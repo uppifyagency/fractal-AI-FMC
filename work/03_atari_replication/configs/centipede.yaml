@@ -1,0 +1,21 @@
+# Centipede — benchmark di sampling efficiency
+env:
+  name: ALE/Centipede-v5
+  observation_mode: ram
+  fixed_steps: 5
+
+planner:
+  algorithm: FMC
+  n_walkers: 100
+  time_horizon: 30
+  max_samples_step: 1000
+  balance: 1.0
+
+runs:
+  n_runs: 5
+  seeds: [42, 137, 271, 314, 1729]
+  max_episode_steps: 27000
+
+target:
+  paper_score: 1351000
+  human_record: 1301709

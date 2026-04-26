@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FMC Live Simulations — Fractal AI</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+         background: #0a0e27; color: #e1e7f5; padding: 40px 20px;
+         min-height: 100vh; }
+  .container { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 2.2em; color: #ffd700; margin-bottom: 8px; }
+  .subtitle { font-size: 1.1em; color: #8b9bb4; margin-bottom: 32px;
+              max-width: 750px; line-height: 1.6; }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .card { background: #1a1f3a; border-radius: 12px; padding: 24px;
+          border: 1px solid #2a3458; transition: transform 0.15s, border-color 0.15s;
+          text-decoration: none; color: inherit; }
+  .card:hover { transform: translateY(-2px); border-color: #ffd700; }
+  .card-icon { font-size: 2.4em; margin-bottom: 8px; }
+  .card-title { font-size: 1.3em; color: #ffd700; margin-bottom: 6px; }
+  .card-tags { font-size: 0.8em; color: #6ba3ff; margin-bottom: 10px; }
+  .card-desc { font-size: 0.9em; color: #c1cae0; line-height: 1.55; }
+  .card-meta { font-size: 0.8em; color: #8b9bb4; margin-top: 12px;
+               padding-top: 12px; border-top: 1px solid #2a3458; }
+  footer { margin-top: 40px; padding-top: 24px; border-top: 1px solid #2a3458;
+           font-size: 0.85em; color: #8b9bb4; line-height: 1.6; }
+  footer a { color: #6ba3ff; text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 12px;
+          background: #2a3458; font-size: 0.75em; color: #6ba3ff;
+          margin-right: 6px; }
+  .formula { font-family: monospace; background: #0d1228; padding: 8px 12px;
+             border-radius: 6px; color: #ffd700; display: inline-block;
+             margin-top: 8px; font-size: 0.85em; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🌀 FMC Live Simulations</h1>
+  <p class="subtitle">
+    Quattro simulazioni interattive del <b>Fractal Monte Carlo</b> di
+    Hernández-Cerezo & Duran-Ballester (paper arXiv:1803.05049, 2020).<br>
+    <b>Niente training. Niente reti neurali. Niente backend.</b> Solo HTML+JS+Canvas.
+    Apri ciascun file e premi ▶ — vedrai lo sciame di walker proiettare il futuro
+    in tempo reale e prendere decisioni intelligenti.
+  </p>
+
+  <div class="formula">
+    VR<sub>i</sub> = relativize(R<sub>i</sub>)<sup>α</sup> · relativize(d<sub>i</sub>)<sup>β</sup>
+  </div>
+
+  <div class="grid" style="margin-top: 24px;">
+
+    <a href="rocket.html" class="card">
+      <div class="card-icon">🚀</div>
+      <div class="card-title">Rocket in Cave</div>
+      <div class="card-tags">
+        <span class="pill">continuous control</span>
+        <span class="pill">paper §5.2</span>
+        <span class="pill">2014 prototype</span>
+      </div>
+      <div class="card-desc">
+        Un razzo deve raggiungere un goal in una caverna piena di ostacoli.
+        Fisica con gravità, thrust, rotazione. Lo sciame proietta le possibili
+        traiettorie e sceglie quella che mantiene più futuri vivi.
+      </div>
+      <div class="card-meta">
+        💡 Prova α=0 (Common Sense): il razzo svolazza senza schiantarsi anche senza goal.
+      </div>
+    </a>
+
+    <a href="kart.html" class="card">
+      <div class="card-icon">🏎</div>
+      <div class="card-title">Kart Racing</div>
+      <div class="card-tags">
+        <span class="pill">discrete + continuous</span>
+        <span class="pill">2014 blog</span>
+        <span class="pill">checkpoint reward</span>
+      </div>
+      <div class="card-desc">
+        Un kart segue un tracciato a forma di anello con 8 checkpoint.
+        Reward per raggiungere il prossimo checkpoint, penalty per uscire
+        dalla pista. Niente training: solo cono frattale di possibilità.
+      </div>
+      <div class="card-meta">
+        💡 Aumenta M (time horizon) per vedere il kart "anticipare" curve strette.
+      </div>
+    </a>
+
+    <a href="pong.html" class="card">
+      <div class="card-icon">🕹</div>
+      <div class="card-title">Pong (Atari-style)</div>
+      <div class="card-tags">
+        <span class="pill">discrete actions</span>
+        <span class="pill">paper §5.1</span>
+        <span class="pill">vs DQN</span>
+      </div>
+      <div class="card-desc">
+        Un paddle vs muro. La palla rimbalza, il paddle deve intercettarla.
+        DQN richiese ~10M frame di training per battere Pong. FMC ci riesce
+        dal primo episodio, senza training. Stesso risultato, costo computazionale
+        spostato dal training all'inferenza.
+      </div>
+      <div class="card-meta">
+        💡 Aumenta la velocità della palla: vedrai la confidence calare.
+      </div>
+    </a>
+
+    <a href="octopus.html" class="card">
+      <div class="card-icon">🐙</div>
+      <div class="card-title">Octopus (Multi-agent)</div>
+      <div class="card-tags">
+        <span class="pill">multi-agent</span>
+        <span class="pill">2015 blog</span>
+        <span class="pill">Badger preview</span>
+      </div>
+      <div class="card-desc">
+        5 agenti devono raggiungere un goal mantenendo la formazione e senza collidere.
+        Ogni agente è un FMC indipendente; la collaborazione emerge.
+        Prototipo del Badger Structure del Book #2 (2020), 5 anni prima.
+      </div>
+      <div class="card-meta">
+        💡 Aumenta "Repulsion" per vedere la formazione "respirare".
+      </div>
+    </a>
+
+  </div>
+
+  <footer>
+    <p>
+      <b>Cosa stai vedendo?</b> Lo stesso algoritmo (FMC) applicato a 4 domini diversi.
+      In ogni demo, un agente prende decisioni proiettando <b>N walker</b>
+      (sub-simulazioni) per <b>M tick</b> nel futuro. I walker si confrontano via
+      <i>virtual reward = R · Dist</i>, quelli scarsi clonano quelli buoni, e la
+      decisione finale è l'azione iniziale modale tra i sopravvissuti.
+    </p>
+    <p style="margin-top: 12px;">
+      <b>Verifica empirica</b>: il paper afferma 50/50 vs MCTS UCT su Atari, con
+      ~360× meno sample. La mia replica Python su Boxing ha confermato 96/100
+      al primo tentativo (vedi
+      <a href="../work/03_atari_replication/results/SMOKE_TEST_REPORT.md">SMOKE_TEST_REPORT</a>).
+      Queste demo HTML sono il "verifica con i tuoi occhi" — apri il dev tools e leggi
+      <code>fmc.js</code>: 200 righe, niente nascosto.
+    </p>
+    <p style="margin-top: 12px;">
+      <b>Riferimenti</b>:
+      <a href="../docs/bibliography/CORPUS.md">Corpus completo Hernández-Cerezo & Duran-Ballester</a> ·
+      <a href="../ANALISIS.md">Analisi in profondità (italiano)</a> ·
+      <a href="../analisisPost.md">Diario di replicazione</a> ·
+      <a href="../docs/vision/fractal_coding_loop.md">Visione Fractal Coding Loop</a>
+    </p>
+  </footer>
+</div>
+</body>
+</html>

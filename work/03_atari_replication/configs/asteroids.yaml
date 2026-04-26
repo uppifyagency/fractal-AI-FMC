@@ -1,0 +1,21 @@
+# Asteroids — supera l'human record secondo il paper
+env:
+  name: ALE/Asteroids-v5
+  observation_mode: ram
+  fixed_steps: 5
+
+planner:
+  algorithm: FMC
+  n_walkers: 100         # alzato rispetto a Boxing/MsPacman per gioco più dinamico
+  time_horizon: 50
+  max_samples_step: 1000
+  balance: 1.0
+
+runs:
+  n_runs: 5
+  seeds: [42, 137, 271, 314, 1729]
+  max_episode_steps: 50000
+
+target:
+  paper_score: 12575000
+  human_record: 10004100

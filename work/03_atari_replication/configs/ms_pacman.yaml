@@ -1,0 +1,21 @@
+# MsPacman — showcase del paper (RAM-mode, parametri Tabella 5.1.3.3)
+env:
+  name: ALE/MsPacman-v5
+  observation_mode: ram
+  fixed_steps: 5
+
+planner:
+  algorithm: FMC
+  n_walkers: 30
+  time_horizon: 15
+  max_samples_step: 300
+  balance: 1.0
+
+runs:
+  n_runs: 5
+  seeds: [42, 137, 271, 314, 1729]
+  max_episode_steps: 27000
+
+target:
+  paper_score: 29410     # paper RAM mode @ 300 max_samples
+  human_record: 290090

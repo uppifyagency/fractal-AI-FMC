@@ -1,0 +1,26 @@
+# Montezuma's Revenge — weak-spot di FMC (sparse reward exploration)
+# Test mirato a confermare/refutare i 5 600 punti del paper
+env:
+  name: ALE/MontezumaRevenge-v5
+  observation_mode: ram
+  fixed_steps: 5
+
+planner:
+  algorithm: FMC
+  n_walkers: 200         # alzato per esplorazione
+  time_horizon: 100      # orizzonte lungo per sparse reward
+  max_samples_step: 5000
+  balance: 1.0
+
+runs:
+  n_runs: 3              # ridotto per costo CPU
+  seeds: [42, 137, 271]
+  max_episode_steps: 50000
+
+target:
+  paper_score: 5600
+  human_record: 1219200
+
+notes: >
+  Paper non "risolve" Montezuma. Atteso: punteggi 4 000-7 000.
+  Per superare 100 000 servirebbe DQN-prior come a-priori (vedi paper §6.2).

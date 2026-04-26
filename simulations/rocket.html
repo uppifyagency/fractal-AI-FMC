@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FMC Rocket — Fractal AI Live Simulation</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+         background: #0a0e27; color: #e1e7f5; padding: 20px; }
+  h1 { font-size: 1.4em; margin-bottom: 4px; color: #ffd700; }
+  .subtitle { font-size: 0.9em; color: #8b9bb4; margin-bottom: 16px; }
+  .layout { display: grid; grid-template-columns: 1fr 320px; gap: 16px; }
+  .canvas-wrap { background: #1a1f3a; border-radius: 8px; padding: 8px;
+                 border: 1px solid #2a3458; }
+  canvas { display: block; background: #0d1228; border-radius: 4px; }
+  .controls { background: #1a1f3a; border-radius: 8px; padding: 16px;
+              border: 1px solid #2a3458; }
+  .control-row { margin-bottom: 14px; }
+  .control-row label { display: block; font-size: 0.85em; color: #8b9bb4;
+                       margin-bottom: 4px; }
+  .control-row input[type=range] { width: 100%; }
+  .control-row .value { color: #ffd700; font-weight: bold; font-size: 0.9em; }
+  button { background: #2563eb; color: white; border: none; padding: 8px 16px;
+           border-radius: 4px; cursor: pointer; font-size: 0.9em; }
+  button:hover { background: #1d4ed8; }
+  button:disabled { background: #374151; cursor: not-allowed; }
+  .stats { margin-top: 16px; font-family: monospace; font-size: 0.85em;
+           background: #0d1228; padding: 10px; border-radius: 4px;
+           border: 1px solid #2a3458; }
+  .stat { display: flex; justify-content: space-between; margin: 3px 0; }
+  .stat .key { color: #8b9bb4; }
+  .stat .val { color: #ffd700; }
+  .meter { height: 8px; background: #0d1228; border-radius: 4px;
+           overflow: hidden; margin-top: 4px; }
+  .meter-fill { height: 100%; background: linear-gradient(90deg, #2563eb, #ffd700);
+                transition: width 0.2s; }
+  .legend { font-size: 0.75em; color: #8b9bb4; margin-top: 12px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; margin: 3px 0; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+  details { margin-top: 12px; font-size: 0.85em; }
+  summary { cursor: pointer; color: #ffd700; padding: 4px 0; }
+  details p { padding: 6px 8px; line-height: 1.5; color: #c1cae0; }
+  .nav { font-size: 0.85em; margin-bottom: 12px; }
+  .nav a { color: #6ba3ff; text-decoration: none; margin-right: 12px; }
+  .nav a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+  <div class="nav">
+    <a href="index.html">← back to index</a>
+    <a href="kart.html">kart →</a>
+    <a href="pong.html">pong →</a>
+    <a href="octopus.html">octopus →</a>
+  </div>
+
+  <h1>🚀 FMC Rocket — vincolato in una caverna</h1>
+  <p class="subtitle">
+    Reimplementazione dell'esperimento del paper §5.2 + post blog 2014
+    <a style="color:#6ba3ff" href="../docs/bibliography/sources/blog_posts/2014-03_rocket_in_cave.md" target="_blank">«Driving a Rocket Inside a Cave»</a>.
+    Lo sciame di walker proietta il razzo nel futuro, sceglie la mossa che mantiene più futuri vivi.
+  </p>
+
+  <div class="layout">
+    <div class="canvas-wrap">
+      <canvas id="cv" width="900" height="600"></canvas>
+    </div>
+
+    <div class="controls">
+      <h3 style="font-size: 1em; margin-bottom: 12px; color: #ffd700;">Parametri FMC</h3>
+
+      <div class="control-row">
+        <label>N walkers <span class="value" id="vN">30</span></label>
+        <input type="range" id="N" min="5" max="200" value="30">
+      </div>
+      <div class="control-row">
+        <label>Time horizon (M tick) <span class="value" id="vM">15</span></label>
+        <input type="range" id="M" min="3" max="60" value="15">
+      </div>
+      <div class="control-row">
+        <label>Balance α (exploitation) <span class="value" id="vA">1.00</span></label>
+        <input type="range" id="A" min="0" max="200" value="100" step="5">
+      </div>
+      <div class="control-row">
+        <label>Distance coef β (exploration) <span class="value" id="vB">1.00</span></label>
+        <input type="range" id="B" min="0" max="300" value="100" step="5">
+      </div>
+
+      <button id="startBtn">▶ Start</button>
+      <button id="resetBtn">⟲ Reset</button>
+
+      <div class="stats">
+        <div class="stat"><span class="key">tick</span><span class="val" id="sTick">0</span></div>
+        <div class="stat"><span class="key">cum reward</span><span class="val" id="sReward">0.00</span></div>
+        <div class="stat"><span class="key">altitude</span><span class="val" id="sAlt">0.00</span></div>
+        <div class="stat"><span class="key">confidence</span><span class="val" id="sConf">0%</span></div>
+        <div class="meter"><div class="meter-fill" id="mConf" style="width:0%"></div></div>
+        <div class="stat" style="margin-top:8px;"><span class="key">reward variance</span><span class="val" id="sVar">0.00</span></div>
+        <div class="stat"><span class="key">walkers alive</span><span class="val" id="sAlive">30</span></div>
+        <div class="stat"><span class="key">samples used</span><span class="val" id="sSamples">0</span></div>
+      </div>
+
+      <div class="legend">
+        <div class="legend-item"><span class="legend-dot" style="background:#ffd700;"></span> Razzo (vero stato)</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#3b82f6;opacity:0.4"></span> Walker traiettorie (futuro virtuale)</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> Goal (uscita)</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#ef4444;"></span> Pareti / morte</div>
+      </div>
+
+      <details>
+        <summary>Cosa stai guardando?</summary>
+        <p>
+          Ad ogni decisione, l'algoritmo lancia <b>N walker</b> (sub-simulazioni del razzo)
+          per <b>M tick</b> nel futuro. Ogni walker prova un'azione iniziale random;
+          poi i walker si confrontano via <b>virtual reward = R · Dist^β</b>
+          e quelli scarsi <b>clonano</b> quelli buoni. Dopo M tick, l'azione iniziale
+          modale tra i sopravvissuti diventa la decisione del razzo vero.
+          <br><br>
+          <b>Nessuna rete neurale, nessun training, nessun gradiente.</b>
+          Solo simulazione + entropia.
+        </p>
+      </details>
+
+      <details>
+        <summary>Common Sense mode (α=0)</summary>
+        <p>
+          Setta α=0: il razzo non insegue il goal, cerca solo di restare vivo
+          il più a lungo possibile. Vedrai un comportamento di "autopilot biologico":
+          il razzo svolazza evitando i muri senza un obiettivo esterno.
+          Questo è esattamente il pattern descritto in <i>Empowerment</i> (Salge–Glackin–Polani 2013).
+        </p>
+      </details>
+    </div>
+  </div>
+
+<script>
+/**
+ * fmc.js — Fractal Monte Carlo (FMC) algorithm in vanilla JavaScript
+ *
+ * Direct port of the algorithm in:
+ *   Hernández-Cerezo & Duran-Ballester, "Fractal AI: A Fragile Theory of Intelligence" (2020)
+ *   §4.3 Pseudo-code
+ *
+ * Same algorithm as fmc_minimal.py but in JS for browser visualizations.
+ *
+ * The user provides an Environment object with this interface:
+ *   env.cloneState(state) -> deep copy of state
+ *   env.step(state, action) -> { state, reward, terminal }
+ *   env.observe(state) -> feature vector (for distance metric)
+ *   env.distance(obs1, obs2) -> scalar (defaults to L2)
+ *   env.availableActions(state) -> array of actions (discrete) OR
+ *   env.sampleAction(state) -> action (continuous)
+ *
+ * Configuration:
+ *   nWalkers (N)        — number of parallel walkers (default 30)
+ *   timeHorizon (M)     — depth of the fractal cone in ticks (default 15)
+ *   balance (α)         — exploration/exploitation balance (default 1.0)
+ *   distanceCoef (β)    — distance term exponent (default 1.0)
+ *   rewardCoef          — alias for balance (default = balance)
+ */
+
+const FMC = (() => {
+  /**
+   * Relativize transformation from paper §2.2.3.
+   * Maps any real vector to strictly positive values, preserving order,
+   * compressing high outliers (log) and expanding low outliers (exp).
+   */
+  function relativize(arr) {
+    const n = arr.length;
+    if (n === 0) return arr;
+    const mean = arr.reduce((a, b) => a + b, 0) / n;
+    const variance = arr.reduce((a, b) => a + (b - mean) ** 2, 0) / n;
+    const std = Math.sqrt(variance);
+    if (std === 0 || !isFinite(std)) return new Array(n).fill(1);
+    return arr.map(x => {
+      const z = (x - mean) / std;
+      if (z <= 0) return Math.exp(Math.max(z, -50));
+      return 1 + Math.log1p(z);
+    });
+  }
+
+  /**
+   * Default L2 distance between two observation vectors.
+   */
+  function l2(a, b) {
+    let s = 0;
+    for (let i = 0; i < a.length; i++) s += (a[i] - b[i]) ** 2;
+    return Math.sqrt(s);
+  }
+
+  /**
+   * Pick a random index in [0, N) different from `excluded`.
+   */
+  function randomOther(N, excluded) {
+    if (N <= 1) return 0;
+    let j;
+    do { j = Math.floor(Math.random() * N); } while (j === excluded);
+    return j;
+  }
+
+  /**
+   * Run one FMC decision from `rootState`.
+   *
+   * Returns:
+   *   {
+   *     action: chosen action,
+   *     confidence: fraction of walkers backing the chosen action,
+   *     walkers: final walker pool (for visualization),
+   *     trajectories: per-walker path (for visualization),
+   *     counts: { action -> walker count },
+   *     virtualRewards: VR vector at decision time,
+   *   }
+   */
+  function decide(env, rootState, config) {
+    const cfg = Object.assign({
+      nWalkers: 30,
+      timeHorizon: 15,
+      balance: 1.0,
+      distanceCoef: 1.0,
+      isDiscrete: true,
+      recordTrajectories: true,
+    }, config || {});
+
+    const N = cfg.nWalkers;
+    const M = cfg.timeHorizon;
+
+    // Determine available actions (only used in discrete mode)
+    let actions = null;
+    if (cfg.isDiscrete) {
+      actions = env.availableActions(rootState);
+      if (!actions || actions.length === 0) {
+        return { action: null, confidence: 0, walkers: [], counts: {} };
+      }
+    }
+
+    // Initialize N walkers, each with a random initial action
+    const walkers = [];
+    const trajectories = cfg.recordTrajectories ? [] : null;
+    for (let i = 0; i < N; i++) {
+      let initAction;
+      if (cfg.isDiscrete) {
+        initAction = actions[Math.floor(Math.random() * actions.length)];
+      } else {
+        initAction = env.sampleAction(rootState);
+      }
+      walkers.push({
+        state: env.cloneState(rootState),
+        initAction,
+        cumReward: 0,
+        alive: true,
+      });
+      if (trajectories) {
+        trajectories.push([env.observe(rootState).slice()]);
+      }
+    }
+
+    // Buffers reused across ticks; declared here so they're available after the loop too
+    let rewards = new Array(N).fill(0);
+    let distances = new Array(N).fill(0);
+    let VR = new Array(N).fill(0);
+
+    // Main FMC loop: M ticks
+    for (let t = 0; t < M; t++) {
+      // Step each living walker
+      for (let i = 0; i < N; i++) {
+        if (!walkers[i].alive) continue;
+        let a;
+        if (t === 0) {
+          a = walkers[i].initAction;
+        } else if (cfg.isDiscrete) {
+          a = actions[Math.floor(Math.random() * actions.length)];
+        } else {
+          a = env.sampleAction(walkers[i].state);
+        }
+        const result = env.step(walkers[i].state, a);
+        walkers[i].state = result.state;
+        walkers[i].cumReward += result.reward;
+        if (result.terminal) walkers[i].alive = false;
+        if (trajectories) trajectories[i].push(env.observe(walkers[i].state).slice());
+      }
+
+      // Compute virtual rewards
+      const observations = walkers.map(w => env.observe(w.state));
+      const distFn = env.distance || l2;
+      const partners = new Array(N);
+      for (let i = 0; i < N; i++) {
+        partners[i] = randomOther(N, i);
+        distances[i] = distFn(observations[i], observations[partners[i]]);
+      }
+
+      for (let i = 0; i < N; i++) rewards[i] = walkers[i].cumReward;
+      const Rn = relativize(rewards);
+      const Dn = relativize(distances);
+      // Penalize dead walkers
+      for (let i = 0; i < N; i++) {
+        if (!walkers[i].alive) { Rn[i] = 0; Dn[i] = 0; }
+      }
+      for (let i = 0; i < N; i++) {
+        VR[i] = Math.pow(Rn[i], cfg.balance) * Math.pow(Dn[i], cfg.distanceCoef);
+        if (!isFinite(VR[i])) VR[i] = 0;
+      }
+
+      // Cloning step
+      for (let i = 0; i < N; i++) {
+        const k = randomOther(N, i);
+        let pClone;
+        if (!walkers[i].alive) {
+          pClone = 1.0; // dead walkers always try to clone
+        } else if (VR[i] <= 1e-8) {
+          pClone = 1.0;
+        } else if (VR[k] <= VR[i]) {
+          pClone = 0.0;
+        } else {
+          pClone = (VR[k] - VR[i]) / VR[i];
+        }
+        if (Math.random() < pClone && walkers[k].alive) {
+          // Clone state, init action, reward, alive flag
+          walkers[i] = {
+            state: env.cloneState(walkers[k].state),
+            initAction: walkers[k].initAction,
+            cumReward: walkers[k].cumReward,
+            alive: true,
+          };
+          if (trajectories) {
+            trajectories[i] = trajectories[k].slice();
+          }
+        }
+      }
+    }
+
+    // Decision: most popular initial action among living walkers
+    const counts = new Map();
+    let totalAlive = 0;
+    for (const w of walkers) {
+      if (!w.alive) continue;
+      const key = JSON.stringify(w.initAction);
+      counts.set(key, (counts.get(key) || 0) + 1);
+      totalAlive++;
+    }
+
+    let bestKey = null;
+    let bestCount = -1;
+    for (const [key, count] of counts.entries()) {
+      if (count > bestCount) { bestCount = count; bestKey = key; }
+    }
+
+    let chosenAction = null;
+    if (bestKey !== null) {
+      chosenAction = JSON.parse(bestKey);
+    } else if (cfg.isDiscrete) {
+      chosenAction = actions[Math.floor(Math.random() * actions.length)];
+    } else {
+      chosenAction = env.sampleAction(rootState);
+    }
+
+    const confidence = totalAlive > 0 ? bestCount / totalAlive : 0;
+
+    // Compute reward variance among survivors
+    const aliveRewards = walkers.filter(w => w.alive).map(w => w.cumReward);
+    let rewardVariance = 0;
+    if (aliveRewards.length > 1) {
+      const m = aliveRewards.reduce((a, b) => a + b, 0) / aliveRewards.length;
+      rewardVariance = Math.sqrt(
+        aliveRewards.reduce((a, b) => a + (b - m) ** 2, 0) / aliveRewards.length
+      );
+    }
+
+    return {
+      action: chosenAction,
+      confidence,
+      counts: Object.fromEntries(
+        Array.from(counts.entries()).map(([k, v]) => [k, v / Math.max(1, totalAlive)])
+      ),
+      walkers,
+      trajectories,
+      virtualRewards: VR,
+      rewards,
+      distances,
+      rewardVariance,
+      aliveCount: totalAlive,
+    };
+  }
+
+  return { decide, relativize, l2 };
+})();
+</script>
+<script>
+// === ROCKET PHYSICS ============================================================
+const W = 900, H = 600;
+const cv = document.getElementById('cv');
+const ctx = cv.getContext('2d');
+
+// World: a rectangular cave with internal obstacles, goal at top
+const WORLD = {
+  walls: [
+    {x:0, y:0, w:W, h:8},          // top
+    {x:0, y:H-8, w:W, h:8},        // bottom
+    {x:0, y:0, w:8, h:H},          // left
+    {x:W-8, y:0, w:8, h:H},        // right
+    // internal obstacles (cave)
+    {x:200, y:120, w:30, h:200},
+    {x:400, y:280, w:200, h:30},
+    {x:680, y:100, w:30, h:300},
+    {x:100, y:400, w:200, h:30},
+    {x:550, y:480, w:200, h:30},
+  ],
+  goal: {x: W-100, y: 50, r: 28},
+};
+
+// Available thrust + rotation actions (discrete grid of joystick positions)
+const THRUSTS = [0, 0.18, 0.36];
+const TORQUES = [-0.06, 0, 0.06];
+const ACTIONS = [];
+for (const t of THRUSTS) for (const r of TORQUES) ACTIONS.push([t, r]);
+
+// Initial state
+function initialState() {
+  return {
+    x: 80, y: H - 80,
+    vx: 0, vy: 0,
+    angle: -Math.PI/2, vAngle: 0,
+    alive: true, fuel: 1000,
+  };
+}
+
+const GRAVITY = 0.14;
+const DRAG = 0.992;
+
+function pointInWalls(x, y, rad=4) {
+  for (const w of WORLD.walls) {
+    if (x + rad > w.x && x - rad < w.x + w.w &&
+        y + rad > w.y && y - rad < w.y + w.h) return true;
+  }
+  return false;
+}
+
+function distToGoal(s) {
+  const dx = s.x - WORLD.goal.x, dy = s.y - WORLD.goal.y;
+  return Math.sqrt(dx*dx + dy*dy);
+}
+
+const ENV = {
+  cloneState: s => ({...s}),
+  step(state, action) {
+    const [thrust, torque] = action;
+    const s = {...state};
+    s.vAngle = s.vAngle + torque;
+    s.angle = s.angle + s.vAngle;
+    s.vx = s.vx + Math.cos(s.angle) * thrust;
+    s.vy = s.vy + Math.sin(s.angle) * thrust + GRAVITY;
+    s.vx *= DRAG; s.vy *= DRAG; s.vAngle *= 0.95;
+    s.x += s.vx; s.y += s.vy;
+    s.fuel = Math.max(0, s.fuel - thrust*5);
+
+    // Reward: closer to goal = better, alive = bonus
+    let reward = 0;
+    if (s.alive) {
+      const d = distToGoal(s);
+      reward = Math.max(0, 600 - d) / 600; // [0..1]
+    }
+
+    let terminal = false;
+    if (pointInWalls(s.x, s.y)) {
+      s.alive = false;
+      terminal = true;
+      reward = 0;
+    }
+    // Goal check
+    if (distToGoal(s) < WORLD.goal.r) {
+      reward = 5; // big bonus
+    }
+    return { state: s, reward, terminal };
+  },
+  observe(s) {
+    return [s.x/W, s.y/H, s.vx*0.1, s.vy*0.1, Math.cos(s.angle), Math.sin(s.angle)];
+  },
+  availableActions() { return ACTIONS; },
+};
+
+// === MAIN LOOP =================================================================
+let state = initialState();
+let cumReward = 0;
+let tick = 0;
+let totalSamples = 0;
+let running = false;
+let lastDecision = null;
+let goalReached = false;
+
+const ui = {
+  N: document.getElementById('N'), vN: document.getElementById('vN'),
+  M: document.getElementById('M'), vM: document.getElementById('vM'),
+  A: document.getElementById('A'), vA: document.getElementById('vA'),
+  B: document.getElementById('B'), vB: document.getElementById('vB'),
+  start: document.getElementById('startBtn'),
+  reset: document.getElementById('resetBtn'),
+  sTick: document.getElementById('sTick'),
+  sReward: document.getElementById('sReward'),
+  sAlt: document.getElementById('sAlt'),
+  sConf: document.getElementById('sConf'),
+  mConf: document.getElementById('mConf'),
+  sVar: document.getElementById('sVar'),
+  sAlive: document.getElementById('sAlive'),
+  sSamples: document.getElementById('sSamples'),
+};
+function updateLabels() {
+  ui.vN.textContent = ui.N.value;
+  ui.vM.textContent = ui.M.value;
+  ui.vA.textContent = (ui.A.value/100).toFixed(2);
+  ui.vB.textContent = (ui.B.value/100).toFixed(2);
+}
+['N','M','A','B'].forEach(k => ui[k].addEventListener('input', updateLabels));
+updateLabels();
+
+function reset() {
+  state = initialState(); cumReward = 0; tick = 0;
+  totalSamples = 0; lastDecision = null; goalReached = false;
+  draw();
+}
+ui.reset.addEventListener('click', () => { reset(); running = false; ui.start.textContent = '▶ Start'; });
+ui.start.addEventListener('click', () => {
+  running = !running;
+  ui.start.textContent = running ? '⏸ Pause' : '▶ Start';
+  if (running) loop();
+});
+
+function loop() {
+  if (!running) return;
+  if (!state.alive || goalReached || tick > 1500) {
+    running = false;
+    ui.start.textContent = '▶ Start';
+    return;
+  }
+
+  const config = {
+    nWalkers: parseInt(ui.N.value),
+    timeHorizon: parseInt(ui.M.value),
+    balance: parseInt(ui.A.value)/100,
+    distanceCoef: parseInt(ui.B.value)/100,
+    isDiscrete: true,
+  };
+
+  lastDecision = FMC.decide(ENV, state, config);
+  totalSamples += config.nWalkers * config.timeHorizon;
+
+  const action = lastDecision.action;
+  const result = ENV.step(state, action);
+  state = result.state;
+  cumReward += result.reward;
+  tick++;
+  if (distToGoal(state) < WORLD.goal.r) goalReached = true;
+
+  draw();
+  updateStats();
+  requestAnimationFrame(loop);
+}
+
+// === RENDER =====================================================================
+function draw() {
+  ctx.fillStyle = '#0d1228';
+  ctx.fillRect(0, 0, W, H);
+
+  // walker trajectories (alive ones, in light blue)
+  if (lastDecision && lastDecision.trajectories) {
+    ctx.strokeStyle = 'rgba(59, 130, 246, 0.18)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < lastDecision.walkers.length; i++) {
+      const w = lastDecision.walkers[i];
+      const traj = lastDecision.trajectories[i];
+      if (!traj || traj.length < 2) continue;
+      ctx.beginPath();
+      ctx.moveTo(traj[0][0]*W, traj[0][1]*H);
+      for (let j = 1; j < traj.length; j++) {
+        ctx.lineTo(traj[j][0]*W, traj[j][1]*H);
+      }
+      ctx.strokeStyle = w.alive ? 'rgba(59, 130, 246, 0.18)' : 'rgba(239, 68, 68, 0.08)';
+      ctx.stroke();
+    }
+  }
+
+  // walls
+  ctx.fillStyle = '#ef4444';
+  for (const w of WORLD.walls) ctx.fillRect(w.x, w.y, w.w, w.h);
+
+  // goal
+  ctx.beginPath();
+  ctx.arc(WORLD.goal.x, WORLD.goal.y, WORLD.goal.r, 0, Math.PI*2);
+  ctx.fillStyle = 'rgba(16, 185, 129, 0.25)';
+  ctx.fill();
+  ctx.strokeStyle = '#10b981';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.fillStyle = '#10b981';
+  ctx.font = 'bold 11px monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('GOAL', WORLD.goal.x, WORLD.goal.y+4);
+
+  // rocket
+  ctx.save();
+  ctx.translate(state.x, state.y);
+  ctx.rotate(state.angle);
+  ctx.fillStyle = state.alive ? '#ffd700' : '#ef4444';
+  ctx.beginPath();
+  ctx.moveTo(12, 0);
+  ctx.lineTo(-8, 6);
+  ctx.lineTo(-4, 0);
+  ctx.lineTo(-8, -6);
+  ctx.closePath();
+  ctx.fill();
+  // flame
+  if (lastDecision && lastDecision.action && lastDecision.action[0] > 0.05 && state.alive) {
+    ctx.fillStyle = '#ff6b35';
+    ctx.beginPath();
+    ctx.moveTo(-4, 0);
+    ctx.lineTo(-12, 3);
+    ctx.lineTo(-16, 0);
+    ctx.lineTo(-12, -3);
+    ctx.closePath();
+    ctx.fill();
+  }
+  ctx.restore();
+
+  // status overlay
+  if (!state.alive) {
+    ctx.fillStyle = 'rgba(239, 68, 68, 0.85)';
+    ctx.font = 'bold 24px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('💥 CRASHED', W/2, H/2);
+  } else if (goalReached) {
+    ctx.fillStyle = 'rgba(16, 185, 129, 0.95)';
+    ctx.font = 'bold 28px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('🏆 GOAL REACHED', W/2, H/2);
+  }
+}
+
+function updateStats() {
+  ui.sTick.textContent = tick;
+  ui.sReward.textContent = cumReward.toFixed(2);
+  ui.sAlt.textContent = (H - state.y).toFixed(0);
+  if (lastDecision) {
+    const conf = (lastDecision.confidence * 100).toFixed(1);
+    ui.sConf.textContent = conf + '%';
+    ui.mConf.style.width = conf + '%';
+    ui.sVar.textContent = lastDecision.rewardVariance.toFixed(3);
+    ui.sAlive.textContent = lastDecision.aliveCount;
+  }
+  ui.sSamples.textContent = totalSamples.toLocaleString();
+}
+
+draw();
+</script>
+</body>
+</html>

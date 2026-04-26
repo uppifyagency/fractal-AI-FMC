@@ -1,0 +1,3 @@
+port: 9998
+websocket_origin: "*"
+show: false

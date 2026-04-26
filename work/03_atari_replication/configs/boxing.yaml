@@ -1,0 +1,19 @@
+# Boxing — smoke test (parametri minimali, win quando reward = 100)
+env:
+  name: ALE/Boxing-v5
+  observation_mode: ram
+  fixed_steps: 5
+
+planner:
+  algorithm: FMC
+  n_walkers: 30
+  time_horizon: 15
+  max_samples_step: 300
+  balance: 1.0
+  reward_limit: 100      # game termina al cap
+  can_win: true          # paper: meccanismo win-detection
+
+runs:
+  n_runs: 5
+  seeds: [42, 137, 271, 314, 1729]
+  max_episode_steps: 27000  # cap di sicurezza, in pratica termina molto prima
