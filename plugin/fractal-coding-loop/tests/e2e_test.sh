@@ -135,6 +135,93 @@ assert "memory recall returns top-K Wigner-weighted" \
 
 # ============================================================================
 echo ""
+echo "=== TEST 5b: fractal_loop.py decide — tie detection (Sev-2 fix) ==="
+
+# Setup an isolated workdir so we don't pollute cwd's .fractal/
+TIE_DIR="$TMP_DIR/tie_test"
+mkdir -p "$TIE_DIR"
+
+cat > "$TIE_DIR/walkers_tied.json" <<'EOF'
+[
+  {"approach_label":"alpha","worktree_path":"/x/0","worktree_branch":"w0","walker_head":"sha0","init_commit_sha":"sha0","init_commit_message":"alpha","files_changed":["a.py"],"lines_added":10,"lines_deleted":0,"tests_run":true,"tests_passed":1,"tests_total":1,"lint_warnings":0,"compile_ok":true,"summary":"alpha"},
+  {"approach_label":"bravo","worktree_path":"/x/1","worktree_branch":"w1","walker_head":"sha1","init_commit_sha":"sha1","init_commit_message":"bravo","files_changed":["b.py"],"lines_added":10,"lines_deleted":0,"tests_run":true,"tests_passed":1,"tests_total":1,"lint_warnings":0,"compile_ok":true,"summary":"bravo"},
+  {"approach_label":"charlie","worktree_path":"/x/2","worktree_branch":"w2","walker_head":"sha2","init_commit_sha":"sha2","init_commit_message":"charlie","files_changed":["c.py"],"lines_added":10,"lines_deleted":0,"tests_run":true,"tests_passed":1,"tests_total":1,"lint_warnings":0,"compile_ok":true,"summary":"charlie"}
+]
+EOF
+
+cd "$TIE_DIR"
+SESS=$(python3 "$SCRIPTS/fractal_loop.py" init --task t --n 3 --m 1 \
+    | python3 -c "import json,sys;print(json.loads(sys.stdin.read())['session_id'])")
+python3 "$SCRIPTS/fractal_loop.py" record --session "$SESS" --file walkers_tied.json > /dev/null
+DECIDE_OUT=$(python3 "$SCRIPTS/fractal_loop.py" decide --session "$SESS")
+cd - > /dev/null
+
+assert "decide reports is_tie=true on uniform bincount" bash -c "
+echo '$DECIDE_OUT' | python3 -c '
+import json, sys
+d = json.loads(sys.stdin.read())
+assert d[\"is_tie\"] is True, f\"expected is_tie=true, got {d}\"
+'
+"
+
+assert "decide lists all 3 tied_labels" bash -c "
+echo '$DECIDE_OUT' | python3 -c '
+import json, sys
+d = json.loads(sys.stdin.read())
+v = sorted(d[\"tied_labels\"])
+assert v == [\"alpha\", \"bravo\", \"charlie\"], \"got \" + repr(v)
+'
+"
+
+assert "decide reports tie_break_method=highest_R_among_tied" bash -c "
+echo '$DECIDE_OUT' | python3 -c '
+import json, sys
+d = json.loads(sys.stdin.read())
+v = d[\"tie_break_method\"]
+assert v == \"highest_R_among_tied\", \"got \" + repr(v)
+'
+"
+
+assert "decide confidence is 1/3 when 3-way tied" bash -c "
+echo '$DECIDE_OUT' | python3 -c '
+import json, sys
+d = json.loads(sys.stdin.read())
+c = d[\"confidence\"]
+assert abs(c - 1/3) < 1e-6, f\"expected confidence=0.333, got {c}\"
+'
+"
+
+# Sanity: when NOT tied (one walker has higher R), is_tie=false
+cat > "$TIE_DIR/walkers_clear.json" <<'EOF'
+[
+  {"approach_label":"alpha","worktree_path":"/x/0","worktree_branch":"w0","walker_head":"sha0","init_commit_sha":"sha0","init_commit_message":"alpha","files_changed":["a.py"],"lines_added":10,"lines_deleted":0,"tests_run":true,"tests_passed":1,"tests_total":1,"lint_warnings":0,"compile_ok":true,"summary":"alpha"},
+  {"approach_label":"alpha","worktree_path":"/x/1","worktree_branch":"w1","walker_head":"sha1","init_commit_sha":"sha1","init_commit_message":"alpha-2","files_changed":["b.py"],"lines_added":10,"lines_deleted":0,"tests_run":true,"tests_passed":1,"tests_total":1,"lint_warnings":0,"compile_ok":true,"summary":"alpha-2"},
+  {"approach_label":"bravo","worktree_path":"/x/2","worktree_branch":"w2","walker_head":"sha2","init_commit_sha":"sha2","init_commit_message":"bravo","files_changed":["c.py"],"lines_added":10,"lines_deleted":0,"tests_run":true,"tests_passed":1,"tests_total":1,"lint_warnings":0,"compile_ok":true,"summary":"bravo"}
+]
+EOF
+
+cd "$TIE_DIR"
+SESS2=$(python3 "$SCRIPTS/fractal_loop.py" init --task t --n 3 --m 1 \
+    | python3 -c "import json,sys;print(json.loads(sys.stdin.read())['session_id'])")
+python3 "$SCRIPTS/fractal_loop.py" record --session "$SESS2" --file walkers_clear.json > /dev/null
+DECIDE_OUT2=$(python3 "$SCRIPTS/fractal_loop.py" decide --session "$SESS2")
+cd - > /dev/null
+
+assert "decide reports is_tie=false when one label has clear majority" bash -c "
+echo '$DECIDE_OUT2' | python3 -c '
+import json, sys
+d = json.loads(sys.stdin.read())
+is_tie_v = d[\"is_tie\"]
+winner_v = d[\"winner_label\"]
+tied_v = d[\"tied_labels\"]
+assert is_tie_v is False, \"expected is_tie=false, got \" + repr(is_tie_v)
+assert winner_v == \"alpha\", \"expected alpha, got \" + repr(winner_v)
+assert tied_v == [\"alpha\"], \"got \" + repr(tied_v)
+'
+"
+
+# ============================================================================
+echo ""
 echo "=== TEST 5: Wigner reward shape ==="
 
 assert "Wigner peaks near x=1" python3 -c "

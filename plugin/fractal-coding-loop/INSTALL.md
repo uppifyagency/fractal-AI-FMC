@@ -1,15 +1,15 @@
-# Installation — Fractal Coding Loop plugin
+# Installation — fractal-coding-loop
 
-## Requisiti
+## Requirements
 
-- **Claude Code** ≥ recent version (with plugin support)
-- **Python 3.8+** (per gli script di reward + memory)
-- **git** ≥ 2.5 (per `git worktree`)
-- *Opzionale*: la toolchain di test/lint del tuo progetto (pytest, eslint, ecc.)
+- **Claude Code** (recent version with plugin support)
+- **Python 3.8+** (for the math and state-machine scripts)
+- **git ≥ 2.5** (`git worktree` is used to isolate walkers)
+- *Optional*: the test/lint toolchain of your target project (pytest, eslint, ruff, etc.)
 
-## Step 1 — Installa il plugin
+## Step 1 — Install the plugin
 
-### Opzione A: symlink (raccomandato per dev)
+### Option A — symlink (recommended for active development)
 
 ```bash
 mkdir -p ~/.claude/plugins
@@ -17,82 +17,103 @@ ln -s "/Users/vladvrinceanu/Desktop/PROGETTI ANTYGRAVITY/FractalAI/plugin/fracta
       ~/.claude/plugins/fractal-coding-loop
 ```
 
-### Opzione B: copia (per uso stabile)
+Edits to the plugin source are picked up live (after Claude Code restart).
+
+### Option B — copy (for stable use)
 
 ```bash
 cp -r "/Users/vladvrinceanu/Desktop/PROGETTI ANTYGRAVITY/FractalAI/plugin/fractal-coding-loop" \
       ~/.claude/plugins/
 ```
 
-## Step 2 — Verifica installazione
+## Step 2 — Verify installation
 
-Restart Claude Code, poi in una nuova sessione:
+Restart Claude Code, then in any session:
 
 ```
-> /help
+/help
 ```
 
-Dovresti vedere `/fractal-decide`, `/fractal-recall`, `/fractal-memory-show` nella lista.
+You should see `/fractal-decide` and `/octopus` in the slash command list.
 
-Se non li vedi:
-- Verifica che il symlink/copia esista: `ls ~/.claude/plugins/fractal-coding-loop/`
-- Verifica `.claude-plugin/plugin.json`: deve essere parsabile JSON
-- Restart Claude Code completamente
+If they don't appear:
+1. Check that the symlink/copy exists: `ls ~/.claude/plugins/fractal-coding-loop/`
+2. Verify [`.claude-plugin/plugin.json`](.claude-plugin/plugin.json) is valid JSON: `python3 -c "import json; json.load(open('~/.claude/plugins/fractal-coding-loop/.claude-plugin/plugin.json'))"`
+3. Restart Claude Code completely (not just a new tab — fully quit and relaunch).
 
-## Step 3 — Verifica gli script Python
+## Step 3 — Verify the math layer
+
+Run the certification tests:
 
 ```bash
+python3 ~/.claude/plugins/fractal-coding-loop/tests/test_fractal_math.py
+```
+
+Expected output ends with:
+```
+All FMC math tests passed — convergence certified.
+```
+
+If any test fails, **do not use the plugin** until fixed. The math layer is the foundation; failures there mean the algorithm is broken.
+
+## Step 4 — Verify the state machine CLI
+
+```bash
+python3 ~/.claude/plugins/fractal-coding-loop/scripts/fractal_loop.py --help
 python3 ~/.claude/plugins/fractal-coding-loop/scripts/fractal_reward.py --help
-python3 ~/.claude/plugins/fractal-coding-loop/scripts/fractal_memory.py --help
 ```
 
-Entrambi dovrebbero stampare l'help senza errori.
+Both should print help without errors.
 
-## Step 4 — Run smoke test
+For a fuller smoke test (init + record + step + decide on synthetic walker JSONs), see [`docs/USAGE.md`](docs/USAGE.md) §"CLI smoke test".
 
-```bash
-bash ~/.claude/plugins/fractal-coding-loop/tests/e2e_test.sh
-```
+## Step 5 — First real use
 
-Output atteso: `OK ✓ — all components functional`.
-
-## Step 5 — Primo utilizzo
-
-In un repo git pulito:
+In a clean git repo (no uncommitted changes):
 
 ```
-> /fractal-decide explain what this codebase does
+> /fractal-decide "add a hello world function in src/util.py and a unit test"
 ```
 
-(Task volutamente leggero per il primo test.)
+This will:
+1. Generate 3 strategies
+2. Spawn 3 walkers in parallel git worktrees
+3. After ~3-5 minutes, present a comparison table
+4. Ask if you want to cherry-pick the winner
 
-Il plugin lancerà 3 sub-agent in parallelo, ognuno produrrà una spiegazione, e ti mostrerà la comparison.
+**Cost estimate for this first run**: ~9 sub-agent calls (3 walker × 3 ticks) plus 3 judge calls = ~12 LLM invocations. Approximately $1-3 in Claude Code billing depending on plan and model.
 
 ## Troubleshooting
 
-| Sintomo | Causa probabile | Soluzione |
+| Symptom | Likely cause | Fix |
 |---|---|---|
-| `/fractal-decide` non appare | plugin non riconosciuto | check `.claude-plugin/plugin.json` syntax |
-| Walker fail with "not in worktree" | repo not git-init | `git init && git commit` first |
-| Reward script `ModuleNotFoundError` | Python missing | install python3 ≥ 3.8 |
-| Memory bank empty | first run | normal, popolato dopo prima `/fractal-decide` |
-| Walkers all return same approach | sub-agent non distinguono | rivedi le approach descriptions in fase 1 |
-| Confidence sempre < 30% | high reward variance | aumenta N o specifica approcci più diversi |
+| `/fractal-decide` not in `/help` | Plugin not registered | Verify symlink, restart Claude Code completely |
+| `plugin.json` parse error | JSON syntax | Validate with `python3 -c "import json; json.load(open(...))"` |
+| `ModuleNotFoundError: fractal_reward` | Path issue when running fractal_loop.py | Both scripts must be in the same directory; check they coexist in `scripts/` |
+| Walker fails with "not a git repo" | Target dir has no git history | `git init && git commit --allow-empty -m initial` first |
+| All walkers return same approach | Strategies in Phase 1 too similar | Edit the prompt in `fractal-decide.md` Phase 1 to enforce orthogonality |
+| Confidence always < 30% | High reward variance with low N | Raise N (currently default 3, try 5-10 in `fractal_loop.py init --n 5`) |
+| `git worktree remove` fails | Worktree busy or modified | `git worktree remove <path> --force` (data may be lost — only do this for failed walker worktrees) |
+| Cherry-pick conflict in `/octopus` | Main has diverged from walker base | The octopus loop stops here — investigate the conflict, optionally `git reset --hard <START_HEAD>` to abort the whole session |
+| Math tests fail | Python version too old, or fractal_reward modified | Use Python 3.8+; revert `fractal_reward.py` to the canonical version |
 
-## Disinstallazione
+## Uninstall
 
 ```bash
-rm ~/.claude/plugins/fractal-coding-loop  # if symlink
-# OR
-rm -rf ~/.claude/plugins/fractal-coding-loop  # if copied
+rm ~/.claude/plugins/fractal-coding-loop          # if symlink
+rm -rf ~/.claude/plugins/fractal-coding-loop      # if copied
 ```
 
-I worktree e la memory bank di un progetto vivono in `<project>/.fractal/` e `<project>/<worktree-paths>/`. Per ripulire un progetto:
+The plugin writes session state into `<your-project>/.fractal/sessions/` of the target repo. To clean a project's accumulated state:
 
 ```bash
 cd <your-project>
 rm -rf .fractal/
-git worktree list  # see active fractal worktrees
-git worktree remove <path>  # for each fractal-walker-* path
-git branch -D fractal-walker-*
+
+# Remove any leftover walker worktrees:
+git worktree list
+git worktree remove <path>      # for each fractal-walker-* path
+git branch -D fractal-walker-*  # for each lingering branch
 ```
+
+There is no global state outside the plugin directory and per-project `.fractal/` directories.
