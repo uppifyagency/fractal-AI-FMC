@@ -1,0 +1,69 @@
+{
+  "config": {
+    "N": 64,
+    "M": 20,
+    "alpha": 1.0,
+    "beta": 1.0,
+    "n_seeds": 5,
+    "seed_start": 42
+  },
+  "v1_obs_1345d": {
+    "mean_achievements": 6.4,
+    "std_achievements": 2.42,
+    "n_unique_achievements": 12,
+    "crafter_score_pct": 6.8737,
+    "achievements_per_seed": [
+      10,
+      3,
+      5,
+      8,
+      6
+    ],
+    "mean_steps": 176.4,
+    "mean_reward": 5.34,
+    "achievements_seen": [
+      "collect_drink",
+      "collect_sapling",
+      "collect_stone",
+      "collect_wood",
+      "eat_cow",
+      "make_wood_pickaxe",
+      "make_wood_sword",
+      "place_furnace",
+      "place_plant",
+      "place_stone",
+      "place_table",
+      "wake_up"
+    ],
+    "wall_total_s": 63.2
+  },
+  "v2_state_18d": {
+    "mean_achievements": 6.4,
+    "std_achievements": 2.87,
+    "n_unique_achievements": 11,
+    "crafter_score_pct": 6.4534,
+    "achievements_per_seed": [
+      10,
+      2,
+      5,
+      6,
+      9
+    ],
+    "mean_steps": 129.2,
+    "mean_reward": 5.24,
+    "achievements_seen": [
+      "collect_drink",
+      "collect_sapling",
+      "collect_stone",
+      "collect_wood",
+      "make_wood_pickaxe",
+      "make_wood_sword",
+      "place_furnace",
+      "place_plant",
+      "place_stone",
+      "place_table",
+      "wake_up"
+    ],
+    "wall_total_s": 49.3
+  }
+}

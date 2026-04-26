@@ -1,0 +1,40 @@
+
+=== N=32, M=12, samples/dec=384 ===
+    seed=42: ach=10 steps=147
+    seed=43: ach=2 steps=60
+    seed=44: ach=5 steps=149
+    seed=45: ach=5 steps=141
+    seed=46: ach=5 steps=184
+  → Crafter score: 5.42%, mean ach: 5.4±2.58, wall: 38s
+
+=== N=64, M=12, samples/dec=768 ===
+    seed=42: ach=6 steps=147
+    seed=43: ach=4 steps=90
+    seed=44: ach=5 steps=85
+    seed=45: ach=6 steps=207
+    seed=46: ach=6 steps=273
+  → Crafter score: 2.86%, mean ach: 5.4±0.8, wall: 43s
+
+=== N=32, M=20, samples/dec=640 ===
+    seed=42: ach=10 steps=263
+    seed=43: ach=1 steps=72
+    seed=44: ach=4 steps=75
+    seed=45: ach=2 steps=55
+    seed=46: ach=4 steps=43
+  → Crafter score: 4.76%, mean ach: 4.2±3.12, wall: 35s
+
+=== N=64, M=20, samples/dec=1280 ===
+    seed=42: ach=10 steps=247
+    seed=43: ach=3 steps=61
+    seed=44: ach=5 steps=95
+    seed=45: ach=8 steps=323
+    seed=46: ach=6 steps=156
+  → Crafter score: 6.87%, mean ach: 6.4±2.42, wall: 62s
+
+=== N=128, M=12, samples/dec=1536 ===
+    seed=42: ach=10 steps=177
+    seed=43: ach=6 steps=307
+    seed=44: ach=5 steps=179
+    seed=45: ach=7 steps=144
+    seed=46: ach=5 steps=191
+  → Crafter score: 5.89%, mean ach: 6.6±1.85, wall: 65s

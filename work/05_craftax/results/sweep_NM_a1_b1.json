@@ -1,0 +1,135 @@
+{
+  "env": "Craftax-Classic-Symbolic-v1",
+  "alpha": 1.0,
+  "beta": 1.0,
+  "n_seeds": 5,
+  "seed_start": 42,
+  "max_steps": 500,
+  "configs": [
+    {
+      "config": {
+        "N": 32,
+        "M": 12,
+        "alpha": 1.0,
+        "beta": 1.0
+      },
+      "n_seeds": 5,
+      "wall_time_total_s": 37.8,
+      "wall_time_per_seed_s": 7.6,
+      "mean_achievements": 5.4,
+      "std_achievements": 2.58,
+      "mean_reward": 4.42,
+      "mean_steps": 136.2,
+      "n_unique_achievements": 11,
+      "crafter_score_pct": 5.4168,
+      "achievements_per_seed": [
+        10,
+        2,
+        5,
+        5,
+        5
+      ],
+      "samples_per_decision": 384
+    },
+    {
+      "config": {
+        "N": 64,
+        "M": 12,
+        "alpha": 1.0,
+        "beta": 1.0
+      },
+      "n_seeds": 5,
+      "wall_time_total_s": 43.0,
+      "wall_time_per_seed_s": 8.6,
+      "mean_achievements": 5.4,
+      "std_achievements": 0.8,
+      "mean_reward": 4.4,
+      "mean_steps": 160.4,
+      "n_unique_achievements": 7,
+      "crafter_score_pct": 2.8621,
+      "achievements_per_seed": [
+        6,
+        4,
+        5,
+        6,
+        6
+      ],
+      "samples_per_decision": 768
+    },
+    {
+      "config": {
+        "N": 32,
+        "M": 20,
+        "alpha": 1.0,
+        "beta": 1.0
+      },
+      "n_seeds": 5,
+      "wall_time_total_s": 35.0,
+      "wall_time_per_seed_s": 7.0,
+      "mean_achievements": 4.2,
+      "std_achievements": 3.12,
+      "mean_reward": 3.26,
+      "mean_steps": 101.6,
+      "n_unique_achievements": 11,
+      "crafter_score_pct": 4.7628,
+      "achievements_per_seed": [
+        10,
+        1,
+        4,
+        2,
+        4
+      ],
+      "samples_per_decision": 640
+    },
+    {
+      "config": {
+        "N": 64,
+        "M": 20,
+        "alpha": 1.0,
+        "beta": 1.0
+      },
+      "n_seeds": 5,
+      "wall_time_total_s": 61.7,
+      "wall_time_per_seed_s": 12.3,
+      "mean_achievements": 6.4,
+      "std_achievements": 2.42,
+      "mean_reward": 5.34,
+      "mean_steps": 176.4,
+      "n_unique_achievements": 12,
+      "crafter_score_pct": 6.8737,
+      "achievements_per_seed": [
+        10,
+        3,
+        5,
+        8,
+        6
+      ],
+      "samples_per_decision": 1280
+    },
+    {
+      "config": {
+        "N": 128,
+        "M": 12,
+        "alpha": 1.0,
+        "beta": 1.0
+      },
+      "n_seeds": 5,
+      "wall_time_total_s": 65.4,
+      "wall_time_per_seed_s": 13.1,
+      "mean_achievements": 6.6,
+      "std_achievements": 1.85,
+      "mean_reward": 5.4,
+      "mean_steps": 199.6,
+      "n_unique_achievements": 11,
+      "crafter_score_pct": 5.8933,
+      "achievements_per_seed": [
+        10,
+        6,
+        5,
+        7,
+        5
+      ],
+      "samples_per_decision": 1536
+    }
+  ]
+}

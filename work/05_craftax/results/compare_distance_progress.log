@@ -1,0 +1,13 @@
+=== V1: obs distance (1345-D L2) ===
+  seed=42: ach=10 steps=247
+  seed=43: ach=3 steps=61
+  seed=44: ach=5 steps=95
+  seed=45: ach=8 steps=323
+  seed=46: ach=6 steps=156
+
+=== V2: state lowd distance (18-D L2) ===
+  seed=42: ach=10 steps=133
+  seed=43: ach=2 steps=57
+  seed=44: ach=5 steps=210
+  seed=45: ach=6 steps=147
+  seed=46: ach=9 steps=99

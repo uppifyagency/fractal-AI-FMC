@@ -1,0 +1,44 @@
+Loading Craftax-Classic textures from cache.
+Textures successfully loaded from cache.
+{
+  "env": "Craftax-Classic-Symbolic-v1",
+  "seed": 43,
+  "n_steps": 172,
+  "reward": 2.999999985098839,
+  "achievements_unlocked": 4,
+  "wall_time_s": 1.7369530200958252,
+  "steps_per_sec": 99.02397935351816
+}
+Loading Craftax-Classic textures from cache.
+Textures successfully loaded from cache.
+{
+  "env": "Craftax-Classic-Symbolic-v1",
+  "seed": 44,
+  "n_steps": 41,
+  "reward": -0.10000002384185791,
+  "achievements_unlocked": 1,
+  "wall_time_s": 1.628951072692871,
+  "steps_per_sec": 25.1695711966484
+}
+Loading Craftax-Classic textures from cache.
+Textures successfully loaded from cache.
+{
+  "env": "Craftax-Classic-Symbolic-v1",
+  "seed": 45,
+  "n_steps": 39,
+  "reward": 0.8999999910593033,
+  "achievements_unlocked": 2,
+  "wall_time_s": 1.649594783782959,
+  "steps_per_sec": 23.64216981249337
+}
+Loading Craftax-Classic textures from cache.
+Textures successfully loaded from cache.
+{
+  "env": "Craftax-Classic-Symbolic-v1",
+  "seed": 46,
+  "n_steps": 139,
+  "reward": 3.0000000074505806,
+  "achievements_unlocked": 4,
+  "wall_time_s": 1.6884989738464355,
+  "steps_per_sec": 82.32163723698045
+}

@@ -1,0 +1,50 @@
+    5,
+    5,
+    5
+  ],
+  "n_steps_per_seed": [
+    147,
+    60,
+    149,
+    141,
+    184
+  ],
+  "rewards_per_seed": [
+    9.099999979138374,
+    0.9999999776482582,
+    3.899999998509884,
+    3.999999977648258,
+    4.099999979138374
+  ],
+  "achievement_success_rates": {
+    "collect_drink": 0.6,
+    "collect_sapling": 0.6,
+    "collect_stone": 0.2,
+    "collect_wood": 1.0,
+    "make_wood_pickaxe": 0.2,
+    "place_furnace": 0.2,
+    "place_plant": 0.6,
+    "place_stone": 0.2,
+    "place_table": 0.6,
+    "wake_up": 1.0,
+    "make_wood_sword": 0.2
+  },
+  "achievements_seen": [
+    "collect_drink",
+    "collect_sapling",
+    "collect_stone",
+    "collect_wood",
+    "make_wood_pickaxe",
+    "place_furnace",
+    "place_plant",
+    "place_stone",
+    "place_table",
+    "wake_up",
+    "make_wood_sword"
+  ],
+  "n_unique_achievements": 11,
+  "crafter_score_pct": 5.4168,
+  "mean_achievements": 5.4,
+  "mean_steps": 136.2,
+  "mean_reward": 4.42
+}
