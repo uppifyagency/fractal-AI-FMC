@@ -1,0 +1,74 @@
+# TCV geometry — parametri verificati
+# Fonte primaria: freegs.machine.TCV() (community-validated)
+# Fonte secondaria: EPFL Infoscience LRP-755-13 (Hofmann)
+# Cross-check: Reimerdes et al. Nucl. Fusion 62 (2022)
+
+machine:
+  name: "TCV (Tokamak à Configuration Variable)"
+  R_major: 0.88        # major radius [m] — TCV-overview
+  a_minor: 0.25        # minor radius [m] — TCV-overview
+  B_T_max: 1.5         # max toroidal field [T] — TCV-overview
+  I_p_max: 1.0e6       # max plasma current [A] — TCV-overview
+  kappa_max: 2.8       # max elongation — TCV-overview
+  delta_min: -0.7      # min triangularity (negative)
+  delta_max: 1.0       # max triangularity
+
+# Coil positions: (R, Z) in meters
+# E-coils: inner side (R=0.505 m), 8 coils symmetric Z=±0.7,±0.5,±0.3,±0.1
+# F-coils: outer side (R=1.3095 m), 8 coils Z=±0.77,±0.61,±0.31,±0.15
+# T-coils: 3 toroidal-field correction coils
+# OH circuit: solenoid + C1/C2 + D1/D2 (treated as 1 channel for control)
+# Total control channels: 16 shaping + 3 T + 1 OH = 20
+
+shaping_coils:
+  E1: {R: 0.5050, Z: -0.7000}
+  E2: {R: 0.5050, Z: -0.5000}
+  E3: {R: 0.5050, Z: -0.3000}
+  E4: {R: 0.5050, Z: -0.1000}
+  E5: {R: 0.5050, Z:  0.1000}
+  E6: {R: 0.5050, Z:  0.3000}
+  E7: {R: 0.5050, Z:  0.5000}
+  E8: {R: 0.5050, Z:  0.7000}
+  F1: {R: 1.3095, Z: -0.7700}
+  F2: {R: 1.3095, Z: -0.6100}
+  F3: {R: 1.3095, Z: -0.3100}
+  F4: {R: 1.3095, Z: -0.1500}
+  F5: {R: 1.3095, Z:  0.1500}
+  F6: {R: 1.3095, Z:  0.3100}
+  F7: {R: 1.3095, Z:  0.6100}
+  F8: {R: 1.3095, Z:  0.7700}
+
+t_coils:
+  T1: {R: 1.5540, Z: -0.7800}
+  T2: {R: 1.7170, Z: -0.7800}
+  T3: {R: 1.7540, Z: -0.7800}
+
+ohmic_circuit:
+  # Single circuit with multiple elements driven together
+  # Solenoid: extends from Z=-0.93 to Z=+0.93 at R=0.43, 100 turns
+  solenoid: {R: 0.43, Z_min: -0.93, Z_max: 0.93, N_turns: 100}
+  C1: {R: 0.6215, Z: -1.1100}
+  C2: {R: 0.6215, Z:  1.1100}
+  D1: {R: 1.1765, Z: -1.1700}
+  D2: {R: 1.1765, Z:  1.1700}
+
+# Engineering limits (assumzioni — vedi REFERENCES.md G)
+limits:
+  I_max_EF: 7700.0     # Amperes, E and F coils — verified TCV-current-limits
+  I_max_OH: 20000.0    # Amperes, OH coils flat-top
+  V_max_EF: 1500.0     # Volts — H1 ASSUMPTION
+  V_max_OH: 1500.0     # Volts — H1 ASSUMPTION
+  R_coil_uniform: 1.0e-3   # Ohms — H2 ASSUMPTION
+
+# Vessel (approximated D-shape, simplified for plotting)
+vessel:
+  inner_R: 0.624
+  outer_R: 1.136
+  height: 1.50
+  description: "Approximate, for plotting only"
+
+# Control system parameters
+control:
+  freq_nominal: 1000.0      # Hz, target FMC controller rate
+  freq_inner_loop: 25000.0  # Hz, vertical instability stabilization (PID)
+  budget_per_decision_us: 1000.0  # microseconds = 1 ms at 1 kHz

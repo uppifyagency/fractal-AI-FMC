@@ -1,0 +1,314 @@
+
+[inv_a05_ref] FMCConfig(n_walkers=64, time_horizon=20, alpha=1.0, beta=1.0, action_repeat=1, intrinsic_inv_alpha=0.5, proximity_alpha=0.0, proximity_sigma=10.0, proximity_mode='delta')
+  seed=42 ach=11 reward=10.1 wall=18.5s
+  seed=43 ach=7 reward=6.1 wall=14.8s
+  seed=44 ach=4 reward=3.0 wall=10.3s
+  seed=45 ach=7 reward=6.1 wall=6.4s
+  seed=46 ach=11 reward=10.1 wall=9.7s
+
+[v4_p02_delta] FMCConfig(n_walkers=64, time_horizon=20, alpha=1.0, beta=1.0, action_repeat=1, intrinsic_inv_alpha=0.5, proximity_alpha=0.2, proximity_sigma=10.0, proximity_mode='delta')
+  seed=42 ach=16 reward=15.0 wall=18.5s
+  seed=43 ach=7 reward=6.0 wall=8.5s
+  seed=44 ach=4 reward=2.6 wall=11.9s
+  seed=45 ach=14 reward=13.0 wall=19.0s
+  seed=46 ach=10 reward=9.0 wall=14.6s
+
+[v4_p10_delta] FMCConfig(n_walkers=64, time_horizon=20, alpha=1.0, beta=1.0, action_repeat=1, intrinsic_inv_alpha=0.5, proximity_alpha=1.0, proximity_sigma=10.0, proximity_mode='delta')
+  seed=42 ach=7 reward=6.0 wall=8.7s
+  seed=43 ach=7 reward=6.1 wall=12.0s
+  seed=44 ach=5 reward=4.1 wall=12.9s
+  seed=45 ach=10 reward=9.1 wall=18.0s
+  seed=46 ach=9 reward=8.1 wall=7.8s
+
+[v5_mem03] FMCConfig(n_walkers=64, time_horizon=20, alpha=1.0, beta=1.0, action_repeat=1, intrinsic_inv_alpha=0.5, proximity_alpha=0.0, proximity_sigma=10.0, mem_weight=0.3, mem_min_visits=3)
+  seed=42 ach=10 reward=9.1 mem_hit=0.74 wall=7.7s
+  seed=43 ach=6 reward=5.1 mem_hit=0.72 wall=5.9s
+  seed=44 ach=4 reward=2.5 mem_hit=0.95 wall=8.1s
+  seed=45 ach=15 reward=14.1 mem_hit=0.92 wall=14.3s
+  seed=46 ach=6 reward=5.0 mem_hit=0.95 wall=7.6s
+
+[v5_mem07] FMCConfig(n_walkers=64, time_horizon=20, alpha=1.0, beta=1.0, action_repeat=1, intrinsic_inv_alpha=0.5, proximity_alpha=0.0, proximity_sigma=10.0, mem_weight=0.7, mem_min_visits=3)
+  seed=42 ach=12 reward=11.1 mem_hit=0.89 wall=15.6s
+  seed=43 ach=3 reward=2.1 mem_hit=0.91 wall=6.1s
+  seed=44 ach=3 reward=2.1 mem_hit=0.97 wall=8.8s
+  seed=45 ach=2 reward=1.1 mem_hit=0.98 wall=6.6s
+  seed=46 ach=5 reward=3.7 mem_hit=0.98 wall=7.5s
+
+[v5_full] FMCConfig(n_walkers=64, time_horizon=20, alpha=1.0, beta=1.0, action_repeat=1, intrinsic_inv_alpha=0.5, proximity_alpha=0.5, proximity_sigma=10.0, mem_weight=0.5, mem_min_visits=3)
+  seed=42 ach=8 reward=7.0 mem_hit=0.90 wall=16.7s
+  seed=43 ach=8 reward=7.1 mem_hit=0.76 wall=8.0s
+  seed=44 ach=3 reward=2.0 mem_hit=0.97 wall=9.2s
+  seed=45 ach=4 reward=3.0 mem_hit=0.90 wall=8.4s
+  seed=46 ach=11 reward=10.1 mem_hit=0.96 wall=16.4s
+
+=== RANKING (5 seeds, N=64 M=20, intrinsic α=2.0) ===
+  v4_p02_delta        score=21.53%  mean=10.20±3.86  uniq=17  wall=76s
+  v5_mem03            score=14.45%  mean=8.20±3.44  uniq=16  wall=47s
+  inv_a05_ref         score=12.86%  mean=8.00±2.35  uniq=15  wall=66s
+  v4_p10_delta        score=10.98%  mean=7.60±1.53  uniq=14  wall=63s
+  v5_full             score= 6.42%  mean=6.80±2.56  uniq=11  wall=62s
+  v5_mem07            score= 5.86%  mean=5.00±3.18  uniq=12  wall=48s
+Loading Craftax-Classic textures from cache.
+Textures successfully loaded from cache.
+{
+  "sweep": {
+    "inv_a05_ref": {
+      "achievements_per_seed": [
+        11,
+        7,
+        4,
+        7,
+        11
+      ],
+      "achievement_success_rates": {
+        "collect_stone": 0.8,
+        "collect_wood": 1.0,
+        "defeat_zombie": 0.4,
+        "eat_cow": 0.2,
+        "make_stone_pickaxe": 0.2,
+        "make_stone_sword": 0.4,
+        "make_wood_pickaxe": 0.8,
+        "place_furnace": 0.8,
+        "place_stone": 0.6,
+        "place_table": 0.8,
+        "wake_up": 0.4,
+        "collect_coal": 0.2,
+        "collect_sapling": 0.6,
+        "place_plant": 0.6,
+        "make_wood_sword": 0.2
+      },
+      "n_unique_achievements": 15,
+      "crafter_score_pct": 12.8639,
+      "mean_achievements": 8.0,
+      "std_achievements": 2.68,
+      "ci95_achievements": 2.35,
+      "wall_total_s": 65.6,
+      "version": "v4"
+    },
+    "v4_p02_delta": {
+      "achievements_per_seed": [
+        16,
+        7,
+        4,
+        14,
+        10
+      ],
+      "achievement_success_rates": {
+        "collect_coal": 0.4,
+        "collect_drink": 0.4,
+        "collect_iron": 0.4,
+        "collect_sapling": 0.8,
+        "collect_stone": 0.8,
+        "collect_wood": 1.0,
+        "defeat_zombie": 0.4,
+        "make_stone_pickaxe": 0.4,
+        "make_stone_sword": 0.6,
+        "make_wood_pickaxe": 0.8,
+        "make_wood_sword": 0.4,
+        "place_furnace": 0.8,
+        "place_plant": 0.8,
+        "place_stone": 0.8,
+        "place_table": 0.8,
+        "wake_up": 0.4,
+        "eat_cow": 0.2
+      },
+      "n_unique_achievements": 17,
+      "crafter_score_pct": 21.53,
+      "mean_achievements": 10.2,
+      "std_achievements": 4.4,
+      "ci95_achievements": 3.86,
+      "wall_total_s": 75.7,
+      "version": "v4"
+    },
+    "v4_p10_delta": {
+      "achievements_per_seed": [
+        7,
+        7,
+        5,
+        10,
+        9
+      ],
+      "achievement_success_rates": {
+        "collect_stone": 0.6,
+        "collect_wood": 1.0,
+        "make_wood_pickaxe": 0.8,
+        "place_furnace": 0.6,
+        "place_stone": 0.6,
+        "place_table": 0.8,
+        "wake_up": 0.4,
+        "collect_drink": 0.6,
+        "collect_sapling": 0.6,
+        "make_wood_sword": 0.4,
+        "place_plant": 0.6,
+        "collect_coal": 0.2,
+        "collect_iron": 0.2,
+        "make_stone_pickaxe": 0.2
+      },
+      "n_unique_achievements": 14,
+      "crafter_score_pct": 10.9793,
+      "mean_achievements": 7.6,
+      "std_achievements": 1.74,
+      "ci95_achievements": 1.53,
+      "wall_total_s": 63.1,
+      "version": "v4"
+    },
+    "v5_mem03": {
+      "achievements_per_seed": [
+        10,
+        6,
+        4,
+        15,
+        6
+      ],
+      "achievement_success_rates": {
+        "collect_sapling": 0.8,
+        "collect_stone": 0.8,
+        "collect_wood": 1.0,
+        "make_wood_pickaxe": 0.8,
+        "make_wood_sword": 0.2,
+        "place_furnace": 0.6,
+        "place_plant": 0.8,
+        "place_stone": 0.6,
+        "place_table": 0.8,
+        "wake_up": 0.6,
+        "collect_drink": 0.2,
+        "defeat_skeleton": 0.2,
+        "defeat_zombie": 0.2,
+        "eat_cow": 0.2,
+        "make_stone_pickaxe": 0.2,
+        "make_stone_sword": 0.2
+      },
+      "n_unique_achievements": 16,
+      "crafter_score_pct": 14.453,
+      "mean_achievements": 8.2,
+      "std_achievements": 3.92,
+      "ci95_achievements": 3.44,
+      "wall_total_s": 47.4,
+      "version": "v5",
+      "memory_stats": {
+        "n_fingerprints": 21,
+        "total_visits": 505,
+        "max_visits_single_fp": 96
+      }
+    },
+    "v5_mem07": {
+      "achievements_per_seed": [
+        12,
+        3,
+        3,
+        2,
+        5
+      ],
+      "achievement_success_rates": {
+        "collect_sapling": 1.0,
+        "collect_stone": 0.2,
+        "collect_wood": 1.0,
+        "defeat_zombie": 0.2,
+        "make_stone_sword": 0.2,
+        "make_wood_pickaxe": 0.2,
+        "make_wood_sword": 0.2,
+        "place_furnace": 0.2,
+        "place_plant": 0.8,
+        "place_stone": 0.2,
+        "place_table": 0.4,
+        "wake_up": 0.4
+      },
+      "n_unique_achievements": 12,
+      "crafter_score_pct": 5.8594,
+      "mean_achievements": 5.0,
+      "std_achievements": 3.63,
+      "ci95_achievements": 3.18,
+      "wall_total_s": 48.5,
+      "version": "v5",
+      "memory_stats": {
+        "n_fingerprints": 14,
+        "total_visits": 536,
+        "max_visits_single_fp": 114
+      }
+    },
+    "v5_full": {
+      "achievements_per_seed": [
+        8,
+        8,
+        3,
+        4,
+        11
+      ],
+      "achievement_success_rates": {
+        "collect_sapling": 1.0,
+        "collect_stone": 0.6,
+        "collect_wood": 1.0,
+        "make_wood_pickaxe": 0.6,
+        "place_furnace": 0.6,
+        "place_plant": 1.0,
+        "place_stone": 0.4,
+        "place_table": 0.8,
+        "collect_coal": 0.4,
+        "defeat_zombie": 0.2,
+        "wake_up": 0.2
+      },
+      "n_unique_achievements": 11,
+      "crafter_score_pct": 6.4189,
+      "mean_achievements": 6.8,
+      "std_achievements": 2.93,
+      "ci95_achievements": 2.56,
+      "wall_total_s": 62.3,
+      "version": "v5",
+      "memory_stats": {
+        "n_fingerprints": 20,
+        "total_visits": 692,
+        "max_visits_single_fp": 174
+      }
+    }
+  },
+  "ranking": [
+    [
+      "v4_p02_delta",
+      21.53,
+      10.2,
+      3.86,
+      17,
+      75.7
+    ],
+    [
+      "v5_mem03",
+      14.453,
+      8.2,
+      3.44,
+      16,
+      47.4
+    ],
+    [
+      "inv_a05_ref",
+      12.8639,
+      8.0,
+      2.35,
+      15,
+      65.6
+    ],
+    [
+      "v4_p10_delta",
+      10.9793,
+      7.6,
+      1.53,
+      14,
+      63.1
+    ],
+    [
+      "v5_full",
+      6.4189,
+      6.8,
+      2.56,
+      11,
+      62.3
+    ],
+    [
+      "v5_mem07",
+      5.8594,
+      5.0,
+      3.18,
+      12,
+      48.5
+    ]
+  ]
+}

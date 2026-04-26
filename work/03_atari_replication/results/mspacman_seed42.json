@@ -1,0 +1,19 @@
+A.L.E: Arcade Learning Environment (version 0.11.2+ecc1138)
+[Powered by Stella]
+{
+  "reward": 2050.0,
+  "samples": 1455750,
+  "wall_time_s": 150.02735114097595,
+  "n_steps": 647,
+  "samples_per_action_avg": 2250.0,
+  "terminated": true,
+  "game": "ALE/MsPacman-v5",
+  "seed": 42,
+  "config": {
+    "n_walkers": 30,
+    "time_horizon": 15,
+    "max_samples_per_action": 300,
+    "balance": 1.0,
+    "fixed_steps": 5
+  }
+}

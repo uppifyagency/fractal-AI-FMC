@@ -1,0 +1,102 @@
+=== FMC Math Benchmarks (3 seeds, n_walkers=100, n_iters=500) ===
+function        dims    known_min  best_seed   avg_seed        gap   wall
+sphere             5       0.0000     0.0014     0.0024     0.0014    0.1s
+rastrigin          5       0.0000     2.7913     3.9315     2.7913    0.1s
+eggholder          2    -959.6407  -959.6407  -937.9468     0.0000    0.1s
+styblinski_tang    5    -195.8299  -195.7920  -195.7899     0.0379    0.1s
+rosenbrock         5       0.0000     0.5327     0.7811     0.5327    0.1s
+easom              2      -1.0000    -0.9978    -0.9962     0.0022    0.1s
+holder_table       2     -19.2085   -19.2084   -19.2083     0.0001    0.1s
+{
+  "sphere": {
+    "dims": 5,
+    "known_min": 0.0,
+    "per_seed_best_values": [
+      0.003555767238140106,
+      0.0014387286501005292,
+      0.002287744078785181
+    ],
+    "best_overall": 0.0014387286501005292,
+    "avg_best": 0.002427413322341939,
+    "gap_to_known_min": 0.0014387286501005292,
+    "wall_total_s": 0.11
+  },
+  "rastrigin": {
+    "dims": 5,
+    "known_min": 0.0,
+    "per_seed_best_values": [
+      2.791309356689453,
+      6.2074432373046875,
+      2.7956390380859375
+    ],
+    "best_overall": 2.791309356689453,
+    "avg_best": 3.931463877360026,
+    "gap_to_known_min": 2.791309356689453,
+    "wall_total_s": 0.1
+  },
+  "eggholder": {
+    "dims": 2,
+    "known_min": -959.6407,
+    "per_seed_best_values": [
+      -959.6407470703125,
+      -959.6407470703125,
+      -894.5589599609375
+    ],
+    "best_overall": -959.6407470703125,
+    "avg_best": -937.9468180338541,
+    "gap_to_known_min": 4.707031246198312e-05,
+    "wall_total_s": 0.09
+  },
+  "styblinski_tang": {
+    "dims": 5,
+    "known_min": -195.82995,
+    "per_seed_best_values": [
+      -195.78797912597656,
+      -195.79200744628906,
+      -195.7895965576172
+    ],
+    "best_overall": -195.79200744628906,
+    "avg_best": -195.78986104329428,
+    "gap_to_known_min": 0.037942553710934135,
+    "wall_total_s": 0.1
+  },
+  "rosenbrock": {
+    "dims": 5,
+    "known_min": 0.0,
+    "per_seed_best_values": [
+      0.5327227711677551,
+      0.9137338399887085,
+      0.8967909812927246
+    ],
+    "best_overall": 0.5327227711677551,
+    "avg_best": 0.7810825308163961,
+    "gap_to_known_min": 0.5327227711677551,
+    "wall_total_s": 0.11
+  },
+  "easom": {
+    "dims": 2,
+    "known_min": -1.0,
+    "per_seed_best_values": [
+      -0.9964613914489746,
+      -0.9943683743476868,
+      -0.9977782368659973
+    ],
+    "best_overall": -0.9977782368659973,
+    "avg_best": -0.9962026675542196,
+    "gap_to_known_min": 0.0022217631340026855,
+    "wall_total_s": 0.1
+  },
+  "holder_table": {
+    "dims": 2,
+    "known_min": -19.2085,
+    "per_seed_best_values": [
+      -19.208341598510742,
+      -19.208162307739258,
+      -19.2083797454834
+    ],
+    "best_overall": -19.2083797454834,
+    "avg_best": -19.2082945505778,
+    "gap_to_known_min": 0.00012025451660235831,
+    "wall_total_s": 0.1
+  }
+}

@@ -1,0 +1,206 @@
+Long-episode test: max_steps=10000 (Hafner standard) on best v4_p02_delta
+--- seed=42 ---
+  step 20: action=6 reward=2.000 alive=64/64 elapsed=5.4s
+  step 40: action=1 reward=4.000 alive=64/64 elapsed=6.4s
+  step 60: action=5 reward=4.000 alive=64/64 elapsed=7.3s
+  step 80: action=10 reward=6.000 alive=64/64 elapsed=8.3s
+  step 100: action=15 reward=9.000 alive=64/64 elapsed=9.2s
+  step 120: action=5 reward=9.000 alive=64/64 elapsed=10.1s
+  step 140: action=7 reward=9.000 alive=64/64 elapsed=11.1s
+  step 160: action=3 reward=11.400 alive=64/64 elapsed=12.0s
+  step 180: action=5 reward=12.500 alive=64/64 elapsed=13.0s
+  step 200: action=4 reward=12.500 alive=64/64 elapsed=13.9s
+  step 220: action=2 reward=13.600 alive=63/64 elapsed=14.9s
+  step 240: action=2 reward=13.500 alive=64/64 elapsed=15.8s
+  step 260: action=3 reward=15.400 alive=64/64 elapsed=16.8s
+  step 280: action=10 reward=15.300 alive=64/64 elapsed=17.8s
+  RESULT seed=42 ach=16 reward=15.0 steps_dec=298 wall=18.6s
+  achievements: ['collect_coal', 'collect_drink', 'collect_iron', 'collect_sapling', 'collect_stone', 'collect_wood', 'defeat_zombie', 'make_stone_pickaxe', 'make_stone_sword', 'make_wood_pickaxe', 'make_wood_sword', 'place_furnace', 'place_plant', 'place_stone', 'place_table', 'wake_up']
+--- seed=47 ---
+  step 20: action=2 reward=1.000 alive=64/64 elapsed=5.3s
+  step 40: action=5 reward=3.000 alive=64/64 elapsed=6.4s
+  step 60: action=1 reward=5.000 alive=64/64 elapsed=7.4s
+  step 80: action=16 reward=6.000 alive=64/64 elapsed=8.3s
+  step 100: action=4 reward=9.000 alive=64/64 elapsed=9.4s
+  step 120: action=3 reward=10.000 alive=64/64 elapsed=10.3s
+  step 140: action=4 reward=10.000 alive=64/64 elapsed=11.3s
+  step 160: action=15 reward=10.000 alive=64/64 elapsed=12.2s
+  step 180: action=1 reward=10.000 alive=47/64 elapsed=13.4s
+  step 200: action=5 reward=12.000 alive=55/64 elapsed=14.4s
+  step 220: action=4 reward=11.800 alive=64/64 elapsed=15.4s
+  step 240: action=4 reward=11.800 alive=64/64 elapsed=16.3s
+  step 260: action=1 reward=11.700 alive=63/64 elapsed=17.3s
+  step 280: action=0 reward=11.600 alive=64/64 elapsed=18.3s
+  step 300: action=3 reward=11.400 alive=64/64 elapsed=19.3s
+  step 320: action=4 reward=11.300 alive=64/64 elapsed=20.2s
+  step 340: action=0 reward=11.200 alive=0/64 elapsed=21.2s
+  RESULT seed=47 ach=12 reward=11.1 steps_dec=348 wall=21.6s
+  achievements: ['collect_coal', 'collect_drink', 'collect_iron', 'collect_sapling', 'collect_stone', 'collect_wood', 'make_stone_pickaxe', 'make_wood_pickaxe', 'place_furnace', 'place_plant', 'place_stone', 'place_table']
+--- seed=55 ---
+  step 20: action=3 reward=4.000 alive=64/64 elapsed=5.7s
+  step 40: action=4 reward=6.000 alive=64/64 elapsed=6.7s
+  step 60: action=3 reward=6.000 alive=64/64 elapsed=7.6s
+  step 80: action=2 reward=6.000 alive=64/64 elapsed=8.6s
+  step 100: action=9 reward=9.600 alive=64/64 elapsed=9.5s
+  step 120: action=15 reward=10.300 alive=64/64 elapsed=10.5s
+  step 140: action=5 reward=12.400 alive=64/64 elapsed=11.5s
+  step 160: action=4 reward=13.500 alive=63/64 elapsed=12.5s
+  step 180: action=12 reward=14.300 alive=64/64 elapsed=13.5s
+  RESULT seed=55 ach=15 reward=14.0 steps_dec=192 wall=14.1s
+  achievements: ['collect_coal', 'collect_drink', 'collect_iron', 'collect_sapling', 'collect_stone', 'collect_wood', 'defeat_zombie', 'make_stone_pickaxe', 'make_stone_sword', 'make_wood_pickaxe', 'make_wood_sword', 'place_furnace', 'place_plant', 'place_stone', 'place_table']
+
+=== LONG-EPISODE 3-SEED ===
+  Crafter score: 24.8624%
+  Mean ach: 14.33
+  Unique: 16/22
+    collect_coal              1.00
+    collect_drink             1.00
+    collect_iron              1.00
+    collect_sapling           1.00
+    collect_stone             1.00
+    collect_wood              1.00
+    make_stone_pickaxe        1.00
+    make_wood_pickaxe         1.00
+    place_furnace             1.00
+    place_plant               1.00
+    place_stone               1.00
+    place_table               1.00
+    defeat_zombie             0.67
+    make_stone_sword          0.67
+    make_wood_sword           0.67
+    wake_up                   0.33
+  Wall total: 59.2s
+Loading Craftax-Classic textures from cache.
+Textures successfully loaded from cache.
+{
+  "per_seed": [
+    {
+      "reward": 14.999999977648258,
+      "n_steps_decisions": 298,
+      "n_steps_env": 298,
+      "achievements_unlocked": 16,
+      "achievements_list": [
+        "collect_coal",
+        "collect_drink",
+        "collect_iron",
+        "collect_sapling",
+        "collect_stone",
+        "collect_wood",
+        "defeat_zombie",
+        "make_stone_pickaxe",
+        "make_stone_sword",
+        "make_wood_pickaxe",
+        "make_wood_sword",
+        "place_furnace",
+        "place_plant",
+        "place_stone",
+        "place_table",
+        "wake_up"
+      ],
+      "wall_time_s": 18.616242170333862,
+      "decisions_per_sec": 16.007527044039076,
+      "samples_per_decision": 1280,
+      "config": {
+        "n_walkers": 64,
+        "time_horizon": 20,
+        "alpha": 1.0,
+        "beta": 1.0,
+        "action_repeat": 1,
+        "intrinsic_inv_alpha": 0.5,
+        "proximity_alpha": 0.2,
+        "proximity_sigma": 10.0
+      },
+      "seed": 42
+    },
+    {
+      "reward": 11.099999986588955,
+      "n_steps_decisions": 348,
+      "n_steps_env": 348,
+      "achievements_unlocked": 12,
+      "achievements_list": [
+        "collect_coal",
+        "collect_drink",
+        "collect_iron",
+        "collect_sapling",
+        "collect_stone",
+        "collect_wood",
+        "make_stone_pickaxe",
+        "make_wood_pickaxe",
+        "place_furnace",
+        "place_plant",
+        "place_stone",
+        "place_table"
+      ],
+      "wall_time_s": 21.576279163360596,
+      "decisions_per_sec": 16.128823573572895,
+      "samples_per_decision": 1280,
+      "config": {
+        "n_walkers": 64,
+        "time_horizon": 20,
+        "alpha": 1.0,
+        "beta": 1.0,
+        "action_repeat": 1,
+        "intrinsic_inv_alpha": 0.5,
+        "proximity_alpha": 0.2,
+        "proximity_sigma": 10.0
+      },
+      "seed": 47
+    },
+    {
+      "reward": 13.999999985098839,
+      "n_steps_decisions": 192,
+      "n_steps_env": 192,
+      "achievements_unlocked": 15,
+      "achievements_list": [
+        "collect_coal",
+        "collect_drink",
+        "collect_iron",
+        "collect_sapling",
+        "collect_stone",
+        "collect_wood",
+        "defeat_zombie",
+        "make_stone_pickaxe",
+        "make_stone_sword",
+        "make_wood_pickaxe",
+        "make_wood_sword",
+        "place_furnace",
+        "place_plant",
+        "place_stone",
+        "place_table"
+      ],
+      "wall_time_s": 14.080228090286255,
+      "decisions_per_sec": 13.636142736384933,
+      "samples_per_decision": 1280,
+      "config": {
+        "n_walkers": 64,
+        "time_horizon": 20,
+        "alpha": 1.0,
+        "beta": 1.0,
+        "action_repeat": 1,
+        "intrinsic_inv_alpha": 0.5,
+        "proximity_alpha": 0.2,
+        "proximity_sigma": 10.0
+      },
+      "seed": 55
+    }
+  ],
+  "sr": {
+    "collect_coal": 1.0,
+    "collect_drink": 1.0,
+    "collect_iron": 1.0,
+    "collect_sapling": 1.0,
+    "collect_stone": 1.0,
+    "collect_wood": 1.0,
+    "defeat_zombie": 0.6666666666666666,
+    "make_stone_pickaxe": 1.0,
+    "make_stone_sword": 0.6666666666666666,
+    "make_wood_pickaxe": 1.0,
+    "make_wood_sword": 0.6666666666666666,
+    "place_furnace": 1.0,
+    "place_plant": 1.0,
+    "place_stone": 1.0,
+    "place_table": 1.0,
+    "wake_up": 0.3333333333333333
+  },
+  "score": 24.862353084020192
+}

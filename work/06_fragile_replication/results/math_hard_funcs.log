@@ -1,0 +1,15 @@
+=== Aggressive runs on Rastrigin + Rosenbrock ===
+
+--- rastrigin (dims=5, known_min=0.0) ---
+  default        N=100 iters= 500 sigma=0.05 alpha=1.0  best_seed=  2.7913  avg=  4.8975  gap_overall= 2.7913  gap_avg= 4.8975
+  big_swarm      N=500 iters= 500 sigma=0.05 alpha=1.0  best_seed=  0.3290  avg=  2.4670  gap_overall= 0.3290  gap_avg= 2.4670
+  long_run       N=100 iters=2000 sigma=0.05 alpha=1.0  best_seed=  1.0401  avg=  1.6491  gap_overall= 1.0401  gap_avg= 1.6491
+  explore        N=200 iters=1000 sigma=0.10 alpha=1.0  best_seed=  0.0129  avg=  0.8253  gap_overall= 0.0129  gap_avg= 0.8253
+  common_sense   N=200 iters=1000 sigma=0.10 alpha=2.0  best_seed=  1.0515  avg=  1.8287  gap_overall= 1.0515  gap_avg= 1.8287
+
+--- rosenbrock (dims=5, known_min=0.0) ---
+  default        N=100 iters= 500 sigma=0.05 alpha=1.0  best_seed=  0.5327  avg=  0.9377  gap_overall= 0.5327  gap_avg= 0.9377
+  big_swarm      N=500 iters= 500 sigma=0.05 alpha=1.0  best_seed=  0.2705  avg=  0.5413  gap_overall= 0.2705  gap_avg= 0.5413
+  long_run       N=100 iters=2000 sigma=0.05 alpha=1.0  best_seed=  0.0767  avg=  0.6335  gap_overall= 0.0767  gap_avg= 0.6335
+  explore        N=200 iters=1000 sigma=0.10 alpha=1.0  best_seed=  0.0202  avg=  0.8685  gap_overall= 0.0202  gap_avg= 0.8685
+  common_sense   N=200 iters=1000 sigma=0.10 alpha=2.0  best_seed=  0.0639  avg=  0.0959  gap_overall= 0.0639  gap_avg= 0.0959

@@ -1,0 +1,431 @@
+--- seed=42  memory: {'n_entries': 0, 'n_unique_fps': 0, 'total_visits': 0, 'mean_visits_per_entry': 0.0, 'max_walkers_single': 0} ---
+  ach=10  reward=9.10  hit_rate=0.00  mem_entries=87  wall=14.2s
+--- seed=43  memory: {'n_entries': 87, 'n_unique_fps': 14, 'total_visits': 200, 'mean_visits_per_entry': 2.2988505747126435, 'max_walkers_single': 5.921858399941292} ---
+  ach=8  reward=7.00  hit_rate=0.39  mem_entries=86  wall=6.7s
+--- seed=44  memory: {'n_entries': 86, 'n_unique_fps': 13, 'total_visits': 205, 'mean_visits_per_entry': 2.383720930232558, 'max_walkers_single': 8.11920382684257} ---
+  ach=4  reward=2.50  hit_rate=0.97  mem_entries=77  wall=8.8s
+--- seed=45  memory: {'n_entries': 77, 'n_unique_fps': 11, 'total_visits': 187, 'mean_visits_per_entry': 2.4285714285714284, 'max_walkers_single': 8.059323250779094} ---
+  ach=8  reward=7.10  hit_rate=0.53  mem_entries=77  wall=7.0s
+--- seed=46  memory: {'n_entries': 77, 'n_unique_fps': 11, 'total_visits': 207, 'mean_visits_per_entry': 2.688311688311688, 'max_walkers_single': 8.58089152717075} ---
+  ach=8  reward=6.50  hit_rate=0.52  mem_entries=132  wall=12.3s
+--- seed=47  memory: {'n_entries': 132, 'n_unique_fps': 18, 'total_visits': 369, 'mean_visits_per_entry': 2.7954545454545454, 'max_walkers_single': 10.810036780502045} ---
+  ach=8  reward=7.10  hit_rate=0.37  mem_entries=170  wall=9.3s
+--- seed=48  memory: {'n_entries': 170, 'n_unique_fps': 24, 'total_visits': 476, 'mean_visits_per_entry': 2.8, 'max_walkers_single': 10.405163925814794} ---
+  ach=11  reward=9.90  hit_rate=0.65  mem_entries=201  wall=11.0s
+--- seed=49  memory: {'n_entries': 201, 'n_unique_fps': 26, 'total_visits': 617, 'mean_visits_per_entry': 3.0696517412935322, 'max_walkers_single': 11.829977944209007} ---
+  ach=11  reward=9.90  hit_rate=0.32  mem_entries=203  wall=14.5s
+--- seed=50  memory: {'n_entries': 203, 'n_unique_fps': 26, 'total_visits': 747, 'mean_visits_per_entry': 3.6798029556650245, 'max_walkers_single': 11.25718697995098} ---
+  ach=4  reward=3.00  hit_rate=1.00  mem_entries=186  wall=11.3s
+--- seed=51  memory: {'n_entries': 186, 'n_unique_fps': 25, 'total_visits': 726, 'mean_visits_per_entry': 3.903225806451613, 'max_walkers_single': 11.01468052446459} ---
+  ach=6  reward=5.10  hit_rate=0.94  mem_entries=181  wall=9.1s
+Loading Craftax-Classic textures from cache.
+Textures successfully loaded from cache.
+{
+  "config": {
+    "n_walkers": 64,
+    "time_horizon": 20,
+    "alpha": 1.0,
+    "beta": 1.0,
+    "action_repeat": 1,
+    "intrinsic_inv_alpha": 0.5,
+    "proximity_alpha": 0.2,
+    "proximity_sigma": 10.0,
+    "mem_weight": 0.3,
+    "walkers_per_memory": 5.0,
+    "n_seeds": 10,
+    "seed_start": 42,
+    "max_steps": 500,
+    "env": "Craftax-Classic-Symbolic-v1",
+    "verbose": false
+  },
+  "memory_final": {
+    "n_entries": 181,
+    "n_unique_fps": 25,
+    "total_visits": 744,
+    "mean_visits_per_entry": 4.110497237569061,
+    "max_walkers_single": 11.507884979191513
+  },
+  "per_seed": [
+    {
+      "reward": 9.099999979138374,
+      "n_steps_decisions": 200,
+      "achievements_unlocked": 10,
+      "achievements_list": [
+        "collect_sapling",
+        "collect_stone",
+        "collect_wood",
+        "make_wood_pickaxe",
+        "make_wood_sword",
+        "place_furnace",
+        "place_plant",
+        "place_stone",
+        "place_table",
+        "wake_up"
+      ],
+      "wall_time_s": 14.236336946487427,
+      "mem_hit_rate": 0.0,
+      "memory_stats": {
+        "n_entries": 87,
+        "n_unique_fps": 14,
+        "total_visits": 200,
+        "mean_visits_per_entry": 2.2988505747126435,
+        "max_walkers_single": 5.921858399941292
+      },
+      "config": {
+        "n_walkers": 64,
+        "time_horizon": 20,
+        "alpha": 1.0,
+        "beta": 1.0,
+        "action_repeat": 1,
+        "intrinsic_inv_alpha": 0.5,
+        "proximity_alpha": 0.2,
+        "proximity_sigma": 10.0,
+        "mem_weight": 0.3,
+        "walkers_per_memory": 5.0
+      },
+      "seed": 42
+    },
+    {
+      "reward": 6.999999985098839,
+      "n_steps_decisions": 49,
+      "achievements_unlocked": 8,
+      "achievements_list": [
+        "collect_coal",
+        "collect_sapling",
+        "collect_stone",
+        "collect_wood",
+        "make_wood_pickaxe",
+        "place_furnace",
+        "place_plant",
+        "place_table"
+      ],
+      "wall_time_s": 6.70561671257019,
+      "mem_hit_rate": 0.3877551020408163,
+      "memory_stats": {
+        "n_entries": 86,
+        "n_unique_fps": 13,
+        "total_visits": 205,
+        "mean_visits_per_entry": 2.383720930232558,
+        "max_walkers_single": 8.11920382684257
+      },
+      "config": {
+        "n_walkers": 64,
+        "time_horizon": 20,
+        "alpha": 1.0,
+        "beta": 1.0,
+        "action_repeat": 1,
+        "intrinsic_inv_alpha": 0.5,
+        "proximity_alpha": 0.2,
+        "proximity_sigma": 10.0,
+        "mem_weight": 0.3,
+        "walkers_per_memory": 5.0
+      },
+      "seed": 43
+    },
+    {
+      "reward": 2.499999985098839,
+      "n_steps_decisions": 89,
+      "achievements_unlocked": 4,
+      "achievements_list": [
+        "collect_drink",
+        "collect_sapling",
+        "collect_wood",
+        "wake_up"
+      ],
+      "wall_time_s": 8.841074228286743,
+      "mem_hit_rate": 0.9662921348314607,
+      "memory_stats": {
+        "n_entries": 77,
+        "n_unique_fps": 11,
+        "total_visits": 187,
+        "mean_visits_per_entry": 2.4285714285714284,
+        "max_walkers_single": 8.059323250779094
+      },
+      "config": {
+        "n_walkers": 64,
+        "time_horizon": 20,
+        "alpha": 1.0,
+        "beta": 1.0,
+        "action_repeat": 1,
+        "intrinsic_inv_alpha": 0.5,
+        "proximity_alpha": 0.2,
+        "proximity_sigma": 10.0,
+        "mem_weight": 0.3,
+        "walkers_per_memory": 5.0
+      },
+      "seed": 44
+    },
+    {
+      "reward": 7.100000001490116,
+      "n_steps_decisions": 57,
+      "achievements_unlocked": 8,
+      "achievements_list": [
+        "collect_sapling",
+        "collect_stone",
+        "collect_wood",
+        "make_wood_pickaxe",
+        "place_furnace",
+        "place_plant",
+        "place_stone",
+        "place_table"
+      ],
+      "wall_time_s": 7.021173000335693,
+      "mem_hit_rate": 0.5263157894736842,
+      "memory_stats": {
+        "n_entries": 77,
+        "n_unique_fps": 11,
+        "total_visits": 207,
+        "mean_visits_per_entry": 2.688311688311688,
+        "max_walkers_single": 8.58089152717075
+      },
+      "config": {
+        "n_walkers": 64,
+        "time_horizon": 20,
+        "alpha": 1.0,
+        "beta": 1.0,
+        "action_repeat": 1,
+        "intrinsic_inv_alpha": 0.5,
+        "proximity_alpha": 0.2,
+        "proximity_sigma": 10.0,
+        "mem_weight": 0.3,
+        "walkers_per_memory": 5.0
+      },
+      "seed": 45
+    },
+    {
+      "reward": 6.499999970197678,
+      "n_steps_decisions": 162,
+      "achievements_unlocked": 8,
+      "achievements_list": [
+        "collect_stone",
+        "collect_wood",
+        "make_wood_pickaxe",
+        "make_wood_sword",
+        "place_furnace",
+        "place_stone",
+        "place_table",
+        "wake_up"
+      ],
+      "wall_time_s": 12.323559999465942,
+      "mem_hit_rate": 0.5246913580246914,
+      "memory_stats": {
+        "n_entries": 132,
+        "n_unique_fps": 18,
+        "total_visits": 369,
+        "mean_visits_per_entry": 2.7954545454545454,
+        "max_walkers_single": 10.810036780502045
+      },
+      "config": {
+        "n_walkers": 64,
+        "time_horizon": 20,
+        "alpha": 1.0,
+        "beta": 1.0,
+        "action_repeat": 1,
+        "intrinsic_inv_alpha": 0.5,
+        "proximity_alpha": 0.2,
+        "proximity_sigma": 10.0,
+        "mem_weight": 0.3,
+        "walkers_per_memory": 5.0
+      },
+      "seed": 46
+    },
+    {
+      "reward": 7.099999986588955,
+      "n_steps_decisions": 107,
+      "achievements_unlocked": 8,
+      "achievements_list": [
+        "collect_coal",
+        "collect_drink",
+        "collect_stone",
+        "collect_wood",
+        "make_wood_pickaxe",
+        "place_furnace",
+        "place_stone",
+        "place_table"
+      ],
+      "wall_time_s": 9.292778968811035,
+      "mem_hit_rate": 0.37383177570093457,
+      "memory_stats": {
+        "n_entries": 170,
+        "n_unique_fps": 24,
+        "total_visits": 476,
+        "mean_visits_per_entry": 2.8,
+        "max_walkers_single": 10.405163925814794
+      },
+      "config": {
+        "n_walkers": 64,
+        "time_horizon": 20,
+        "alpha": 1.0,
+        "beta": 1.0,
+        "action_repeat": 1,
+        "intrinsic_inv_alpha": 0.5,
+        "proximity_alpha": 0.2,
+        "proximity_sigma": 10.0,
+        "mem_weight": 0.3,
+        "walkers_per_memory": 5.0
+      },
+      "seed": 47
+    },
+    {
+      "reward": 9.899999983608723,
+      "n_steps_decisions": 141,
+      "achievements_unlocked": 11,
+      "achievements_list": [
+        "collect_sapling",
+        "collect_stone",
+        "collect_wood",
+        "make_stone_pickaxe",
+        "make_stone_sword",
+        "make_wood_pickaxe",
+        "make_wood_sword",
+        "place_furnace",
+        "place_plant",
+        "place_stone",
+        "place_table"
+      ],
+      "wall_time_s": 11.016916036605835,
+      "mem_hit_rate": 0.6524822695035462,
+      "memory_stats": {
+        "n_entries": 201,
+        "n_unique_fps": 26,
+        "total_visits": 617,
+        "mean_visits_per_entry": 3.0696517412935322,
+        "max_walkers_single": 11.829977944209007
+      },
+      "config": {
+        "n_walkers": 64,
+        "time_horizon": 20,
+        "alpha": 1.0,
+        "beta": 1.0,
+        "action_repeat": 1,
+        "intrinsic_inv_alpha": 0.5,
+        "proximity_alpha": 0.2,
+        "proximity_sigma": 10.0,
+        "mem_weight": 0.3,
+        "walkers_per_memory": 5.0
+      },
+      "seed": 48
+    },
+    {
+      "reward": 9.899999983608723,
+      "n_steps_decisions": 217,
+      "achievements_unlocked": 11,
+      "achievements_list": [
+        "collect_iron",
+        "collect_sapling",
+        "collect_stone",
+        "collect_wood",
+        "make_stone_pickaxe",
+        "make_stone_sword",
+        "make_wood_pickaxe",
+        "place_furnace",
+        "place_plant",
+        "place_stone",
+        "place_table"
+      ],
+      "wall_time_s": 14.45543909072876,
+      "mem_hit_rate": 0.3225806451612903,
+      "memory_stats": {
+        "n_entries": 203,
+        "n_unique_fps": 26,
+        "total_visits": 747,
+        "mean_visits_per_entry": 3.6798029556650245,
+        "max_walkers_single": 11.25718697995098
+      },
+      "config": {
+        "n_walkers": 64,
+        "time_horizon": 20,
+        "alpha": 1.0,
+        "beta": 1.0,
+        "action_repeat": 1,
+        "intrinsic_inv_alpha": 0.5,
+        "proximity_alpha": 0.2,
+        "proximity_sigma": 10.0,
+        "mem_weight": 0.3,
+        "walkers_per_memory": 5.0
+      },
+      "seed": 49
+    },
+    {
+      "reward": 2.999999985098839,
+      "n_steps_decisions": 145,
+      "achievements_unlocked": 4,
+      "achievements_list": [
+        "collect_drink",
+        "collect_sapling",
+        "collect_wood",
+        "place_plant"
+      ],
+      "wall_time_s": 11.336198091506958,
+      "mem_hit_rate": 1.0,
+      "memory_stats": {
+        "n_entries": 186,
+        "n_unique_fps": 25,
+        "total_visits": 726,
+        "mean_visits_per_entry": 3.903225806451613,
+        "max_walkers_single": 11.01468052446459
+      },
+      "config": {
+        "n_walkers": 64,
+        "time_horizon": 20,
+        "alpha": 1.0,
+        "beta": 1.0,
+        "action_repeat": 1,
+        "intrinsic_inv_alpha": 0.5,
+        "proximity_alpha": 0.2,
+        "proximity_sigma": 10.0,
+        "mem_weight": 0.3,
+        "walkers_per_memory": 5.0
+      },
+      "seed": 50
+    },
+    {
+      "reward": 5.100000001490116,
+      "n_steps_decisions": 100,
+      "achievements_unlocked": 6,
+      "achievements_list": [
+        "collect_drink",
+        "collect_sapling",
+        "collect_wood",
+        "make_wood_sword",
+        "place_plant",
+        "place_table"
+      ],
+      "wall_time_s": 9.141281604766846,
+      "mem_hit_rate": 0.94,
+      "memory_stats": {
+        "n_entries": 181,
+        "n_unique_fps": 25,
+        "total_visits": 744,
+        "mean_visits_per_entry": 4.110497237569061,
+        "max_walkers_single": 11.507884979191513
+      },
+      "config": {
+        "n_walkers": 64,
+        "time_horizon": 20,
+        "alpha": 1.0,
+        "beta": 1.0,
+        "action_repeat": 1,
+        "intrinsic_inv_alpha": 0.5,
+        "proximity_alpha": 0.2,
+        "proximity_sigma": 10.0,
+        "mem_weight": 0.3,
+        "walkers_per_memory": 5.0
+      },
+      "seed": 51
+    }
+  ],
+  "achievements_per_seed": [
+    10,
+    8,
+    4,
+    8,
+    8,
+    8,
+    11,
+    11,
+    4,
+    6
+  ],
+  "mean_achievements": 7.8
+}

@@ -1,0 +1,17 @@
+=== FMC vs scipy.optimize (5 seeds, same n_func_evals budget) ===
+function           FMC_avg   FMC_best     DE_avg    DE_best    NM_best  COBYLA_best
+sphere              0.0001     0.0001     0.0000     0.0000     0.0000       0.0000
+rastrigin           0.8253     0.0129     0.0000     0.0000    46.7627      12.9345
+eggholder        -959.6407  -959.6407  -915.1986  -956.9182  -565.9978    -565.9978
+styblinski_tang  -195.8280  -195.8295  -195.8308  -195.8308  -153.4207    -153.4207
+rosenbrock          0.8685     0.0202     0.7862     0.0000     0.0000       0.0163
+easom              -0.7999    -1.0000    -0.8000    -1.0000     0.0000       0.0000
+holder_table      -19.2085   -19.2085   -19.2085   -19.2085    -8.0951      -8.0951
+Known minimums for reference:
+  sphere          = 0.0
+  rastrigin       = 0.0
+  eggholder       = -959.6407
+  styblinski_tang = -195.82995
+  rosenbrock      = 0.0
+  easom           = -1.0
+  holder_table    = -19.2085

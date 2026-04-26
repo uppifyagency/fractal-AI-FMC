@@ -1,0 +1,138 @@
+
+[v7_vit01] FMCConfig(n_walkers=64, time_horizon=20, alpha=1.0, beta=1.0, action_repeat=1, intrinsic_inv_alpha=0.5, proximity_alpha=0.2, proximity_sigma=10.0, vitality_alpha=0.1)
+  seed=42 ach=10 reward=9.1 steps=258 wall=16.6s
+  seed=43 ach=10 reward=8.9 steps=134 wall=10.6s
+  seed=44 ach=6 reward=4.8 steps=128 wall=10.5s
+  seed=45 ach=10 reward=8.7 steps=199 wall=13.7s
+  seed=46 ach=9 reward=8.1 steps=123 wall=10.2s
+
+[v7_vit03] FMCConfig(n_walkers=64, time_horizon=20, alpha=1.0, beta=1.0, action_repeat=1, intrinsic_inv_alpha=0.5, proximity_alpha=0.2, proximity_sigma=10.0, vitality_alpha=0.3)
+  seed=42 ach=12 reward=11.0 steps=172 wall=12.4s
+  seed=43 ach=7 reward=6.1 steps=91 wall=8.7s
+  seed=44 ach=11 reward=10.1 steps=244 wall=16.0s
+  seed=45 ach=12 reward=11.0 steps=293 wall=18.4s
+  seed=46 ach=8 reward=6.5 steps=83 wall=8.6s
+
+[v7_vit10] FMCConfig(n_walkers=64, time_horizon=20, alpha=1.0, beta=1.0, action_repeat=1, intrinsic_inv_alpha=0.5, proximity_alpha=0.2, proximity_sigma=10.0, vitality_alpha=1.0)
+  seed=42 ach=12 reward=11.1 steps=248 wall=16.5s
+  seed=43 ach=9 reward=8.0 steps=185 wall=13.8s
+  seed=44 ach=5 reward=3.7 steps=155 wall=11.9s
+  seed=45 ach=8 reward=6.6 steps=147 wall=11.9s
+  seed=46 ach=7 reward=6.0 steps=55 wall=7.8s
+
+[v7_vit30] FMCConfig(n_walkers=64, time_horizon=20, alpha=1.0, beta=1.0, action_repeat=1, intrinsic_inv_alpha=0.5, proximity_alpha=0.2, proximity_sigma=10.0, vitality_alpha=3.0)
+  seed=42 ach=8 reward=6.8 steps=197 wall=14.1s
+  seed=43 ach=5 reward=3.5 steps=192 wall=14.6s
+  seed=44 ach=5 reward=4.1 steps=101 wall=9.3s
+  seed=45 ach=10 reward=9.1 steps=320 wall=21.1s
+  seed=46 ach=7 reward=5.9 steps=148 wall=12.0s
+
+=== RANKING (5 seeds, vitality_alpha sweep) ===
+  v7_vit03     score=15.32% mean_ach=10.00 mean_steps=177 uniq=15 wall=67s
+  v7_vit10     score=14.25% mean_ach=8.20 mean_steps=158 uniq=16 wall=65s
+  v7_vit01     score=12.04% mean_ach=9.00 mean_steps=168 uniq=14 wall=68s
+  v7_vit30     score= 7.74% mean_ach=7.00 mean_steps=192 uniq=12 wall=75s
+Loading Craftax-Classic textures from cache.
+Textures successfully loaded from cache.
+{
+  "sweep": {
+    "v7_vit01": {
+      "config_vitality": 0.1,
+      "achievements_per_seed": [
+        10,
+        10,
+        6,
+        10,
+        9
+      ],
+      "mean_achievements": 9.0,
+      "std_achievements": 1.55,
+      "n_unique": 14,
+      "crafter_score_pct": 12.0357,
+      "mean_steps_dec": 168.4,
+      "wall_total_s": 67.5
+    },
+    "v7_vit03": {
+      "config_vitality": 0.3,
+      "achievements_per_seed": [
+        12,
+        7,
+        11,
+        12,
+        8
+      ],
+      "mean_achievements": 10.0,
+      "std_achievements": 2.1,
+      "n_unique": 15,
+      "crafter_score_pct": 15.3158,
+      "mean_steps_dec": 176.6,
+      "wall_total_s": 67.4
+    },
+    "v7_vit10": {
+      "config_vitality": 1.0,
+      "achievements_per_seed": [
+        12,
+        9,
+        5,
+        8,
+        7
+      ],
+      "mean_achievements": 8.2,
+      "std_achievements": 2.32,
+      "n_unique": 16,
+      "crafter_score_pct": 14.2504,
+      "mean_steps_dec": 158.0,
+      "wall_total_s": 65.4
+    },
+    "v7_vit30": {
+      "config_vitality": 3.0,
+      "achievements_per_seed": [
+        8,
+        5,
+        5,
+        10,
+        7
+      ],
+      "mean_achievements": 7.0,
+      "std_achievements": 1.9,
+      "n_unique": 12,
+      "crafter_score_pct": 7.7405,
+      "mean_steps_dec": 191.6,
+      "wall_total_s": 74.9
+    }
+  },
+  "ranking": [
+    [
+      "v7_vit03",
+      15.3158,
+      10.0,
+      176.6,
+      15,
+      67.4
+    ],
+    [
+      "v7_vit10",
+      14.2504,
+      8.2,
+      158.0,
+      16,
+      65.4
+    ],
+    [
+      "v7_vit01",
+      12.0357,
+      9.0,
+      168.4,
+      14,
+      67.5
+    ],
+    [
+      "v7_vit30",
+      7.7405,
+      7.0,
+      191.6,
+      12,
+      74.9
+    ]
+  ]
+}

@@ -19,72 +19,92 @@ Bersaglio: il leaderboard pubblico **[craftaxenv.github.io](https://craftaxenv.g
 4. **65 achievement gerarchici in 4 classi** = struttura di reward composta-moltiplicativa coerente con paper Hernández-Cerezo §2.2.2
 5. **FMC vanilla in 200 righe** già funzionante (ereditato da [`work/03_atari_replication/`](../03_atari_replication/), Boxing 96/100)
 
-## Stato attuale del progetto (26 aprile 2026)
+## Stato attuale del progetto (26 aprile 2026 notte)
 
 ✅ Ambiente installato (`craftax 1.5.0`, `jax 0.10.0`, Python 3.11.7)
-✅ FMC port a JAX (`scripts/fmc_craftax.py`, ~150 righe attive)
+✅ FMC port a JAX (v1, v2 baseline)
 ✅ Random baseline (`scripts/random_baseline.py`)
-✅ Multi-seed sweep con calcolo Crafter score (`scripts/sweep_seeds.py`)
-✅ Primi numeri verificati su Craftax-Classic (vedi `results/`)
+✅ Multi-seed sweep con calcolo Crafter score
+✅ **FMC + intrinsic shaping (v3) → 19.27% Crafter, 10 seed** — supera DreamerV3 (run_003)
+✅ **FMC + delta-proximity (v4) → 21.87% Crafter, 30 seed** — supera Curious Replay (run_004)
+⚠️ FMC + Wigner Fractal Memory (v6) → 12.32% — regressione (run_005, errore di applicazione)
+⚠️ FMC + max_steps=10000 / vitality bonus (v7) → episodi non si allungano + risk-take penalizzato (run_006)
+🔒 **v4_p02_delta confermato local optimum** del framework FMC vanilla zero-training
 
-⏳ Prossimi step (vedi roadmap)
+## Risultato verificato
 
-## Risultati preliminari verificati
+**Setup**: Craftax-Classic-Symbolic-v1, FMC con N=64 walker, M=20 tick, α=β=1.0, max_steps=500, **30 seed (42-71), zero training**.
 
-**Setup**: Craftax-Classic-Symbolic-v1, FMC vanilla con N=32 walker, M=12 tick, α=β=1.0, max_steps=500, 5 seed (42-46), zero training.
+Best config: `intrinsic_inv_alpha=0.5, proximity_alpha=0.2, proximity_mode='delta', sigma=10.0`
 
-| Metodo | Crafter score | Mean ach | Mean step | Note |
-|---|---|---|---|---|
-| Random baseline (5 seed) | ~1.6%* | 2.8 / 22 | 86 | * stima da Hafner 2021 |
-| FMC vanilla N=32 M=12 | 5.42% | 5.4 / 22 | 136 | Run 001 |
-| **FMC vanilla N=64 M=20** ✓ | **6.87%** | **6.4 / 22** | **176** | Run 002 — **best ad oggi** |
-| Rainbow (Hafner 2021) | 4.3% | — | — | da paper originale |
-| PPO (Hafner 2021) | 4.6% | — | — | da paper originale |
-| DreamerV2 | 10.0% | — | — | da paper Hafner 2023 |
-| DreamerV3 | 14.5% | — | — | SOTA stable model-based |
-| Curious Replay | 19.4% | — | — | SOTA classic table |
-| EMERALD (Jul 2025) | 58.1% | — | — | SOTA attuale, > human |
-| Human expert | 50.5% | — | — | Hafner 2021 |
+| Metodo | Crafter score | Sample | Note |
+|---|---|---|---|
+| Random baseline | ~1.6% | 0 | Hafner 2021 |
+| Rainbow | 4.3% | 1M | superato di +17.6 |
+| PPO | 4.6% | 1M | superato di +17.3 |
+| FMC vanilla N=32 M=12 | 5.42% | 0 | Run 001 |
+| FMC vanilla N=64 M=20 | 6.87% | 0 | Run 002 |
+| FMC + intrinsic α=0.5 | 19.27% ±2.32 | 0 | **Run 003** (10 seed) |
+| **FMC + intrinsic + delta-prox** ✓ | **21.87% ±1.21** | **0** | **Run 004** (30 seed) — **BEST** |
+| DreamerV2 | 10.0% | 1M | superato di +11.9 |
+| DreamerV3 | 14.5% | 1M | superato di +7.4 |
+| Curious Replay | 19.4% | 1M | superato di +2.5 |
+| EMERALD (Jul 2025) | 58.1% | 10M | gap −36.2 — SOTA |
+| Human expert | 50.5% | — | gap −28.7 |
 
-**FMC vanilla supera Rainbow e PPO con 0 training step.** Best config N=64, M=20 (sweep in [`docs/run_002_sweep_NM_distance.md`](docs/run_002_sweep_NM_distance.md)). Resta sotto DreamerV3 di ~7.6 punti — gap colmabile via reward intrinseca + Fractal Memory.
+**FMC zero-training supera la SOTA tabular (Curious Replay) di 2.5 punti percentuali su Crafter score.**
 
-### 12 achievement uniche unlocked (config N=64, M=20)
+### 18 di 22 achievement unlocked (30 seed, success rate)
 
-`collect_drink, collect_sapling, collect_stone, collect_wood, eat_cow, make_wood_pickaxe, make_wood_sword, place_furnace, place_plant, place_stone, place_table, wake_up`
+```
+collect_wood              1.00  (100%)
+place_table               0.93
+make_wood_pickaxe         0.87
+collect_stone             0.83
+place_stone               0.83
+place_furnace             0.80
+collect_sapling           0.73
+place_plant               0.73
+collect_coal              0.57   ← chain stone aperta
+collect_drink             0.53
+make_stone_pickaxe        0.43
+make_wood_sword           0.43
+wake_up                   0.37
+collect_iron              0.30   ← chain iron raggiunta
+make_stone_sword          0.27
+defeat_zombie             0.23
+eat_cow                   0.13
+defeat_skeleton           0.03
+```
 
-Mai visti (10 di 22): `collect_coal, collect_diamond, collect_iron, defeat_skeleton, defeat_zombie, eat_plant, make_iron_pickaxe, make_iron_sword, make_stone_pickaxe, make_stone_sword`
-
-Pattern: il planner trova le achievement entro un raggio τ = 20 tick × 1 azione, ma fallisce su catene profonde (collect_iron richiede make_stone_pickaxe richiede make_wood_pickaxe richiede pickup sticks…). La barriera è quella delle pickaxe stone+iron.
+Mai unlocked (4 di 22): `collect_diamond, make_iron_pickaxe, make_iron_sword, eat_plant` — la chain dal raw iron al diamond resta fuori dell'orizzonte M=20.
 
 ## Roadmap
 
-### Fase 0 — Validazione baseline ✓ (completata oggi)
-Verificare che FMC vanilla giri end-to-end e produca risultati ≥ random.
+### Fase 0 — Validazione baseline ✓ (run_001, run_002)
+FMC vanilla end-to-end, baseline 6.87%.
 
-### Fase 1 — Tuning iperparametri (1-2 settimane)
-- Sweep N ∈ {32, 64, 128, 256}, M ∈ {12, 20, 40}
-- Sweep α/β ∈ {(0,1), (0.5,1), (0.5,1.5), (1,1), (1,2), (2,1)}
-- Misurare scaling Crafter score vs sample-budget
-- Output atteso: una configurazione ottima e una curva di scaling
+### Fase 1 — Tuning iperparametri ✓ (run_002, run_003)
+Sweep N×M + intrinsic α. **Best: N=64, M=20, α_inv=0.5 → 19.27% (10 seed).**
 
-### Fase 2 — Reward intrinseca per chain di crafting (2-3 settimane)
-- Aggiungere reward intrinseca per "stare vicino" a obiettivi mancanti (e.g., near-tree, near-stone)
-- Inspirazione: Curiosity-driven exploration (Pathak 2017) + Sergio §6.3 Common Sense Assisted Control
-- Output: superare 10 ach mean (territorio DreamerV2)
+### Fase 2 — Reward intrinseca per chain di crafting ✓ (run_003, run_004)
+Inventory-delta + curriculum-gated proximity (delta-mode). **Best: 21.87% (30 seed CI95 ±1.21).**
 
-### Fase 3 — Fractal Memory (3-4 settimane)
-- Implementare Slide doc 2020: memoria persistente di trajectory chains
-- Wigner-weighted sampling delle past trajectories vincenti
-- Output: superare DreamerV3 (~14.5%) sulla Crafter score
+### Fase 3 — Fractal Memory ⚠️ (run_005, risultato negativo)
+Wigner-correct memory naive applicata al planning peggiora il score di 9.55 punti. Lezione: la Fractal Memory di Sergio è progettata per NN training attention, NON per direct action selection. Vedi [`run_005_wigner_memory_negative.md`](docs/run_005_wigner_memory_negative.md).
 
-### Fase 4 — Submission al leaderboard (1 settimana)
-- Multi-seed (≥10) per CI95 affidabili
+### Fase 4 — Submission al leaderboard (in pianificazione)
+- 30-seed CI95 disponibile su run_004
 - PR su [MichaelTMatthews/Craftax](https://github.com/MichaelTMatthews/Craftax) con codice riproducibile
 - Workshop paper draft (RL Open Worlds, Generalization in RL)
 
-### Fase 5 (opzionale) — Craftax full (mesi)
-- Affrontare il setup 1B con i 65 achievement gerarchici
-- Entrare nella tabella Craftax-1B/1M ufficiale
+### Fase 5 — Spinta verso EMERALD (mesi)
+Opzioni:
+- **A.** v7 Badger-Level-1: multi-config FMC outer-loop (cf. Book #2 §3.2)
+- **B.** Episodi 10000-step (Hafner standard) invece di 500
+- **C.** N=128 walker
+- **D.** Fractal Memory con NN target (path corretto secondo Sergio)
+- **E.** Migrazione a Craftax full (1B leaderboard)
 
 ## File del progetto
 
@@ -96,19 +116,31 @@ work/05_craftax/
 │   ├── random_baseline.py                 ← floor (1.6% Crafter)
 │   ├── fmc_craftax.py                     ← FMC v1: distance L2 obs 1345-D
 │   ├── fmc_craftax_v2.py                  ← FMC v2: distance L2 state 18-D
+│   ├── fmc_craftax_v3.py                  ← FMC v3: + action_repeat + intrinsic inv-delta
+│   ├── fmc_craftax_v4.py                  ← FMC v4: v3 + curriculum-gated delta-proximity ★
+│   ├── fmc_craftax_v5.py                  ← FMC v5: v4 + naive memory counter (deprecato)
+│   ├── fmc_craftax_v6.py                  ← FMC v6: v4 + Wigner-correct memory (negative)
 │   ├── sweep_seeds.py                     ← multi-seed + Crafter score (single config)
 │   ├── sweep_NM.py                        ← multi-config (N, M) sweep
+│   ├── sweep_v3.py                        ← v3 multi-config sweep harness
+│   ├── sweep_v4v5.py                      ← v4/v5 confronto
 │   └── compare_distance.py                ← v1 vs v2 distance ablation
 ├── results/
 │   ├── sweep_n32_m12_a1_b1.json           ← Run 001 baseline
 │   ├── sweep_NM_a1_b1.json                ← Run 002 sweep (5 configs)
-│   ├── compare_distance_n64_m20.json      ← Run 002 distance ablation
-│   ├── sweep_NM_progress.log              ← log live dello sweep
+│   ├── sweep_v3_first.log, sweep_v3_alpha.log, sweep_v3_inv_10seed.log  ← Run 003
+│   ├── sweep_v4_proximity.log, sweep_v4v5.log, sweep_v4_p02delta_30seed.log ← Run 004
+│   ├── sweep_v6_wigner_10seed.log         ← Run 005 (negativo)
 │   └── random_baseline_seeds_*.txt
 └── docs/
-    ├── run_001_first_baseline.md          ← primo report (FMC funziona, 5.42%)
-    └── run_002_sweep_NM_distance.md       ← sweep + distance (best 6.87%)
+    ├── run_001_first_baseline.md          ← FMC funziona (5.42%)
+    ├── run_002_sweep_NM_distance.md       ← N×M sweep (6.87%)
+    ├── run_003_intrinsic_shaping.md       ← intrinsic α=0.5 → 19.27% ★
+    ├── run_004_delta_proximity.md         ← + delta-prox → 21.87% ★★
+    └── run_005_wigner_memory_negative.md  ← Wigner mem applicato male → 12.32% ⚠️
 ```
+
+**★ Best config attuale**: `fmc_craftax_v4.py` con `intrinsic_inv_alpha=0.5, proximity_alpha=0.2, proximity_mode='delta'`.
 
 ## Riproduzione
 

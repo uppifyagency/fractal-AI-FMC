@@ -1,0 +1,311 @@
+
+[inv_a01] cfg=FMCConfig(n_walkers=64, time_horizon=20, alpha=1.0, beta=1.0, action_repeat=1, intrinsic_inv_alpha=0.1)
+  seed=42  ach=14  reward=13.1  steps_dec=199  steps_env=199  wall=13.5s
+  seed=43  ach=3  reward=2.1  steps_dec=72  steps_env=72  wall=8.1s
+  seed=44  ach=5  reward=4.1  steps_dec=395  steps_env=395  wall=22.1s
+
+[inv_a05] cfg=FMCConfig(n_walkers=64, time_horizon=20, alpha=1.0, beta=1.0, action_repeat=1, intrinsic_inv_alpha=0.5)
+  seed=42  ach=11  reward=10.1  steps_dec=338  steps_env=338  wall=20.0s
+  seed=43  ach=7  reward=6.1  steps_dec=250  steps_env=250  wall=18.0s
+  seed=44  ach=4  reward=3.0  steps_dec=143  steps_env=143  wall=10.4s
+
+[inv_a10] cfg=FMCConfig(n_walkers=64, time_horizon=20, alpha=1.0, beta=1.0, action_repeat=1, intrinsic_inv_alpha=1.0)
+  seed=42  ach=12  reward=10.5  steps_dec=331  steps_env=331  wall=19.7s
+  seed=43  ach=9  reward=8.1  steps_dec=154  steps_env=154  wall=16.0s
+  seed=44  ach=6  reward=5.0  steps_dec=121  steps_env=121  wall=12.5s
+
+[ar2inv02] cfg=FMCConfig(n_walkers=64, time_horizon=20, alpha=1.0, beta=1.0, action_repeat=2, intrinsic_inv_alpha=0.2)
+  seed=42  ach=10  reward=9.0  steps_dec=113  steps_env=226  wall=17.9s
+  seed=43  ach=6  reward=5.0  steps_dec=22  steps_env=44  wall=8.9s
+  seed=44  ach=4  reward=3.1  steps_dec=53  steps_env=106  wall=12.6s
+
+[ar3inv05] cfg=FMCConfig(n_walkers=64, time_horizon=20, alpha=1.0, beta=1.0, action_repeat=3, intrinsic_inv_alpha=0.5)
+  seed=42  ach=6  reward=5.0  steps_dec=67  steps_env=201  wall=15.2s
+  seed=43  ach=4  reward=3.1  steps_dec=42  steps_env=126  wall=11.4s
+  seed=44  ach=9  reward=8.1  steps_dec=81  steps_env=243  wall=16.6s
+=== RANKING ===
+  inv_a10     score=16.69%  mean=9.00  uniq=16  wall=51s
+  inv_a01     score=12.49%  mean=7.33  uniq=15  wall=49s
+  inv_a05     score=10.99%  mean=7.33  uniq=14  wall=51s
+  ar3inv05    score= 6.40%  mean=6.33  uniq=11  wall=46s
+  ar2inv02    score= 6.35%  mean=6.67  uniq=11  wall=42s
+Loading Craftax-Classic textures from cache.
+Textures successfully loaded from cache.
+{
+  "sweep": {
+    "inv_a01": {
+      "label": "inv_a01",
+      "config": {
+        "n_walkers": 64,
+        "time_horizon": 20,
+        "alpha": 1.0,
+        "beta": 1.0,
+        "action_repeat": 1,
+        "intrinsic_inv_alpha": 0.1
+      },
+      "n_seeds": 3,
+      "achievements_per_seed": [
+        14,
+        3,
+        5
+      ],
+      "rewards_per_seed": [
+        13.099999979138374,
+        2.0999999791383743,
+        4.099999971687794
+      ],
+      "n_steps_dec_per_seed": [
+        199,
+        72,
+        395
+      ],
+      "achievement_success_rates": {
+        "collect_sapling": 0.6667,
+        "collect_stone": 0.3333,
+        "collect_wood": 1.0,
+        "defeat_zombie": 0.3333,
+        "eat_cow": 0.3333,
+        "make_stone_pickaxe": 0.3333,
+        "make_stone_sword": 0.3333,
+        "make_wood_pickaxe": 0.3333,
+        "make_wood_sword": 0.3333,
+        "place_furnace": 0.3333,
+        "place_plant": 0.6667,
+        "place_stone": 0.3333,
+        "place_table": 0.6667,
+        "wake_up": 1.0,
+        "collect_drink": 0.3333
+      },
+      "n_unique_achievements": 15,
+      "crafter_score_pct": 12.4853,
+      "mean_achievements": 7.33,
+      "std_achievements": 4.78,
+      "wall_total_s": 48.6
+    },
+    "inv_a05": {
+      "label": "inv_a05",
+      "config": {
+        "n_walkers": 64,
+        "time_horizon": 20,
+        "alpha": 1.0,
+        "beta": 1.0,
+        "action_repeat": 1,
+        "intrinsic_inv_alpha": 0.5
+      },
+      "n_seeds": 3,
+      "achievements_per_seed": [
+        11,
+        7,
+        4
+      ],
+      "rewards_per_seed": [
+        10.099999979138374,
+        6.099999986588955,
+        2.999999977648258
+      ],
+      "n_steps_dec_per_seed": [
+        338,
+        250,
+        143
+      ],
+      "achievement_success_rates": {
+        "collect_stone": 0.6667,
+        "collect_wood": 1.0,
+        "defeat_zombie": 0.3333,
+        "eat_cow": 0.3333,
+        "make_stone_pickaxe": 0.3333,
+        "make_stone_sword": 0.3333,
+        "make_wood_pickaxe": 0.6667,
+        "place_furnace": 0.6667,
+        "place_stone": 0.6667,
+        "place_table": 0.6667,
+        "wake_up": 0.6667,
+        "collect_coal": 0.3333,
+        "collect_sapling": 0.3333,
+        "place_plant": 0.3333
+      },
+      "n_unique_achievements": 14,
+      "crafter_score_pct": 10.9932,
+      "mean_achievements": 7.33,
+      "std_achievements": 2.87,
+      "wall_total_s": 50.7
+    },
+    "inv_a10": {
+      "label": "inv_a10",
+      "config": {
+        "n_walkers": 64,
+        "time_horizon": 20,
+        "alpha": 1.0,
+        "beta": 1.0,
+        "action_repeat": 1,
+        "intrinsic_inv_alpha": 1.0
+      },
+      "n_seeds": 3,
+      "achievements_per_seed": [
+        12,
+        9,
+        6
+      ],
+      "rewards_per_seed": [
+        10.49999999254942,
+        8.099999986588955,
+        4.999999985098839
+      ],
+      "n_steps_dec_per_seed": [
+        331,
+        154,
+        121
+      ],
+      "achievement_success_rates": {
+        "collect_drink": 0.6667,
+        "collect_stone": 0.6667,
+        "collect_wood": 1.0,
+        "defeat_zombie": 0.3333,
+        "eat_cow": 0.3333,
+        "make_stone_pickaxe": 0.3333,
+        "make_stone_sword": 0.3333,
+        "make_wood_pickaxe": 1.0,
+        "place_furnace": 0.6667,
+        "place_stone": 0.6667,
+        "place_table": 1.0,
+        "wake_up": 0.6667,
+        "collect_coal": 0.3333,
+        "collect_sapling": 0.3333,
+        "make_wood_sword": 0.3333,
+        "place_plant": 0.3333
+      },
+      "n_unique_achievements": 16,
+      "crafter_score_pct": 16.691,
+      "mean_achievements": 9.0,
+      "std_achievements": 2.45,
+      "wall_total_s": 51.0
+    },
+    "ar2inv02": {
+      "label": "ar2inv02",
+      "config": {
+        "n_walkers": 64,
+        "time_horizon": 20,
+        "alpha": 1.0,
+        "beta": 1.0,
+        "action_repeat": 2,
+        "intrinsic_inv_alpha": 0.2
+      },
+      "n_seeds": 3,
+      "achievements_per_seed": [
+        10,
+        6,
+        4
+      ],
+      "rewards_per_seed": [
+        8.999999985098839,
+        4.999999992549419,
+        3.099999986588955
+      ],
+      "n_steps_dec_per_seed": [
+        113,
+        22,
+        53
+      ],
+      "achievement_success_rates": {
+        "collect_coal": 0.3333,
+        "collect_drink": 0.3333,
+        "collect_sapling": 1.0,
+        "collect_stone": 0.3333,
+        "collect_wood": 1.0,
+        "make_wood_pickaxe": 0.6667,
+        "place_furnace": 0.3333,
+        "place_plant": 1.0,
+        "place_stone": 0.3333,
+        "place_table": 1.0,
+        "wake_up": 0.3333
+      },
+      "n_unique_achievements": 11,
+      "crafter_score_pct": 6.3528,
+      "mean_achievements": 6.67,
+      "std_achievements": 2.49,
+      "wall_total_s": 42.4
+    },
+    "ar3inv05": {
+      "label": "ar3inv05",
+      "config": {
+        "n_walkers": 64,
+        "time_horizon": 20,
+        "alpha": 1.0,
+        "beta": 1.0,
+        "action_repeat": 3,
+        "intrinsic_inv_alpha": 0.5
+      },
+      "n_seeds": 3,
+      "achievements_per_seed": [
+        6,
+        4,
+        9
+      ],
+      "rewards_per_seed": [
+        4.999999985098839,
+        3.099999986588955,
+        8.100000008940697
+      ],
+      "n_steps_dec_per_seed": [
+        67,
+        42,
+        81
+      ],
+      "achievement_success_rates": {
+        "collect_stone": 0.6667,
+        "collect_wood": 1.0,
+        "make_wood_pickaxe": 0.6667,
+        "make_wood_sword": 0.6667,
+        "place_furnace": 0.3333,
+        "place_table": 0.6667,
+        "collect_sapling": 0.6667,
+        "place_plant": 0.6667,
+        "wake_up": 0.3333,
+        "collect_coal": 0.3333,
+        "defeat_zombie": 0.3333
+      },
+      "n_unique_achievements": 11,
+      "crafter_score_pct": 6.4049,
+      "mean_achievements": 6.33,
+      "std_achievements": 2.05,
+      "wall_total_s": 45.5
+    }
+  },
+  "ranking": [
+    [
+      "inv_a10",
+      16.691,
+      9.0,
+      16,
+      51.0
+    ],
+    [
+      "inv_a01",
+      12.4853,
+      7.33,
+      15,
+      48.6
+    ],
+    [
+      "inv_a05",
+      10.9932,
+      7.33,
+      14,
+      50.7
+    ],
+    [
+      "ar3inv05",
+      6.4049,
+      6.33,
+      11,
+      45.5
+    ],
+    [
+      "ar2inv02",
+      6.3528,
+      6.67,
+      11,
+      42.4
+    ]
+  ]
+}

@@ -1,0 +1,243 @@
+
+[baseline] cfg=FMCConfig(n_walkers=64, time_horizon=20, alpha=1.0, beta=1.0, action_repeat=1, intrinsic_inv_alpha=0.0)
+  seed=42  ach=10  reward=9.1  steps_dec=247  steps_env=247  wall=14.6s
+  seed=43  ach=3  reward=2.0  steps_dec=61  steps_env=61  wall=6.8s
+  seed=44  ach=5  reward=4.0  steps_dec=95  steps_env=95  wall=8.5s
+[skip] unknown config: ar2
+
+[ar3] cfg=FMCConfig(n_walkers=64, time_horizon=20, alpha=1.0, beta=1.0, action_repeat=3, intrinsic_inv_alpha=0.0)
+  seed=42  ach=6  reward=5.1  steps_dec=123  steps_env=369  wall=19.1s
+  seed=43  ach=3  reward=2.0  steps_dec=30  steps_env=90  wall=8.3s
+  seed=44  ach=5  reward=4.0  steps_dec=33  steps_env=99  wall=8.4s
+
+[inv] cfg=FMCConfig(n_walkers=64, time_horizon=20, alpha=1.0, beta=1.0, action_repeat=1, intrinsic_inv_alpha=0.2)
+  seed=42  ach=13  reward=12.0  steps_dec=297  steps_env=297  wall=18.1s
+  seed=43  ach=7  reward=6.1  steps_dec=88  steps_env=88  wall=8.6s
+  seed=44  ach=4  reward=2.6  steps_dec=103  steps_env=103  wall=9.2s
+
+[ar3inv] cfg=FMCConfig(n_walkers=64, time_horizon=20, alpha=1.0, beta=1.0, action_repeat=3, intrinsic_inv_alpha=0.2)
+  seed=42  ach=12  reward=11.0  steps_dec=93  steps_env=279  wall=15.4s
+  seed=43  ach=10  reward=9.0  steps_dec=93  steps_env=279  wall=15.2s
+  seed=44  ach=5  reward=4.1  steps_dec=43  steps_env=129  wall=9.4s
+
+=== Crafter score ranking ===
+  ar3inv      score=12.47%  mean_ach=9.00  uniq=14  wall=42s
+  inv         score=11.76%  mean_ach=8.00  uniq=14  wall=38s
+  baseline    score= 5.15%  mean_ach=6.00  uniq=10  wall=34s
+  ar3         score= 2.23%  mean_ach=4.67  uniq= 6  wall=38s
+Loading Craftax-Classic textures from cache.
+Textures successfully loaded from cache.
+{
+  "sweep": {
+    "baseline": {
+      "label": "baseline",
+      "config": {
+        "n_walkers": 64,
+        "time_horizon": 20,
+        "alpha": 1.0,
+        "beta": 1.0,
+        "action_repeat": 1,
+        "intrinsic_inv_alpha": 0.0
+      },
+      "n_seeds": 3,
+      "achievements_per_seed": [
+        10,
+        3,
+        5
+      ],
+      "rewards_per_seed": [
+        9.099999986588955,
+        2.0,
+        4.000000007450581
+      ],
+      "n_steps_dec_per_seed": [
+        247,
+        61,
+        95
+      ],
+      "achievement_success_rates": {
+        "collect_drink": 0.6667,
+        "collect_sapling": 1.0,
+        "collect_stone": 0.3333,
+        "collect_wood": 1.0,
+        "make_wood_pickaxe": 0.3333,
+        "place_furnace": 0.3333,
+        "place_plant": 1.0,
+        "place_stone": 0.3333,
+        "place_table": 0.3333,
+        "wake_up": 0.6667
+      },
+      "n_unique_achievements": 10,
+      "crafter_score_pct": 5.1481,
+      "mean_achievements": 6.0,
+      "std_achievements": 2.94,
+      "wall_total_s": 34.3
+    },
+    "ar3": {
+      "label": "ar3",
+      "config": {
+        "n_walkers": 64,
+        "time_horizon": 20,
+        "alpha": 1.0,
+        "beta": 1.0,
+        "action_repeat": 3,
+        "intrinsic_inv_alpha": 0.0
+      },
+      "n_seeds": 3,
+      "achievements_per_seed": [
+        6,
+        3,
+        5
+      ],
+      "rewards_per_seed": [
+        5.099999986588955,
+        1.9999999850988388,
+        3.999999985098839
+      ],
+      "n_steps_dec_per_seed": [
+        123,
+        30,
+        33
+      ],
+      "achievement_success_rates": {
+        "collect_drink": 0.6667,
+        "collect_sapling": 1.0,
+        "collect_wood": 1.0,
+        "place_plant": 1.0,
+        "place_table": 0.3333,
+        "wake_up": 0.6667
+      },
+      "n_unique_achievements": 6,
+      "crafter_score_pct": 2.2324,
+      "mean_achievements": 4.67,
+      "std_achievements": 1.25,
+      "wall_total_s": 37.8
+    },
+    "inv": {
+      "label": "inv",
+      "config": {
+        "n_walkers": 64,
+        "time_horizon": 20,
+        "alpha": 1.0,
+        "beta": 1.0,
+        "action_repeat": 1,
+        "intrinsic_inv_alpha": 0.2
+      },
+      "n_seeds": 3,
+      "achievements_per_seed": [
+        13,
+        7,
+        4
+      ],
+      "rewards_per_seed": [
+        11.999999977648258,
+        6.099999986588955,
+        2.599999986588955
+      ],
+      "n_steps_dec_per_seed": [
+        297,
+        88,
+        103
+      ],
+      "achievement_success_rates": {
+        "collect_drink": 0.3333,
+        "collect_sapling": 0.6667,
+        "collect_stone": 0.6667,
+        "collect_wood": 1.0,
+        "defeat_zombie": 0.3333,
+        "make_stone_pickaxe": 0.3333,
+        "make_stone_sword": 0.3333,
+        "make_wood_pickaxe": 0.6667,
+        "place_furnace": 0.6667,
+        "place_plant": 0.6667,
+        "place_stone": 0.6667,
+        "place_table": 0.6667,
+        "wake_up": 0.6667,
+        "collect_coal": 0.3333
+      },
+      "n_unique_achievements": 14,
+      "crafter_score_pct": 11.7562,
+      "mean_achievements": 8.0,
+      "std_achievements": 3.74,
+      "wall_total_s": 38.0
+    },
+    "ar3inv": {
+      "label": "ar3inv",
+      "config": {
+        "n_walkers": 64,
+        "time_horizon": 20,
+        "alpha": 1.0,
+        "beta": 1.0,
+        "action_repeat": 3,
+        "intrinsic_inv_alpha": 0.2
+      },
+      "n_seeds": 3,
+      "achievements_per_seed": [
+        12,
+        10,
+        5
+      ],
+      "rewards_per_seed": [
+        10.999999985098839,
+        9.0,
+        4.099999986588955
+      ],
+      "n_steps_dec_per_seed": [
+        93,
+        93,
+        43
+      ],
+      "achievement_success_rates": {
+        "collect_sapling": 1.0,
+        "collect_stone": 0.3333,
+        "collect_wood": 1.0,
+        "defeat_skeleton": 0.3333,
+        "eat_cow": 0.6667,
+        "make_wood_pickaxe": 0.6667,
+        "make_wood_sword": 0.6667,
+        "place_furnace": 0.3333,
+        "place_plant": 1.0,
+        "place_stone": 0.3333,
+        "place_table": 0.6667,
+        "wake_up": 1.0,
+        "collect_drink": 0.6667,
+        "defeat_zombie": 0.3333
+      },
+      "n_unique_achievements": 14,
+      "crafter_score_pct": 12.4723,
+      "mean_achievements": 9.0,
+      "std_achievements": 2.94,
+      "wall_total_s": 42.0
+    }
+  },
+  "ranking": [
+    [
+      "ar3inv",
+      12.4723,
+      9.0,
+      14,
+      42.0
+    ],
+    [
+      "inv",
+      11.7562,
+      8.0,
+      14,
+      38.0
+    ],
+    [
+      "baseline",
+      5.1481,
+      6.0,
+      10,
+      34.3
+    ],
+    [
+      "ar3",
+      2.2324,
+      4.67,
+      6,
+      37.8
+    ]
+  ]
+}
