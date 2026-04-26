@@ -1,0 +1,17 @@
+{
+  "reward": 96.0,
+  "samples": 3019500,
+  "wall_time_s": 414.6695499420166,
+  "n_steps": 1342,
+  "samples_per_action_avg": 2250.0,
+  "terminated": true,
+  "game": "ALE/Boxing-v5",
+  "seed": 42,
+  "config": {
+    "n_walkers": 30,
+    "time_horizon": 15,
+    "max_samples_per_action": 300,
+    "balance": 1.0,
+    "fixed_steps": 5
+  }
+}

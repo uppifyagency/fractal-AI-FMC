@@ -1,0 +1,8 @@
+#!/bin/sh
+'''exec' "/Users/vladvrinceanu/Desktop/PROGETTI ANTYGRAVITY/FractalAI/work/01_setup_environment/.venv/bin/python3" "$0" "$@"
+' '''
+import sys
+from ale_py.scripts.import_roms import main
+if __name__ == '__main__':
+    sys.argv[0] = sys.argv[0].removesuffix('.exe')
+    sys.exit(main())
