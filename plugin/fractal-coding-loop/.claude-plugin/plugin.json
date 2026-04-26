@@ -1,0 +1,18 @@
+{
+  "name": "fractal-coding-loop",
+  "version": "0.1.0",
+  "description": "Fractal Monte Carlo planning for coding decisions. Spawns N parallel walker sub-agents in worktree-isolated branches, evaluates them via multiplicative composite reward, and picks the best initial action. Based on Hernández-Cerezo & Duran-Ballester (2020).",
+  "author": {
+    "name": "Vlad Vrinceanu",
+    "email": "filcarspa@gmail.com"
+  },
+  "homepage": "https://github.com/uppifyagency/fractal-coding-loop",
+  "license": "MIT",
+  "keywords": [
+    "fmc",
+    "fractal-ai",
+    "planning",
+    "multi-agent",
+    "decision-making"
+  ]
+}
