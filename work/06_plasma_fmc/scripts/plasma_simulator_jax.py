@@ -75,7 +75,7 @@ class SimParams:
     # Reasons: (a) profile averaging — current is peaked, T_e profile-averaged;
     # (b) neoclassical bootstrap reduces effective resistance.
     # Empirical default 0.05 calibrates τ_res ≈ 30 ms at 1 keV.
-    R_plasma_calib: float = 0.05
+    R_plasma_calib: float = 0.005
 
 
 def pack_state(I_coils, I_p, W, n_bar, R_p, Z_p, kappa, delta) -> jnp.ndarray:
@@ -189,12 +189,14 @@ def step_jax(
     dn_dt = gas_puff / V_plasma - s["n_bar"] / tau_p
     n_new = jnp.maximum(s["n_bar"] + dt * dn_dt, 1e15)
 
-    # (5) Shape response
+    # (5) Shape response (linearized around ref). Clip to physical bounds —
+    # the linearization breaks for large δI; clipping prevents nonsensical
+    # values from cascading into NaN.
     dI = I_new - p.I_ref
     delta_shape = p.S @ dI
-    R_p_new = p.R_ref + delta_shape[0]
-    Z_p_new = p.Z_ref + delta_shape[1]
-    kappa_new = jnp.maximum(p.kappa_ref + delta_shape[2], 1.0)
+    R_p_new = jnp.clip(p.R_ref + delta_shape[0], 0.624, 1.136)  # vessel bounds
+    Z_p_new = jnp.clip(p.Z_ref + delta_shape[1], -0.75, 0.75)
+    kappa_new = jnp.clip(p.kappa_ref + delta_shape[2], 1.0, 2.8)
     delta_new = jnp.clip(p.delta_ref + delta_shape[3], -0.7, 1.0)
 
     return jnp.concatenate([
@@ -266,8 +268,8 @@ def build_jax_params(tcv: TCVMachine | None = None) -> tuple[SimParams, jnp.ndar
         is_F = c.name.startswith("F")
         S[1, i] = (1.5e-6 * sign_Z) if is_F else (0.5e-6 * sign_Z)
         S[0, i] = (-2.0e-6) if is_F else (+1.5e-6)
-        S[2, i] = (4.0e-8 * abs(c.Z)) if is_F else (-1.0e-8 * abs(c.Z))
-        S[3, i] = (2.0e-8 * abs(c.Z)) * (1.0 if is_F else -0.5)
+        S[2, i] = (4.0e-7 * abs(c.Z)) if is_F else (-1.0e-7 * abs(c.Z))
+        S[3, i] = (2.0e-7 * abs(c.Z)) * (1.0 if is_F else -0.5)
 
     params = SimParams(
         N=N,

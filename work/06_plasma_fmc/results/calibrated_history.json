@@ -1,0 +1,61 @@
+{
+  "history": [
+    {
+      "iter": 0,
+      "n_samples": 1000,
+      "mean_err": 69.06703175190465,
+      "median_err": 69.19610624121523,
+      "quench": 3,
+      "n_eval": 20
+    },
+    {
+      "iter": 1,
+      "n_samples": 1500,
+      "mean_err": 4.332608602804442,
+      "median_err": 4.220259602864584,
+      "quench": 0,
+      "n_eval": 20
+    },
+    {
+      "iter": 2,
+      "n_samples": 2000,
+      "mean_err": 6.602075567245484,
+      "median_err": 5.616383930047354,
+      "quench": 0,
+      "n_eval": 20
+    },
+    {
+      "iter": 3,
+      "n_samples": 2500,
+      "mean_err": 4.956449207936724,
+      "median_err": 5.543983895579974,
+      "quench": 0,
+      "n_eval": 20
+    },
+    {
+      "iter": 4,
+      "n_samples": 3000,
+      "mean_err": 6.163739193826914,
+      "median_err": 5.385606271028518,
+      "quench": 0,
+      "n_eval": 20
+    },
+    {
+      "iter": 5,
+      "n_samples": 3500,
+      "mean_err": 3.4655261787399647,
+      "median_err": 3.292054655154546,
+      "quench": 0,
+      "n_eval": 20
+    }
+  ],
+  "calibrated_baseline": {
+    "R_p": 0.901,
+    "Z_p": -0.109,
+    "a": 0.39,
+    "kappa": 1.616,
+    "delta": 0.003
+  },
+  "s_scale": 10.0,
+  "dataset_gen_time_s": 0.5441237089689821
+}

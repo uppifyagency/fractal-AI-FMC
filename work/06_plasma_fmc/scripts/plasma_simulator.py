@@ -172,7 +172,7 @@ class PlasmaSimulator:
         ref_state: PlasmaState,
         a_wire: float = 0.01,
         H98: float = 1.0,
-        R_plasma_calib: float = 0.05,
+        R_plasma_calib: float = 0.005,
     ):
         self.tcv = tcv
         self.H98 = H98
@@ -265,9 +265,9 @@ class PlasmaSimulator:
             # δR_p / δI: E pushes outward, F pulls inward (symmetric in Z)
             S[0, i] = (-2.0e-6) if is_F else (+1.5e-6)
             # δκ / δI: outer-most F coils enhance elongation
-            S[2, i] = (4.0e-8 * abs(c.Z)) if is_F else (-1.0e-8 * abs(c.Z))
+            S[2, i] = (4.0e-7 * abs(c.Z)) if is_F else (-1.0e-7 * abs(c.Z))
             # δδ / δI: F coils with large |Z| → triangularity
-            S[3, i] = (2.0e-8 * abs(c.Z)) * (1.0 if is_F else -0.5)
+            S[3, i] = (2.0e-7 * abs(c.Z)) * (1.0 if is_F else -0.5)
 
         # T coils + OH: small effect on shape, mainly heat plasma & drive I_p
         return S
@@ -345,16 +345,24 @@ class PlasmaSimulator:
         dn_dt = control.gas_puff / V_plasma - s.n_bar / tau_p
         n_new = max(s.n_bar + dt * dn_dt, 1e15)
 
-        # (5) Shape response (linearized about reference)
+        # (5) Shape response (linearized about reference) — clip to physical
+        # bounds so linearization breakdown can't cascade into NaN.
         dI = I_new - self.I_ref
         delta_shape = self.S @ dI  # [δR, δZ, δκ, δδ]
-        R_p_new = self.ref_state.R_p + delta_shape[0]
-        Z_p_new = self.ref_state.Z_p + delta_shape[1]
-        kappa_new = max(self.ref_state.kappa + delta_shape[2], 1.0)  # κ ≥ 1
-        delta_new = np.clip(
+        R_p_new = float(np.clip(
+            self.ref_state.R_p + delta_shape[0],
+            self.tcv.vessel["inner_R"], self.tcv.vessel["outer_R"],
+        ))
+        Z_p_new = float(np.clip(
+            self.ref_state.Z_p + delta_shape[1],
+            -self.tcv.vessel["height"] / 2, self.tcv.vessel["height"] / 2,
+        ))
+        kappa_new = float(np.clip(self.ref_state.kappa + delta_shape[2],
+                                   1.0, self.tcv.kappa_max))
+        delta_new = float(np.clip(
             self.ref_state.delta + delta_shape[3],
             self.tcv.delta_min, self.tcv.delta_max,
-        )
+        ))
 
         return PlasmaState(
             I_coils=I_new, I_p=I_p_new, W=W_new, n_bar=n_new,

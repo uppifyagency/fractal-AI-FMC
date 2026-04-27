@@ -1,0 +1,42 @@
+{
+  "summary": {
+    "M5_BC": {
+      "mean_err_truth": 64.0036781112353,
+      "mean_err_self": 65.06393398952932,
+      "n_truth_valid": 150,
+      "n_self_valid": 150
+    },
+    "M6_DAgger3": {
+      "mean_err_truth": 64.75894335011641,
+      "mean_err_self": 10.541048949614817,
+      "n_truth_valid": 150,
+      "n_self_valid": 150
+    },
+    "M10_DAggerN": {
+      "mean_err_truth": 65.76325280914703,
+      "mean_err_self": 7.9344779976503785,
+      "n_truth_valid": 150,
+      "n_self_valid": 150
+    },
+    "M12_NNshape": {
+      "mean_err_truth": 61.683761757115526,
+      "mean_err_self": 61.683761757115526,
+      "n_truth_valid": 150,
+      "n_self_valid": 150
+    },
+    "FMC_online": {
+      "mean_err_truth": 63.21547796626886,
+      "mean_err_self": 4.713594685498041,
+      "n_truth_valid": 150
+    }
+  },
+  "scenarios_count": 10,
+  "ticks_per_scenario": 15,
+  "wall_clock_s": 2.976087833987549,
+  "weights": [
+    100.0,
+    100.0,
+    10.0,
+    10.0
+  ]
+}

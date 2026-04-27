@@ -1,0 +1,51 @@
+{
+  "config": {
+    "n_iter": 3,
+    "samples_per_iter": 200,
+    "episode_length": 20,
+    "fmc_walkers": 32,
+    "fmc_horizon": 8,
+    "epochs_per_iter": 200,
+    "seed": 0
+  },
+  "history": [
+    {
+      "iter": 0,
+      "n_samples": 500,
+      "mean_err": 35.995291313048654,
+      "median_err": 30.945999042760757,
+      "quench_count": 9,
+      "n_eval": 10
+    },
+    {
+      "iter": 1,
+      "n_samples": 700,
+      "train_loss": 0.8403597034906086,
+      "val_loss": 1.1060810089111328,
+      "mean_err": 3.4840631548563636,
+      "median_err": 2.668873286247253,
+      "quench_count": 0,
+      "n_eval": 10
+    },
+    {
+      "iter": 2,
+      "n_samples": 900,
+      "train_loss": 0.8644473751386007,
+      "val_loss": 1.088366985321045,
+      "mean_err": 3.5463673738638564,
+      "median_err": 2.5942808389663696,
+      "quench_count": 0,
+      "n_eval": 10
+    },
+    {
+      "iter": 3,
+      "n_samples": 1100,
+      "train_loss": 0.8672268629074097,
+      "val_loss": 1.090904951095581,
+      "mean_err": 3.5491726267337795,
+      "median_err": 2.7339195887247723,
+      "quench_count": 0,
+      "n_eval": 10
+    }
+  ]
+}

@@ -57,7 +57,7 @@ def relativize_np(x: np.ndarray) -> np.ndarray:
         out = 1 + log(1+R_N)  if R_N > 0
     """
     sigma = float(x.std())
-    if sigma == 0:
+    if sigma < 1e-12:
         return np.ones_like(x, dtype=np.float32)
     z = (x - x.mean()) / sigma
     return np.where(

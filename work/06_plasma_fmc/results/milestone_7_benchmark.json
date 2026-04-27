@@ -1,0 +1,15 @@
+{
+  "latency_us": {
+    "python_small": 2270.6437506712973,
+    "jit_small": 598.5874973703176,
+    "python_full": 8394.681254867464,
+    "jit_full": 5495.929153403267,
+    "speedup_small": 3.7933364138853007,
+    "speedup_full": 1.5274362206196181
+  },
+  "dataset_gen": {
+    "python_samples_per_sec": 8.02045590333607,
+    "jit_samples_per_sec": 1559.6518006357999,
+    "speedup": 194.45924513930316
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "history": [
+    {
+      "iter": 0,
+      "n_samples": 500,
+      "mean_err": 64.21382551242074,
+      "median_err": 64.61548614501953,
+      "quench": 16,
+      "n_eval": 20
+    },
+    {
+      "iter": 1,
+      "n_samples": 1000,
+      "mean_err": 63.23658194541931,
+      "median_err": 63.11444778442383,
+      "quench": 0,
+      "n_eval": 20
+    },
+    {
+      "iter": 2,
+      "n_samples": 1500,
+      "mean_err": 63.63868505477906,
+      "median_err": 64.16462211608888,
+      "quench": 0,
+      "n_eval": 20
+    },
+    {
+      "iter": 3,
+      "n_samples": 2000,
+      "mean_err": 63.54571049372355,
+      "median_err": 62.86988906860351,
+      "quench": 0,
+      "n_eval": 20
+    }
+  ],
+  "dataset_gen_time_s": 0.3415140829747543
+}
