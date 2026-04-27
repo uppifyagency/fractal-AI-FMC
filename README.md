@@ -1,295 +1,338 @@
 # FractalAI
 
-> *Un planner che pensa per traiettorie possibili — non per gradienti. Zero training, sample efficiency 360× rispetto a MCTS UCT, performance da SoTA su Atari, Craftax e controllo plasma su tokamak reali.*
+> *A planner that reasons through possible trajectories — not gradients. Zero training, 360× sample efficiency over MCTS UCT, SoTA-class performance on Atari, Craftax, and real tokamak plasma control.*
 
 [![Paper](https://img.shields.io/badge/paper-arXiv%3A1803.05049v5-b31b1b)](https://arxiv.org/abs/1803.05049)
-[![Status](https://img.shields.io/badge/status-research%20%2B%20replica%20attiva-2ea44f)]()
+[![Status](https://img.shields.io/badge/status-active%20research%20%2B%20replication-2ea44f)]()
 [![License](https://img.shields.io/badge/license-MIT-blue)]()
-[![Lang](https://img.shields.io/badge/prose-italiano-008C45)]()
+[![Tests](https://img.shields.io/badge/fmc--core-66%2F66%20green-2ea44f)]()
 [![Lang](https://img.shields.io/badge/code-english-005BBB)]()
 
 ---
 
-## In una frase
+## In one sentence
 
-Questa repo raccoglie **studio teorico, replica empirica ed estensione** del **Fractal Monte Carlo (FMC)** di Sergio Hernández-Cerezo e Guillem Duran-Ballester — un algoritmo di pianificazione che, senza alcun training, batte MCTS, Rainbow, PPO, DreamerV2/V3 in sample efficiency, e che proviamo a far uscire dal mondo dei giochi per portarlo nel **coding agentico** e nel **controllo di reattori a fusione**.
+This repository contains **theoretical study, empirical replication, and original extensions** of **Fractal Monte Carlo (FMC)** by Sergio Hernández-Cerezo and Guillem Duran-Ballester — a planning algorithm that, with **no training**, beats MCTS, Rainbow, PPO, and DreamerV2/V3 on sample efficiency, and which we are pushing beyond games into **agentic coding**, **fusion reactor control**, and **traffic signal control**.
 
-## Perché FMC è interessante (e perché conta per l'AGI)
+## Why FMC matters (and why it's an AGI piece)
 
-La comunità deep-RL degli ultimi dieci anni ha consumato **miliardi di step di training** per produrre policy che spesso non generalizzano. FMC parte dall'idea opposta:
+The deep-RL community has spent the last decade burning **billions of training steps** on policies that often fail to generalize. FMC starts from the opposite premise:
 
-> **L'intelligenza non è una rete neurale addestrata. È una procedura di esplorazione che, data una funzione di reward e un simulatore, scopre azioni intelligenti in pochi millisecondi — *senza pesi da imparare*.**
+> **Intelligence is not a trained neural network. It is a search procedure that, given a reward function and a simulator, discovers intelligent actions in milliseconds — *with no weights to learn*.**
 
-Il meccanismo, in tre concetti:
+Three concepts:
 
-1. **Walker** — N copie dell'agente vengono lanciate in parallelo nel futuro simulato (M tick avanti).
-2. **Virtual reward** $V = R^\alpha \cdot D^\beta$ — premia chi accumula reward *e* chi sta lontano dagli altri (diversità, ispirata all'entropia di Tsallis).
-3. **Cloning** — periodicamente, un walker debole "diventa" la copia di un walker forte. Selezione naturale, in tempo reale, dentro il pianificatore.
+1. **Walkers** — N copies of the agent are launched in parallel into the simulated future (M ticks ahead).
+2. **Virtual reward** $V = R^\alpha \cdot D^\beta$ — rewards walkers that accumulate reward *and* stay diverse from each other (Tsallis-entropy-inspired diversity).
+3. **Cloning** — periodically, weak walkers "become" copies of strong walkers. Natural selection in real time, inside the planner.
 
-Risultato: il sistema converge a una distribuzione di Gibbs sulle traiettorie ottimali (link formale a Sequential Monte Carlo / particle filtering — vedi [`work/02_deep_dives/05_smc_particle_filter_view.md`](work/02_deep_dives/05_smc_particle_filter_view.md)). E lo fa **con 100-300 sample per decisione**, non 3 milioni come MCTS UCT.
+The system converges to a Gibbs distribution over optimal trajectories (formal connection to Sequential Monte Carlo / particle filtering — see [`work/02_deep_dives/05_smc_particle_filter_view.md`](work/02_deep_dives/05_smc_particle_filter_view.md)). And it does this with **100–300 samples per decision**, not 3 million like MCTS UCT.
 
-### Perché è un tassello AGI
+### Why this is an AGI building block
 
-| Asse AGI | Cosa offre FMC |
+| AGI axis | What FMC offers |
 |---|---|
-| **Sample efficiency** | 360× meno rollout di MCTS, batte deep-RL pubblicato su Crafter con **0 step di training** |
-| **Compute-at-inference** | Il "pensiero" scala con N×M, non con il dataset di training — *più tempo pensi, meglio decidi* |
-| **Generalizzazione** | Nessuna policy memorizzata = nessun overfitting al training set |
-| **Planning + memoria** | Il framework si estende naturalmente a **Fractal Memory** (Wigner-weighted recall) e all'**Octopus** (loop multi-livello stile Badger) — vedi [`work/02_deep_dives/06_book2_badger_fractal_memory.md`](work/02_deep_dives/06_book2_badger_fractal_memory.md) |
-| **Embodiment-ready** | Funziona su qualsiasi simulatore: ALE, Craftax, equilibri Grad-Shafranov per plasma, *e codice* — l'unica richiesta è "step + reward" |
+| **Sample efficiency** | 360× fewer rollouts than MCTS; beats published deep-RL on Crafter with **0 training steps** |
+| **Compute-at-inference** | "Thinking" scales with N×M, not with the training dataset — *the more time you think, the better you decide* |
+| **Generalization** | No memorized policy = no overfitting to the training set |
+| **Planning + memory** | The framework extends naturally to **Fractal Memory** (Wigner-weighted recall) and **Octopus** (multi-level loops, Badger-style) — see [`work/02_deep_dives/06_book2_badger_fractal_memory.md`](work/02_deep_dives/06_book2_badger_fractal_memory.md) |
+| **Embodiment-ready** | Works on any simulator: ALE, Craftax, Grad-Shafranov plasma equilibria, *and code* — the only requirement is "step + reward" |
 
-In altre parole: FMC sostituisce l'idea "addestra una rete enorme su tutto" con "*hai un mondo simulabile? Allora sai già pianificare in modo intelligente al suo interno*". È un complemento — non un sostituto — del deep learning, e potrebbe essere il pezzo mancante per i sistemi che oggi falliscono in ambienti sparse-reward o long-horizon (Montezuma's Revenge, achievement profondi di Crafter, controllo industriale).
+In short: FMC replaces "*train a huge network on everything*" with "*you have a simulator? then you already know how to plan intelligently inside it*". A complement — not a substitute — to deep learning, and possibly the missing piece for systems that today fail in sparse-reward or long-horizon environments (Montezuma's Revenge, deep Crafter achievements, industrial control).
 
 ---
 
-## I quattro filoni della repo
+## What's in this repo
 
 ```
 FractalAI/
-├── 1803.05049v5.pdf                ← il paper canonico (Hernández-Cerezo 2020)
-├── ANALISIS.md                     ← analisi profonda del paper (46 KB, italiano)
-├── analisisPost.md / analisisPost2.md
-├── DominiDaIndagare.md             ← survey domini per benchmark
-├── 2020 Fractal Slide.md           ← Fractal Memory (slide deck Sergio)
-├── 2020 Fractal.md                 ← Hives + Badger (spec operativa)
-├── Fractal Book.md                 ← Book #2 (struttura AGI)
-├── docs/bibliography/              ← corpus completo (paper, blog, codebases)
+├── 1803.05049v5.pdf                ← canonical paper (Hernández-Cerezo 2020)
+├── docs/
+│   ├── MATH_CANON.md               ← canonical math: 6 defs, 3 thms, 3 conjectures
+│   ├── SESSION_2026-04-27_SUMMARY.md  ← Sergio peer-review briefing
+│   └── bibliography/               ← full corpus (papers, blog, codebases)
 │
-├── work/                           ← IMPLEMENTAZIONE
-│   ├── 01_setup_environment/       ← installazione fragile + smoke test Atari
-│   ├── 02_deep_dives/              ← 6 deep-dive teorici (cloning math, SMC, Active Inference, …)
-│   ├── 03_atari_replication/       ← replica del paper su 3-5 Atari
-│   ├── 04_diagrams/                ← C4 + Mermaid per FMC e fragile-rl
-│   ├── 05_craftax/                 ← FMC su open leaderboard Crafter (zero-training SoTA tabular)
-│   └── 06_plasma_fmc/              ← FMC per controllo plasma TCV (validato su shot reale)
+├── fmc-core/                       ← REFERENCE IMPLEMENTATION
+│   ├── src/fmc/                    ← Python (NumPy) — 6 built-in envs
+│   ├── js/fmc.js                   ← JS port, bit-for-bit identical to Python
+│   ├── tests/                      ← 55 Python + 11 JS, all green
+│   ├── bench/                      ← 9-sweep benchmark suite + REPORT.md
+│   └── Makefile                    ← make install / test-all / bench-full
 │
-├── plugin/fractal-coding-loop/     ← FMC come plugin Claude Code (/fractal-decide, /octopus, …)
+├── work/                           ← APPLIED EXPERIMENTS
+│   ├── 02_deep_dives/              ← 7 formal deep-dives (cloning math, SMC, WF mapping…)
+│   ├── 03_atari_replication/       ← FMC on 3-5 Atari games (Boxing 96/100)
+│   ├── 04_diagrams/                ← C4 + Mermaid for FMC and fragile-rl
+│   ├── 05_craftax/                 ← FMC on Crafter, beats tabular SoTA at 0 training
+│   ├── 06_plasma_fmc/              ← FMC for TCV plasma control (real shot validated)
+│   └── 07_sergio_branching_sweep/  ← original empirical study of b_eff*
 │
-├── simulations/                    ← demo HTML/JS interattive (kart, rocket, pong, octopus)
+├── plugin/fractal-coding-loop/     ← FMC as a Claude Code plugin
 │
-└── repos/                          ← codebase clonate degli autori originali
-    ├── FractalAI_old               ← NumPy, paper #1 reference
-    ├── fragile                     ← PyTorch/GPU, attivo
-    └── fragile-rl                  ← Fragile Mechanics, successore Book #2
+├── simulations/                    ← interactive HTML/JS demos
+│   ├── kart.html / rocket.html / pong.html / octopus.html
+│   └── cong_A_surface.html         ← interactive viz of the 4D b_eff surface
+│
+└── repos/                          ← cloned upstream codebases (FractalAI_old, fragile, fragile-rl)
 ```
 
 ---
 
-## Highlights empirici (cosa abbiamo verificato)
+## Empirical highlights
 
-### 🧮 fmc-core + scaling law (sessione 2026-04-27)
+### 🧮 fmc-core + scaling-law discovery (April 2026)
 
-Filone: [`fmc-core/`](fmc-core/), canone matematico in [`docs/MATH_CANON.md`](docs/MATH_CANON.md), report empirico in [`fmc-core/bench/REPORT.md`](fmc-core/bench/REPORT.md).
+Source of truth: [`fmc-core/`](fmc-core/), canon in [`docs/MATH_CANON.md`](docs/MATH_CANON.md), benchmark report in [`fmc-core/bench/REPORT.md`](fmc-core/bench/REPORT.md), interactive viz in [`simulations/cong_A_surface.html`](simulations/cong_A_surface.html).
 
-**Cosa abbiamo prodotto in una sessione `/loop` autonoma**:
+**Three pieces of original work** delivered in a single autonomous `/loop` session:
 
-1. **Documento canonico** [`docs/MATH_CANON.md`](docs/MATH_CANON.md) — 6 definizioni, 3 teoremi, 3 congetture con criteri di falsificabilità, tavola di stato di verifica empirica.
-2. **Reference implementation** [`fmc-core/`](fmc-core/) — Python (NumPy) + JS bit-fedeli sulle primitive deterministiche (1e-12 tolerance), 6 environment built-in (gridworld, rocket 2D, cartpole, navigation 2D, pendulum swing-up, navigation 2D parametrizzato in K), 55 test Python + 11 test JS.
-3. **Suite benchmark** [`fmc-core/bench/`](fmc-core/bench/) — runner uniforme con bootstrap CI95, output JSONL, 6 sweep (rocket α×β, navigation α×β, pendulum α×β, dipendenza da K, forma di $c_K$, dipendenza da M).
+1. **Canonical math document** — [`docs/MATH_CANON.md`](docs/MATH_CANON.md): 6 definitions, 3 theorems, 3 falsifiable conjectures, empirical-verification status table. Single citable reference replacing scattered deep-dive content.
+2. **Reference implementation** — [`fmc-core/`](fmc-core/): Python (NumPy) and JS port that produce **bit-for-bit identical** virtual rewards on shared fixtures (1e-12 tolerance). Six built-in environments: gridworld, rocket 2D, cartpole, navigation 2D, pendulum swing-up, navigation 2D parameterized in K. **66 tests green** (55 Python + 11 JS).
+3. **Benchmark suite** — [`fmc-core/bench/`](fmc-core/bench/): uniform runner with bootstrap CI95 and JSONL output, **9 parameter sweeps** plus 3 LLM/SUMO experiments.
 
-**Risultato scientifico originale**: Bet 3 della roadmap ha **falsificato due volte** la "regola del 6" di Sergio:
+#### Original scientific result: the "magic 6" of Sergio is not a constant
 
-- Prima falsificazione: a $K=16$ il sweet spot non è 6 ma $\sim 8.4$. La "magic 6" scala con $K$: $b_{\text{eff}}^* \approx 1.53 \cdot K^{0.6}$ (fit su 8 valori di $K$, SSE 25× migliore di costante).
-- Seconda falsificazione: anche $K^{0.6}$ è transiente. Aumentando $M$ (planning horizon) tutto collassa a palmera ($b_{\text{eff}} \to 1$), come previsto dal Teorema 2 (Gibbs equilibrium su $R^\alpha$).
+The Radient 2026 podcast (ch. 16) proposed that $b_{\text{eff}}^* \approx 6$ is a Third Law of cognition — a universal optimal branching factor for FMC under tuned reward. This session **falsifies that claim** with three successive empirical experiments:
 
-**Conclusione**: Sergio's "6" è uno snapshot di un transitorio doppiamente contingente ($K=9$ E $M=15$), **non** una Terza Legge della cognizione come ipotizzato nel podcast Radient 2026 cap. 16. È comunque interessante **come punto di osservazione del transitorio** — la domanda vera è "perché si pianifica a $M$ specifico" (compute budget, profondità task).
+| Step | Finding |
+|---|---|
+| K-sweep on navigation 2D | $b_{\text{eff}}^* \approx 1.53 \cdot K^{0.6}$ (8 K-values, $25\times$ better fit than constant) — "6" is just the value at $K=9$ |
+| M-sweep at K=9 | The $K^{0.6}$ scaling is **transient**; at $M=120$ the system collapses to palmera ($b_{\text{eff}} \to 1$), as predicted by Theorem 2 (Gibbs equilibrium) |
+| N-sweep at K=9 | At $\alpha=0$ exact, $K - b_{\text{eff}} \propto N^{-0.948}$ — within $5\%$ of the Wright-Fisher prediction $-1$. **FMC at small $\alpha$ is empirically a Moran neutral process.** |
 
-> Questo è il primo contributo originale del progetto **oltre** quanto Sergio o il paper FMC dicono. Eseguito in modalità autonoma con criterio falsificabile esplicito, non in pitch mode.
+Final reformulation:
 
-**Bet 1 (SUMO traffic single-intersection)** eseguito come *terzo* test:
+$$b_{\text{eff}}^*(\alpha, \beta=0, K, N, M) \approx 1 + (K-1) \cdot \mathcal{F}(M/N) \cdot \mathcal{G}(\alpha, K)$$
 
-- 1 incrocio 4-way sintetico, traffico Poisson via SUMO 1.26
-- FMC zero-training (queue model planner) vs SUMO actuated default vs static 30/30 cycle
-- **Simmetrico**: tie con static (+5% non significativo)
-- **Asimmetrico** (N/S 6× più carico di E/W): FMC **+116%** throughput vs actuated, **+23%** vs static, varianza 9× più bassa
-- Verdetto: FMC è la scelta giusta per traffico naturale (asimmetrico, time-varying); non aggiunge valore su pattern stazionari simmetrici
+Sergio's "6" is a single point on a 4D surface — triply contingent on $(K=9, M=15, N=32)$. The full discussion is in [`work/02_deep_dives/07_wright_fisher_mapping.md`](work/02_deep_dives/07_wright_fisher_mapping.md). Open the interactive 3D plot in [`simulations/cong_A_surface.html`](simulations/cong_A_surface.html) to see it.
 
-Codice in [`fmc-core/bench/sumo/single_intersection.py`](fmc-core/bench/sumo/single_intersection.py), dati in [`fmc-core/bench/results/sumo_single_intersection_{symmetric,asymmetric}.jsonl`](fmc-core/bench/results/).
+#### Bet 1 — SUMO traffic, single intersection (first-pass)
 
-**Bet 2 (Fractal-of-Thought su LLM piccolo)** eseguito come *secondo* test:
+Source: [`fmc-core/bench/sumo/`](fmc-core/bench/sumo/), JSONL in `bench/results/sumo_*`.
 
-- Modello: LFM2.5-1.2B-Instruct-MLX-4bit (~equiv Llama-3.2-1B)
-- Benchmark: 12 problemi math multi-step custom, 2 seed
-- FoT $87.5\%$ vs self-consistency $83.3\%$ vs greedy $66.7\%$
-- FoT è marginalmente migliore di SC ($+4.2$pp) al costo di $+30\%$ token
+| Scenario | Method | Throughput | Avg waiting time |
+|---|---|---|---|
+| **Symmetric Poisson** (rate=0.15/s/dir, 8 seeds) | actuated | $156 \pm 20$ | 1623 |
+| | static 30/30 | $249 \pm 32$ | 1732 |
+| | **fmc** | $\mathbf{261 \pm 16}$ | **1160** |
+| **Asymmetric** (N/S=0.30, E/W=0.05, 6 seeds) | actuated | $146 \pm 22$ | 1181 |
+| | static 30/30 | $256 \pm 80$ (unstable) | 1822 |
+| | **fmc** | $\mathbf{314 \pm 9}$ | **413** |
 
-Risultato preliminare positivo ma non decisivo. Per Bet 2 *go* serve setup ottimizzato. Codice in [`fmc-core/bench/llm/fot.py`](fmc-core/bench/llm/fot.py), dati in [`fmc-core/bench/results/fot_llm_hard.jsonl`](fmc-core/bench/results/fot_llm_hard.jsonl).
+**FMC wins +116% throughput vs SUMO actuated and +23% vs static cycle on asymmetric traffic, with the lowest variance (σ=9 vs 80).** On stationary symmetric traffic the static cycle is already near-optimal. Verdict: FMC is the right tool for naturalistic adaptive scenarios; ignore it for the trivial-symmetric case.
 
+#### Bet 2 — Fractal-of-Thought on a small LLM
 
+Source: [`fmc-core/bench/llm/fot.py`](fmc-core/bench/llm/fot.py), JSONL in `bench/results/fot_llm_*`.
 
-### 🎮 Atari — la replica controllata
+Model: `LiquidAI/LFM2.5-1.2B-Instruct-MLX-4bit` (≈ Llama-3.2-1B class). Benchmark: 12 multi-step math problems, 2 seeds.
 
-Filone: [`work/03_atari_replication/`](work/03_atari_replication/)
+| Method | Accuracy | Avg tokens/problem |
+|---|---|---|
+| Greedy ($T=0$) | $66.7\%$ (16/24) | 247 |
+| Self-consistency ($K=8$) | $83.3\%$ (20/24) | 1931 |
+| **FoT** ($N=8, M=2$) | $\mathbf{87.5\%}$ (21/24) | 2522 |
 
-> **Boxing 96/100 in 7 minuti, 231 righe di NumPy, zero GPU.** Esattamente nei range del paper.
+FoT beats greedy by $+20.8$ pp and self-consistency by $+4.2$ pp. **Honest verdict**: positive but modest improvement over self-consistency; for a clean *go* signal the setup needs LLM-as-judge reward, more cycles, and a larger benchmark (full GSM8K).
 
-Smoke test riproducibile (`run_single.py --config boxing.yaml --seed 42`). 3-5 giochi diversi (Boxing, MsPacman, Centipede, Asteroids, Montezuma) con intervalli di confidenza al 95% su 5 seed. Il setup conferma **<500 sample/azione** dichiarati dal paper.
+### 🎮 Atari — controlled replication
 
-### 🌳 Craftax — battere il deep-RL pubblicato con 0 training
+Source: [`work/03_atari_replication/`](work/03_atari_replication/)
 
-Filone: [`work/05_craftax/`](work/05_craftax/)
+> **Boxing 96/100 in 7 minutes, 231 lines of NumPy, no GPU.** Squarely in the paper's reported range.
 
-| Metodo | Crafter score | Sample di training |
+Reproducible smoke test (`run_single.py --config boxing.yaml --seed 42`). 3-5 different games (Boxing, MsPacman, Centipede, Asteroids, Montezuma) with 95% confidence intervals over 5 seeds. The setup confirms **<500 samples/action** as claimed in the paper.
+
+### 🌳 Craftax — beating published deep-RL with 0 training
+
+Source: [`work/05_craftax/`](work/05_craftax/)
+
+| Method | Crafter score | Training samples |
 |---|---|---|
 | Random baseline | 1.6% | 0 |
 | Rainbow | 4.3% | 1M |
 | PPO | 4.6% | 1M |
 | DreamerV2 | 10.0% | 1M |
 | DreamerV3 | 14.5% | 1M |
-| Curious Replay (SoTA tabular pre-2025) | 19.4% | 1M |
-| **FMC + intrinsic + delta-prox (nostro)** | **21.87% ± 1.21** | **0** |
-| EMERALD (SoTA assoluta, Jul 2025) | 58.1% | 10M |
+| Curious Replay (tabular SoTA pre-2025) | 19.4% | 1M |
+| **FMC + intrinsic + delta-prox (ours)** | **21.87% ± 1.21** | **0** |
+| EMERALD (absolute SoTA, July 2025) | 58.1% | 10M |
 
-**FMC zero-training supera la SoTA tabular di +2.5 punti percentuali su 30 seed.** Run completamente riproducibile (`fmc_craftax_v4.py` con `intrinsic_inv_alpha=0.5, proximity_alpha=0.2, proximity_mode='delta'`).
+**FMC zero-training beats the tabular SoTA by +2.5 percentage points across 30 seeds.** Fully reproducible (`fmc_craftax_v4.py` with `intrinsic_inv_alpha=0.5, proximity_alpha=0.2, proximity_mode='delta'`).
 
-### ⚛️ Plasma — FMC per il controllo di un tokamak reale
+### ⚛️ Plasma — FMC for real tokamak control
 
-Filone: [`work/06_plasma_fmc/`](work/06_plasma_fmc/) — **17 milestone, 118/118 test verdi.**
+Source: [`work/06_plasma_fmc/`](work/06_plasma_fmc/) — **17 milestones, 118/118 tests green.**
 
-Questo è il filone più ambizioso: prendere FMC e usarlo per controllare la forma del plasma in un **tokamak TCV reale** (Tokamak à Configuration Variable, EPFL Losanna). Il problema è di interesse mondiale per la fusione: il plasma deve restare confinato in una geometria precisa, e il controllo richiede policy con latenza sub-millisecondo.
+Most ambitious thread: use FMC to control the plasma shape on a real **TCV tokamak** (Tokamak à Configuration Variable, EPFL Lausanne). The problem matters globally for fusion: plasma must remain confined within precise geometry, and the controller must hit sub-millisecond latency.
 
-| Metrica | Valore |
+| Metric | Value |
 |---|---|
-| Latenza decisione (NN policy distillata da FMC) | **122 µs** (8× margine sotto il target di 1 ms) |
+| Decision latency (NN policy distilled from FMC) | **122 µs** (8× margin under the 1 ms target) |
 | Speedup vs FMC online | **109×** |
-| Speedup generazione dataset (JIT FMC) | **200×** |
+| Speedup of dataset generation (JIT FMC) | **200×** |
 | Quench rate (BC → DAgger) | **9/10 → 0/10** |
-| Tracking error in-sim (BC → DAgger) | **10×** riduzione |
-| **Truth-error sullo shot TCV reale 65402 (M12 NN-shape)** | **3.47 cm con 100% physicality** — comparabile al PCS operativo TCV |
+| Tracking error in-sim (BC → DAgger) | **10×** reduction |
+| **Truth error on real TCV shot 65402 (M12 NN-shape)** | **3.47 cm with 100% physicality** — comparable to TCV's operational PCS |
 
-Validato non solo su simulatore ma sul **dataset TCV-X21 (CC-BY-4.0)**, con shot sperimentale reale `65402_t1.eqdsk`. La sintesi completa è in [`work/06_plasma_fmc/docs/SYNTHESIS_PAPER.md`](work/06_plasma_fmc/docs/SYNTHESIS_PAPER.md), con anche le **lesioni negative** (M13: l'oracolo NN-proxy ha bias; corretto in M14 col solver Grad-Shafranov reale, che rivela uno spread di ranking di 22×).
+Validated not only in-sim but on the **TCV-X21 dataset (CC-BY-4.0)**, with real experimental shot `65402_t1.eqdsk`. Full synthesis in [`work/06_plasma_fmc/docs/SYNTHESIS_PAPER.md`](work/06_plasma_fmc/docs/SYNTHESIS_PAPER.md), including the **negative lessons** (M13: the NN-proxy oracle had bias; corrected in M14 with the real Grad-Shafranov solver, which revealed a 22× ranking spread).
 
-### 🐙 Coding agentico — FMC come planner per Claude Code
+### 🐙 Agentic coding — FMC as a Claude Code planner
 
-Filone: [`plugin/fractal-coding-loop/`](plugin/fractal-coding-loop/)
+Source: [`plugin/fractal-coding-loop/`](plugin/fractal-coding-loop/)
 
-Il plugin traduce FMC dal mondo dei giochi al mondo del codice. Quattro slash command:
+The plugin ports FMC from games to code. Four slash commands:
 
-- **`/fractal-decide [goal]`** — UNA decisione FMC: spawn N walker in worktree git isolati, M tick di esplorazione + cloning, cherry-pick del commit vincente sul main.
-- **`/octopus [goal]`** — outer loop che chiama `/fractal-decide` finché un giudice non dichiara raggiunto l'obiettivo.
-- **`/fractal-recall [query]`** — recall Wigner-weighted di episodi decisionali passati (Fractal Memory).
-- **`/fractal-memory-show`** — dump del banco di memoria con statistiche per-memoria.
+- **`/fractal-decide [goal]`** — ONE FMC decision: spawn N walkers in isolated git worktrees, M cycles of explore + clone, cherry-pick the winning commit onto main.
+- **`/octopus [goal]`** — outer loop calling `/fractal-decide` until a judge declares the goal reached.
+- **`/fractal-recall [query]`** — Wigner-weighted recall of past decision episodes (Fractal Memory).
+- **`/fractal-memory-show`** — dump the memory bank with per-memory statistics.
 
-Math layer **certificato da 5 test deterministici** (convergenza alla distribuzione di Gibbs verificata numericamente), 17/17 test e2e passano.
+Math layer **certified by 5 deterministic tests** (Gibbs convergence verified numerically). 17/17 e2e tests pass.
 
 ---
 
-## Sezione teorica — i deep-dive
+## Theory section — the deep dives
 
-[`work/02_deep_dives/`](work/02_deep_dives/) contiene sei espansioni formali, ognuna 600-1200 righe con citazioni puntuali al codice (`file:linea`) e bibliografia:
+[`work/02_deep_dives/`](work/02_deep_dives/) holds seven formal expansions, each 250-1200 lines with precise code citations (`file:line`) and bibliography:
 
-| # | Doc | Cosa contiene |
+| # | Doc | What it covers |
 |---|---|---|
-| 01 | [`01_cloning_mathematics.md`](work/02_deep_dives/01_cloning_mathematics.md) | Matematica del cloning, teorema di convergenza (Del Moral 2004) |
-| 02 | [`02_active_inference_link.md`](work/02_deep_dives/02_active_inference_link.md) | Ponte Friston ↔ Hernández-Cerezo: free-energy come virtual reward |
-| 03 | [`03_standard_model_cognition.md`](work/02_deep_dives/03_standard_model_cognition.md) | Mappa FMC → Standard Model of Cognition (Laird, Lebiere, Rosenbloom) |
-| 04 | [`04_relativize_axiomatics.md`](work/02_deep_dives/04_relativize_axiomatics.md) | Axiomatizzazione del `relativize` operator (paper §2.2.3) |
-| 05 | [`05_smc_particle_filter_view.md`](work/02_deep_dives/05_smc_particle_filter_view.md) | FMC ≅ Sequential Monte Carlo con resampling adattivo |
-| 06 | [`06_book2_badger_fractal_memory.md`](work/02_deep_dives/06_book2_badger_fractal_memory.md) | Book #2 di Sergio: Octopus / Badger / Hives + Fractal Memory operativa |
+| 01 | [`01_cloning_mathematics.md`](work/02_deep_dives/01_cloning_mathematics.md) | Cloning math, convergence theorem (Del Moral 2004) |
+| 02 | [`02_active_inference_link.md`](work/02_deep_dives/02_active_inference_link.md) | Friston ↔ Hernández-Cerezo bridge: free-energy as virtual reward |
+| 03 | [`03_standard_model_cognition.md`](work/02_deep_dives/03_standard_model_cognition.md) | FMC mapped onto the Standard Model of Cognition (Laird, Lebiere, Rosenbloom) |
+| 04 | [`04_relativize_axiomatics.md`](work/02_deep_dives/04_relativize_axiomatics.md) | Axiomatization of the `relativize` operator (paper §2.2.3) |
+| 05 | [`05_smc_particle_filter_view.md`](work/02_deep_dives/05_smc_particle_filter_view.md) | FMC ≅ Sequential Monte Carlo with adaptive resampling |
+| 06 | [`06_book2_badger_fractal_memory.md`](work/02_deep_dives/06_book2_badger_fractal_memory.md) | Sergio's Book #2: Octopus / Badger / Hives + operational Fractal Memory |
+| 07 | [`07_wright_fisher_mapping.md`](work/02_deep_dives/07_wright_fisher_mapping.md) | **NEW (2026-04-27)**: empirical confirmation of FMC ↔ Moran/Wright-Fisher mapping |
 
-E in [`work/04_diagrams/`](work/04_diagrams/) ci sono i diagrammi C4 (context, container, components) e una vista a livelli di `fragile-rl`.
+C4 architecture diagrams (context, container, components) and a layered view of `fragile-rl` are in [`work/04_diagrams/`](work/04_diagrams/).
 
 ---
 
 ## Quick start
 
-### Eseguire la replica Atari (smoke test)
+### Use the reference implementation
+
+```bash
+cd fmc-core
+make install              # editable pip install
+make test-all             # 55 Python + 11 JS, all green
+make bench-full           # ~3 min, reproduces all parameter sweeps
+```
+
+```python
+from fmc.core import plan
+from fmc.envs.rocket import Rocket
+
+env = Rocket()
+action = plan(env, env.reset(), N=64, M=30, alpha=1.0, beta=1.0, seed=42)
+```
+
+### Replicate Atari (smoke test)
 
 ```bash
 cd work/03_atari_replication/scripts
 python run_single.py --config ../configs/boxing.yaml --seed 42 \
     --output ../results/boxing_seed42.json
-# Atteso: episodio termina in <10 min con reward >= 99
+# Expected: episode terminates in <10 min with reward >= 99
 ```
 
-### Eseguire FMC su Craftax
+### Run FMC on Craftax
 
 ```bash
 cd work/05_craftax
 python3 scripts/sweep_seeds.py --n_walkers 64 --time_horizon 20 \
     --alpha 1.0 --beta 1.0 --n_seeds 5 --seed_start 42
-# Best config: fmc_craftax_v4.py con --intrinsic_inv_alpha 0.5 --proximity_alpha 0.2
+# Best config: fmc_craftax_v4.py with --intrinsic_inv_alpha 0.5 --proximity_alpha 0.2
 ```
 
-### Far girare la dashboard plasma in real-time
+### Run the plasma real-time dashboard
 
 ```bash
 cd work/06_plasma_fmc
-bash run_all_tests.sh                    # verifica 118/118 test
-streamlit run scripts/dashboard_realtime.py  # M14 oracle truth + TCV-X21 target + FMC internals
+bash run_all_tests.sh                          # verify 118/118 tests
+streamlit run scripts/dashboard_realtime.py    # M14 oracle truth + TCV-X21 target + FMC internals
 ```
 
-### Provare il plugin coding
+### Try the coding plugin
 
 ```bash
-# Verifica matematica certificata
+# Verify the certified math
 python3 plugin/fractal-coding-loop/tests/test_fractal_math.py
-# Atteso: "All FMC math tests passed — convergence certified."
+# Expected: "All FMC math tests passed — convergence certified."
 
-# Dentro Claude Code:
-/fractal-decide "implementa add(a, b) in src/math.py con un unit test"
-/octopus "endpoint POST /login restituisce JWT valido, tests/auth_test.py passa"
+# Inside Claude Code:
+/fractal-decide "implement add(a, b) in src/math.py with a unit test"
+/octopus "POST /login returns a valid JWT, tests/auth_test.py passes"
 ```
 
-### Aprire le simulazioni live (browser)
+### Open the live simulations (browser)
 
 ```bash
 open simulations/index.html
-# Cart-pole, rocket, pong, octopus — tutti FMC in JavaScript, zero dipendenze
+# Cart-pole, rocket, pong, octopus — all FMC in JavaScript, zero dependencies
+
+open simulations/cong_A_surface.html
+# Interactive Plotly viz of the 4D b_eff surface (Sergio's "6" reformulated)
 ```
 
 ---
 
-## Convenzioni
+## Conventions
 
-- **Italiano** per la prosa, **inglese** per il codice e i commenti tecnici.
-- **Date ISO 8601** (`2026-04-27`).
-- **Path relativi** alla root del progetto.
-- **Citazioni paper**: `(Hernández-Cerezo & Duran-Ballester, 2020, §X.Y)`.
-- **Citazioni codice**: link markdown a `file:linea`.
-
----
-
-## Bibliografia minima (per chi vuole approfondire)
-
-Letture in ordine:
-
-1. **Paper canonico** — Hernández-Cerezo & Duran-Ballester (2020), *Fractal AI: A Fragile Theory of Intelligence*, [arXiv:1803.05049v5](https://arxiv.org/abs/1803.05049). §2.2 = math; §4 = algoritmo; §5 = risultati Atari.
-2. **Companion empirico** — Hernández-Cerezo et al. (2018), *Solving Atari Games Using Fractals And Entropy*, [arXiv:1807.01081](https://arxiv.org/abs/1807.01081). FMC > MCTS UCT con <1000 vs 3M sample/azione.
-3. **Predecessore** — Hernández et al. (2017), *General Algorithmic Search*, [arXiv:1705.08691](https://arxiv.org/abs/1705.08691). FMC = "GAS applicato al planning".
-4. **Foundation entropica** — Amigó, Balogh, Hernández (2018), *A Brief Review of Generalized Entropies*, Entropy 20(11):813.
-
-Indice corpus completo (papers, drafts, blog, codebase, gap noti): [`docs/bibliography/CORPUS.md`](docs/bibliography/CORPUS.md).
+- **English** throughout (codebase + prose). Older Italian deep dives are kept verbatim under `work/02_deep_dives/` for archival fidelity.
+- **ISO 8601 dates** (`2026-04-27`).
+- **Project-relative paths**.
+- **Paper citations**: `(Hernández-Cerezo & Duran-Ballester, 2020, §X.Y)`.
+- **Code citations**: markdown links to `file:line`.
 
 ---
 
-## Crediti
+## Minimal bibliography
 
-**Algoritmo FMC**: Sergio Hernández-Cerezo ([@EntropyFarmer](https://twitter.com/EntropyFarmer)) e Guillem Duran-Ballester ([@Miau_DB](https://twitter.com/Miau_DB)), 2014-2026 — oltre dieci anni di lavoro indipendente, mai diventato "mainstream" nonostante l'evidenza empirica.
+Reading order:
 
-**Replica, estensione e plugin Claude Code**: Vlad Vrinceanu ([@uppifyagency](https://github.com/uppifyagency)), 2026.
+1. **Canonical paper** — Hernández-Cerezo & Duran-Ballester (2020), *Fractal AI: A Fragile Theory of Intelligence*, [arXiv:1803.05049v5](https://arxiv.org/abs/1803.05049). §2.2 = math; §4 = algorithm; §5 = Atari results.
+2. **Empirical companion** — Hernández-Cerezo et al. (2018), *Solving Atari Games Using Fractals And Entropy*, [arXiv:1807.01081](https://arxiv.org/abs/1807.01081). FMC > MCTS UCT with <1000 vs 3M samples/action.
+3. **Predecessor** — Hernández et al. (2017), *General Algorithmic Search*, [arXiv:1705.08691](https://arxiv.org/abs/1705.08691). FMC = "GAS applied to planning".
+4. **Entropic foundation** — Amigó, Balogh, Hernández (2018), *A Brief Review of Generalized Entropies*, Entropy 20(11):813.
 
-Per il debito intellettuale completo (papers, blog, codebases, drafts, persone): [`docs/bibliography/CORPUS.md`](docs/bibliography/CORPUS.md).
-
-Rilasciato sotto licenza MIT.
+Full corpus index (papers, drafts, blog posts, codebases, known gaps): [`docs/bibliography/CORPUS.md`](docs/bibliography/CORPUS.md).
 
 ---
 
-## Stato del progetto
+## Project status
 
-| Filone | Stato |
+| Thread | Status |
 |---|---|
-| 01 Setup ambiente | ✅ scaffolding pronto |
-| 02 Deep dives teorici | ✅ 6/6 deep-dive completati |
-| 03 Replica Atari | ✅ Boxing 96/100 verificato; piano completo per 5 giochi |
-| 04 Diagrammi | ✅ C4 + Mermaid renderizzabili |
-| 05 Craftax | ✅ 21.87% Crafter score, 30 seed, supera SoTA tabular |
-| 06 Plasma TCV | ✅ 17 milestone, 118/118 test, validato su shot reale 65402 |
-| Plugin coding | ✅ math layer certificato (5/5), e2e (17/17); end-to-end LLM in fase di test |
-| Simulazioni JS | ✅ kart, rocket, pong, octopus interattive |
+| MATH_CANON.md (canonical math) | ✅ v0.4.3 — 6 defs, 3 thms, 3 conjectures with falsifiability criteria |
+| fmc-core (reference impl) | ✅ 6 envs, 55 Py + 11 JS tests green, bit-for-bit Py↔JS verified |
+| Benchmark suite | ✅ 9 parameter sweeps + 3 applied tests (SUMO, FoT, WF validation), all in JSONL |
+| Bet 3 — universal $b_{\text{eff}}^*$ | ✅ closed: triple falsification, WF mapping confirmed empirically (q=-0.948 vs -1 theoretical) |
+| Bet 2 — Fractal-of-Thought | ✅ first-pass executed: +4.2pp vs self-consistency, +20.8pp vs greedy |
+| Bet 1 — SUMO traffic | ✅ first-pass executed: +116% throughput vs SUMO actuated on asymmetric traffic |
+| Atari replication | ✅ Boxing 96/100 verified, full plan for 5 games |
+| Craftax | ✅ 21.87% Crafter score, 30 seeds, beats tabular SoTA |
+| Plasma TCV | ✅ 17 milestones, 118/118 tests, validated on real shot 65402 |
+| Coding plugin | ✅ math layer certified (5/5), e2e (17/17); end-to-end LLM testing in progress |
+| JS simulations | ✅ kart, rocket, pong, octopus interactive |
+| 4D surface viz | ✅ `simulations/cong_A_surface.html` |
 
 ---
 
-> *"Il deep RL pubblicato fallisce nel raggiungere le ultime due classi di achievement con 1B step. FMC con 0 training step potrebbe esserne un complemento, non un sostituto."*
+## Credits
+
+**FMC algorithm**: Sergio Hernández-Cerezo ([@EntropyFarmer](https://twitter.com/EntropyFarmer)) and Guillem Duran-Ballester ([@Miau_DB](https://twitter.com/Miau_DB)), 2014–2026 — over a decade of independent work that never went mainstream despite the empirical evidence.
+
+**Replication, extension, scaling-law analysis, fmc-core, plugin, Bets 1/2/3**: Vlad Vrinceanu ([@uppifyagency](https://github.com/uppifyagency)), 2026.
+
+For the full intellectual debt (papers, blog posts, codebases, drafts, people): [`docs/bibliography/CORPUS.md`](docs/bibliography/CORPUS.md).
+
+Released under the MIT License.
+
+---
+
+> *"Published deep-RL fails to reach the last two achievement classes with 1B steps. FMC with 0 training steps could be a complement, not a substitute."*
 >
 > — `work/05_craftax/README.md`
