@@ -1,0 +1,38 @@
+{
+  "benchmark": "fot_llm",
+  "model": "LiquidAI/LFM2.5-1.2B-Instruct-MLX-4bit",
+  "problems": 12,
+  "seeds_per_method": 2,
+  "methods": {
+    "greedy": {
+      "correct": 24,
+      "attempted": 24,
+      "accuracy": 1.0,
+      "avg_tokens_per_problem": 135.75
+    },
+    "self_consistency": {
+      "correct": 24,
+      "attempted": 24,
+      "accuracy": 1.0,
+      "avg_tokens_per_problem": 1200.2916666666667
+    },
+    "fot": {
+      "correct": 24,
+      "attempted": 24,
+      "accuracy": 1.0,
+      "avg_tokens_per_problem": 1387.375
+    }
+  },
+  "params": {
+    "self_consistency_K": 8,
+    "fot_N": 8,
+    "fot_M": 2
+  },
+  "hardware": {
+    "platform": "macOS-26.4.1-arm64-arm-64bit",
+    "processor": "arm",
+    "python": "3.11.7",
+    "hostname": "MacBook-Pro-di-vlad.local"
+  },
+  "fmc_core_version": "0.1.0"
+}

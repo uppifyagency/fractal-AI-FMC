@@ -96,6 +96,15 @@ Filone: [`fmc-core/`](fmc-core/), canone matematico in [`docs/MATH_CANON.md`](do
 
 > Questo è il primo contributo originale del progetto **oltre** quanto Sergio o il paper FMC dicono. Eseguito in modalità autonoma con criterio falsificabile esplicito, non in pitch mode.
 
+**Bet 2 (Fractal-of-Thought su LLM piccolo)** eseguito come *secondo* test:
+
+- Modello: LFM2.5-1.2B-Instruct-MLX-4bit (~equiv Llama-3.2-1B)
+- Benchmark: 12 problemi math multi-step custom, 2 seed
+- FoT $87.5\%$ vs self-consistency $83.3\%$ vs greedy $66.7\%$
+- FoT è marginalmente migliore di SC ($+4.2$pp) al costo di $+30\%$ token
+
+Risultato preliminare positivo ma non decisivo. Per Bet 2 *go* serve setup ottimizzato. Codice in [`fmc-core/bench/llm/fot.py`](fmc-core/bench/llm/fot.py), dati in [`fmc-core/bench/results/fot_llm_hard.jsonl`](fmc-core/bench/results/fot_llm_hard.jsonl).
+
 
 
 ### 🎮 Atari — la replica controllata

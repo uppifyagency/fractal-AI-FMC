@@ -127,6 +127,34 @@ $$b_{\text{eff}}^* = 1 + (K-1) \cdot \mathcal{F}(M/N) \cdot \mathcal{G}(\alpha, 
 | Pendulum swing-up | 9 | 6.40 | [6.00, 6.81] | ✅ |
 | Navigation 2D (K=16) | 16 | 8.39 | [7.46, 9.31] | ❌ |
 
+## 4b. Bet 2 — Fractal-of-Thought su LFM2.5-1.2B (Liquid AI)
+
+Esperimento aggiuntivo (`bench/llm/fot.py`): FoT come planner per chain-of-thought su LLM piccolo.
+
+**Setup**:
+- Modello: `LiquidAI/LFM2.5-1.2B-Instruct-MLX-4bit` (Apple MLX backend, ~equiv Llama-3.2-1B)
+- Embedding distance: `sentence-transformers/all-MiniLM-L6-v2`
+- Reward: validità del numero estratto + length penalty (concise = preferito)
+- Walker = una catena di reasoning completa
+- Cycle = re-generation guidata dai walker forti
+
+**Tre metodi confrontati su 12 problemi math hard, 2 seed**:
+
+| Metodo | Accuracy | Avg tokens/problema |
+|---|---|---|
+| Greedy ($T=0$) | $66.7\%$ (16/24) | 247 |
+| Self-consistency ($K=8, T=0.7$) | $83.3\%$ (20/24) | 1931 |
+| **FoT** ($N=8, M=2$, embed dist) | $\mathbf{87.5\%}$ (21/24) | 2522 |
+
+**Verdetto preliminare**:
+- FoT $>$ greedy: $+20.8$pp (significativo)
+- FoT $>$ self-consistency: $+4.2$pp (modesto)
+- FoT costa $+30\%$ token vs SC
+
+Su EASY tier (12 problemi single-step) tutti e tre al $100\%$. Il vantaggio FoT emerge solo nel regime hard, dove greedy fallisce sistematicamente (es. "bookshelf 5×8 - 28 = ?" — greedy dà 5).
+
+**Limiti onesti**: con questo benchmark ridotto, il vantaggio FoT vs SC è entro la rumore stochastico. Per Bet 2 *go* serve setup ottimizzato (più cicli, reward function migliore, tempering di $\alpha$). Tutti dati in `bench/results/fot_llm_hard.jsonl`.
+
 ## 5. Conclusioni operative
 
 1. **Trend $\alpha$ confermato** su 3 task: aumentando $\alpha$ il sistema collassa monotonamente verso palmera ($b_{\text{eff}} \to 1$).
