@@ -1,0 +1,308 @@
+{
+  "method": "tcv_published_targets_via_m14_freegs_oracle",
+  "weights": [
+    100.0,
+    100.0,
+    10.0,
+    10.0
+  ],
+  "tick_dt_s": 0.05,
+  "wall_clock_s": 13.483487083925866,
+  "scenarios": {
+    "iter_like_ramp": {
+      "scenario": "iter_like_ramp",
+      "citation": "Degrave 2022 Nat (shot 70599 fundamental capability)",
+      "n_ticks": 21,
+      "duration_s": 1.0,
+      "policies": {
+        "M5_BC": {
+          "mean_truth_err": 76.25996349214954,
+          "mean_self_err": 74.18404374299826,
+          "physicality": 0.047619047619047616,
+          "n_steps": 21,
+          "n_nan": 0
+        },
+        "M6_DAgger3": {
+          "mean_truth_err": 5.8025117225286795,
+          "mean_self_err": 15.941286573721474,
+          "physicality": 1.0,
+          "n_steps": 21,
+          "n_nan": 0
+        },
+        "M10_DAggerN": {
+          "mean_truth_err": 74.01361493250377,
+          "mean_self_err": 7.635372175673616,
+          "physicality": 0.14285714285714285,
+          "n_steps": 21,
+          "n_nan": 0
+        },
+        "M12_NNshape": {
+          "mean_truth_err": 0.48754357809011334,
+          "mean_self_err": 72.10782644294557,
+          "physicality": 1.0,
+          "n_steps": 21,
+          "n_nan": 0
+        },
+        "FMC_online": {
+          "mean_truth_err": 9.232732996470299,
+          "mean_self_err": 6.175722716310583,
+          "physicality": 0.9047619047619048,
+          "n_steps": 21,
+          "n_nan": 0
+        }
+      }
+    },
+    "negative_triangularity": {
+      "scenario": "negative_triangularity",
+      "citation": "Degrave 2022 Nat (shot 70600 negative triangularity)",
+      "n_ticks": 17,
+      "duration_s": 0.8,
+      "policies": {
+        "M5_BC": {
+          "mean_truth_err": 74.01299979888293,
+          "mean_self_err": 83.0146507075166,
+          "physicality": 0.058823529411764705,
+          "n_steps": 17,
+          "n_nan": 0
+        },
+        "M6_DAgger3": {
+          "mean_truth_err": 1.6061660118366288,
+          "mean_self_err": 8.531192686127993,
+          "physicality": 1.0,
+          "n_steps": 17,
+          "n_nan": 0
+        },
+        "M10_DAggerN": {
+          "mean_truth_err": 65.28655906522768,
+          "mean_self_err": 6.727812700097703,
+          "physicality": 0.17647058823529413,
+          "n_steps": 17,
+          "n_nan": 0
+        },
+        "M12_NNshape": {
+          "mean_truth_err": 4.122199722013492,
+          "mean_self_err": 81.80617189363522,
+          "physicality": 1.0,
+          "n_steps": 17,
+          "n_nan": 0
+        },
+        "FMC_online": {
+          "mean_truth_err": 10.506332144193179,
+          "mean_self_err": 7.583124747270631,
+          "physicality": 0.9411764705882353,
+          "n_steps": 17,
+          "n_nan": 0
+        }
+      }
+    },
+    "high_elongation": {
+      "scenario": "high_elongation",
+      "citation": "Degrave 2022 Nat (\u03ba=1.9 demonstration)",
+      "n_ticks": 13,
+      "duration_s": 0.6,
+      "policies": {
+        "M5_BC": {
+          "mean_truth_err": 71.31111256211437,
+          "mean_self_err": 69.1677865258848,
+          "physicality": 0.07692307692307693,
+          "n_steps": 13,
+          "n_nan": 0
+        },
+        "M6_DAgger3": {
+          "mean_truth_err": 4.138741857511482,
+          "mean_self_err": 14.44208474046482,
+          "physicality": 1.0,
+          "n_steps": 13,
+          "n_nan": 0
+        },
+        "M10_DAggerN": {
+          "mean_truth_err": 60.619645890852105,
+          "mean_self_err": 6.248705710822833,
+          "physicality": 0.23076923076923078,
+          "n_steps": 13,
+          "n_nan": 0
+        },
+        "M12_NNshape": {
+          "mean_truth_err": 1.1095113545378361,
+          "mean_self_err": 76.31640346470074,
+          "physicality": 1.0,
+          "n_steps": 13,
+          "n_nan": 0
+        },
+        "FMC_online": {
+          "mean_truth_err": 7.945040665415695,
+          "mean_self_err": 4.741206566229196,
+          "physicality": 0.9230769230769231,
+          "n_steps": 13,
+          "n_nan": 0
+        }
+      }
+    },
+    "z_position_swing": {
+      "scenario": "z_position_swing",
+      "citation": "Degrave 2022 (vertical position control demos)",
+      "n_ticks": 11,
+      "duration_s": 0.5,
+      "policies": {
+        "M5_BC": {
+          "mean_truth_err": 62.8533238705223,
+          "mean_self_err": 70.73391753725114,
+          "physicality": 0.2727272727272727,
+          "n_steps": 11,
+          "n_nan": 0
+        },
+        "M6_DAgger3": {
+          "mean_truth_err": 4.921696458146553,
+          "mean_self_err": 8.514873537378662,
+          "physicality": 1.0,
+          "n_steps": 11,
+          "n_nan": 0
+        },
+        "M10_DAggerN": {
+          "mean_truth_err": 62.81650576747341,
+          "mean_self_err": 6.762746688360941,
+          "physicality": 0.2727272727272727,
+          "n_steps": 11,
+          "n_nan": 0
+        },
+        "M12_NNshape": {
+          "mean_truth_err": 2.555288991485016,
+          "mean_self_err": 85.41868827559732,
+          "physicality": 1.0,
+          "n_steps": 11,
+          "n_nan": 0
+        },
+        "FMC_online": {
+          "mean_truth_err": 1.8418486377834873,
+          "mean_self_err": 6.9144913867510445,
+          "physicality": 1.0,
+          "n_steps": 11,
+          "n_nan": 0
+        }
+      }
+    },
+    "r_axis_shift": {
+      "scenario": "r_axis_shift",
+      "citation": "Reimerdes 2022 (TCV operational space)",
+      "n_ticks": 13,
+      "duration_s": 0.6,
+      "policies": {
+        "M5_BC": {
+          "mean_truth_err": 70.748807222902,
+          "mean_self_err": 71.5117497990566,
+          "physicality": 0.07692307692307693,
+          "n_steps": 13,
+          "n_nan": 0
+        },
+        "M6_DAgger3": {
+          "mean_truth_err": 3.977660356634051,
+          "mean_self_err": 14.256786869120962,
+          "physicality": 1.0,
+          "n_steps": 13,
+          "n_nan": 0
+        },
+        "M10_DAggerN": {
+          "mean_truth_err": 62.53098418053298,
+          "mean_self_err": 6.30657724266187,
+          "physicality": 0.23076923076923078,
+          "n_steps": 13,
+          "n_nan": 0
+        },
+        "M12_NNshape": {
+          "mean_truth_err": 1.253708736690767,
+          "mean_self_err": 75.49019653636675,
+          "physicality": 1.0,
+          "n_steps": 13,
+          "n_nan": 0
+        },
+        "FMC_online": {
+          "mean_truth_err": 18.09669521253,
+          "mean_self_err": 6.644461750622493,
+          "physicality": 0.7692307692307693,
+          "n_steps": 13,
+          "n_nan": 0
+        }
+      }
+    },
+    "combined_complex": {
+      "scenario": "combined_complex",
+      "citation": "Synthesized from Degrave 2022 multi-target demos",
+      "n_ticks": 25,
+      "duration_s": 1.2,
+      "policies": {
+        "M5_BC": {
+          "mean_truth_err": 76.63928461115177,
+          "mean_self_err": 73.95209149678703,
+          "physicality": 0.04,
+          "n_steps": 25,
+          "n_nan": 0
+        },
+        "M6_DAgger3": {
+          "mean_truth_err": 5.092414691111739,
+          "mean_self_err": 27.390648149447223,
+          "physicality": 1.0,
+          "n_steps": 25,
+          "n_nan": 0
+        },
+        "M10_DAggerN": {
+          "mean_truth_err": 70.72938015270138,
+          "mean_self_err": 8.578960668185028,
+          "physicality": 0.12,
+          "n_steps": 25,
+          "n_nan": 0
+        },
+        "M12_NNshape": {
+          "mean_truth_err": 2.4450908170361862,
+          "mean_self_err": 76.10273919552564,
+          "physicality": 1.0,
+          "n_steps": 25,
+          "n_nan": 0
+        },
+        "FMC_online": {
+          "mean_truth_err": 30.8386306696058,
+          "mean_self_err": 6.94059515260451,
+          "physicality": 0.64,
+          "n_steps": 25,
+          "n_nan": 0
+        }
+      }
+    }
+  },
+  "aggregate": {
+    "M5_BC": {
+      "mean_truth_across_scenarios": 71.97091525962048,
+      "mean_self_across_scenarios": 73.76070663491573,
+      "mean_physicality": 0.09550266726737315,
+      "max_truth": 76.63928461115177,
+      "min_truth": 62.8533238705223
+    },
+    "M6_DAgger3": {
+      "mean_truth_across_scenarios": 4.256531849628188,
+      "mean_self_across_scenarios": 14.84614542604352,
+      "mean_physicality": 1.0,
+      "max_truth": 5.8025117225286795,
+      "min_truth": 1.6061660118366288
+    },
+    "M10_DAggerN": {
+      "mean_truth_across_scenarios": 65.99944833154855,
+      "mean_self_across_scenarios": 7.0433625309669985,
+      "mean_physicality": 0.19559891089302858,
+      "max_truth": 74.01361493250377,
+      "min_truth": 60.619645890852105
+    },
+    "M12_NNshape": {
+      "mean_truth_across_scenarios": 1.9955571999755684,
+      "mean_self_across_scenarios": 77.87367096812854,
+      "mean_physicality": 1.0,
+      "max_truth": 4.122199722013492,
+      "min_truth": 0.48754357809011334
+    },
+    "FMC_online": {
+      "mean_truth_across_scenarios": 13.07688005433308,
+      "mean_self_across_scenarios": 6.499933719964743,
+      "mean_physicality": 0.8630410112763053,
+      "max_truth": 30.8386306696058,
+      "min_truth": 1.8418486377834873
+    }
+  }
+}

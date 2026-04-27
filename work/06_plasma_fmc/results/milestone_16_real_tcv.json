@@ -1,0 +1,71 @@
+{
+  "shot": "TCV 65402 t=1.0s",
+  "source": "TCV-X21 (Oliveira & Body et al. 2021), CC-BY-4.0",
+  "physical_parameters": {
+    "B0_T": 0.929,
+    "Te0_eV": 41.3,
+    "n0_per_m3": 1e+19,
+    "R0_m": 0.906,
+    "Mi_amu": 2
+  },
+  "real_shape": {
+    "R_p": 0.8889895976,
+    "Z_p": -0.056210502999999995,
+    "a": 0.20926067240000007,
+    "kappa": 1.7095984070822468,
+    "delta": 0.1231363461871395,
+    "I_p": -145937.75,
+    "R_axis": 0.9088468552,
+    "Z_axis": -0.007681136951,
+    "psi_axis": 0.11175064,
+    "psi_bndry": 0.0,
+    "n_lcfs_pts": 129,
+    "B0_T_at_R0": -0.9286396338,
+    "R0_m": 0.88
+  },
+  "in_oracle_envelope": true,
+  "weights": [
+    100.0,
+    100.0,
+    10.0,
+    10.0
+  ],
+  "n_ticks": 30,
+  "policy_results": {
+    "M5_BC": {
+      "mean_truth_err": 66.63433845852867,
+      "mean_self_err": 70.19817733062736,
+      "physicality": 0.03333333333333333,
+      "n_steps": 30,
+      "steady_state_truth_err_last10": 66.96000000867579
+    },
+    "M6_DAgger3": {
+      "mean_truth_err": 5.1818047192197065,
+      "mean_self_err": 35.79395766966476,
+      "physicality": 1.0,
+      "n_steps": 30,
+      "steady_state_truth_err_last10": 9.592188391249625
+    },
+    "M10_DAggerN": {
+      "mean_truth_err": 68.2776840034884,
+      "mean_self_err": 7.441180330329171,
+      "physicality": 0.06666666666666667,
+      "n_steps": 30,
+      "steady_state_truth_err_last10": 73.82162416242504
+    },
+    "M12_NNshape": {
+      "mean_truth_err": 3.3656285349188124,
+      "mean_self_err": 66.96000000867576,
+      "physicality": 1.0,
+      "n_steps": 30,
+      "steady_state_truth_err_last10": 3.474058268159035
+    },
+    "FMC_online": {
+      "mean_truth_err": 27.923839207341235,
+      "mean_self_err": 4.331735220130664,
+      "physicality": 0.6333333333333333,
+      "n_steps": 30,
+      "steady_state_truth_err_last10": 21.57223972581134
+    }
+  }
+}

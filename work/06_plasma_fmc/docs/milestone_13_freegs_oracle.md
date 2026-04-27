@@ -117,7 +117,7 @@ $ python tests/test_oracle.py
 5 passed, 0 failed
 ```
 
-**Cumulativo M2-M13**: 21 + 12 + 11 + 6 + 6 + 6 + 6 + 10 + 7 + 10 + 6 + 5 = **106/106 test green**.
+**Cumulativo M2-M13**: 21 + 12 + 11 + 6 + 6 + 6 + 10 + 7 + 10 + 6 + 5 = **100/100 test green**.
 
 ## 7. Riproducibilità
 
