@@ -227,7 +227,7 @@ Indice corpus completo (papers, drafts, blog, codebase, gap noti): [`docs/biblio
 
 **Algoritmo FMC**: Sergio Hernández-Cerezo ([@EntropyFarmer](https://twitter.com/EntropyFarmer)) e Guillem Duran-Ballester ([@Miau_DB](https://twitter.com/Miau_DB)), 2014-2026 — oltre dieci anni di lavoro indipendente, mai diventato "mainstream" nonostante l'evidenza empirica.
 
-**Replica, estensione e plugin Claude Code**: Vlad Vrinceanu (filcarspa@gmail.com), 2026.
+**Replica, estensione e plugin Claude Code**: Vlad Vrinceanu ([@uppifyagency](https://github.com/uppifyagency)), 2026.
 
 Per il debito intellettuale completo (papers, blog, codebases, drafts, persone): [`docs/bibliography/CORPUS.md`](docs/bibliography/CORPUS.md).
 
