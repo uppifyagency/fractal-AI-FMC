@@ -640,6 +640,7 @@ Per disciplina (cf. CLAUDE.md §3 "surgical changes" e §"cosa rifiutiamo"):
 | 2026-04-27 | 0.3.0 | **Forma di $c_K$ scoperta** ($K \in \{3,4,6,9,12,16,24,32\}$): power law $b_{\text{eff}}^* \approx 1.53 \cdot K^{0.6}$, fit 25× meglio del modello costante. Il "6" è caso particolare a $K=9$, non legge universale. **Primo contributo originale del progetto**. | idem |
 | 2026-04-27 | 0.3.1 | **Anche $K^{0.6}$ falsificato come fixed point**: M-dependence test mostra che il scaling è transiente. A $M \to \infty$, $b_{\text{eff}} \to 1$ (Th. 2). Sergio's "6" è doppiamente contingente: $K=9$ E $M=15$. La "vera" domanda è perché si pianifica a un certo $M$. | idem |
 | 2026-04-27 | 0.4.0 | **Triade completa $(K, M, N)$**: N-dependence test rivela $K - b_{\text{eff}} \propto N^{-0.45}$ a $M$ fisso (Wright-Fisher). Sergio's "6" è triplamente contingente: $K=9, M=15, N=32$. Forma generale candidata: $b_{\text{eff}} = 1 + (K-1) \mathcal{F}(M/N) \mathcal{G}(\alpha, K)$. | idem |
+| 2026-04-27 | 0.4.1 | **Mappatura WF empiricamente confermata** a $\alpha = 0$ esatto: $q = -0.948$ vs $-1$ teorico (errore 5%). FMC neutrale $\leftrightarrow$ Moran drift. Deep dive 07 passa da candidate a confermato. | idem |
 
 ---
 

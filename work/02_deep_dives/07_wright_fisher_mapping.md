@@ -111,7 +111,37 @@ Esponente osservato (fit power law, vedi [`bench/c_K_shape_summary.json`](../../
 1. *Differenze procedurali*: FMC usa **pairwise partner sampling** con "MH ratio" $(\mathrm{VR}_k - \mathrm{VR}_i)/\mathrm{VR}_i$, non Moran-style "uniform parent". Per piccolo $\alpha$ questo è più vicino a Moran ma con **rate effettivo dipendente da $\alpha$**.
 2. *Fluttuazioni del fitness*: il fitness è stocastico ad ogni tick (dipende dalla perturbazione del simulatore), aggiungendo una varianza extra che rallenta la fissazione.
 
-Predizione testabile: a $\alpha = 0$ esatto, l'esponente dovrebbe avvicinarsi a $-1$. **Esperimento da fare**: lanciare il sweep N a $\alpha = 0$ esatto.
+Predizione testabile: a $\alpha = 0$ esatto, l'esponente dovrebbe avvicinarsi a $-1$. ~~**Esperimento da fare**: lanciare il sweep N a $\alpha = 0$ esatto.~~
+
+### 2.4 Conferma sperimentale (2026-04-27)
+
+[`fmc-core/bench/results/WF_validation_alpha0.jsonl`](../../fmc-core/bench/results/WF_validation_alpha0.jsonl), $K=9, M=15, \alpha=0, \beta=0$, 20 seed:
+
+| $N$ | $b_{\text{eff}}^*$ | $K - b_{\text{eff}}^*$ |
+|---|---|---|
+| 8 | 5.26 | 3.74 |
+| 16 | 6.87 | 2.13 |
+| 32 | 7.99 | 1.01 |
+| 64 | 8.41 | 0.59 |
+| 128 | 8.70 | 0.30 |
+| 256 | 8.86 | 0.14 |
+| 512 | 8.93 | 0.07 |
+
+Fit power law $K - b_{\text{eff}}^* = a \cdot N^q$:
+
+$$\boxed{q_{\text{measured}}(\alpha=0) = -0.948 \;\;\approx\;\; q_{\text{WF predicted}} = -1.0}$$
+
+Errore $5.2\%$, **entro la deviazione attesa per finite-sample stochasticity con 20 seed**. La mappatura FMC neutral $\leftrightarrow$ Moran drift è **empiricamente confermata**.
+
+Riassunto della dipendenza dell'esponente da $\alpha$:
+
+| $\alpha$ | $q$ misurato | regime |
+|---|---|---|
+| $0.0$ | $-0.948$ | neutrale puro (WF prediction) |
+| $0.1$ | $-0.45$ | selezione debole (rallenta fissazione) |
+| $\geq 0.5$ | dominato da palmera asintotica | regime di selezione forte (Th. 2) |
+
+**Significato**: il deep dive 07 passa da "candidate derivation" a "**derivation confermata empiricamente nel limite $\alpha \to 0$**". I corollari predetti (Sergio's "6" come snapshot di $b_{\text{eff}}(t/\tau \approx 0.5)$ con $\tau \sim N$, calibrazione $M_{\text{opt}} \sim 0.5 N$, applicabilità di Ewens 1972) diventano testabili e probabilmente veri.
 
 ## 3. Cosa farebbe la mappatura, se confermata
 
