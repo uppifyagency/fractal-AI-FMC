@@ -11,6 +11,7 @@ Tutti i materiali sono stati scaricati e archiviati in [`sources/`](sources/):
 | 📄 Paper PDF | [`sources/papers/`](sources/papers/) | 4 PDF (3 arXiv + 1 Entropy journal) |
 | 📚 Drafts | [`sources/books/`](sources/books/) | Book #2, Hives, Fractal Memory Slide |
 | 📝 Blog posts | [`sources/blog_posts/`](sources/blog_posts/) | 8 post archiviati con annotazioni + INDEX |
+| 🎙️ Podcasts/interviste | [`sources/podcasts/`](sources/podcasts/) | Trascrizione integrale Radient 2026, capitolata |
 | 🔗 External refs | [`sources/external_refs/`](sources/external_refs/) | Riservato per future espansioni |
 
 **Autori principali**:
@@ -41,6 +42,7 @@ Tutti i materiali sono stati scaricati e archiviati in [`sources/`](sources/):
 | 2021 | Book chapter | [Physics-Inspired Swarm Optimization: The General Algorithmic Search](https://www.worldscientific.com/) | World Scientific Series on Nonlinear Science. **Pubblicazione formale del lavoro 2017** |
 | 2023 | arXiv | [Latent Diffusion Models for Histopathology](https://arxiv.org/abs/2312.09792) | Duran-Ballester come co-autore. **Off-topic** (medical imaging) ma rilevante per la traiettoria di carriera |
 | 2024-2026 | Codebase + docs | [`fragile-rl`](https://github.com/FragileTech/fragile-rl) + Fragile Mechanics book | Successore canonico di Book #2 |
+| 2026 | Podcast/intervista | **Radient — intervista a Sergio Hernández** (~2.5h) → 📁 [`MD capitolato locale`](sources/podcasts/2026_radient_sergio_interview.md) | **Knowledge orale di Sergio**: prima persona, 21 capitoli argomentativi, copre l'intera traiettoria (Wissner-Gross → cochecito → Atari → fractal → cooperazione → frontera caos → futuro AI) |
 
 ---
 
@@ -165,7 +167,51 @@ Video dimostrativi degli esperimenti, citati anche nel paper §5.2:
 
 ---
 
-## 6. Codebase / Software
+## 6. Podcasts e interviste
+
+### 6.1 Radient — intervista a Sergio Hernández (2026)
+
+> **Show**: Radient (radio/podcast tecnologia, conduttori Alberto e César)
+> **Lunghezza**: ~2.5 ore (~21 700 parole trascritte)
+> **Lingua originale**: spagnolo
+> 📁 **Locale**: [`sources/podcasts/2026_radient_sergio_interview.md`](sources/podcasts/2026_radient_sergio_interview.md)
+> **Strutturazione**: trascrizione integrale capitolata in 21 sezioni argomentative con tesi italiana
+
+**Posizione nel corpus**: questa è **l'unica fonte orale in prima persona** del programma. Sergio espone in tempo reale, senza filtraggio editoriale, il suo intero percorso intellettuale: dall'illuminazione iniziale (Wissner-Gross 2013) fino alla previsione del prossimo grande salto AI. Complementa il corpus scritto su tre fronti:
+
+1. **Genesi**: Sergio racconta esattamente come arrivò al primo cochecito (codice in una notte, prima di leggere il paper). Nessun documento scritto cattura questa specifica dinamica psicologica.
+2. **Quantitativi nuovi**: dichiara la cifra "**~6 ramificazioni per nodo**" come ottimo per la massimizzazione di entropia di un albero — non presente in alcun paper. Recipe quantitativa per il design della reward.
+3. **La "frontera caos/orden" come Terza Legge**: Sergio articola la sua ipotesi sul terzo principio fisico che governerebbe il design di una reward function, ipotesi che nei paper non è mai esplicitata in questa forma.
+
+**Contenuti chiave per capitolo** (vedi indice nel file):
+
+| Cap | Argomento | Importanza per il corpus |
+|---|---|---|
+| 1-2 | Tesi fondamentale + Wissner-Gross 2013 | Conferma in voce: FMC ≡ secondo principio termodinamica applicato a τ esteso |
+| 3-4 | Intuizione "contare i futuri" + cochecito (one-night) | Genesi psicologica unica |
+| 5-6 | Tre pilastri AGI + reward = personalità | "El reward te define" — prima volta articolato così esplicitamente |
+| 7 | Buon controllore | Connessione a teoria del controllo classica |
+| 8 | FMC su LLM (Fractal of Thought) | **Proposta concreta** non documentata altrove |
+| 10 | FMC vs MCTS | Sergio dice "**150,000 vs 35**" — verificare contro la cifra "400" del paper |
+| 11 | Boltzmann + mineros | Articolazione semplificata del cuore matematico |
+| 12 | Bengala vs láser | **Metafora chiave** per spiegare i limiti dei reasoning LLM lineari |
+| 13 | Razzo+uncino + cooperazione tirachinas | Conferma: **continuous-control demos hanno tutti forze di richiamo** |
+| 16 | Frontera caos/orden come reward criterion | **Ipotesi nuova** sul terzo principio fisico mancante |
+| 17 | Open source come strategia entropica | Filosofia non-ideologica per OSS |
+| 19 | Sintesi futura FMC + reti neurali | Predizione esplicita del prossimo salto AI |
+
+**Citazioni notevoli da incorporare nelle nostre analisi**:
+
+- *"Le reti neurali stanno simulando il principio di minima azione. E se applicassi l'altro principio fondante della fisica, quello di massima entropia, e costruisco qualcosa di parallelo a una rete neurale?"* — la tesi-zero di Fractal AI, in lingua naturale.
+- *"Sí, dormí muy bien pero fue porque no me había leído el paper si me llego a haber leído el paper antes de ponerme a hacer el código me habría replanteado todo esto y habría dicho madre mía cómo simplifico esta ecuación y me habría metido en un callejón sin salida"* — la fortuna epistemica.
+- *"Esa función de recompensa que tú creas es lo único creativo que hay en el algoritmo todo lo demás es mecánico... modificando la recompensa defines totalmente la personalidad del agente"* — il principio canonico del reward design.
+- *"Las piedras caen para abajo porque son muy inteligentes pero solo ven el siguiente microsegundo"* — la fisica come limite τ→0 dell'intelligenza.
+- *"Yo lo que hice fue como abrir una bengala y que se llene todo de gas... eso con el láser no lo va a encontrar nunca"* — perché LLM lineari falliranno.
+- *"Soy un grimo a muerte... porque es lo que más entropía tiene al final"* — open source come strategia entropica.
+
+---
+
+## 7. Codebase / Software
 
 | Repository | Anni | Stato | Scopo |
 |---|---|---|---|
@@ -199,10 +245,15 @@ Video dimostrativi degli esperimenti, citati anche nel paper §5.2:
                                ↓
                        [Fragile Mechanics 2024-2026]
                        (`fragile-rl` codebase + book)
+                               │
+                               ↓
+                       [Radient Podcast 2026]
+                       (sintesi orale prima persona)
 
 LEGENDA:
   ───  pubblicato (peer-reviewed o arXiv)
   ─ ─  draft privato
+  ···  fonte orale trascritta
 ```
 
 ---
@@ -217,7 +268,7 @@ Riconosciute lacune nel materiale a nostra disposizione:
 
 3. **Documentazione interna `fragile`** — il codebase ha `docs/` con jupyter book, parzialmente esplorato.
 
-4. **Tesi/talk video non transcritti** — la playlist YouTube ha video sostanziali, mai trascritti.
+4. **Tesi/talk video non transcritti** — la playlist YouTube ha video sostanziali, mai trascritti. *(Parziale: Radient 2026 ora trascritto.)*
 
 5. **Riferimenti incrociati con altri programmi AGI** — non abbiamo ancora cercato come questo corpus dialoga con: Yampolskiy, Schmidhuber, Hutter, Friston, Goertzel.
 

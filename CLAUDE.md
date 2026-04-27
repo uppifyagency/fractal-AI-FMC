@@ -121,6 +121,10 @@ Language convention: **Italian for prose, English for code/comments**. ISO 8601 
 - [`analisisPost.md`](analisisPost.md) / [`analisisPost2.md`](analisisPost2.md) — post-replication reflections
 - [`DominiDaIndagare.md`](DominiDaIndagare.md) — domain survey for benchmark selection
 
+**Sergio's oral knowledge (first-person, ~2.5h)**:
+
+- [`docs/bibliography/sources/podcasts/2026_radient_sergio_interview.md`](docs/bibliography/sources/podcasts/2026_radient_sergio_interview.md) — Radient 2026 podcast, full transcript (~21 700 words), structured into 21 argumentative chapters with Italian theses. Spanish dialogue preserved verbatim. **Most direct source for Sergio's intuitive framing**: Wissner-Gross genesis, the one-night cochecito, the **6-fold optimal branching factor**, "frontera caos/orden" as candidate Third Law of cognition, FMC vs MCTS quantitative comparison (Sergio claims ~150,000 vs ~35 samples — verify against paper's "400"), bengala-vs-laser metaphor for LLM limits, open-source-as-entropy-maximization philosophy. **Read alongside paper #1** for the operational intuition that the math alone doesn't carry.
+
 **Codebases** under [`repos/`](repos/): `FractalAI_old` (deprecated NumPy, paper #1 reference), `fragile` (PyTorch/GPU, active), `fragile-rl` (Fragile Mechanics, 2024-2026, successor to Book #2).
 
 ### gstack

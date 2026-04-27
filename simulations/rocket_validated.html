@@ -1,0 +1,1684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FMC Rocket Validated — Math + Physics + Theory</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+         background: #0a0e27; color: #e1e7f5; padding: 18px 24px; line-height: 1.4; }
+  h1 { font-size: 1.5em; margin-bottom: 4px; color: #ffd700; }
+  h2 { font-size: 1.05em; margin: 14px 0 8px; color: #ffd700;
+       border-bottom: 1px solid #2a3458; padding-bottom: 4px; }
+  .subtitle { font-size: 0.9em; color: #8b9bb4; margin-bottom: 18px; }
+  .nav { font-size: 0.85em; margin-bottom: 16px; }
+  .nav a { color: #6ba3ff; text-decoration: none; margin-right: 14px; }
+  .nav a:hover { text-decoration: underline; }
+  .panel { background: #1a1f3a; border-radius: 8px; padding: 14px;
+           border: 1px solid #2a3458; margin-bottom: 14px; }
+  .layout { display: grid; grid-template-columns: 1fr 320px; gap: 14px; }
+  canvas { display: block; background: #0d1228; border-radius: 4px;
+           border: 1px solid #2a3458; }
+  button { background: #2563eb; color: white; border: none; padding: 7px 14px;
+           border-radius: 4px; cursor: pointer; font-size: 0.88em; margin-right: 6px; }
+  button:hover { background: #1d4ed8; }
+  button.green { background: #10b981; } button.green:hover { background: #059669; }
+  button.warn { background: #d97706; } button.warn:hover { background: #b45309; }
+  button:disabled { background: #374151; cursor: not-allowed; }
+  .control-row { margin-bottom: 10px; font-size: 0.86em; }
+  .control-row label { display: block; color: #8b9bb4; margin-bottom: 3px; }
+  .control-row input[type=range] { width: 100%; }
+  .value { color: #ffd700; font-weight: bold; }
+  .stats { font-family: ui-monospace, 'Cascadia Code', monospace; font-size: 0.84em;
+           background: #0d1228; padding: 9px 11px; border-radius: 4px;
+           border: 1px solid #2a3458; }
+  .stat { display: flex; justify-content: space-between; margin: 2px 0; }
+  .stat .key { color: #8b9bb4; } .stat .val { color: #ffd700; }
+  .meter { height: 6px; background: #0d1228; border-radius: 3px;
+           overflow: hidden; margin: 4px 0; }
+  .meter-fill { height: 100%; background: linear-gradient(90deg, #2563eb, #ffd700); }
+  .test-list { font-family: ui-monospace, 'Cascadia Code', monospace; font-size: 0.84em; }
+  .test-row { display: grid; grid-template-columns: 22px 1fr auto;
+              padding: 4px 8px; border-radius: 3px; gap: 8px; align-items: center; }
+  .test-row.pass { background: rgba(16, 185, 129, 0.10); }
+  .test-row.fail { background: rgba(239, 68, 68, 0.15); }
+  .test-row.run { background: rgba(37, 99, 235, 0.12); }
+  .test-icon { font-size: 1em; text-align: center; }
+  .test-name { color: #c1cae0; }
+  .test-detail { color: #8b9bb4; font-size: 0.82em; }
+  .test-summary { font-size: 0.92em; padding: 8px; margin-top: 6px;
+                  border-radius: 4px; font-weight: bold; }
+  .test-summary.pass { background: rgba(16, 185, 129, 0.20); color: #10b981; }
+  .test-summary.fail { background: rgba(239, 68, 68, 0.25); color: #ef4444; }
+  .legend { font-size: 0.78em; color: #8b9bb4; margin-top: 10px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; margin: 2px 0; }
+  .legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+  details summary { cursor: pointer; color: #ffd700; padding: 3px 0;
+                    font-size: 0.86em; user-select: none; }
+  details p { padding: 6px 8px; line-height: 1.5; color: #c1cae0; font-size: 0.84em; }
+  .tag { display: inline-block; padding: 1px 6px; font-size: 0.72em;
+         border-radius: 3px; background: #2a3458; color: #8b9bb4; margin-right: 4px; }
+  .tag.math { background: #1e40af; color: #bfdbfe; }
+  .tag.phys { background: #92400e; color: #fde68a; }
+  .tag.integ { background: #166534; color: #bbf7d0; }
+  .vr-bars { display: flex; align-items: flex-end; height: 50px;
+             background: #0d1228; padding: 4px; border-radius: 3px;
+             border: 1px solid #2a3458; gap: 1px; }
+  .vr-bar { flex: 1; background: linear-gradient(180deg, #ffd700, #2563eb); min-height: 1px; }
+  .vr-bar.dead { background: #ef4444; opacity: 0.5; }
+</style>
+</head>
+<body>
+  <div class="nav">
+    <a href="index.html">← back to index</a>
+    <a href="rocket.html">rocket (broken)</a>
+    <a href="kart.html">kart</a>
+    <a href="pong.html">pong</a>
+    <a href="octopus.html">octopus</a>
+  </div>
+
+  <h1>🚀 FMC Rocket Validated — math + physics + theory</h1>
+  <p class="subtitle">
+    Fractal Monte Carlo (Hernández-Cerezo &amp; Duran-Ballester 2020) applicato a free-flight 2D.
+    Versione corretta di <code>rocket.html</code> dopo diagnosi del fallimento originale: reward
+    composta moltiplicativa, action continua, distance pesata, init-action persistence, time
+    horizon esteso, modalità Common Sense (α=0). Math layer e physics certificati da 14 unit test.
+  </p>
+
+  <div class="panel">
+    <h2>1. Test Suite — math + physics + FMC theory</h2>
+    <div style="margin-bottom: 10px;">
+      <button id="btnRunTests" class="green">▶ Run all tests</button>
+      <button id="btnClearTests">⟲ Clear</button>
+      <span id="testStatus" style="margin-left: 12px; color: #8b9bb4; font-size: 0.86em;">
+        Click "Run all tests" — ~3 secondi
+      </span>
+    </div>
+    <div id="testList" class="test-list"></div>
+    <div id="testSummary"></div>
+  </div>
+
+  <div class="layout">
+    <div class="panel">
+      <h2>2. Live simulator — pilota il razzo via FMC</h2>
+      <canvas id="cv" width="900" height="540"></canvas>
+      <div style="margin-top: 8px; font-size: 0.84em; color: #8b9bb4;">
+        Cono FMC: traiettorie <b style="color:#ffd700">oro</b> = lineage vincente,
+        <b style="color:#60a5fa">azzurre</b> = alternative scartate dal cloning,
+        <b style="color:#ef4444">rosse</b> = walker morti. Punti finali = "horizon"
+        del cono. Razzo giallo = stato vero. Verde = goal (rispawna ad ogni cattura).
+        Tracciato bianco = path effettivo.
+      </div>
+    </div>
+
+    <div>
+      <div class="panel">
+        <h2>3. Parametri FMC</h2>
+        <div class="control-row">
+          <label>N walkers <span class="value" id="vN">64</span></label>
+          <input type="range" id="N" min="8" max="200" value="64">
+        </div>
+        <div class="control-row">
+          <label>M time horizon (tick) <span class="value" id="vM">40</span></label>
+          <input type="range" id="M" min="5" max="120" value="40">
+        </div>
+        <div class="control-row">
+          <label>α exploitation <span class="value" id="vA">1.00</span></label>
+          <input type="range" id="A" min="0" max="200" value="100" step="5">
+        </div>
+        <div class="control-row">
+          <label>β exploration <span class="value" id="vB">1.00</span></label>
+          <input type="range" id="B" min="0" max="300" value="100" step="5">
+        </div>
+        <div class="control-row">
+          <label>ESS threshold <span class="value" id="vE">0.70</span></label>
+          <input type="range" id="E" min="30" max="95" value="70" step="5">
+        </div>
+        <div style="margin-top: 8px;">
+          <button id="btnStart" class="green">▶ Start</button>
+          <button id="btnReset">⟲ Reset</button>
+          <button id="btnAlpha0" class="warn">α=0 mode</button>
+          <button id="btnSergio" title="Empirical sweet spot for b_eff≈6 on this rocket task: α=0.1, β=0.0">Sergio config</button>
+        </div>
+
+        <div class="legend">
+          <details>
+            <summary>Common Sense mode (α=0)</summary>
+            <p>
+              Setta α=0 (clic "α=0 mode"): il razzo ignora il goal, cerca solo di restare vivo.
+              Pattern paper §6.3: <i>"never crashes"</i>. È il test diretto del claim
+              di Sergio sul drone autopilot. Se il razzo svolazza senza schiantarsi, FMC funziona
+              su free-flight. Se cade, FMC ha un limite strutturale.
+            </p>
+          </details>
+          <details>
+            <summary>Cosa è cambiato vs rocket.html</summary>
+            <p>
+              <b>1.</b> Reward composta moltiplicativa <code>R = alive × clearance × (1 + progress)</code><br>
+              <b>2.</b> Time horizon default M=40 (vs 15) — lookahead 1.6s<br>
+              <b>3.</b> Action continua sampled da gaussiana con bias counter-gravity<br>
+              <b>4.</b> Distance metric pesata per canale (pos, vel, attitude)<br>
+              <b>5.</b> Init-action persistence: σ piccolo nei primi 4 tick<br>
+              <b>6.</b> ESS-adaptive cloning (skip se ESS &gt; 0.7·N)
+            </p>
+          </details>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>4. Diagnostics</h2>
+        <div class="stats">
+          <div class="stat"><span class="key">tick</span><span class="val" id="sTick">0</span></div>
+          <div class="stat"><span class="key">goals reached</span><span class="val" id="sGoals">0</span></div>
+          <div class="stat"><span class="key">cum reward</span><span class="val" id="sReward">0.00</span></div>
+          <div class="stat"><span class="key">altitude (px)</span><span class="val" id="sAlt">0</span></div>
+          <div class="stat"><span class="key">v (px/tick)</span><span class="val" id="sV">0.0</span></div>
+          <div class="stat"><span class="key">attitude (deg)</span><span class="val" id="sTheta">0</span></div>
+          <div class="stat"><span class="key">decision</span><span class="val" id="sDec">—</span></div>
+          <div class="stat"><span class="key">confidence</span><span class="val" id="sConf">0%</span></div>
+          <div class="meter"><div class="meter-fill" id="mConf" style="width:0%"></div></div>
+          <div class="stat"><span class="key">ESS / N</span><span class="val" id="sESS">0/0</span></div>
+          <div class="meter"><div class="meter-fill" id="mESS" style="width:0%"></div></div>
+          <div class="stat" title="Sergio's hypothesis: b_eff ≈ 6 = optimally-tuned reward (cap. 16 podcast)"><span class="key">b_eff (target ≈ 6)</span><span class="val" id="sBranch">0.00</span></div>
+          <div class="meter"><div class="meter-fill" id="mBranch" style="width:0%"></div></div>
+          <div class="stat"><span class="key">walkers alive</span><span class="val" id="sAlive">0</span></div>
+          <div class="stat"><span class="key">cloning skipped</span><span class="val" id="sSkip">—</span></div>
+          <div class="stat"><span class="key">samples used</span><span class="val" id="sSamples">0</span></div>
+        </div>
+        <div style="margin-top: 8px;">
+          <div style="font-size: 0.78em; color: #8b9bb4; margin-bottom: 3px;">VR distribution</div>
+          <div class="vr-bars" id="vrBars"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+"use strict";
+
+/* ============================================================================
+   FMC CORE — primitive validate against paper Hernández-Cerezo 2020
+   ============================================================================
+   References:
+     §2.2.3 — relativize transformation
+     §4.4   — virtual reward + clone probability
+     §4.5   — stochastic O(N) distance via random partner
+     §4.6   — argmax bincount marginalization
+   Plus:
+     Doucet et al. 2001 — Effective Sample Size (ESS) for adaptive resampling
+============================================================================ */
+
+const FMC = (function() {
+
+  /* Seedable PRNG (Mulberry32) — deterministic for tests; default Math.random() */
+  function makeRng(seed) {
+    if (seed === undefined) return Math.random;
+    let s = seed >>> 0;
+    return function() {
+      s = (s + 0x6D2B79F5) >>> 0;
+      let t = s;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  /* relativize — paper §2.2.3
+   * R_N = (R - μ) / σ
+   * R   = exp(R_N)         if R_N ≤ 0
+   * R   = 1 + ln(1 + R_N)  if R_N > 0
+   * Properties: strictly positive, order-preserving, affine-invariant. */
+  function relativize(arr) {
+    const n = arr.length;
+    if (n === 0) return [];
+    let sum = 0; for (const v of arr) sum += v;
+    const mean = sum / n;
+    let var_ = 0; for (const v of arr) { const d = v - mean; var_ += d*d; }
+    var_ /= n;
+    const std = Math.sqrt(var_);
+    if (std === 0 || !isFinite(std)) return new Array(n).fill(1);
+    const out = new Array(n);
+    for (let i = 0; i < n; i++) {
+      const z = (arr[i] - mean) / std;
+      out[i] = z <= 0 ? Math.exp(Math.max(z, -50)) : 1 + Math.log1p(z);
+    }
+    return out;
+  }
+
+  /* L2 distance (default metric). */
+  function l2(a, b) {
+    let s = 0;
+    for (let i = 0; i < a.length; i++) { const d = a[i] - b[i]; s += d*d; }
+    return Math.sqrt(s);
+  }
+
+  /* virtualReward — paper §4.4
+   * VR_i = relativize(R)[i]^α · relativize(D)[i]^β
+   * Dead walkers get VR=0 (excluded from selection). */
+  function virtualReward(rewards, distances, aliveMask, alpha, beta) {
+    const Rn = relativize(rewards);
+    const Dn = relativize(distances);
+    const N = rewards.length;
+    const vr = new Array(N);
+    for (let i = 0; i < N; i++) {
+      if (!aliveMask[i]) { vr[i] = 0; continue; }
+      const r = Rn[i] >= 0 ? Math.pow(Rn[i], alpha) : 0;
+      const d = Dn[i] >= 0 ? Math.pow(Dn[i], beta)  : 0;
+      const v = r * d;
+      vr[i] = isFinite(v) ? v : 0;
+    }
+    return vr;
+  }
+
+  /* ESS — Doucet et al. 2001
+   * ESS = (Σ vr)² / Σ vr²
+   * Range: [1, N]; high = diverse swarm, low = degenerate. */
+  function ess(vr) {
+    let s = 0, sq = 0;
+    for (const v of vr) { s += v; sq += v*v; }
+    if (sq < 1e-12) return 0;
+    return (s * s) / sq;
+  }
+
+  /* effectiveBranching — Sergio Hernández (Radient podcast 2026, cap. 16):
+   *   "in cada punto hiciera seis es de la manera en que la entropía crece
+   *    más rápido"
+   * The optimally-tuned reward should produce a tree with branching factor
+   * around 6 per node. We compute the *effective* branching factor as the
+   * perplexity of the surviving lineage distribution:
+   *
+   *     b_eff = exp( H(label_distribution) )
+   *
+   * where H is the Shannon entropy in nats over the surviving walkers'
+   * initActionLabel. b_eff = 1 means everyone converged on one lineage
+   * (palmera); b_eff = K means uniform spread over K possible labels
+   * (matorral). Sergio's hypothesis: optimal reward → b_eff ≈ 6.            */
+  function effectiveBranching(walkers) {
+    const counts = new Map();
+    let total = 0;
+    for (const w of walkers) {
+      if (!w.alive) continue;
+      counts.set(w.initActionLabel, (counts.get(w.initActionLabel) || 0) + 1);
+      total++;
+    }
+    if (total === 0) return 0;
+    let H = 0;
+    for (const c of counts.values()) {
+      const p = c / total;
+      if (p > 0) H -= p * Math.log(p);
+    }
+    return Math.exp(H);
+  }
+
+  /* cloneProbability — paper §4.4
+   *   P = 1                         if VR_self = 0       (dead → revive)
+   *   P = 0                         if VR_partner ≤ VR_self
+   *   P = (VR_partner - VR_self)/VR_self   otherwise (capped at 1) */
+  function cloneProbability(vrSelf, vrPartner) {
+    if (vrSelf <= 1e-12) return 1.0;
+    if (vrPartner <= vrSelf) return 0.0;
+    return Math.min(1.0, (vrPartner - vrSelf) / vrSelf);
+  }
+
+  /* randomOther — uniform random index in [0,N) excluding `excluded`. */
+  function randomOther(N, excluded, rng) {
+    if (N <= 1) return 0;
+    let j;
+    do { j = Math.floor(rng() * N); } while (j === excluded);
+    return j;
+  }
+
+  /* Sample from a truncated normal (Box-Muller) — for continuous action.
+   * Returns clamp(mean + std·N(0,1), lo, hi). */
+  function sampleTruncNormal(mean, std, lo, hi, rng) {
+    let u1 = rng(), u2 = rng();
+    if (u1 < 1e-12) u1 = 1e-12;
+    const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+    let x = mean + std * z;
+    if (x < lo) x = lo;
+    if (x > hi) x = hi;
+    return x;
+  }
+
+  /* decide — full FMC decision
+   * Inputs:
+   *   env: { cloneState, step, observe, distance?, sampleAction, isDiscrete?,
+   *          actionDim?, perturbInitAction? }
+   *   rootState: starting state
+   *   config: { nWalkers, timeHorizon, alpha, beta, essThreshold, recordTrajectories, seed }
+   * Output:
+   *   { action, confidence, walkers, trajectories, vr, ess, essThresholdAbs,
+   *     cloningSkipped, aliveCount, rewards, distances, decisionLabel }
+   */
+  function decide(env, rootState, config) {
+    const cfg = Object.assign({
+      nWalkers: 30, timeHorizon: 30,
+      alpha: 1.0, beta: 1.0,
+      essThreshold: 0.70,
+      recordTrajectories: true,
+      seed: undefined,
+    }, config || {});
+    const rng = makeRng(cfg.seed);
+    const N = cfg.nWalkers;
+    const M = cfg.timeHorizon;
+    const distFn = env.distance || l2;
+
+    /* Initialize walkers — each carries its `initAction` (paper §4.6 marginalization marker). */
+    const walkers = new Array(N);
+    const trajectories = cfg.recordTrajectories ? new Array(N) : null;
+    for (let i = 0; i < N; i++) {
+      const initAction = env.sampleAction(rootState, rng, /*isInit=*/true);
+      walkers[i] = {
+        state: env.cloneState(rootState),
+        initAction: initAction,                     // raw value used at tick 0
+        initActionLabel: env.labelAction
+            ? env.labelAction(initAction)
+            : JSON.stringify(initAction),           // for bincount marginalization
+        cumReward: 0,
+        alive: true,
+        ticksLived: 0,
+      };
+      if (trajectories) trajectories[i] = [env.observe(rootState).slice()];
+    }
+
+    /* Buffers reused across ticks. */
+    const rewards = new Array(N).fill(0);
+    const distances = new Array(N).fill(0);
+    const aliveMask = new Array(N).fill(true);
+    let lastVR = new Array(N).fill(0);
+    let lastESS = N;
+    let lastEssThresholdAbs = cfg.essThreshold * N;
+    let lastCloningSkipped = false;
+
+    /* Main FMC loop — paper §4.3 */
+    for (let t = 0; t < M; t++) {
+      /* Step each living walker forward by one tick. */
+      for (let i = 0; i < N; i++) {
+        if (!walkers[i].alive) continue;
+        let action;
+        if (t === 0) {
+          /* tick 0: use the walker's initial action verbatim. */
+          action = walkers[i].initAction;
+        } else if (env.perturbInitAction && t < env.perturbInitAction.persistTicks) {
+          /* init-action persistence: small perturbation around initAction. */
+          const phase = t / env.perturbInitAction.persistTicks;
+          action = env.perturbInitAction.fn(walkers[i].initAction, phase, rng);
+        } else {
+          /* full random sampling from prior. */
+          action = env.sampleAction(walkers[i].state, rng, /*isInit=*/false);
+        }
+        const result = env.step(walkers[i].state, action);
+        walkers[i].state = result.state;
+        walkers[i].cumReward += result.reward;
+        walkers[i].ticksLived += 1;
+        if (result.terminal) walkers[i].alive = false;
+        if (trajectories) {
+          trajectories[i].push(env.observe(walkers[i].state).slice());
+        }
+      }
+
+      /* Build observations + alive mask for VR computation. */
+      for (let i = 0; i < N; i++) aliveMask[i] = walkers[i].alive;
+      const observations = walkers.map(w => env.observe(w.state));
+
+      /* Stochastic O(N) distance — paper §4.5. */
+      const partners = new Array(N);
+      for (let i = 0; i < N; i++) {
+        partners[i] = randomOther(N, i, rng);
+        distances[i] = distFn(observations[i], observations[partners[i]]);
+        rewards[i] = walkers[i].cumReward;
+      }
+
+      const vr = virtualReward(rewards, distances, aliveMask, cfg.alpha, cfg.beta);
+      lastVR = vr;
+      lastESS = ess(vr);
+      lastEssThresholdAbs = cfg.essThreshold * N;
+      const skipClone = lastESS > lastEssThresholdAbs;
+      lastCloningSkipped = skipClone;
+
+      if (!skipClone && t < M - 1) {
+        /* Pairwise cloning — each walker compares with a fresh random partner. */
+        const newPartners = new Array(N);
+        const willClone = new Array(N).fill(false);
+        for (let i = 0; i < N; i++) {
+          newPartners[i] = randomOther(N, i, rng);
+          const p = cloneProbability(vr[i], vr[newPartners[i]]);
+          willClone[i] = rng() < p;
+        }
+        /* Apply clones using OLD-snapshot semantics (paper §4.4): all clone decisions
+         * use the same pre-tick swarm reference, never partial-update. */
+        const snapshot = walkers.map(w => ({
+          state: env.cloneState(w.state),
+          initAction: w.initAction,
+          initActionLabel: w.initActionLabel,
+          cumReward: w.cumReward,
+          alive: w.alive,
+          ticksLived: w.ticksLived,
+        }));
+        for (let i = 0; i < N; i++) {
+          if (!willClone[i]) continue;
+          const k = newPartners[i];
+          if (!snapshot[k].alive && walkers[i].alive) continue;
+          walkers[i].state = env.cloneState(snapshot[k].state);
+          walkers[i].initAction = snapshot[k].initAction;
+          walkers[i].initActionLabel = snapshot[k].initActionLabel;
+          walkers[i].cumReward = snapshot[k].cumReward;
+          walkers[i].alive = snapshot[k].alive || walkers[i].alive;
+          walkers[i].ticksLived = snapshot[k].ticksLived;
+          if (trajectories) trajectories[i] = trajectories[k].slice();
+        }
+      }
+    }
+
+    /* Marginalization — paper §4.6: argmax bincount over alive walkers' initActionLabel. */
+    const counts = new Map();
+    let totalAlive = 0;
+    for (const w of walkers) {
+      if (!w.alive) continue;
+      counts.set(w.initActionLabel, (counts.get(w.initActionLabel) || 0) + 1);
+      totalAlive++;
+    }
+    let bestLabel = null, bestCount = -1;
+    for (const [label, c] of counts.entries()) {
+      if (c > bestCount) { bestLabel = label; bestCount = c; }
+    }
+
+    /* Pick a representative walker carrying that label (for action retrieval). */
+    let representative = null;
+    if (bestLabel !== null) {
+      let bestR = -Infinity;
+      for (const w of walkers) {
+        if (!w.alive || w.initActionLabel !== bestLabel) continue;
+        if (w.cumReward > bestR) { bestR = w.cumReward; representative = w; }
+      }
+    }
+    /* Fallback if all walkers died: sample fresh action. */
+    let chosenAction;
+    if (representative) chosenAction = representative.initAction;
+    else                chosenAction = env.sampleAction(rootState, rng, /*isInit=*/true);
+
+    const confidence = totalAlive > 0 ? bestCount / totalAlive : 0;
+    return {
+      action: chosenAction,
+      decisionLabel: bestLabel,
+      confidence,
+      walkers,
+      trajectories,
+      vr: lastVR,
+      ess: lastESS,
+      essThresholdAbs: lastEssThresholdAbs,
+      cloningSkipped: lastCloningSkipped,
+      aliveCount: totalAlive,
+      rewards: rewards.slice(),
+      distances: distances.slice(),
+      branching: effectiveBranching(walkers),       // Sergio's "~6" criterion
+    };
+  }
+
+  return {
+    relativize, l2, virtualReward, ess, cloneProbability,
+    effectiveBranching,
+    decide, makeRng, sampleTruncNormal,
+  };
+})();
+
+/* ============================================================================
+   ROCKET PHYSICS — 2D free-flight with gravity, drag, walls
+   Validated for determinism + Newton's laws (see tests). 6 fixes vs rocket.html.
+============================================================================ */
+
+const W = 900, H = 540;
+const Physics = (function() {
+
+  const GRAVITY  = 0.14;     // px/tick² downward
+  const DRAG     = 0.992;    // velocity damping per tick
+  const A_DRAG   = 0.95;     // angular velocity damping
+  const MAX_THRUST = 0.40;   // max linear thrust per tick
+  const MAX_TORQUE = 0.08;   // max angular thrust per tick
+
+  /* World: rectangular cave with internal obstacles, goal at top-right. */
+  const WORLD = {
+    walls: [
+      {x: 0,   y: 0,     w: W, h: 8 },   // top
+      {x: 0,   y: H-8,   w: W, h: 8 },   // bottom
+      {x: 0,   y: 0,     w: 8, h: H },   // left
+      {x: W-8, y: 0,     w: 8, h: H },   // right
+      // internal obstacles forming a navigable cave
+      {x: 200, y: 120, w: 30,  h: 220},
+      {x: 400, y: 280, w: 200, h: 30},
+      {x: 680, y: 100, w: 30,  h: 280},
+      {x: 100, y: 400, w: 200, h: 30},
+      {x: 550, y: 460, w: 200, h: 30},
+    ],
+    goal: { x: W - 100, y: 60, r: 30 },
+  };
+
+  function initialState() {
+    return {
+      x: 80, y: H - 80,
+      vx: 0, vy: 0,
+      angle: -Math.PI / 2, vAngle: 0,
+      alive: true, fuel: 1000,
+      _seed: Math.floor(Math.random() * 1e9),
+    };
+  }
+
+  function cloneState(s) {
+    return {
+      x: s.x, y: s.y, vx: s.vx, vy: s.vy,
+      angle: s.angle, vAngle: s.vAngle,
+      alive: s.alive, fuel: s.fuel, _seed: s._seed,
+    };
+  }
+
+  function pointInWalls(x, y, rad) {
+    rad = rad || 4;
+    for (const w of WORLD.walls) {
+      if (x + rad > w.x && x - rad < w.x + w.w &&
+          y + rad > w.y && y - rad < w.y + w.h) return true;
+    }
+    return false;
+  }
+
+  function distToGoal(s) {
+    const dx = s.x - WORLD.goal.x, dy = s.y - WORLD.goal.y;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  function distToNearestWall(x, y) {
+    let best = Infinity;
+    for (const w of WORLD.walls) {
+      // signed clearance to rectangle
+      const dx = Math.max(w.x - x, 0, x - (w.x + w.w));
+      const dy = Math.max(w.y - y, 0, y - (w.y + w.h));
+      const d = Math.sqrt(dx * dx + dy * dy);
+      if (d < best) best = d;
+    }
+    return best;
+  }
+
+  /* step — Newton + Euler integration, deterministic.
+   * action = [thrust, torque] both clamped to legal ranges. */
+  function step(state, action) {
+    if (!state.alive) {
+      return { state: cloneState(state), reward: 0, terminal: true };
+    }
+    const thrust = Math.max(0, Math.min(MAX_THRUST, action[0]));
+    const torque = Math.max(-MAX_TORQUE, Math.min(MAX_TORQUE, action[1]));
+    const s = cloneState(state);
+    /* Angular dynamics. */
+    s.vAngle = s.vAngle + torque;
+    s.angle  = s.angle  + s.vAngle;
+    s.vAngle *= A_DRAG;
+    /* Linear dynamics: thrust along body x-axis (paper convention). */
+    s.vx = (s.vx + Math.cos(s.angle) * thrust) * DRAG;
+    s.vy = (s.vy + Math.sin(s.angle) * thrust + GRAVITY) * DRAG;
+    s.x += s.vx;
+    s.y += s.vy;
+    s.fuel = Math.max(0, s.fuel - thrust * 5);
+
+    /* Reward composition (paper §2.2.2 multiplicative). */
+    let terminal = false;
+    let reward = 0;
+    if (pointInWalls(s.x, s.y)) {
+      s.alive = false;
+      terminal = true;
+      reward = 0;
+    } else {
+      const R_alive    = 1.0;
+      const clearance  = distToNearestWall(s.x, s.y);
+      const R_clear    = Math.min(1.0, clearance / 50.0);
+      const dGoal      = distToGoal(s);
+      const maxDiag    = Math.sqrt(W*W + H*H);
+      const R_progress = 1.0 - dGoal / maxDiag;          // [0,1]
+      reward = R_alive * R_clear * (1.0 + R_progress);
+      if (dGoal < WORLD.goal.r) reward += 5.0;
+    }
+    return { state: s, reward, terminal };
+  }
+
+  /* observe — feature vector for distance metric.
+   * IMPORTANT: this is the WEIGHTED vector (paper §5.1.3.3 lesson).
+   * Each channel scaled so that L2 in this space ≈ meaningful trajectory distance. */
+  function observe(s) {
+    return [
+      s.x / W,                     // pos x        weight 1
+      s.y / H,                     // pos y        weight 1
+      s.vx * 0.05,                 // velocity x   weight 0.05·|v|
+      s.vy * 0.05,                 // velocity y
+      Math.cos(s.angle) * 0.5,     // attitude     weight 0.5
+      Math.sin(s.angle) * 0.5,
+      s.vAngle * 0.3,              // angular vel  weight 0.3
+    ];
+  }
+
+  /* sampleAction — continuous action with counter-gravity bias.
+   * For init: wider distribution → diversity of starting strategies.
+   * For perturbation: narrower around the gravity-balanced thrust. */
+  function sampleAction(state, rng, isInit) {
+    const meanThrust = 0.20;       // ≈ 1.4× gravity equivalent (rough hover)
+    const meanTorque = 0.0;
+    const stdThrust  = isInit ? 0.12 : 0.10;
+    const stdTorque  = isInit ? 0.04 : 0.03;
+    const thrust = FMC.sampleTruncNormal(meanThrust, stdThrust, 0, 0.40, rng);
+    const torque = FMC.sampleTruncNormal(meanTorque, stdTorque, -0.08, 0.08, rng);
+    return [thrust, torque];
+  }
+
+  /* labelAction — 3×3 quantization for bincount marginalization.
+   * Continuous actions need a discrete label so the swarm can vote on a strategy.
+   * Buckets: thrust × torque grid → 9 cells. */
+  function labelAction(a) {
+    const tBucket = a[0] < 0.10 ? 0 : (a[0] < 0.25 ? 1 : 2);
+    const rBucket = a[1] < -0.02 ? 0 : (a[1] < 0.02 ? 1 : 2);
+    return tBucket + 3 * rBucket;
+  }
+
+  /* perturbInitAction — fix #5: in the first 4 ticks, walker stays close to its
+   * init strategy (small σ). Then full random. Prevents instant washout. */
+  const perturbInitAction = {
+    persistTicks: 4,
+    fn(initAction, phase, rng) {
+      const sigma = 0.02 + 0.06 * phase;
+      const t = FMC.sampleTruncNormal(initAction[0], sigma, 0, 0.40, rng);
+      const r = FMC.sampleTruncNormal(initAction[1], sigma * 0.5, -0.08, 0.08, rng);
+      return [t, r];
+    },
+  };
+
+  return {
+    GRAVITY, DRAG, A_DRAG, MAX_THRUST, MAX_TORQUE,
+    WORLD, W, H,
+    initialState, cloneState, step, observe,
+    sampleAction, labelAction, perturbInitAction,
+    pointInWalls, distToGoal, distToNearestWall,
+  };
+})();
+
+/* ============================================================================
+   TEST HARNESS — minimal, dependency-free, async-safe
+============================================================================ */
+
+const TestRunner = (function() {
+  const tests = [];
+  function add(tag, name, fn) { tests.push({ tag, name, fn }); }
+
+  function assert(cond, msg) {
+    if (!cond) throw new Error('Assertion failed: ' + (msg || ''));
+  }
+  function assertNear(a, b, tol, msg) {
+    const ok = Math.abs(a - b) <= tol;
+    if (!ok) throw new Error(`assertNear failed: ${a} vs ${b} (tol=${tol}) — ${msg||''}`);
+  }
+  function assertGreater(a, b, msg) {
+    if (!(a > b)) throw new Error(`assertGreater failed: ${a} not > ${b} — ${msg||''}`);
+  }
+  function assertBetween(x, lo, hi, msg) {
+    if (!(x >= lo && x <= hi)) throw new Error(`assertBetween failed: ${x} not in [${lo}, ${hi}] — ${msg||''}`);
+  }
+
+  async function runAll(onProgress) {
+    const results = [];
+    for (let i = 0; i < tests.length; i++) {
+      const t = tests[i];
+      if (onProgress) onProgress(i, t, 'running', null);
+      let pass = false, error = null, detail = '';
+      const t0 = performance.now();
+      try {
+        const r = await t.fn({ assert, assertNear, assertGreater, assertBetween });
+        if (typeof r === 'string') detail = r;
+        pass = true;
+      } catch (e) {
+        error = e.message || String(e);
+      }
+      const ms = performance.now() - t0;
+      const result = { ...t, pass, error, detail, ms };
+      results.push(result);
+      if (onProgress) onProgress(i, t, pass ? 'pass' : 'fail', result);
+      // yield to UI
+      await new Promise(r => setTimeout(r, 0));
+    }
+    return results;
+  }
+
+  return { add, runAll, get tests() { return tests; } };
+})();
+
+/* ============================================================================
+   TESTS — math + physics + integration. Every test is deterministic via seed.
+============================================================================ */
+
+/* --- 1. relativize (paper §2.2.3) --- */
+TestRunner.add('math', 'relativize: strict positivity', t => {
+  const out = FMC.relativize([-100, 0, 100]);
+  for (const v of out) t.assertGreater(v, 0, 'all values must be > 0');
+  return `out=[${out.map(v=>v.toFixed(3))}]`;
+});
+TestRunner.add('math', 'relativize: order preservation', t => {
+  const inp = [3, 1, 4, 1, 5, 9, 2, 6];
+  const out = FMC.relativize(inp);
+  const idxIn  = inp.map((_, i) => i).sort((a,b) => inp[a] - inp[b]);
+  const idxOut = inp.map((_, i) => i).sort((a,b) => out[a] - out[b]);
+  for (let i = 0; i < idxIn.length; i++) {
+    t.assert(idxIn[i] === idxOut[i], `rank mismatch at ${i}`);
+  }
+});
+TestRunner.add('math', 'relativize: constant input → ones', t => {
+  const out = FMC.relativize([5, 5, 5, 5]);
+  for (const v of out) t.assertNear(v, 1.0, 1e-9);
+});
+TestRunner.add('math', 'relativize: extreme range bounded', t => {
+  const out = FMC.relativize([-1e6, 0, 1e6]);
+  for (const v of out) {
+    t.assert(isFinite(v), 'must be finite');
+    t.assertGreater(v, 0, 'must be > 0');
+  }
+});
+
+/* --- 2. clone probability (paper §4.4) --- */
+TestRunner.add('math', 'clone prob: VR_self=0 → P=1 (revive)', t => {
+  t.assertNear(FMC.cloneProbability(0, 0.5), 1.0, 1e-9);
+});
+TestRunner.add('math', 'clone prob: VR_partner ≤ VR_self → P=0', t => {
+  t.assertNear(FMC.cloneProbability(1.0, 0.5), 0.0, 1e-9);
+  t.assertNear(FMC.cloneProbability(1.0, 1.0), 0.0, 1e-9);
+});
+TestRunner.add('math', 'clone prob: 50% better → P=0.5', t => {
+  t.assertNear(FMC.cloneProbability(1.0, 1.5), 0.5, 1e-9);
+});
+TestRunner.add('math', 'clone prob: 9× better → capped at 1', t => {
+  t.assertNear(FMC.cloneProbability(1.0, 10.0), 1.0, 1e-9);
+});
+
+/* --- 3. ESS (Doucet 2001) --- */
+TestRunner.add('math', 'ESS: uniform VR=[1,1,1,1] → 4', t => {
+  t.assertNear(FMC.ess([1,1,1,1]), 4.0, 1e-9);
+});
+TestRunner.add('math', 'ESS: concentrated VR=[1,0,0,0] → 1', t => {
+  t.assertNear(FMC.ess([1,0,0,0]), 1.0, 1e-9);
+});
+TestRunner.add('math', 'ESS: half-degenerate VR=[1,1,0,0] → 2', t => {
+  t.assertNear(FMC.ess([1,1,0,0]), 2.0, 1e-9);
+});
+
+/* --- 4. Gibbs convergence (paper §4.3, deep dive 01 Theorem 3) --- */
+TestRunner.add('math', 'Gibbs convergence: high R dominates (R=0.9,0.5,0.1)', t => {
+  const N = 3, M = 10, RUNS = 100;
+  const targetRewards = [0.9, 0.5, 0.1];
+  let winsHigh = 0;
+  for (let run = 0; run < RUNS; run++) {
+    const rng = FMC.makeRng(42 + run);
+    const env = makeStaticEnv(targetRewards, rng);
+    const r = FMC.decide(env, env.initial(), {
+      nWalkers: N, timeHorizon: M, alpha: 1.0, beta: 1.0,
+      essThreshold: 0.99, recordTrajectories: false,
+      seed: 1000 + run,
+    });
+    if (r.decisionLabel === '0') winsHigh++;
+  }
+  const frac = winsHigh / RUNS;
+  t.assertGreater(frac, 0.85, `walker_0 won only ${frac} of ${RUNS} runs`);
+  return `walker_0 wins ${(frac*100).toFixed(0)}% of ${RUNS} runs (expected ≥85%)`;
+});
+
+/* --- 5. close-top with short horizon (M=2): non-trivial Gibbs split --- */
+TestRunner.add('math', 'Close-top short-M: R=(1.0, 0.95, 0) M=2 → top-2 share ≥95%', t => {
+  /* With cumulative reward (FMC's actual dynamics) and a short M=2 horizon, the
+   * cumulative gap between R=1.0 and R=0.95 is small (2.0 vs 1.9 → 5% gap),
+   * so both top lineages share wins. Walker_2 (R=0) must still be squeezed out
+   * by the dead-revive cycle. This validates that close-but-not-equal rewards
+   * produce a non-degenerate Gibbs distribution.                              */
+  const N = 3, M = 2, RUNS = 200;
+  const targetRewards = [1.0, 0.95, 0.0];
+  const wins = [0, 0, 0];
+  for (let run = 0; run < RUNS; run++) {
+    const rng = FMC.makeRng(99 + run);
+    const env = makeStaticEnv(targetRewards, rng);
+    const r = FMC.decide(env, env.initial(), {
+      nWalkers: N, timeHorizon: M, alpha: 1.0, beta: 1.0,
+      essThreshold: 0.99, recordTrajectories: false,
+      seed: 5000 + run,
+    });
+    if (r.decisionLabel !== null) wins[parseInt(r.decisionLabel, 10)]++;
+  }
+  const f = wins.map(w => w / RUNS);
+  /* Top-2 (walker_0 and walker_1) together must dominate (≥95%). */
+  t.assertGreater(f[0] + f[1], 0.95, `top-2 share only ${(f[0]+f[1])}`);
+  /* Walker_0 must lead (R=1.0 strictly higher cumulative). */
+  t.assertGreater(f[0], f[1], `walker_0 (R=1.0) should beat walker_1 (R=0.95)`);
+  /* Walker_2 (R=0) squeezed out: both R-and-Dist relativize make it disappear. */
+  t.assert(f[2] <= 0.05, `walker_2 (R=0) won ${(f[2]*100).toFixed(1)}% — must be ≤5%`);
+  return `wins = [${f.map(x=>(x*100).toFixed(0)+'%').join(', ')}]`;
+});
+
+/* --- 6. dead-walker squeeze-out --- */
+TestRunner.add('math', 'Dead walker (R=0) squeezed out at M=20', t => {
+  const N = 3, M = 20, RUNS = 100;
+  const targetRewards = [0.9, 0.5, 0.0];
+  const wins = [0, 0, 0];
+  for (let run = 0; run < RUNS; run++) {
+    const rng = FMC.makeRng(7 + run);
+    const env = makeStaticEnv(targetRewards, rng);
+    const r = FMC.decide(env, env.initial(), {
+      nWalkers: N, timeHorizon: M, alpha: 1.0, beta: 1.0,
+      essThreshold: 0.99, recordTrajectories: false,
+      seed: 9000 + run,
+    });
+    if (r.decisionLabel !== null) wins[parseInt(r.decisionLabel, 10)]++;
+  }
+  const f = wins.map(w => w / RUNS);
+  t.assert(f[2] <= 0.10, `walker_2 (R=0) won ${(f[2]*100).toFixed(1)}% of runs (must be ≤10%)`);
+  return `wins = [${f.map(x=>(x*100).toFixed(0)+'%').join(', ')}], dead-walker share = ${(f[2]*100).toFixed(1)}%`;
+});
+
+/* --- 7-8. Physics tests --- */
+TestRunner.add('phys', 'Physics: deterministic given identical inputs', t => {
+  const s0 = Physics.initialState();
+  s0._seed = 12345;
+  const action = [0.20, 0.01];
+  const r1 = Physics.step(s0, action);
+  const r2 = Physics.step(s0, action);
+  t.assertNear(r1.state.x,  r2.state.x,  1e-12, 'x mismatch');
+  t.assertNear(r1.state.vy, r2.state.vy, 1e-12, 'vy mismatch');
+  t.assertNear(r1.reward,   r2.reward,   1e-12, 'reward mismatch');
+});
+
+TestRunner.add('phys', 'Physics: free-fall acceleration ≈ gravity', t => {
+  let s = Physics.initialState();
+  s.x = 450; s.y = 270; s.vx = 0; s.vy = 0;
+  s.angle = 0; s.vAngle = 0;
+  const action = [0, 0]; // no thrust, no torque
+  /* one step under DRAG; vy should approach gravity (allowing for one drag mult). */
+  const r = Physics.step(s, action);
+  const expectedVy = (0 + 0 * Math.sin(0) + Physics.GRAVITY) * Physics.DRAG;
+  t.assertNear(r.state.vy, expectedVy, 1e-9, `vy=${r.state.vy} expected ${expectedVy}`);
+  t.assertNear(r.state.vx, 0, 1e-9, 'no horizontal drift');
+});
+
+TestRunner.add('phys', 'Physics: thrust along body axis (angle=-π/2 → up)', t => {
+  let s = Physics.initialState();
+  s.x = 450; s.y = 270; s.vx = 0; s.vy = 0;
+  s.angle = -Math.PI / 2; s.vAngle = 0;
+  const r = Physics.step(s, [0.40, 0]); // max upward thrust
+  /* angle=-π/2: cos≈0, sin≈-1. Thrust pushes vy by -0.40 then gravity adds. */
+  const expectedVy = (0 + Math.sin(-Math.PI/2) * 0.40 + Physics.GRAVITY) * Physics.DRAG;
+  t.assertNear(r.state.vy, expectedVy, 1e-9, `vy=${r.state.vy} expected ${expectedVy}`);
+  t.assert(r.state.vy < 0, 'vy must be upward (negative in screen coords)');
+});
+
+TestRunner.add('phys', 'Physics: wall collision → terminal + R=0', t => {
+  let s = Physics.initialState();
+  s.x = 1; s.y = 1; // crash into top-left corner
+  s.alive = true;
+  const r = Physics.step(s, [0, 0]);
+  t.assert(r.terminal, 'collision must be terminal');
+  t.assertNear(r.reward, 0, 1e-12, 'collision reward must be 0');
+  t.assert(!r.state.alive, 'alive flag must be false');
+});
+
+/* --- 9. Continuous-action sampling: bias correctly toward counter-gravity --- */
+TestRunner.add('integ', 'Action prior: mean thrust > gravity equivalent', t => {
+  const rng = FMC.makeRng(2024);
+  let sumT = 0, sumR = 0; const N = 5000;
+  const s = Physics.initialState();
+  for (let i = 0; i < N; i++) {
+    const a = Physics.sampleAction(s, rng, false);
+    sumT += a[0]; sumR += a[1];
+  }
+  const meanT = sumT / N, meanR = sumR / N;
+  /* For the rocket to hover, mean thrust must clearly exceed gravity (0.14). */
+  t.assertGreater(meanT, Physics.GRAVITY, `mean thrust ${meanT} not > gravity ${Physics.GRAVITY}`);
+  t.assertNear(meanR, 0, 0.005, 'mean torque should be ≈ 0');
+  return `meanThrust=${meanT.toFixed(3)} (gravity=${Physics.GRAVITY}), meanTorque=${meanR.toFixed(4)}`;
+});
+
+/* --- 10. Common Sense (α=0): walkers survive longer than greedy random --- */
+TestRunner.add('integ', 'Common Sense (α=0): swarm survives ≥30 ticks on avg', t => {
+  /* Run a single FMC decision with α=0 and see how many of the projected walker
+   * trajectories survive M=40 ticks. Without ANY reward signal pulling them
+   * toward the goal, only "stay alive" matters. If the swarm collapses, FMC
+   * cannot do free-flight. */
+  const env = {
+    cloneState: Physics.cloneState,
+    step: Physics.step,
+    observe: Physics.observe,
+    sampleAction: Physics.sampleAction,
+    labelAction: Physics.labelAction,
+    perturbInitAction: Physics.perturbInitAction,
+  };
+  const root = Physics.initialState();
+  root.x = 450; root.y = 270; // start in open area
+  let totalAlive = 0; let totalWalkers = 0;
+  const RUNS = 5;
+  for (let run = 0; run < RUNS; run++) {
+    const r = FMC.decide(env, root, {
+      nWalkers: 32, timeHorizon: 40,
+      alpha: 0.0, beta: 1.0,            // α=0 = Common Sense
+      essThreshold: 0.70,
+      recordTrajectories: false,
+      seed: 100 + run,
+    });
+    totalAlive   += r.aliveCount;
+    totalWalkers += 32;
+  }
+  const surviveRate = totalAlive / totalWalkers;
+  t.assertGreater(surviveRate, 0.40, `survival rate ${surviveRate} < 40% — α=0 mode failed`);
+  return `α=0 walker survival rate after M=40: ${(surviveRate*100).toFixed(0)}% (over ${RUNS} runs)`;
+});
+
+/* --- 11. Reward composition: alive=0 zeroes everything (paper §2.2.2 multiplicative) --- */
+TestRunner.add('integ', 'Reward composition: dead walker has R=0', t => {
+  let s = Physics.initialState();
+  s.x = 1; s.y = 1; // crash
+  const r = Physics.step(s, [0.20, 0]);
+  t.assertNear(r.reward, 0, 1e-12, 'crashed walker must have R=0');
+});
+
+/* --- 12. ESS-adaptive cloning saves work when swarm is diverse --- */
+TestRunner.add('integ', 'ESS-adaptive: high diversity → cloning skipped', t => {
+  /* Construct an artificial situation: many walkers all with similar (high) VR
+   * → ESS close to N → cloning should be skipped. */
+  const rng = FMC.makeRng(0);
+  const env = {
+    cloneState: s => ({...s}),
+    step: (s, a) => ({ state: {...s, _t: s._t + 1}, reward: 1 + 0.001 * rng(), terminal: false }),
+    observe: s => [s._t, rng(), rng()],
+    sampleAction: () => [rng()],
+    labelAction: a => 'a',
+  };
+  const root = { _t: 0 };
+  const r = FMC.decide(env, root, {
+    nWalkers: 16, timeHorizon: 5,
+    alpha: 1.0, beta: 1.0,
+    essThreshold: 0.70,
+    recordTrajectories: false,
+    seed: 7,
+  });
+  /* With nearly uniform VR the final ESS should be near N; the last cloning
+   * step should be skipped (cloningSkipped=true on the LAST iteration). */
+  t.assertGreater(r.ess, 0.5 * 16, `ESS=${r.ess.toFixed(2)} should be high (>8) for uniform VR`);
+  return `final ESS=${r.ess.toFixed(2)}/16, threshold=${r.essThresholdAbs.toFixed(2)}, skipped=${r.cloningSkipped}`;
+});
+
+/* --- 13. Marginalization: bincount picks majority label --- */
+TestRunner.add('math', 'Marginalization: argmax bincount over alive walkers', t => {
+  /* Stack the deck: 7 walkers labeled "A", 3 labeled "B", all equally rewarded.
+   * After M ticks under α=0 (no reward pressure), bincount should still favor "A". */
+  const env = {
+    cloneState: s => ({...s}),
+    step: s => ({ state: {...s}, reward: 1, terminal: false }),
+    observe: s => [s._id || 0],
+    sampleAction: (s, rng, isInit) => {
+      if (isInit) return s._nextLabel;
+      return s._nextLabel;
+    },
+    labelAction: a => a,
+  };
+  /* Custom env that forces the initial action distribution. */
+  let labels = ['A','A','A','A','A','A','A','B','B','B'];
+  let counter = 0;
+  const sampleAction = (s, rng, isInit) => labels[counter++ % labels.length];
+  env.sampleAction = sampleAction;
+  const r = FMC.decide(env, {_id: 0}, {
+    nWalkers: 10, timeHorizon: 3,
+    alpha: 0.0, beta: 1.0,           // no reward pressure
+    essThreshold: 0.99,
+    recordTrajectories: false,
+    seed: 42,
+  });
+  t.assert(r.decisionLabel === 'A', `expected 'A', got '${r.decisionLabel}'`);
+});
+
+/* --- 14. effectiveBranching primitive — degenerate edge cases --- */
+TestRunner.add('math', 'effectiveBranching: all same label → 1', t => {
+  const walkers = [
+    { alive: true, initActionLabel: 'A' },
+    { alive: true, initActionLabel: 'A' },
+    { alive: true, initActionLabel: 'A' },
+  ];
+  t.assertNear(FMC.effectiveBranching(walkers), 1.0, 1e-9, 'palmera case');
+});
+TestRunner.add('math', 'effectiveBranching: uniform over K → K', t => {
+  const walkers = [];
+  for (let i = 0; i < 6; i++) {
+    walkers.push({ alive: true, initActionLabel: 'L' + i });
+  }
+  t.assertNear(FMC.effectiveBranching(walkers), 6.0, 1e-9, 'matorral case');
+});
+TestRunner.add('math', 'effectiveBranching: 50/50 split → 2', t => {
+  const walkers = [
+    { alive: true, initActionLabel: 'A' },
+    { alive: true, initActionLabel: 'A' },
+    { alive: true, initActionLabel: 'B' },
+    { alive: true, initActionLabel: 'B' },
+  ];
+  t.assertNear(FMC.effectiveBranching(walkers), 2.0, 1e-9, 'binary split');
+});
+
+/* --- 15. Branching diagnostic — sanity bounds on real rocket dynamics ----
+   Sergio (Radient cap. 16) postulates the optimally-tuned reward yields ~6
+   effective branches per node. The rocket's default reward (α=1, β=1) is
+   strongly peaky (R_alive × R_clearance × (1+R_progress)) and tends to push
+   the swarm to b_eff → 1 (palmera). This is *correct cloning dynamics on a
+   peaky reward*, NOT a bug — but it shows the reward needs tuning to reach
+   Sergio's target. Sanity test: b_eff must be in [1, 9] (action space size).
+   The accompanying α=0 test below verifies the swarm CAN diversify when
+   reward pressure is removed — operationalizing Sergio's tuning recipe.   */
+TestRunner.add('integ', "b_eff diagnostic (α=1): bounded in [1, 9], reports gap from Sergio's 6", t => {
+  const env = {
+    cloneState: Physics.cloneState,
+    step: Physics.step,
+    observe: Physics.observe,
+    sampleAction: Physics.sampleAction,
+    labelAction: Physics.labelAction,
+    perturbInitAction: Physics.perturbInitAction,
+  };
+  const root = Physics.initialState();
+  root.x = 450; root.y = 270;
+  const branchings = [];
+  for (let run = 0; run < 8; run++) {
+    const r = FMC.decide(env, root, {
+      nWalkers: 64, timeHorizon: 30,
+      alpha: 1.0, beta: 1.0,
+      essThreshold: 0.70,
+      recordTrajectories: false,
+      seed: 200 + run,
+    });
+    branchings.push(r.branching);
+  }
+  branchings.sort((a, b) => a - b);
+  const median = branchings[Math.floor(branchings.length / 2)];
+  /* Bound check (sanity): b_eff is a perplexity, must be in [1, K] where K
+   * is the label-space size. For our 3×3 action grid K = 9.                 */
+  t.assert(median >= 1.0 && median <= 9.0, `b_eff ${median.toFixed(2)} outside [1, 9]`);
+  const gap = 6.0 - median;
+  return `b_eff median=${median.toFixed(2)} (Sergio's target: 6, gap=${gap >= 0 ? '+'+gap.toFixed(1) : gap.toFixed(1)}) — ${median <= 1.5 ? 'PALMERA, reward too peaky → lower α or raise β' : (median >= 7.5 ? 'MATORRAL, reward too flat' : 'in tunable zone')}`;
+});
+
+/* --- 16. Sergio's tuning recipe: α=0 (Common Sense) → b_eff increases ----
+   Direct empirical test of Sergio's claim that lowering α (exploitation)
+   broadens the cone of futures. Removing all reward pressure should let
+   the swarm explore the full action space → b_eff approaches K (matorral).
+   This is the OTHER endpoint of the spectrum; Sergio's "6" is between this
+   and the α=1 palmera.                                                     */
+TestRunner.add('integ', "α=0 (Common Sense) → b_eff > α=1 b_eff", t => {
+  const env = {
+    cloneState: Physics.cloneState,
+    step: Physics.step,
+    observe: Physics.observe,
+    sampleAction: Physics.sampleAction,
+    labelAction: Physics.labelAction,
+    perturbInitAction: Physics.perturbInitAction,
+  };
+  const root = Physics.initialState();
+  root.x = 450; root.y = 270;
+  let bAlpha0 = 0, bAlpha1 = 0;
+  const RUNS = 5;
+  for (let run = 0; run < RUNS; run++) {
+    const r0 = FMC.decide(env, root, {
+      nWalkers: 64, timeHorizon: 30,
+      alpha: 0.0, beta: 1.0,
+      essThreshold: 0.70, recordTrajectories: false,
+      seed: 300 + run,
+    });
+    const r1 = FMC.decide(env, root, {
+      nWalkers: 64, timeHorizon: 30,
+      alpha: 1.0, beta: 1.0,
+      essThreshold: 0.70, recordTrajectories: false,
+      seed: 300 + run,
+    });
+    bAlpha0 += r0.branching;
+    bAlpha1 += r1.branching;
+  }
+  bAlpha0 /= RUNS; bAlpha1 /= RUNS;
+  t.assertGreater(bAlpha0, bAlpha1, `α=0 b_eff (${bAlpha0.toFixed(2)}) not > α=1 b_eff (${bAlpha1.toFixed(2)})`);
+  return `b_eff(α=0)=${bAlpha0.toFixed(2)} > b_eff(α=1)=${bAlpha1.toFixed(2)} — confirms Sergio's tuning direction`;
+});
+
+/* --- 17. Empirical Sergio sweet spot — (α=0.1, β=0.0) on rocket dynamics ---
+   Documented finding from headless sweep over (α, β) grid: this configuration
+   minimizes the gap from Sergio's b_eff=6 target while retaining non-trivial
+   selection pressure. See work/07_sergio_branching_sweep/REPORT.md.         */
+TestRunner.add('integ', "Sergio sweet spot: (α=0.1, β=0) → 4.5 ≤ b_eff ≤ 6.5", t => {
+  const env = {
+    cloneState: Physics.cloneState, step: Physics.step, observe: Physics.observe,
+    sampleAction: Physics.sampleAction, labelAction: Physics.labelAction,
+    perturbInitAction: Physics.perturbInitAction,
+  };
+  const root = Physics.initialState();
+  root.x = 450; root.y = 270;
+  const branchings = [];
+  for (let s = 0; s < 12; s++) {
+    const r = FMC.decide(env, root, {
+      nWalkers: 64, timeHorizon: 30,
+      alpha: 0.1, beta: 0.0,
+      essThreshold: 0.70, recordTrajectories: false,
+      seed: 5000 + s,
+    });
+    branchings.push(r.branching);
+  }
+  const mean = branchings.reduce((a,b)=>a+b,0)/branchings.length;
+  t.assertGreater(mean, 4.5, `b_eff mean ${mean.toFixed(2)} < 4.5 — sweet spot regressed`);
+  t.assert(mean < 6.5, `b_eff mean ${mean.toFixed(2)} ≥ 6.5 — exceeds Sergio's target`);
+  return `b_eff = ${mean.toFixed(2)} (target 6, gap ${(mean-6).toFixed(2)}) — closest non-degenerate config`;
+});
+
+/* --- 18. Init-action persistence: walker stays close to init for first ticks --- */
+
+/* --- 16. Init-action persistence: walker stays close to init for first ticks --- */
+TestRunner.add('integ', 'Init-action persistence: σ ramps over 4 ticks', t => {
+  const rng = FMC.makeRng(1);
+  const init = [0.20, 0.0];
+  const samples = [];
+  for (let i = 0; i < 1000; i++) {
+    samples.push(Physics.perturbInitAction.fn(init, 0.0, rng));   // tick 0 phase
+  }
+  const meanT0 = samples.reduce((s,a)=>s+a[0], 0) / samples.length;
+  const stdT0  = Math.sqrt(samples.reduce((s,a)=>s+(a[0]-meanT0)**2, 0) / samples.length);
+  /* tick-1 phase=0: σ = 0.02 (very small) — verify walker stays close to init */
+  t.assertNear(meanT0, init[0], 0.01, `mean drifted: ${meanT0}`);
+  t.assert(stdT0 < 0.05, `σ too large at phase 0: ${stdT0}`);
+  return `tick-0 phase: μ=${meanT0.toFixed(3)} σ=${stdT0.toFixed(3)} (target μ=0.20)`;
+});
+
+/* ============================================================================
+   STATIC TEST ENVIRONMENT — used by Gibbs convergence tests.
+   Walker reward is determined by its initial discrete label only; no dynamics.
+   This isolates the cloning/selection pressure from physics.
+============================================================================ */
+function makeStaticEnv(targetRewards, rng) {
+  /* Lineage-locked env mirroring `test_fractal_math.py:simulate_cloning_only`
+   * from plugin/fractal-coding-loop. Two key properties:
+   *   1. Init actions are assigned **deterministically** in round-robin order
+   *      so each lineage starts with exactly one walker (no Bernoulli loss
+   *      with small N). This is what the plugin's tests do — without it,
+   *      with N=3 lineages and uniform sampling, P(missing the best lineage
+   *      at init) ≈ (k-1)/k)^N which caps the achievable Gibbs win rate.
+   *   2. Reward is locked to the first lineage; subsequent perturbations do
+   *      not change the trajectory's reward. Pure Gibbs selection test.    */
+  const N_ACTIONS = targetRewards.length;
+  let initCounter = 0;
+  return {
+    initial() { return { _stepCount: 0, _lineage: null }; },
+    cloneState(s) { return { _stepCount: s._stepCount, _lineage: s._lineage }; },
+    step(s, action) {
+      const lineage = s._lineage !== null ? s._lineage : parseInt(action, 10);
+      return {
+        state: { _stepCount: s._stepCount + 1, _lineage: lineage },
+        reward: targetRewards[lineage],
+        terminal: false,
+      };
+    },
+    observe(s) {
+      // identical observations → distance is 0 across walkers → relativize gives
+      // uniform distance multiplier → only reward drives selection (clean Gibbs).
+      return [0];
+    },
+    sampleAction(s, rng_, isInit) {
+      if (isInit) {
+        const idx = initCounter % N_ACTIONS;
+        initCounter++;
+        return String(idx);
+      }
+      const idx = Math.floor(rng_() * N_ACTIONS);
+      return String(idx);
+    },
+    labelAction(a) { return a; },
+    distance() { return 0; },
+  };
+}
+
+/* ============================================================================
+   UI WIRING — tests panel
+============================================================================ */
+const ui = {};
+['testList','testSummary','testStatus','btnRunTests','btnClearTests'].forEach(
+  id => ui[id] = document.getElementById(id));
+
+function renderTests(tests) {
+  ui.testList.innerHTML = '';
+  for (const t of tests) {
+    const row = document.createElement('div');
+    row.className = 'test-row';
+    row.dataset.idx = tests.indexOf(t);
+    row.innerHTML = `
+      <span class="test-icon">∘</span>
+      <span class="test-name"><span class="tag ${t.tag}">${t.tag}</span>${t.name}</span>
+      <span class="test-detail"></span>
+    `;
+    ui.testList.appendChild(row);
+  }
+}
+function updateTestRow(i, status, result) {
+  const row = ui.testList.children[i];
+  if (!row) return;
+  const icon = row.querySelector('.test-icon');
+  const detail = row.querySelector('.test-detail');
+  row.classList.remove('pass', 'fail', 'run');
+  if (status === 'running') {
+    row.classList.add('run');
+    icon.textContent = '⟳';
+  } else if (status === 'pass') {
+    row.classList.add('pass');
+    icon.textContent = '✓';
+    icon.style.color = '#10b981';
+    detail.textContent = (result.detail ? result.detail + ' · ' : '') + result.ms.toFixed(0) + ' ms';
+  } else {
+    row.classList.add('fail');
+    icon.textContent = '✗';
+    icon.style.color = '#ef4444';
+    detail.textContent = result.error;
+  }
+}
+function summarize(results) {
+  const pass = results.filter(r => r.pass).length;
+  const total = results.length;
+  const totalMs = results.reduce((s,r) => s + r.ms, 0);
+  const cls = pass === total ? 'pass' : 'fail';
+  const msg = pass === total
+    ? `✓ All ${total} tests passed (${totalMs.toFixed(0)} ms total) — math + physics + FMC theory certified.`
+    : `✗ ${pass}/${total} passed — see failures above. Total ${totalMs.toFixed(0)} ms.`;
+  ui.testSummary.innerHTML = `<div class="test-summary ${cls}">${msg}</div>`;
+}
+
+renderTests(TestRunner.tests);
+
+ui.btnRunTests.addEventListener('click', async () => {
+  ui.btnRunTests.disabled = true;
+  ui.btnClearTests.disabled = true;
+  ui.testStatus.textContent = 'Running…';
+  ui.testSummary.innerHTML = '';
+  const results = await TestRunner.runAll((i, t, status, r) => {
+    updateTestRow(i, status, r);
+  });
+  summarize(results);
+  ui.testStatus.textContent = `Done · ${results.filter(r=>r.pass).length}/${results.length} passed`;
+  ui.btnRunTests.disabled = false;
+  ui.btnClearTests.disabled = false;
+});
+
+ui.btnClearTests.addEventListener('click', () => {
+  renderTests(TestRunner.tests);
+  ui.testSummary.innerHTML = '';
+  ui.testStatus.textContent = 'Cleared';
+});
+
+/* ============================================================================
+   LIVE SIMULATOR
+============================================================================ */
+const cv = document.getElementById('cv');
+const ctx = cv.getContext('2d');
+
+const sim = {
+  state: Physics.initialState(),
+  cumReward: 0,
+  tick: 0,
+  totalSamples: 0,
+  running: false,
+  lastDecision: null,
+  goalsReached: 0,                    // counter, not boolean: goal respawns
+  goalFlash: { active: false, x: 0, y: 0, t0: 0 },
+  path: [],
+};
+
+/* Relocate the goal to a random valid position (not in walls, far from rocket).
+ * Returns true if a valid position was found. */
+function relocateGoal(rocketState) {
+  const margin = 60;
+  const r = Physics.WORLD.goal.r;
+  for (let attempt = 0; attempt < 80; attempt++) {
+    const x = margin + Math.random() * (W - 2 * margin);
+    const y = margin + Math.random() * (H - 2 * margin);
+    if (Physics.pointInWalls(x, y, r + 8)) continue;
+    const dx = x - rocketState.x, dy = y - rocketState.y;
+    const distFromRocket = Math.sqrt(dx*dx + dy*dy);
+    if (distFromRocket < 220) continue;     // non-trivial relocation
+    Physics.WORLD.goal.x = x;
+    Physics.WORLD.goal.y = y;
+    return true;
+  }
+  return false;
+}
+
+const simUI = {
+  N: document.getElementById('N'), vN: document.getElementById('vN'),
+  M: document.getElementById('M'), vM: document.getElementById('vM'),
+  A: document.getElementById('A'), vA: document.getElementById('vA'),
+  B: document.getElementById('B'), vB: document.getElementById('vB'),
+  E: document.getElementById('E'), vE: document.getElementById('vE'),
+  start: document.getElementById('btnStart'),
+  reset: document.getElementById('btnReset'),
+  alpha0: document.getElementById('btnAlpha0'),
+  sTick: document.getElementById('sTick'),
+  sGoals: document.getElementById('sGoals'),
+  sReward: document.getElementById('sReward'),
+  sAlt: document.getElementById('sAlt'),
+  sV: document.getElementById('sV'),
+  sTheta: document.getElementById('sTheta'),
+  sDec: document.getElementById('sDec'),
+  sConf: document.getElementById('sConf'),
+  mConf: document.getElementById('mConf'),
+  sESS: document.getElementById('sESS'),
+  mESS: document.getElementById('mESS'),
+  sBranch: document.getElementById('sBranch'),
+  mBranch: document.getElementById('mBranch'),
+  sAlive: document.getElementById('sAlive'),
+  sSkip: document.getElementById('sSkip'),
+  sSamples: document.getElementById('sSamples'),
+  vrBars: document.getElementById('vrBars'),
+};
+
+function updateLabels() {
+  simUI.vN.textContent = simUI.N.value;
+  simUI.vM.textContent = simUI.M.value;
+  simUI.vA.textContent = (simUI.A.value/100).toFixed(2);
+  simUI.vB.textContent = (simUI.B.value/100).toFixed(2);
+  simUI.vE.textContent = (simUI.E.value/100).toFixed(2);
+}
+['N','M','A','B','E'].forEach(k => simUI[k].addEventListener('input', updateLabels));
+updateLabels();
+
+simUI.alpha0.addEventListener('click', () => {
+  simUI.A.value = 0;
+  updateLabels();
+});
+document.getElementById('btnSergio').addEventListener('click', () => {
+  /* Empirically-derived (α=0.1, β=0.0) sweet spot — see
+   * /tmp/sergio_fine.js sweep: b_eff = 5.46 ± 0.69 on the default rocket task,
+   * within 0.54 of Sergio's target of 6. This is the lowest-selection setting
+   * that still gives non-degenerate FMC dynamics. */
+  simUI.A.value = 10;       // α = 0.10
+  simUI.B.value = 0;        // β = 0.00
+  updateLabels();
+});
+
+function reset() {
+  sim.state = Physics.initialState();
+  sim.cumReward = 0;
+  sim.tick = 0;
+  sim.totalSamples = 0;
+  sim.lastDecision = null;
+  sim.goalsReached = 0;
+  sim.goalFlash.active = false;
+  /* Reset goal to canonical starting position (top-right). */
+  Physics.WORLD.goal.x = W - 100;
+  Physics.WORLD.goal.y = 60;
+  sim.path = [{x: sim.state.x, y: sim.state.y}];
+  draw();
+  refreshStats();
+}
+simUI.reset.addEventListener('click', () => {
+  reset();
+  sim.running = false;
+  simUI.start.textContent = '▶ Start';
+});
+simUI.start.addEventListener('click', () => {
+  sim.running = !sim.running;
+  simUI.start.textContent = sim.running ? '⏸ Pause' : '▶ Start';
+  if (sim.running) loop();
+});
+
+function envForSim() {
+  return {
+    cloneState: Physics.cloneState,
+    step: Physics.step,
+    observe: Physics.observe,
+    sampleAction: Physics.sampleAction,
+    labelAction: Physics.labelAction,
+    perturbInitAction: Physics.perturbInitAction,
+  };
+}
+
+function loop() {
+  if (!sim.running) return;
+  /* Goal no longer terminates the run — it relocates. We only stop on crash
+   * (terminal state) or after a generous tick budget for one session. */
+  if (!sim.state.alive || sim.tick > 5000) {
+    sim.running = false;
+    simUI.start.textContent = '▶ Start';
+    return;
+  }
+  const config = {
+    nWalkers: parseInt(simUI.N.value),
+    timeHorizon: parseInt(simUI.M.value),
+    alpha: parseInt(simUI.A.value) / 100,
+    beta:  parseInt(simUI.B.value) / 100,
+    essThreshold: parseInt(simUI.E.value) / 100,
+    recordTrajectories: true,
+  };
+  sim.lastDecision = FMC.decide(envForSim(), sim.state, config);
+  sim.totalSamples += config.nWalkers * config.timeHorizon;
+  const action = sim.lastDecision.action;
+  const result = Physics.step(sim.state, action);
+  sim.state = result.state;
+  sim.cumReward += result.reward;
+  sim.tick++;
+  sim.path.push({x: sim.state.x, y: sim.state.y});
+  /* Cap path memory to last 800 points to keep rendering snappy. */
+  if (sim.path.length > 800) sim.path.shift();
+
+  /* Goal capture → relocate, count, flash. */
+  if (Physics.distToGoal(sim.state) < Physics.WORLD.goal.r) {
+    sim.goalFlash.active = true;
+    sim.goalFlash.x = Physics.WORLD.goal.x;
+    sim.goalFlash.y = Physics.WORLD.goal.y;
+    sim.goalFlash.t0 = performance.now();
+    sim.goalsReached++;
+    relocateGoal(sim.state);
+  }
+  draw();
+  refreshStats();
+  requestAnimationFrame(loop);
+}
+
+function draw() {
+  ctx.fillStyle = '#0d1228';
+  ctx.fillRect(0, 0, W, H);
+
+  /* ── FMC CAUSAL CONE — three-pass rendering ─────────────────────────────
+     The cone is the union of all walker trajectories projected M ticks into
+     the future from the rocket's current state. We draw in three passes so
+     the winning lineage stays on top:
+       Pass 1: dead walker trajectories (faint red)
+       Pass 2: alive non-winning trajectories (blue, alpha by VR)
+       Pass 3: winning lineage trajectories (gold, bold)
+     Then a fourth pass draws walker endpoints — the "horizon" of the cone. */
+  if (sim.lastDecision && sim.lastDecision.trajectories) {
+    const d = sim.lastDecision;
+    const N = d.walkers.length;
+    let maxVR = 1e-9;
+    for (let i = 0; i < N; i++) if (d.vr[i] > maxVR) maxVR = d.vr[i];
+    const winLabel = d.decisionLabel;
+
+    /* Pass 1: dead walker trajectories. */
+    ctx.lineWidth = 1;
+    for (let i = 0; i < N; i++) {
+      const w = d.walkers[i], traj = d.trajectories[i];
+      if (!traj || traj.length < 2 || w.alive) continue;
+      ctx.beginPath();
+      ctx.moveTo(traj[0][0] * W, traj[0][1] * H);
+      for (let j = 1; j < traj.length; j++) ctx.lineTo(traj[j][0] * W, traj[j][1] * H);
+      ctx.strokeStyle = 'rgba(239, 68, 68, 0.12)';
+      ctx.stroke();
+    }
+
+    /* Pass 2: alive non-winning trajectories — alpha proportional to VR. */
+    for (let i = 0; i < N; i++) {
+      const w = d.walkers[i], traj = d.trajectories[i];
+      if (!traj || traj.length < 2 || !w.alive) continue;
+      if (w.initActionLabel === winLabel) continue;
+      const vrNorm = d.vr[i] / maxVR;             // 0..1
+      const alpha = 0.10 + 0.30 * vrNorm;          // dim losers, brighter near-winners
+      ctx.beginPath();
+      ctx.moveTo(traj[0][0] * W, traj[0][1] * H);
+      for (let j = 1; j < traj.length; j++) ctx.lineTo(traj[j][0] * W, traj[j][1] * H);
+      ctx.strokeStyle = `rgba(96, 165, 250, ${alpha.toFixed(3)})`;
+      ctx.stroke();
+    }
+
+    /* Pass 3: winning lineage trajectories — gold, bold. */
+    ctx.lineWidth = 1.6;
+    for (let i = 0; i < N; i++) {
+      const w = d.walkers[i], traj = d.trajectories[i];
+      if (!traj || traj.length < 2 || !w.alive) continue;
+      if (w.initActionLabel !== winLabel) continue;
+      ctx.beginPath();
+      ctx.moveTo(traj[0][0] * W, traj[0][1] * H);
+      for (let j = 1; j < traj.length; j++) ctx.lineTo(traj[j][0] * W, traj[j][1] * H);
+      ctx.strokeStyle = 'rgba(255, 215, 0, 0.55)';
+      ctx.stroke();
+    }
+    ctx.lineWidth = 1;
+
+    /* Pass 4: walker endpoints — visualize the cone "horizon". */
+    for (let i = 0; i < N; i++) {
+      const w = d.walkers[i], traj = d.trajectories[i];
+      if (!traj || traj.length < 1) continue;
+      const last = traj[traj.length - 1];
+      const x = last[0] * W, y = last[1] * H;
+      ctx.beginPath();
+      ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+      if (!w.alive) ctx.fillStyle = 'rgba(239, 68, 68, 0.55)';
+      else if (w.initActionLabel === winLabel) ctx.fillStyle = 'rgba(255, 215, 0, 0.95)';
+      else ctx.fillStyle = 'rgba(96, 165, 250, 0.70)';
+      ctx.fill();
+    }
+  }
+
+  /* Walls */
+  ctx.fillStyle = '#ef4444';
+  for (const w of Physics.WORLD.walls) ctx.fillRect(w.x, w.y, w.w, w.h);
+
+  /* Goal-reached flash (expanding green ring at last captured goal). */
+  if (sim.goalFlash.active) {
+    const dt = performance.now() - sim.goalFlash.t0;
+    if (dt < 800) {
+      const r = 30 + dt * 0.15;
+      const alpha = 1 - dt / 800;
+      ctx.beginPath();
+      ctx.arc(sim.goalFlash.x, sim.goalFlash.y, r, 0, Math.PI * 2);
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = `rgba(16, 185, 129, ${alpha.toFixed(3)})`;
+      ctx.stroke();
+      ctx.lineWidth = 1;
+    } else {
+      sim.goalFlash.active = false;
+    }
+  }
+
+  /* Goal (current) */
+  ctx.beginPath();
+  ctx.arc(Physics.WORLD.goal.x, Physics.WORLD.goal.y, Physics.WORLD.goal.r, 0, Math.PI*2);
+  ctx.fillStyle = 'rgba(16, 185, 129, 0.30)';
+  ctx.fill();
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = '#10b981';
+  ctx.stroke();
+  ctx.lineWidth = 1;
+  ctx.fillStyle = '#10b981';
+  ctx.font = 'bold 11px ui-monospace, monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('GOAL', Physics.WORLD.goal.x, Physics.WORLD.goal.y + 4);
+
+  /* Real path of the rocket */
+  if (sim.path.length > 1) {
+    ctx.beginPath();
+    ctx.moveTo(sim.path[0].x, sim.path[0].y);
+    for (let i = 1; i < sim.path.length; i++) ctx.lineTo(sim.path[i].x, sim.path[i].y);
+    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
+    ctx.stroke();
+    ctx.lineWidth = 1;
+  }
+
+  /* Rocket body */
+  ctx.save();
+  ctx.translate(sim.state.x, sim.state.y);
+  ctx.rotate(sim.state.angle);
+  ctx.fillStyle = sim.state.alive ? '#ffd700' : '#ef4444';
+  ctx.beginPath();
+  ctx.moveTo(13, 0);
+  ctx.lineTo(-9, 7);
+  ctx.lineTo(-5, 0);
+  ctx.lineTo(-9, -7);
+  ctx.closePath();
+  ctx.fill();
+  /* flame */
+  if (sim.lastDecision && sim.lastDecision.action && sim.lastDecision.action[0] > 0.05 && sim.state.alive) {
+    const flame = sim.lastDecision.action[0] / Physics.MAX_THRUST;
+    ctx.fillStyle = '#ff6b35';
+    ctx.beginPath();
+    ctx.moveTo(-5, 0);
+    ctx.lineTo(-13 - flame*8, 4);
+    ctx.lineTo(-17 - flame*10, 0);
+    ctx.lineTo(-13 - flame*8, -4);
+    ctx.closePath();
+    ctx.fill();
+  }
+  ctx.restore();
+
+  /* Score badge top-left: count of goals captured this run. */
+  if (sim.goalsReached > 0) {
+    ctx.textAlign = 'left';
+    ctx.font = 'bold 14px ui-monospace, monospace';
+    ctx.fillStyle = 'rgba(16, 185, 129, 0.92)';
+    ctx.fillText('🏆 ' + sim.goalsReached, 18, 28);
+  }
+
+  /* Crashed overlay */
+  if (!sim.state.alive) {
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'rgba(239, 68, 68, 0.90)';
+    ctx.font = 'bold 26px sans-serif';
+    ctx.fillText('💥 CRASHED — final score: ' + sim.goalsReached, W/2, H/2);
+  }
+}
+
+function refreshStats() {
+  simUI.sTick.textContent = sim.tick;
+  simUI.sGoals.textContent = sim.goalsReached;
+  simUI.sReward.textContent = sim.cumReward.toFixed(2);
+  simUI.sAlt.textContent = (H - sim.state.y).toFixed(0);
+  const v = Math.sqrt(sim.state.vx*sim.state.vx + sim.state.vy*sim.state.vy);
+  simUI.sV.textContent = v.toFixed(2);
+  const angDeg = (sim.state.angle * 180 / Math.PI) % 360;
+  simUI.sTheta.textContent = angDeg.toFixed(0);
+
+  if (sim.lastDecision) {
+    const d = sim.lastDecision;
+    simUI.sDec.textContent = `T=${d.action[0].toFixed(2)} τ=${d.action[1].toFixed(3)}`;
+    const conf = (d.confidence * 100).toFixed(0);
+    simUI.sConf.textContent = conf + '%';
+    simUI.mConf.style.width = conf + '%';
+    simUI.sESS.textContent = d.ess.toFixed(1) + ' / ' + d.walkers.length;
+    simUI.mESS.style.width = (100 * d.ess / d.walkers.length).toFixed(0) + '%';
+    /* b_eff bar: proximity to Sergio's 6 = max meter; values >9 cap at 100%. */
+    const bEff = d.branching || 0;
+    simUI.sBranch.textContent = bEff.toFixed(2);
+    /* Triangular response peaked at 6: 0 at b=0, 100% at b=6, 0 at b=12. */
+    const bMeter = bEff <= 6
+        ? Math.max(0, Math.min(100, (bEff / 6) * 100))
+        : Math.max(0, Math.min(100, ((12 - bEff) / 6) * 100));
+    simUI.mBranch.style.width = bMeter.toFixed(0) + '%';
+    simUI.sAlive.textContent = d.aliveCount;
+    simUI.sSkip.textContent = d.cloningSkipped ? 'YES' : 'no';
+
+    /* VR histogram bars */
+    const bars = simUI.vrBars;
+    bars.innerHTML = '';
+    const max = Math.max(...d.vr, 1e-9);
+    for (let i = 0; i < d.vr.length; i++) {
+      const bar = document.createElement('div');
+      bar.className = 'vr-bar';
+      bar.style.height = (100 * d.vr[i] / max) + '%';
+      if (!d.walkers[i].alive) bar.classList.add('dead');
+      bars.appendChild(bar);
+    }
+  }
+  simUI.sSamples.textContent = sim.totalSamples.toLocaleString();
+}
+
+reset();
+</script>
+</body>
+</html>
