@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <title>Congettura A — superficie 4D di Sergio's "6"</title>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      max-width: 1100px;
+      margin: 1.5rem auto;
+      padding: 0 1.2rem;
+      line-height: 1.55;
+      color: #222;
+    }
+    h1 { font-size: 1.55rem; margin-bottom: 0.2rem; }
+    h2 { font-size: 1.15rem; margin-top: 2.2rem; border-bottom: 1px solid #ddd; padding-bottom: 0.3rem; }
+    p.lead { color: #555; margin-top: 0; }
+    .formula {
+      background: #f5f5f5;
+      border-left: 4px solid #2c5fa1;
+      padding: 0.8rem 1rem;
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      font-size: 0.95rem;
+      margin: 1rem 0;
+      overflow-x: auto;
+    }
+    .sergio {
+      color: #b22222;
+      font-weight: 600;
+    }
+    .plot { width: 100%; height: 460px; margin-top: 0.5rem; }
+    .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 720px) { .pair { grid-template-columns: 1fr; } }
+    .note {
+      background: #fffbe6;
+      border-left: 4px solid #b8860b;
+      padding: 0.7rem 1rem;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+    table { border-collapse: collapse; margin: 0.5rem 0; font-size: 0.9rem; }
+    td, th { border: 1px solid #ccc; padding: 0.3rem 0.6rem; text-align: right; }
+    th { background: #f0f0f0; }
+    .legend-strip {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      font-size: 0.85rem; color: #555; margin: 0.5rem 0;
+    }
+    .legend-strip span { display: inline-flex; align-items: center; gap: 0.3rem; }
+    .legend-strip .swatch { width: 14px; height: 14px; border-radius: 2px; }
+  </style>
+</head>
+<body>
+
+<h1>Congettura A — la superficie 4D dietro Sergio's "6"</h1>
+<p class="lead">
+Visualizzazione interattiva del transitorio di branching di Fractal Monte Carlo.
+Tutti i dati provengono dai benchmark di <code>fmc-core</code>
+(<code>bench/results/*.jsonl</code>), 20 seed/cella con CI95 bootstrap.
+Sergio's "6" è il punto rosso evidenziato — un singolo snapshot di una superficie 4D.
+</p>
+
+<h2>1. La formula candidata</h2>
+
+<div class="formula">
+b_eff*(α, β=0, K, N, M) ≈ 1 + (K − 1) · 𝓕(M/N) · 𝓖(α, K)
+</div>
+
+<p>
+Tre termini, ognuno controlla un asse del transitorio:
+</p>
+
+<ul>
+  <li><b>1</b>: l'asintoto di palmera (M → ∞, sempre, per α &gt; 0). È il Teorema 2 (Gibbs equilibrium).</li>
+  <li><b>(K − 1) · 𝓕(M/N)</b>: la "curva di Wright-Fisher". 𝓕 decresce da 1 (a M=0, sciame uniforme) a 0 (a M → ∞, sciame fissato). A α=0 esatto: 𝓕(t) ≈ exp(−t · c) con c ≈ 1, e il deficit K − b_eff scala come N⁻¹ (verificato empiricamente q = −0.948).</li>
+  <li><b>𝓖(α, K)</b>: il fattore di selezione. A α=0, 𝓖 ≡ 1. A α=1 (greedy), 𝓖 → 0 e b_eff collassa a 1 indipendentemente da K, M, N.</li>
+</ul>
+
+<div class="note">
+<b>Sergio's "6" come punto specifico</b>: esiste perché lui sceglie istintivamente
+N ≈ 32, M ≈ 15, K ≈ 9, α ≈ 0.1 — la <span class="sergio">tripla (K=9, M=15, N=32)</span>
+nel regime di selezione debole.<br>
+Cambia uno qualsiasi di questi parametri e il numero cambia. Non è una costante universale; è uno
+snapshot di un transitorio.
+</div>
+
+<h2>2. Asse K — al variare di K, b_eff* segue una power law (a M, N fissati)</h2>
+
+<p>
+Sweep su 8 valori di K, fisso (α=0.1, β=0, M=15, N=32). Fit power-law:
+b_eff* ≈ 1.53 · K<sup>0.6</sup> (SSE 25× migliore del modello costante).
+</p>
+<div id="plot_K" class="plot"></div>
+
+<h2>3. Asse M — al variare di M, b_eff* decade verso palmera (Teorema 2)</h2>
+
+<p>
+Sweep su 6 valori di M per K ∈ {6, 9, 16}, fisso (α=0.1, β=0, N=32).
+Tutte le curve convergono a b_eff* → 1 a M grande, indipendentemente dal K iniziale.
+</p>
+<div id="plot_M" class="plot"></div>
+
+<h2>4. Asse N — al variare di N, il deficit K − b_eff segue una power law (Wright-Fisher)</h2>
+
+<p>
+A K=9, M=15, due regimi di selezione:
+</p>
+<ul>
+  <li><b>α=0 esatto</b> (drift puramente neutrale): esponente −0.948 ≈ −1, predizione di Moran/Wright-Fisher.</li>
+  <li><b>α=0.1</b> (Sergio config): esponente −0.45, la selezione rallenta la fissazione.</li>
+</ul>
+<div id="plot_N" class="plot"></div>
+
+<h2>5. Superficie b_eff(K, M) a N=32, α=0.1</h2>
+
+<p>
+Il volume del transitorio. Sergio's punto rosso (K=9, M=15) sta sul versante.
+Spostandoti lungo la cresta (M piccolo, K grande), b_eff cresce; scendendo (M
+grande), b_eff collassa a 1.
+</p>
+<div id="plot_surface" class="plot" style="height: 540px;"></div>
+
+<h2>6. Asse α — al variare di α, il regime cambia (a K=9 fisso)</h2>
+
+<p>
+Dati dai sweep su 3 task built-in (rocket, navigation 2D, pendulum) — tutti a K=9, M=15, N=32.
+Il sweet spot di Sergio è il "ginocchio" della curva, dove la selezione è ancora debole ma non
+zero.
+</p>
+<div id="plot_alpha" class="plot"></div>
+
+<h2>7. Riassunto operativo</h2>
+
+<p>
+Cosa significa avere "Sergio's 6":
+</p>
+<table>
+  <tr><th>Parametro</th><th>Valore di Sergio</th><th>Sensitività</th></tr>
+  <tr><td>K (azioni)</td><td>9</td><td>Cambiando K → b_eff* ≈ 1.53·K<sup>0.6</sup>, quindi a K=4 → ~3.5, a K=18 → ~9</td></tr>
+  <tr><td>M (orizzonte)</td><td>15</td><td>A M=120 b_eff* → ~1.5 per qualsiasi K. Decay esponenziale.</td></tr>
+  <tr><td>N (walker)</td><td>32</td><td>A N=512 b_eff* → ~K-1 (la selezione non ha tempo di agire)</td></tr>
+  <tr><td>α (selezione)</td><td>0.1</td><td>A α=0 → 𝓖=1 (puro WF). A α=1 → b_eff*→1 indipendentemente.</td></tr>
+</table>
+
+<p>
+Il "magic 6" è quindi una scelta di operating point. La <em>vera</em> domanda di ricerca è:
+data una task con (K, profondità di pianificazione richiesta), qual è il punto ottimale
+(N, M, α)? Quella ricerca è aperta.
+</p>
+
+<p style="color:#777; font-size: 0.85rem; margin-top: 2rem;">
+Sorgenti: <code>fmc-core/bench/results/c_K_shape.jsonl</code>,
+<code>M_dependence.jsonl</code>, <code>N_dependence.jsonl</code>,
+<code>WF_validation_alpha0.jsonl</code>, <code>rocket_sweep.jsonl</code>,
+<code>navigation2d_sweep.jsonl</code>, <code>pendulum_sweep.jsonl</code>.
+Documenti: <code>docs/MATH_CANON.md</code>,
+<code>work/02_deep_dives/07_wright_fisher_mapping.md</code>,
+<code>fmc-core/bench/REPORT.md</code>.
+</p>
+
+<script>
+// =============== DATA (extracted from the JSONL files) =================
+
+// c_K_shape: K vs b_eff at alpha=0.1, M=15, N=32
+const cK = {
+  K: [3, 4, 6, 9, 12, 16, 24, 32],
+  b: [2.623, 3.437, 4.728, 5.971, 7.285, 8.391, 9.884, 10.757],
+  lo: [2.473, 3.251, 4.415, 5.412, 6.559, 7.459, 8.670, 9.299],
+  hi: [2.757, 3.599, 5.036, 6.539, 8.026, 9.313, 11.140, 12.243],
+};
+
+// M_dependence: M vs b_eff for K in {6,9,16} at alpha=0.1, N=32
+const M_data = {
+  6:  { M: [5,10,15,30,60,120], b: [5.312, 5.028, 4.728, 3.343, 1.941, 1.260], lo: [5.192,4.846,4.415,2.983,1.658,1.106], hi: [5.423,5.217,5.036,3.731,2.231,1.431] },
+  9:  { M: [5,10,15,30,60,120], b: [7.451, 6.860, 5.971, 4.236, 2.450, 1.551], lo: [7.207,6.567,5.412,3.809,2.037,1.271], hi: [7.672,7.157,6.539,4.677,2.903,1.886] },
+  16: { M: [5,10,15,30,60,120], b: [11.053,9.767, 8.391, 5.092, 2.548, 1.613], lo: [10.548,9.104,7.459,4.393,2.161,1.450], hi: [11.563,10.447,9.313,5.824,2.945,1.776] },
+};
+
+// N_dependence at alpha=0.1 (K=9, M=15)
+const N_a01 = {
+  N: [8,16,32,64,128,256,512],
+  b: [3.124, 4.797, 5.971, 7.100, 7.667, 8.054, 8.098],
+  deficit: [3.124, 4.797, 5.971, 7.100, 7.667, 8.054, 8.098].map(v => 9 - v),
+};
+// N_dependence at alpha=0 (Wright-Fisher pure neutral)
+const N_a0 = {
+  N: [8,16,32,64,128,256,512],
+  b: [5.260, 6.873, 7.992, 8.410, 8.698, 8.858, 8.926],
+  deficit: [5.260, 6.873, 7.992, 8.410, 8.698, 8.858, 8.926].map(v => 9 - v),
+};
+
+// alpha-sweep: 3 tasks at K=9, M=15, N=32, beta=0.
+// From rocket_sweep.jsonl, navigation2d_sweep.jsonl, pendulum_sweep.jsonl.
+const alpha_data = {
+  alphas: [0.0, 0.1, 0.5, 1.0],
+  rocket:    [7.99, 5.35, 1.26, 1.04],
+  navigation:[7.99, 5.98, 1.82, 1.66],
+  pendulum:  [7.99, 6.40, 1.77, 1.44],
+};
+
+// =============== PLOTS =================
+
+// --- Plot K: power-law fit b_eff = 1.53 * K^0.6 ---
+{
+  const Kfit = [];
+  const bfit = [];
+  for (let k = 2; k <= 35; k += 0.5) { Kfit.push(k); bfit.push(1.53 * Math.pow(k, 0.6)); }
+  Plotly.newPlot('plot_K', [
+    {
+      x: cK.K, y: cK.b,
+      error_y: { type: 'data', symmetric: false,
+        array: cK.hi.map((h,i)=>h-cK.b[i]), arrayminus: cK.b.map((b,i)=>b-cK.lo[i]) },
+      mode: 'markers', type: 'scatter', name: 'misurato (CI95)',
+      marker: { size: 9, color: '#2c5fa1' },
+    },
+    {
+      x: Kfit, y: bfit, mode: 'lines', name: 'fit 1.53·K^0.6',
+      line: { color: '#888', dash: 'dash' },
+    },
+    {
+      x: [9], y: [5.971], mode: 'markers+text', name: "Sergio's '6'",
+      marker: { size: 16, color: '#b22222', symbol: 'star' },
+      text: ["Sergio's '6'"], textposition: 'top right',
+      textfont: { color: '#b22222', size: 12 },
+    },
+  ], {
+    xaxis: { title: 'K (numero azioni discrete)', type: 'log' },
+    yaxis: { title: 'b_eff* (effective branching)', type: 'log' },
+    margin: { t: 20, l: 60, r: 20, b: 50 },
+    legend: { x: 0.02, y: 0.98 },
+  }, { responsive: true });
+}
+
+// --- Plot M: exponential decay toward palmera ---
+{
+  const colors = { 6: '#5b9bd5', 9: '#2c5fa1', 16: '#0a2f5e' };
+  const traces = [];
+  for (const k of [6, 9, 16]) {
+    const d = M_data[k];
+    traces.push({
+      x: d.M, y: d.b,
+      error_y: { type: 'data', symmetric: false,
+        array: d.hi.map((h,i)=>h-d.b[i]), arrayminus: d.b.map((b,i)=>b-d.lo[i]) },
+      mode: 'lines+markers', type: 'scatter', name: `K=${k}`,
+      line: { color: colors[k] }, marker: { color: colors[k], size: 8 },
+    });
+  }
+  // Asymptote line at b_eff=1.
+  traces.push({
+    x: [4, 130], y: [1, 1], mode: 'lines', name: 'palmera (Th. 2)',
+    line: { color: '#b22222', dash: 'dot' }, showlegend: true,
+  });
+  // Sergio's point.
+  traces.push({
+    x: [15], y: [5.971], mode: 'markers+text',
+    marker: { size: 16, color: '#b22222', symbol: 'star' },
+    text: ["Sergio (K=9, M=15)"], textposition: 'top right',
+    textfont: { color: '#b22222' },
+    name: "Sergio's '6'",
+  });
+  Plotly.newPlot('plot_M', traces, {
+    xaxis: { title: 'M (planning horizon, tick)', type: 'log' },
+    yaxis: { title: 'b_eff*', range: [0.5, 13] },
+    margin: { t: 20, l: 60, r: 20, b: 50 },
+    legend: { x: 0.7, y: 0.98 },
+  }, { responsive: true });
+}
+
+// --- Plot N: deficit power law (alpha=0 vs alpha=0.1) ---
+{
+  // Fit lines.
+  const Nfit = [];
+  for (let n = 6; n <= 600; n *= 1.1) Nfit.push(n);
+  // alpha=0:    deficit ~ 28.32 * N^-0.948
+  const fit_a0 = Nfit.map(n => 28.32 * Math.pow(n, -0.948));
+  // alpha=0.1:  deficit ~ 14.97 * N^-0.45 (rough)
+  const fit_a01 = Nfit.map(n => 14.97 * Math.pow(n, -0.45));
+
+  Plotly.newPlot('plot_N', [
+    {
+      x: N_a0.N, y: N_a0.deficit, mode: 'markers', name: 'α=0 (puro WF)',
+      marker: { size: 10, color: '#2c5fa1' },
+    },
+    {
+      x: Nfit, y: fit_a0, mode: 'lines',
+      name: 'fit α=0: 28·N^-0.948 (≈ -1, predizione WF)',
+      line: { color: '#2c5fa1', dash: 'dash' },
+    },
+    {
+      x: N_a01.N, y: N_a01.deficit, mode: 'markers', name: 'α=0.1 (Sergio config)',
+      marker: { size: 10, color: '#b22222' },
+    },
+    {
+      x: Nfit, y: fit_a01, mode: 'lines',
+      name: 'fit α=0.1: 14.97·N^-0.45',
+      line: { color: '#b22222', dash: 'dash' },
+    },
+    {
+      x: [32], y: [3.029], mode: 'markers+text',
+      marker: { size: 14, color: '#b22222', symbol: 'star' },
+      text: ["Sergio's '6' (N=32)"], textposition: 'top right',
+      textfont: { color: '#b22222' }, name: "Sergio",
+    },
+  ], {
+    xaxis: { title: 'N (numero walker)', type: 'log' },
+    yaxis: { title: 'K - b_eff* (deficit di fissazione)', type: 'log' },
+    margin: { t: 20, l: 70, r: 20, b: 50 },
+    legend: { x: 0.02, y: 0.02 },
+  }, { responsive: true });
+}
+
+// --- Plot surface: b_eff(K, M) at fixed N, alpha ---
+{
+  // Build 2D grid using formula: b_eff(K, M) = 1 + (K-1) * exp(-c * M / N)
+  // with N=32, alpha=0.1 -> rough c that matches data.
+  // Empirically calibrating: at K=9, M=15, b_eff = 5.97 -> exp(-c*15/32) = 4.97/8 = 0.621 -> c = 1.015
+  const N = 32, c = 1.015;
+  const Krange = [];
+  for (let k = 2; k <= 32; k++) Krange.push(k);
+  const Mrange = [];
+  for (let m = 1; m <= 120; m += 5) Mrange.push(m);
+
+  const Z = Mrange.map(m => Krange.map(k => 1 + (k - 1) * Math.exp(-c * m / N)));
+
+  Plotly.newPlot('plot_surface', [
+    {
+      type: 'surface',
+      x: Krange, y: Mrange, z: Z,
+      colorscale: 'Viridis',
+      showscale: true,
+      colorbar: { title: 'b_eff*' },
+    },
+    {
+      type: 'scatter3d', mode: 'markers+text',
+      x: [9], y: [15], z: [5.97],
+      marker: { size: 8, color: '#b22222', symbol: 'diamond' },
+      text: ["Sergio's '6'"], textposition: 'top center',
+      textfont: { color: '#b22222', size: 14 },
+      name: "Sergio",
+    },
+  ], {
+    scene: {
+      xaxis: { title: 'K' },
+      yaxis: { title: 'M' },
+      zaxis: { title: 'b_eff*' },
+      camera: { eye: { x: 1.6, y: -1.6, z: 1.0 } },
+    },
+    margin: { t: 20, l: 0, r: 0, b: 0 },
+  }, { responsive: true });
+}
+
+// --- Plot alpha: 3 tasks ---
+{
+  const colors = { rocket: '#2c5fa1', navigation: '#3a8b41', pendulum: '#b8860b' };
+  const traces = [];
+  for (const task of ['rocket', 'navigation', 'pendulum']) {
+    traces.push({
+      x: alpha_data.alphas, y: alpha_data[task],
+      mode: 'lines+markers', name: task,
+      line: { color: colors[task] }, marker: { size: 9, color: colors[task] },
+    });
+  }
+  // Sergio config marker.
+  traces.push({
+    x: [0.1], y: [5.97], mode: 'markers+text',
+    marker: { size: 14, color: '#b22222', symbol: 'star' },
+    text: ["Sergio's '6'"], textposition: 'top right',
+    textfont: { color: '#b22222' }, name: "Sergio's α=0.1",
+  });
+  Plotly.newPlot('plot_alpha', traces, {
+    xaxis: { title: 'α (esponente reward, R^α)', type: 'log' },
+    yaxis: { title: 'b_eff* (a K=9, M=15, N=32)', range: [0, 9] },
+    margin: { t: 20, l: 60, r: 20, b: 50 },
+    legend: { x: 0.7, y: 0.98 },
+  }, { responsive: true });
+}
+</script>
+</body>
+</html>
