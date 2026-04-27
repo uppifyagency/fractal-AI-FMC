@@ -77,6 +77,27 @@ FractalAI/
 
 ## Highlights empirici (cosa abbiamo verificato)
 
+### 🧮 fmc-core + scaling law (sessione 2026-04-27)
+
+Filone: [`fmc-core/`](fmc-core/), canone matematico in [`docs/MATH_CANON.md`](docs/MATH_CANON.md), report empirico in [`fmc-core/bench/REPORT.md`](fmc-core/bench/REPORT.md).
+
+**Cosa abbiamo prodotto in una sessione `/loop` autonoma**:
+
+1. **Documento canonico** [`docs/MATH_CANON.md`](docs/MATH_CANON.md) — 6 definizioni, 3 teoremi, 3 congetture con criteri di falsificabilità, tavola di stato di verifica empirica.
+2. **Reference implementation** [`fmc-core/`](fmc-core/) — Python (NumPy) + JS bit-fedeli sulle primitive deterministiche (1e-12 tolerance), 6 environment built-in (gridworld, rocket 2D, cartpole, navigation 2D, pendulum swing-up, navigation 2D parametrizzato in K), 55 test Python + 11 test JS.
+3. **Suite benchmark** [`fmc-core/bench/`](fmc-core/bench/) — runner uniforme con bootstrap CI95, output JSONL, 6 sweep (rocket α×β, navigation α×β, pendulum α×β, dipendenza da K, forma di $c_K$, dipendenza da M).
+
+**Risultato scientifico originale**: Bet 3 della roadmap ha **falsificato due volte** la "regola del 6" di Sergio:
+
+- Prima falsificazione: a $K=16$ il sweet spot non è 6 ma $\sim 8.4$. La "magic 6" scala con $K$: $b_{\text{eff}}^* \approx 1.53 \cdot K^{0.6}$ (fit su 8 valori di $K$, SSE 25× migliore di costante).
+- Seconda falsificazione: anche $K^{0.6}$ è transiente. Aumentando $M$ (planning horizon) tutto collassa a palmera ($b_{\text{eff}} \to 1$), come previsto dal Teorema 2 (Gibbs equilibrium su $R^\alpha$).
+
+**Conclusione**: Sergio's "6" è uno snapshot di un transitorio doppiamente contingente ($K=9$ E $M=15$), **non** una Terza Legge della cognizione come ipotizzato nel podcast Radient 2026 cap. 16. È comunque interessante **come punto di osservazione del transitorio** — la domanda vera è "perché si pianifica a $M$ specifico" (compute budget, profondità task).
+
+> Questo è il primo contributo originale del progetto **oltre** quanto Sergio o il paper FMC dicono. Eseguito in modalità autonoma con criterio falsificabile esplicito, non in pitch mode.
+
+
+
 ### 🎮 Atari — la replica controllata
 
 Filone: [`work/03_atari_replication/`](work/03_atari_replication/)

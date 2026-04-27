@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>fmc-core JS test runner</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; }
+    h1 { font-size: 1.4rem; }
+    pre { background: #f4f4f4; padding: 1rem; border-radius: 6px; overflow-x: auto; white-space: pre-wrap; }
+    .ok { color: #086c0d; }
+    .fail { color: #a30000; }
+  </style>
+</head>
+<body>
+  <h1>fmc-core — browser test runner</h1>
+  <p>Runs the same tests as <code>node js/_test.js</code>. Open this file directly or via a static server.</p>
+  <pre id="out">running...</pre>
+
+  <script src="fmc.js"></script>
+  <script>
+    const out = document.getElementById("out");
+    let log = "";
+    let passed = 0, failed = 0;
+    const failures = [];
+
+    function approxEqual(a, b, tol = 1e-12) {
+      return Math.abs(a - b) <= tol * Math.max(1, Math.abs(a), Math.abs(b));
+    }
+    function arraysApproxEqual(a, b, tol = 1e-12) {
+      if (a.length !== b.length) return false;
+      for (let i = 0; i < a.length; i++) if (!approxEqual(a[i], b[i], tol)) return false;
+      return true;
+    }
+    function test(name, fn) {
+      try { fn(); passed++; log += "."; }
+      catch (e) { failed++; failures.push({ name, message: e.message }); log += "F"; }
+    }
+    function assert(cond, msg) { if (!cond) throw new Error(msg || "assertion failed"); }
+
+    test("relativize positivity", () => {
+      const inputs = [[-100, -10, -1, 0, 1, 10], [1e-12, 1e-12, 1e-12], [-1e9, -1e9, 1e9]];
+      for (const r of inputs) {
+        const o = FMC.relativize(r);
+        for (const x of o) assert(x > 0);
+      }
+    });
+
+    test("relativize constant input returns ones", () => {
+      const o = FMC.relativize([5,5,5,5]);
+      for (const x of o) assert(approxEqual(x, 1.0));
+    });
+
+    test("relativize affine invariance", () => {
+      const r = [0.5, 1, 2, 4, 8];
+      const base = FMC.relativize(r);
+      for (const [a,b] of [[1,0],[2,5],[100,-50],[0.001,1000]]) {
+        const t = r.map(x => a*x + b);
+        assert(arraysApproxEqual(base, FMC.relativize(t), 1e-10));
+      }
+    });
+
+    test("ess uniform = N", () => {
+      assert(approxEqual(FMC.effectiveSampleSize(new Array(50).fill(1)), 50));
+    });
+
+    test("ess one dominant = 1", () => {
+      const v = new Array(50).fill(0); v[7] = 1e9;
+      assert(approxEqual(FMC.effectiveSampleSize(v), 1, 1e-6));
+    });
+
+    test("branching palmera = 1", () => {
+      assert(approxEqual(FMC.effectiveBranchingFactor([3,3,3,3]), 1.0));
+    });
+
+    test("branching matorral = K", () => {
+      const labels = []; const K = 9;
+      for (let k=0;k<K;k++) for (let n=0;n<10;n++) labels.push(k);
+      assert(approxEqual(FMC.effectiveBranchingFactor(labels), K, 1e-9));
+    });
+
+    test("branching 50/50 = 2", () => {
+      const labels = []; for (let i=0;i<32;i++) labels.push(0); for (let i=0;i<32;i++) labels.push(1);
+      assert(approxEqual(FMC.effectiveBranchingFactor(labels), 2.0, 1e-9));
+    });
+
+    test("clone uniform vr means stay", () => {
+      const vr = new Array(64).fill(1);
+      const partners = Array.from({length:64}, (_,i) => (i+1) % 64);
+      const samples = new Array(64).fill(0.5);
+      const out = FMC.cloneStep(vr, partners, samples);
+      for (let i=0;i<64;i++) assert(out[i] === i);
+    });
+
+    test("clone zero vr always clones", () => {
+      const out = FMC.cloneStep([0,1,2,3], [1,2,3,0], [0.99,0.99,0.99,0.99]);
+      assert(out[0] === 1);
+    });
+
+    test("decide argmax bincount", () => {
+      assert(FMC.decide([0,0,1,1,1,2]) === 1);
+    });
+
+    if (failed === 0) {
+      log += `\n\nOK ${passed} passed, 0 failed`;
+      out.textContent = log;
+      out.classList.add("ok");
+    } else {
+      log += `\n\nFAIL ${passed} passed, ${failed} failed`;
+      for (const f of failures) log += `\n  - ${f.name}: ${f.message}`;
+      out.textContent = log;
+      out.classList.add("fail");
+    }
+  </script>
+</body>
+</html>

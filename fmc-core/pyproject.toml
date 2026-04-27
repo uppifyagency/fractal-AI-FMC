@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fmc-core"
+version = "0.1.0"
+description = "Reference implementation of Fractal Monte Carlo (FMC) — math layer matching docs/MATH_CANON.md"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "FractalAI project" }]
+dependencies = ["numpy>=1.21"]
+
+[project.optional-dependencies]
+test = ["pytest>=7", "pytest-cov"]
+envs-atari = ["gymnasium[atari,accept-rom-license]>=0.29"]
+envs-craftax = ["craftax"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.setuptools.packages.find]
+where = ["src"]
