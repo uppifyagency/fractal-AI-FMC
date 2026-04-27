@@ -1,0 +1,801 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>FMC traffic intersection — live simulation</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      margin: 0; padding: 1rem;
+      background: #1a1a1a; color: #e8e8e8;
+      min-height: 100vh;
+    }
+    h1 { font-size: 1.2rem; margin: 0 0 0.6rem 0; }
+    .subtitle { color: #999; font-size: 0.9rem; margin-bottom: 1rem; }
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 1rem;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    @media (max-width: 980px) { .layout { grid-template-columns: 1fr; } }
+    .panel {
+      background: #232323; padding: 1rem;
+      border-radius: 6px;
+      border: 1px solid #333;
+    }
+    canvas { display: block; background: #0c0c0c; border-radius: 4px; }
+    #city { width: 100%; height: auto; max-width: 900px; }
+    #fmc_walkers { width: 100%; max-width: 280px; height: 200px; }
+    .controls { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.6rem 0; }
+    button {
+      padding: 0.45rem 0.85rem;
+      background: #2c5fa1; color: white;
+      border: none; border-radius: 4px;
+      cursor: pointer; font-size: 0.9rem;
+      transition: background 0.15s;
+    }
+    button:hover { background: #3a7bc8; }
+    button.active { background: #b22222; }
+    button.secondary { background: #444; }
+    button.secondary:hover { background: #555; }
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem 1rem;
+      margin-top: 0.6rem;
+      font-size: 0.9rem;
+    }
+    .stat-grid .label { color: #888; }
+    .stat-grid .value {
+      font-family: "SF Mono", Menlo, monospace;
+      color: #4ade80;
+    }
+    .stat-grid .value.warn { color: #f59e0b; }
+    .stat-grid .value.bad { color: #ef4444; }
+    h3 { font-size: 0.95rem; margin: 0.8rem 0 0.4rem 0; color: #ccc; }
+    .compare-table { width: 100%; font-size: 0.85rem; border-collapse: collapse; margin-top: 0.4rem; }
+    .compare-table th, .compare-table td { padding: 0.3rem 0.4rem; text-align: right; border-bottom: 1px solid #333; }
+    .compare-table th { background: #2a2a2a; color: #999; text-align: right; font-weight: normal; }
+    .compare-table td.method { text-align: left; }
+    .compare-table tr.active { background: #2a3a4a; }
+    .legend { font-size: 0.8rem; color: #888; margin-top: 0.5rem; }
+    .legend .swatch { display: inline-block; width: 12px; height: 12px; vertical-align: middle; margin-right: 0.3rem; border-radius: 2px; }
+    a { color: #4ade80; }
+  </style>
+</head>
+<body>
+
+<h1>🚦 FMC traffic intersection — live</h1>
+<div class="subtitle">
+  The same Bet 1 scenario from <a href="../fmc-core/bench/REPORT.md">fmc-core/bench/REPORT.md</a>:
+  4-way intersection, Poisson arrivals, three controllers compared in real time.
+  FMC plans by simulating queue futures with N walkers — visible in the side panel.
+</div>
+
+<div class="layout">
+
+  <div class="panel">
+    <canvas id="city" width="900" height="600"></canvas>
+
+    <div class="controls">
+      <span style="margin-right: 0.4rem; color: #999; align-self: center;">Controller:</span>
+      <button id="btn_actuated" class="active">Actuated</button>
+      <button id="btn_static">Static 30/30</button>
+      <button id="btn_fmc">FMC (N=32, M=8)</button>
+      <span style="margin: 0 0.4rem 0 1.2rem; color: #999; align-self: center;">Traffic:</span>
+      <button id="btn_sym" class="secondary active">Symmetric</button>
+      <button id="btn_asym" class="secondary">Asymmetric (heavy N/S)</button>
+      <button id="btn_reset" class="secondary" style="margin-left: 1.2rem;">Reset</button>
+      <button id="btn_pause" class="secondary">Pause</button>
+      <button id="btn_speed" class="secondary">×1</button>
+    </div>
+
+    <div class="legend">
+      <span class="swatch" style="background: #4ade80;"></span> green light
+      <span class="swatch" style="background: #ef4444; margin-left: 1rem;"></span> red light
+      <span class="swatch" style="background: #f59e0b; margin-left: 1rem;"></span> yellow
+      <span class="swatch" style="background: #6090c8; margin-left: 1rem;"></span> car (moving)
+      <span class="swatch" style="background: #888; margin-left: 1rem;"></span> car (waiting)
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Live stats</h3>
+    <div class="stat-grid">
+      <div class="label">Sim time</div>          <div class="value" id="s_time">0s</div>
+      <div class="label">Throughput</div>        <div class="value" id="s_throughput">0</div>
+      <div class="label">Vehicles in net</div>   <div class="value" id="s_in_net">0</div>
+      <div class="label">Total wait time</div>   <div class="value" id="s_wait">0</div>
+      <div class="label">Queue N</div>           <div class="value" id="s_qn">0</div>
+      <div class="label">Queue S</div>           <div class="value" id="s_qs">0</div>
+      <div class="label">Queue E</div>           <div class="value" id="s_qe">0</div>
+      <div class="label">Queue W</div>           <div class="value" id="s_qw">0</div>
+    </div>
+
+    <h3>FMC walkers (live planning)</h3>
+    <canvas id="fmc_walkers" width="280" height="200"></canvas>
+    <div class="legend">
+      Each dot = one walker prediction at horizon M.
+      X axis = NS queue total, Y axis = EW queue total.
+      Dot color: action chosen by walker (<span class="swatch" style="background: #4ade80;"></span> NS-green, <span class="swatch" style="background: #f59e0b;"></span> EW-green).
+      Visible only when controller = FMC.
+    </div>
+
+    <h3>Comparison (rolling)</h3>
+    <table class="compare-table" id="compare">
+      <tr><th class="method">Method</th><th>thr</th><th>wait</th></tr>
+      <tr id="row_actuated" class="active"><td class="method">Actuated</td><td id="cmp_thr_actuated">0</td><td id="cmp_wait_actuated">0</td></tr>
+      <tr id="row_static"><td class="method">Static</td><td id="cmp_thr_static">0</td><td id="cmp_wait_static">0</td></tr>
+      <tr id="row_fmc"><td class="method">FMC</td><td id="cmp_thr_fmc">0</td><td id="cmp_wait_fmc">0</td></tr>
+    </table>
+
+    <div class="legend" style="margin-top: 1rem;">
+      Toggle controllers to start each one's history.
+      Bench data (8 seeds, 600s SUMO):
+      Actuated 156 ± 20, Static 249 ± 32, FMC 261 ± 16 (symmetric);
+      <br>Asymmetric: Actuated 146, Static 256, <b style="color: #4ade80;">FMC 314 ± 9</b>.
+    </div>
+  </div>
+
+</div>
+
+<!-- ============================================================
+     fmc-core JS port (copied verbatim from fmc-core/js/fmc.js)
+     for self-containment; this is the SAME math layer as the
+     Python reference impl, bit-for-bit on relativize/virtual_reward.
+============================================================ -->
+<script>
+(function() {
+  const EPS = 1e-10;
+  function mean(arr) { let s = 0; for (let i = 0; i < arr.length; i++) s += arr[i]; return s / arr.length; }
+  function std(arr) {
+    const mu = mean(arr); let s = 0;
+    for (let i = 0; i < arr.length; i++) { const d = arr[i] - mu; s += d * d; }
+    return Math.sqrt(s / arr.length);
+  }
+  function relativize(vector) {
+    const n = vector.length;
+    const sd = std(vector);
+    if (sd === 0) return new Float64Array(n).fill(1.0);
+    const mu = mean(vector);
+    const out = new Float64Array(n);
+    for (let i = 0; i < n; i++) {
+      const z = (vector[i] - mu) / sd;
+      if (z > 0) out[i] = Math.log(1 + z) + 1;
+      else out[i] = Math.exp(z);
+    }
+    return out;
+  }
+  function virtualReward(rewards, states, partners, alpha = 1.0, beta = 1.0) {
+    const n = rewards.length;
+    const dist = new Float64Array(n);
+    for (let i = 0; i < n; i++) {
+      const j = partners[i];
+      let s = 0;
+      const xi = states[i], xj = states[j];
+      for (let k = 0; k < xi.length; k++) { const d = xi[k] - xj[k]; s += d * d; }
+      dist[i] = Math.sqrt(s);
+    }
+    const rHat = relativize(rewards), dHat = relativize(dist);
+    const out = new Float64Array(n);
+    for (let i = 0; i < n; i++) out[i] = Math.pow(rHat[i], alpha) * Math.pow(dHat[i], beta);
+    return out;
+  }
+  function cloneStep(vr, partners, samples) {
+    const n = vr.length;
+    const out = new Int32Array(n);
+    for (let i = 0; i < n; i++) {
+      const k = partners[i];
+      let p;
+      if (vr[i] === 0) p = 1.0;
+      else if (vr[k] <= vr[i]) p = 0.0;
+      else { p = (vr[k] - vr[i]) / vr[i]; if (p > 1) p = 1; }
+      out[i] = samples[i] < p ? k : i;
+    }
+    return out;
+  }
+  function decide(labels) {
+    const c = new Map();
+    let best = labels[0], bc = -1;
+    for (let i = 0; i < labels.length; i++) {
+      const k = labels[i];
+      const x = (c.get(k) || 0) + 1;
+      c.set(k, x);
+      if (x > bc) { bc = x; best = k; }
+    }
+    return best;
+  }
+  window.FMC = { relativize, virtualReward, cloneStep, decide };
+})();
+</script>
+
+<!-- ============================================================
+     Traffic simulation + FMC planner + visualization
+============================================================ -->
+<script>
+(function() {
+
+const cv = document.getElementById('city');
+const ctx = cv.getContext('2d');
+const W = cv.width, H = cv.height;
+
+// World layout — single intersection.
+const ROAD_HALF = 50;       // half-width of each road
+const STOP_LINE = ROAD_HALF + 2;
+const CX = W / 2, CY = H / 2;
+const LANE_OFFSET = 22;     // distance of each lane from road centerline
+
+// Each "direction" = where car comes from. Each lane within direction can go straight only (we simplify).
+const DIRS = ['N', 'S', 'E', 'W'];
+const SPAWN_POS = {
+  N: { x: CX - LANE_OFFSET, y: -10, vx: 0, vy: 1 },   // arrives from north going south
+  S: { x: CX + LANE_OFFSET, y: H + 10, vx: 0, vy: -1 },
+  E: { x: W + 10, y: CY - LANE_OFFSET, vx: -1, vy: 0 },
+  W: { x: -10, y: CY + LANE_OFFSET, vx: 1, vy: 0 },
+};
+// Stop line position (car stops if light red & it's ahead of the line approaching center).
+const STOP_BEFORE_CENTER = ROAD_HALF + 4;
+
+const CAR_LEN = 14, CAR_WID = 8;
+const CAR_SPEED = 1.3;     // pixels/tick
+const CAR_GAP = 18;        // min gap between cars
+const ACCEL = 0.12;
+
+// Simulation state
+let cars = [];
+let nextCarId = 0;
+let simTime = 0;          // in ticks
+let throughput = 0;
+let totalWait = 0;
+let phase = 'NS_GREEN';   // 'NS_GREEN' | 'NS_YELLOW' | 'EW_GREEN' | 'EW_YELLOW'
+let phaseClock = 0;
+let arrivalRates = { N: 0.10, S: 0.10, E: 0.10, W: 0.10 };  // per tick
+let controller = 'actuated';
+let asymmetric = false;
+let paused = false;
+let speedMul = 1;
+let history = {
+  actuated: { thr: 0, wait: 0, ticks: 0 },
+  static:   { thr: 0, wait: 0, ticks: 0 },
+  fmc:      { thr: 0, wait: 0, ticks: 0 },
+};
+
+// FMC walker visualization state
+const N_WALKERS = 32, M_HORIZON = 8;
+let lastWalkerStates = null;     // for drawing
+let lastWalkerLabels = null;
+
+// ---------- arrival rates ----------
+function setSymmetric() {
+  arrivalRates = { N: 0.10, S: 0.10, E: 0.10, W: 0.10 };
+}
+function setAsymmetric() {
+  arrivalRates = { N: 0.20, S: 0.20, E: 0.04, W: 0.04 };
+}
+
+// ---------- car spawn ----------
+function spawnFromDir(d) {
+  const sp = SPAWN_POS[d];
+  // Don't spawn if there's a car too close at spawn point.
+  for (const c of cars) {
+    if (c.dir === d) {
+      const dx = c.x - sp.x, dy = c.y - sp.y;
+      if (dx * dx + dy * dy < (CAR_LEN + CAR_GAP) ** 2) return;
+    }
+  }
+  cars.push({
+    id: nextCarId++,
+    dir: d,
+    x: sp.x, y: sp.y,
+    vx: sp.vx * CAR_SPEED, vy: sp.vy * CAR_SPEED,
+    speed: CAR_SPEED,
+    targetSpeed: CAR_SPEED,
+    color: `hsl(${Math.floor(Math.random() * 360)}, 60%, 55%)`,
+    crossed: false,           // has it passed the center?
+    waitTicks: 0,
+  });
+}
+
+// ---------- light state ----------
+function isGreenFor(d) {
+  if (phase === 'NS_GREEN') return d === 'N' || d === 'S';
+  if (phase === 'EW_GREEN') return d === 'E' || d === 'W';
+  return false; // yellow = treat as red
+}
+
+// ---------- queue lengths ----------
+function queueLengths() {
+  const q = { N: 0, S: 0, E: 0, W: 0 };
+  for (const c of cars) {
+    if (!c.crossed && c.speed < 0.3) q[c.dir]++;
+  }
+  return q;
+}
+
+// ---------- car movement ----------
+function stepCar(c) {
+  // For each car find car ahead in same direction and same lane.
+  // Decide target speed based on:
+  //   - distance to car ahead (collision avoidance, gap)
+  //   - distance to stop line if light red
+  let target = CAR_SPEED;
+
+  // Distance traveled toward center (positive = approaching center).
+  const distToCenter = c.dir === 'N' ? CY - c.y :
+                       c.dir === 'S' ? c.y - CY :
+                       c.dir === 'E' ? c.x - CX :
+                       /* W */          CX - c.x;
+
+  // Find car directly ahead (same direction, same lane, ahead of us).
+  let aheadGap = Infinity;
+  for (const other of cars) {
+    if (other.id === c.id || other.dir !== c.dir) continue;
+    const oDist = c.dir === 'N' ? CY - other.y :
+                  c.dir === 'S' ? other.y - CY :
+                  c.dir === 'E' ? other.x - CX :
+                                  CX - other.x;
+    // "ahead" = closer to center than us, but we haven't yet reached center.
+    if (!c.crossed && !other.crossed && oDist < distToCenter && oDist >= -2) {
+      const gap = distToCenter - oDist;
+      if (gap < aheadGap) aheadGap = gap;
+    }
+    // After crossing, follow the car ahead exiting the network.
+    if (c.crossed && other.crossed) {
+      // Same dir lane heading out.
+      const dx = other.x - c.x, dy = other.y - c.y;
+      // Project onto direction of travel.
+      const dot = dx * c.vx / CAR_SPEED + dy * c.vy / CAR_SPEED;
+      if (dot > 0) {
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < aheadGap) aheadGap = dist;
+      }
+    }
+  }
+  if (aheadGap < CAR_GAP * 1.5) target = Math.max(0, CAR_SPEED * (aheadGap - CAR_LEN) / (CAR_GAP * 1.5));
+
+  // Stop at red light if approaching the intersection.
+  if (!c.crossed && distToCenter < STOP_BEFORE_CENTER + 2 && distToCenter > 0) {
+    if (!isGreenFor(c.dir)) {
+      // Stop at the stop line.
+      const distToStop = distToCenter - STOP_BEFORE_CENTER;
+      target = Math.max(0, target * Math.min(1, distToStop / 6));
+    }
+  }
+  // Smooth acceleration.
+  if (c.speed < target) c.speed = Math.min(target, c.speed + ACCEL);
+  else if (c.speed > target) c.speed = Math.max(target, c.speed - ACCEL * 2);
+
+  // Accumulate wait time.
+  if (c.speed < 0.3) c.waitTicks++;
+
+  // Update position.
+  c.x += c.vx * (c.speed / CAR_SPEED);
+  c.y += c.vy * (c.speed / CAR_SPEED);
+
+  // Mark crossed when past center.
+  if (!c.crossed) {
+    const past = c.dir === 'N' ? c.y > CY :
+                 c.dir === 'S' ? c.y < CY :
+                 c.dir === 'E' ? c.x < CX :
+                                 c.x > CX;
+    if (past) c.crossed = true;
+  }
+}
+
+// Remove cars that left the network; count them.
+function pruneCars() {
+  const remaining = [];
+  for (const c of cars) {
+    if (c.x < -30 || c.x > W + 30 || c.y < -30 || c.y > H + 30) {
+      throughput++;
+      totalWait += c.waitTicks;
+    } else {
+      remaining.push(c);
+    }
+  }
+  cars = remaining;
+}
+
+// ---------- controllers ----------
+function controllerActuated() {
+  // Switch to direction with longest queue every 5s, with 25s max + min greens.
+  const MIN_GREEN = 50;  // 5s at 10ticks/s; we use ticks
+  const MAX_GREEN = 250;
+  const q = queueLengths();
+  const ns = q.N + q.S, ew = q.E + q.W;
+  if (phase === 'NS_GREEN') {
+    if (phaseClock >= MIN_GREEN && (ew > ns * 1.5 || phaseClock >= MAX_GREEN)) {
+      phase = 'NS_YELLOW'; phaseClock = 0;
+    }
+  } else if (phase === 'NS_YELLOW') {
+    if (phaseClock >= 20) { phase = 'EW_GREEN'; phaseClock = 0; }
+  } else if (phase === 'EW_GREEN') {
+    if (phaseClock >= MIN_GREEN && (ns > ew * 1.5 || phaseClock >= MAX_GREEN)) {
+      phase = 'EW_YELLOW'; phaseClock = 0;
+    }
+  } else if (phase === 'EW_YELLOW') {
+    if (phaseClock >= 20) { phase = 'NS_GREEN'; phaseClock = 0; }
+  }
+}
+function controllerStatic() {
+  const CYC = 200, YEL = 20;
+  if (phase === 'NS_GREEN' && phaseClock >= CYC) { phase = 'NS_YELLOW'; phaseClock = 0; }
+  else if (phase === 'NS_YELLOW' && phaseClock >= YEL) { phase = 'EW_GREEN'; phaseClock = 0; }
+  else if (phase === 'EW_GREEN' && phaseClock >= CYC) { phase = 'EW_YELLOW'; phaseClock = 0; }
+  else if (phase === 'EW_YELLOW' && phaseClock >= YEL) { phase = 'NS_GREEN'; phaseClock = 0; }
+}
+
+// ---------- FMC controller ----------
+const SAT_FLOW = 1.2;        // veh/sec discharged on green
+const ARR_RATE_FOR_PLAN = () => 4 * (arrivalRates.N + arrivalRates.S + arrivalRates.E + arrivalRates.W) / 4;
+let nextDecisionAt = 0;
+let lastDecision = 0;
+
+function queueSimulate(q0, action, dt) {
+  const arrivalsPerDir = (arrivalRates.N + arrivalRates.S + arrivalRates.E + arrivalRates.W) / 4 * dt * 4;
+  const discharge = SAT_FLOW * dt;
+  const q = q0.slice();
+  // Each direction gets arrivals proportional to its rate.
+  q[0] += arrivalRates.N * dt * 10;  // tick rate -> per second
+  q[1] += arrivalRates.S * dt * 10;
+  q[2] += arrivalRates.E * dt * 10;
+  q[3] += arrivalRates.W * dt * 10;
+  if (action === 0) {  // NS green
+    q[0] = Math.max(0, q[0] - discharge);
+    q[1] = Math.max(0, q[1] - discharge);
+  } else {
+    q[2] = Math.max(0, q[2] - discharge);
+    q[3] = Math.max(0, q[3] - discharge);
+  }
+  return q;
+}
+
+function fmcPlan(q4) {
+  const N = N_WALKERS, M = M_HORIZON;
+  const dt = 5.0;  // seconds per FMC tick
+  const alpha = 0.1, beta = 0;
+  // Init walkers: same q0, random labels in {0, 1}.
+  let states = [];
+  let labels = new Int32Array(N);
+  for (let i = 0; i < N; i++) {
+    states.push(q4.slice());
+    labels[i] = Math.random() < 0.5 ? 0 : 1;
+  }
+  for (let t = 0; t < M; t++) {
+    // step
+    for (let i = 0; i < N; i++) {
+      const a = (t === 0) ? labels[i] : (Math.random() < 0.5 ? 0 : 1);
+      states[i] = queueSimulate(states[i], a, dt);
+    }
+    if (t === M - 1) {
+      // Save for visualization.
+      lastWalkerStates = states.map(s => s.slice());
+      lastWalkerLabels = labels.slice();
+    }
+    // virtual reward
+    const rewards = states.map(s => -(s[0] + s[1] + s[2] + s[3]));
+    const partners = new Int32Array(N);
+    for (let i = 0; i < N; i++) {
+      let p; do { p = Math.floor(Math.random() * N); } while (p === i);
+      partners[i] = p;
+    }
+    const vr = FMC.virtualReward(rewards, states, partners, alpha, beta);
+    // clone
+    const clonePartners = new Int32Array(N);
+    const samples = new Float64Array(N);
+    for (let i = 0; i < N; i++) {
+      let p; do { p = Math.floor(Math.random() * N); } while (p === i);
+      clonePartners[i] = p;
+      samples[i] = Math.random();
+    }
+    const idx = FMC.cloneStep(vr, clonePartners, samples);
+    const newStates = []; const newLabels = new Int32Array(N);
+    for (let i = 0; i < N; i++) {
+      newStates.push(states[idx[i]].slice());
+      newLabels[i] = labels[idx[i]];
+    }
+    states = newStates; labels = newLabels;
+  }
+  return FMC.decide(labels);
+}
+
+function controllerFMC() {
+  // Allow phase changes only after MIN_GREEN.
+  const MIN_GREEN = 50;
+  if (phase === 'NS_YELLOW') {
+    if (phaseClock >= 20) { phase = 'EW_GREEN'; phaseClock = 0; }
+    return;
+  }
+  if (phase === 'EW_YELLOW') {
+    if (phaseClock >= 20) { phase = 'NS_GREEN'; phaseClock = 0; }
+    return;
+  }
+  if (phaseClock < MIN_GREEN) return;
+  if (simTime >= nextDecisionAt) {
+    const q = queueLengths();
+    const q4 = [q.N, q.S, q.E, q.W];
+    const action = fmcPlan(q4);
+    if (action === 0 && phase === 'EW_GREEN') {
+      phase = 'EW_YELLOW'; phaseClock = 0;
+    } else if (action === 1 && phase === 'NS_GREEN') {
+      phase = 'NS_YELLOW'; phaseClock = 0;
+    }
+    nextDecisionAt = simTime + 50;  // every 5s
+    lastDecision = action;
+  }
+}
+
+// ---------- main step ----------
+function step() {
+  if (paused) return;
+  for (let it = 0; it < speedMul; it++) {
+    simTime++;
+    phaseClock++;
+    // Spawn cars (Poisson).
+    for (const d of DIRS) {
+      if (Math.random() < arrivalRates[d]) spawnFromDir(d);
+    }
+    // Run controller.
+    if (controller === 'actuated') controllerActuated();
+    else if (controller === 'static') controllerStatic();
+    else if (controller === 'fmc') controllerFMC();
+    // Step cars.
+    for (const c of cars) stepCar(c);
+    pruneCars();
+    // Update history for active controller.
+    history[controller].thr = throughput;
+    history[controller].wait = totalWait;
+    history[controller].ticks = simTime;
+  }
+}
+
+// ---------- rendering ----------
+function drawRoads() {
+  ctx.fillStyle = '#0c0c0c';
+  ctx.fillRect(0, 0, W, H);
+
+  // Draw the two roads.
+  ctx.fillStyle = '#2a2a2a';
+  ctx.fillRect(0, CY - ROAD_HALF, W, ROAD_HALF * 2);  // E-W
+  ctx.fillRect(CX - ROAD_HALF, 0, ROAD_HALF * 2, H);  // N-S
+
+  // Lane dividers.
+  ctx.strokeStyle = '#444';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([8, 8]);
+  ctx.beginPath(); ctx.moveTo(0, CY); ctx.lineTo(W, CY); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(CX, 0); ctx.lineTo(CX, H); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Road edges.
+  ctx.strokeStyle = '#333';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(0, CY - ROAD_HALF); ctx.lineTo(CX - ROAD_HALF, CY - ROAD_HALF);
+  ctx.lineTo(CX - ROAD_HALF, 0); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(CX + ROAD_HALF, 0); ctx.lineTo(CX + ROAD_HALF, CY - ROAD_HALF);
+  ctx.lineTo(W, CY - ROAD_HALF); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(0, CY + ROAD_HALF); ctx.lineTo(CX - ROAD_HALF, CY + ROAD_HALF);
+  ctx.lineTo(CX - ROAD_HALF, H); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(CX + ROAD_HALF, H); ctx.lineTo(CX + ROAD_HALF, CY + ROAD_HALF);
+  ctx.lineTo(W, CY + ROAD_HALF); ctx.stroke();
+}
+
+function drawStopLines() {
+  ctx.strokeStyle = '#666';
+  ctx.lineWidth = 2;
+  // North stop line (cars from N stop just above center)
+  ctx.beginPath();
+  ctx.moveTo(CX - ROAD_HALF, CY - STOP_BEFORE_CENTER);
+  ctx.lineTo(CX, CY - STOP_BEFORE_CENTER);
+  ctx.stroke();
+  // South stop line
+  ctx.beginPath();
+  ctx.moveTo(CX, CY + STOP_BEFORE_CENTER);
+  ctx.lineTo(CX + ROAD_HALF, CY + STOP_BEFORE_CENTER);
+  ctx.stroke();
+  // East stop line (cars from E stop just right of center)
+  ctx.beginPath();
+  ctx.moveTo(CX + STOP_BEFORE_CENTER, CY - ROAD_HALF);
+  ctx.lineTo(CX + STOP_BEFORE_CENTER, CY);
+  ctx.stroke();
+  // West stop line
+  ctx.beginPath();
+  ctx.moveTo(CX - STOP_BEFORE_CENTER, CY);
+  ctx.lineTo(CX - STOP_BEFORE_CENTER, CY + ROAD_HALF);
+  ctx.stroke();
+}
+
+function drawTrafficLight() {
+  // Show a 4-light cluster at the center + corner indicators.
+  const colorMap = (d) => {
+    if (phase === 'NS_GREEN' && (d === 'N' || d === 'S')) return '#4ade80';
+    if (phase === 'EW_GREEN' && (d === 'E' || d === 'W')) return '#4ade80';
+    if (phase === 'NS_YELLOW' && (d === 'N' || d === 'S')) return '#f59e0b';
+    if (phase === 'EW_YELLOW' && (d === 'E' || d === 'W')) return '#f59e0b';
+    return '#ef4444';
+  };
+  // Center black square
+  ctx.fillStyle = '#000';
+  ctx.fillRect(CX - 16, CY - 16, 32, 32);
+  // Lights (8px circles, one per direction).
+  const places = {
+    N: [CX, CY - 10],
+    S: [CX, CY + 10],
+    E: [CX + 10, CY],
+    W: [CX - 10, CY],
+  };
+  for (const d of DIRS) {
+    ctx.fillStyle = colorMap(d);
+    ctx.beginPath();
+    ctx.arc(places[d][0], places[d][1], 4, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+function drawCar(c) {
+  ctx.save();
+  ctx.translate(c.x, c.y);
+  // rotate to direction of travel
+  const ang = Math.atan2(c.vy, c.vx);
+  ctx.rotate(ang);
+  // body
+  const isWaiting = c.speed < 0.3 && !c.crossed;
+  ctx.fillStyle = isWaiting ? '#888' : c.color;
+  ctx.fillRect(-CAR_LEN / 2, -CAR_WID / 2, CAR_LEN, CAR_WID);
+  // windshield
+  ctx.fillStyle = isWaiting ? '#555' : 'rgba(0,0,0,0.3)';
+  ctx.fillRect(CAR_LEN / 4, -CAR_WID / 2 + 1, CAR_LEN / 4, CAR_WID - 2);
+  ctx.restore();
+}
+
+function draw() {
+  drawRoads();
+  drawStopLines();
+  for (const c of cars) drawCar(c);
+  drawTrafficLight();
+  // Sim time + phase HUD
+  ctx.fillStyle = '#666';
+  ctx.font = '12px ui-monospace, Menlo, monospace';
+  ctx.fillText(`t = ${(simTime / 10).toFixed(1)}s   phase = ${phase}   ctrl = ${controller}${asymmetric ? ' [asym]' : ''}`, 10, 20);
+}
+
+// ---------- FMC walker viz ----------
+const fmcCv = document.getElementById('fmc_walkers');
+const fmcCtx = fmcCv.getContext('2d');
+function drawWalkers() {
+  fmcCtx.fillStyle = '#0c0c0c';
+  fmcCtx.fillRect(0, 0, fmcCv.width, fmcCv.height);
+  // axes
+  fmcCtx.strokeStyle = '#333';
+  fmcCtx.lineWidth = 1;
+  fmcCtx.strokeRect(20, 10, fmcCv.width - 30, fmcCv.height - 30);
+  fmcCtx.fillStyle = '#666';
+  fmcCtx.font = '10px ui-monospace';
+  fmcCtx.fillText('NS queue →', fmcCv.width - 80, fmcCv.height - 5);
+  fmcCtx.save();
+  fmcCtx.translate(12, fmcCv.height - 30);
+  fmcCtx.rotate(-Math.PI / 2);
+  fmcCtx.fillText('EW queue →', 0, 0);
+  fmcCtx.restore();
+
+  if (controller !== 'fmc' || !lastWalkerStates) {
+    fmcCtx.fillStyle = '#666';
+    fmcCtx.fillText('(visible when FMC active)', 60, fmcCv.height / 2);
+    return;
+  }
+  // each walker = (NS=q0+q1, EW=q2+q3)
+  const xs = lastWalkerStates.map(s => s[0] + s[1]);
+  const ys = lastWalkerStates.map(s => s[2] + s[3]);
+  const xMax = Math.max(20, ...xs) * 1.1;
+  const yMax = Math.max(20, ...ys) * 1.1;
+  for (let i = 0; i < lastWalkerStates.length; i++) {
+    const px = 20 + (xs[i] / xMax) * (fmcCv.width - 30);
+    const py = (fmcCv.height - 30) - (ys[i] / yMax) * (fmcCv.height - 40);
+    fmcCtx.fillStyle = lastWalkerLabels[i] === 0 ? '#4ade80' : '#f59e0b';
+    fmcCtx.beginPath();
+    fmcCtx.arc(px, py, 3, 0, Math.PI * 2);
+    fmcCtx.fill();
+  }
+}
+
+// ---------- HUD update ----------
+function updateHUD() {
+  document.getElementById('s_time').textContent = `${(simTime / 10).toFixed(1)}s`;
+  document.getElementById('s_throughput').textContent = throughput;
+  document.getElementById('s_in_net').textContent = cars.length;
+  document.getElementById('s_wait').textContent = totalWait;
+  const q = queueLengths();
+  document.getElementById('s_qn').textContent = q.N;
+  document.getElementById('s_qs').textContent = q.S;
+  document.getElementById('s_qe').textContent = q.E;
+  document.getElementById('s_qw').textContent = q.W;
+
+  // Update comparison table.
+  for (const m of ['actuated', 'static', 'fmc']) {
+    const h = history[m];
+    document.getElementById(`cmp_thr_${m}`).textContent = h.thr;
+    const avgWait = h.ticks > 0 ? (h.wait / Math.max(1, h.thr)).toFixed(1) : '0';
+    document.getElementById(`cmp_wait_${m}`).textContent = avgWait;
+  }
+
+  // Color queue values.
+  for (const id of ['s_qn', 's_qs', 's_qe', 's_qw']) {
+    const el = document.getElementById(id);
+    const v = parseInt(el.textContent);
+    el.classList.toggle('warn', v >= 5 && v < 12);
+    el.classList.toggle('bad', v >= 12);
+  }
+}
+
+// ---------- main loop ----------
+function tick() {
+  step();
+  draw();
+  drawWalkers();
+  updateHUD();
+  requestAnimationFrame(tick);
+}
+
+// ---------- UI handlers ----------
+function setController(c) {
+  controller = c;
+  document.getElementById('btn_actuated').classList.toggle('active', c === 'actuated');
+  document.getElementById('btn_static').classList.toggle('active', c === 'static');
+  document.getElementById('btn_fmc').classList.toggle('active', c === 'fmc');
+  document.getElementById('row_actuated').classList.toggle('active', c === 'actuated');
+  document.getElementById('row_static').classList.toggle('active', c === 'static');
+  document.getElementById('row_fmc').classList.toggle('active', c === 'fmc');
+  // Reset history for the freshly chosen controller.
+  history[c] = { thr: 0, wait: 0, ticks: 0 };
+}
+
+document.getElementById('btn_actuated').onclick = () => { resetSim(); setController('actuated'); };
+document.getElementById('btn_static').onclick   = () => { resetSim(); setController('static'); };
+document.getElementById('btn_fmc').onclick      = () => { resetSim(); setController('fmc'); };
+
+document.getElementById('btn_sym').onclick = () => {
+  asymmetric = false; setSymmetric();
+  document.getElementById('btn_sym').classList.add('active');
+  document.getElementById('btn_asym').classList.remove('active');
+};
+document.getElementById('btn_asym').onclick = () => {
+  asymmetric = true; setAsymmetric();
+  document.getElementById('btn_asym').classList.add('active');
+  document.getElementById('btn_sym').classList.remove('active');
+};
+document.getElementById('btn_reset').onclick = () => { resetSim(); };
+document.getElementById('btn_pause').onclick = (e) => {
+  paused = !paused; e.target.textContent = paused ? 'Resume' : 'Pause';
+};
+document.getElementById('btn_speed').onclick = (e) => {
+  speedMul = speedMul === 1 ? 3 : speedMul === 3 ? 8 : 1;
+  e.target.textContent = `×${speedMul}`;
+};
+
+function resetSim() {
+  cars = [];
+  nextCarId = 0;
+  simTime = 0;
+  throughput = 0;
+  totalWait = 0;
+  phase = 'NS_GREEN';
+  phaseClock = 0;
+  history[controller] = { thr: 0, wait: 0, ticks: 0 };
+}
+
+// ---------- start ----------
+setSymmetric();
+tick();
+
+})();
+</script>
+
+</body>
+</html>
