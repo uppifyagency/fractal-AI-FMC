@@ -155,6 +155,59 @@ Su EASY tier (12 problemi single-step) tutti e tre al $100\%$. Il vantaggio FoT 
 
 **Limiti onesti**: con questo benchmark ridotto, il vantaggio FoT vs SC è entro la rumore stochastico. Per Bet 2 *go* serve setup ottimizzato (più cicli, reward function migliore, tempering di $\alpha$). Tutti dati in `bench/results/fot_llm_hard.jsonl`.
 
+## 4c. Bet 1 — SUMO single-intersection (first-pass)
+
+Esperimento Bet 1 della roadmap: confronto FMC zero-training vs baseline SUMO actuated e fixed cycle, su un singolo incrocio 4-way con traffico Poisson.
+
+**Setup**:
+- SUMO 1.26.0 via `eclipse-sumo` pip package, traci interface
+- 1 incrocio sintetico 4-way, 2 lane per direzione, 13.89 m/s speed limit
+- Durata simulazione: 600s
+- 6-8 seed per cella (varia il pattern Poisson)
+- FMC planner usa modello queue semplificato per forward simulation (non clona stato SUMO; clona stato queue Python). $N=32$ walker, $M=8$ tick di lookahead, $\alpha=0.1, \beta=0.0$, decisione ogni 10s.
+
+**Tre controller**:
+1. `actuated`: SUMO default (gap-based actuated TL).
+2. `static`: ciclo fisso 30s NS-green / 30s EW-green.
+3. `fmc`: planner FMC su modello queue.
+
+### Scenario simmetrico (rate=0.15/s/dir, 8 seed)
+
+| Controller | Throughput (mean ± sd) | Avg waiting time |
+|---|---|---|
+| actuated | $155.9 \pm 20.0$ | $1623$ |
+| static | $248.6 \pm 32.1$ | $1732$ |
+| **fmc** | $\mathbf{261.2 \pm 16.2}$ | $\mathbf{1160}$ |
+
+FMC vs static: $+5.1\%$ throughput (entro $\sigma$, non significativo). FMC vs actuated: $+67.5\%$.
+
+### Scenario asimmetrico (N/S=0.30/s, E/W=0.05/s, 6 seed)
+
+| Controller | Throughput (mean ± sd) | Avg waiting time |
+|---|---|---|
+| actuated | $145.5 \pm 21.5$ | $1181$ |
+| static | $256.3 \pm 79.9$ (instabile) | $1822$ |
+| **fmc** | $\mathbf{314.5 \pm 9.2}$ | $\mathbf{413}$ |
+
+**FMC vs actuated**: $+116\%$ throughput, $-65\%$ wait time.
+**FMC vs static**: $+22.7\%$ throughput, $-77\%$ wait time.
+
+### Lettura del risultato
+
+- **Su traffico simmetrico** (caso semplice), static cycle è already-near-optimal. FMC non porta valore aggiunto significativo.
+- **Su traffico asimmetrico** (più realistico), FMC supera ampiamente entrambi i baseline e con varianza minima ($\sigma = 9.2$ vs $79.9$ di static). Static cycle 30/30 fallisce catastroficamente su seed dove la coda asimmetrica si accumula (seed 4: throughput 95, wait 9209).
+
+Il criterio originale di Bet 1 (`+10%` throughput su tutti gli scenari) è soddisfatto solo sul caso asimmetrico. **Verdetto onesto**: FMC è la scelta giusta per traffico naturale (asimmetrico, time-varying); è ridondante per traffico stazionario simmetrico.
+
+### Limiti del first-pass
+
+1. Solo 2 scenari (sym + asym), spec richiedeva 5 (Cologne, Hangzhou, etc.).
+2. Modello queue per FMC è grezzo (lineare-saturato deterministico). Una versione production userebbe modello queue stocastico o SUMO microsim per il forward.
+3. 6-8 seed per scenario; CI95 bootstrap non calcolato qui (lasciato come future).
+4. Nessun tuning di $N$, $M$, frequenza decisione. Numeri default.
+
+Tutti i dati: `bench/results/sumo_single_intersection_{symmetric,asymmetric}.jsonl`.
+
 ## 5. Conclusioni operative
 
 1. **Trend $\alpha$ confermato** su 3 task: aumentando $\alpha$ il sistema collassa monotonamente verso palmera ($b_{\text{eff}} \to 1$).

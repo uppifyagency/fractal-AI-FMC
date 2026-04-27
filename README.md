@@ -96,6 +96,16 @@ Filone: [`fmc-core/`](fmc-core/), canone matematico in [`docs/MATH_CANON.md`](do
 
 > Questo è il primo contributo originale del progetto **oltre** quanto Sergio o il paper FMC dicono. Eseguito in modalità autonoma con criterio falsificabile esplicito, non in pitch mode.
 
+**Bet 1 (SUMO traffic single-intersection)** eseguito come *terzo* test:
+
+- 1 incrocio 4-way sintetico, traffico Poisson via SUMO 1.26
+- FMC zero-training (queue model planner) vs SUMO actuated default vs static 30/30 cycle
+- **Simmetrico**: tie con static (+5% non significativo)
+- **Asimmetrico** (N/S 6× più carico di E/W): FMC **+116%** throughput vs actuated, **+23%** vs static, varianza 9× più bassa
+- Verdetto: FMC è la scelta giusta per traffico naturale (asimmetrico, time-varying); non aggiunge valore su pattern stazionari simmetrici
+
+Codice in [`fmc-core/bench/sumo/single_intersection.py`](fmc-core/bench/sumo/single_intersection.py), dati in [`fmc-core/bench/results/sumo_single_intersection_{symmetric,asymmetric}.jsonl`](fmc-core/bench/results/).
+
 **Bet 2 (Fractal-of-Thought su LLM piccolo)** eseguito come *secondo* test:
 
 - Modello: LFM2.5-1.2B-Instruct-MLX-4bit (~equiv Llama-3.2-1B)

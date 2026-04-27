@@ -642,6 +642,7 @@ Per disciplina (cf. CLAUDE.md §3 "surgical changes" e §"cosa rifiutiamo"):
 | 2026-04-27 | 0.4.0 | **Triade completa $(K, M, N)$**: N-dependence test rivela $K - b_{\text{eff}} \propto N^{-0.45}$ a $M$ fisso (Wright-Fisher). Sergio's "6" è triplamente contingente: $K=9, M=15, N=32$. Forma generale candidata: $b_{\text{eff}} = 1 + (K-1) \mathcal{F}(M/N) \mathcal{G}(\alpha, K)$. | idem |
 | 2026-04-27 | 0.4.1 | **Mappatura WF empiricamente confermata** a $\alpha = 0$ esatto: $q = -0.948$ vs $-1$ teorico (errore 5%). FMC neutrale $\leftrightarrow$ Moran drift. Deep dive 07 passa da candidate a confermato. | idem |
 | 2026-04-27 | 0.4.2 | **Bet 2 (Fractal-of-Thought) eseguito** su LFM2.5-1.2B + 12 problemi math hard. FoT $87.5\%$ vs greedy $66.7\%$ vs SC $83.3\%$. Risultato positivo ma marginale vs SC. | idem |
+| 2026-04-27 | 0.4.3 | **Bet 1 (SUMO single-intersection) eseguito** first-pass: simmetrico → tie con static (+5%), asimmetrico → FMC stravince (+116% vs actuated, +23% vs static, σ minima). Conferma forte di Cong. C su scenario asimmetrico; sym scenario è dove static cycle è already-near-optimal. | idem |
 
 ---
 

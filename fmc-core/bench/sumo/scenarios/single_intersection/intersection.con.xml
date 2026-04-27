@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<connections>
+    <!-- North arrivals: straight, right, left -->
+    <connection from="n_to_c" to="c_to_s" fromLane="0" toLane="0"/>
+    <connection from="n_to_c" to="c_to_s" fromLane="1" toLane="1"/>
+    <connection from="n_to_c" to="c_to_w" fromLane="1" toLane="1"/>
+    <connection from="n_to_c" to="c_to_e" fromLane="0" toLane="0"/>
+    <!-- South arrivals -->
+    <connection from="s_to_c" to="c_to_n" fromLane="0" toLane="0"/>
+    <connection from="s_to_c" to="c_to_n" fromLane="1" toLane="1"/>
+    <connection from="s_to_c" to="c_to_e" fromLane="1" toLane="1"/>
+    <connection from="s_to_c" to="c_to_w" fromLane="0" toLane="0"/>
+    <!-- East arrivals -->
+    <connection from="e_to_c" to="c_to_w" fromLane="0" toLane="0"/>
+    <connection from="e_to_c" to="c_to_w" fromLane="1" toLane="1"/>
+    <connection from="e_to_c" to="c_to_n" fromLane="1" toLane="1"/>
+    <connection from="e_to_c" to="c_to_s" fromLane="0" toLane="0"/>
+    <!-- West arrivals -->
+    <connection from="w_to_c" to="c_to_e" fromLane="0" toLane="0"/>
+    <connection from="w_to_c" to="c_to_e" fromLane="1" toLane="1"/>
+    <connection from="w_to_c" to="c_to_s" fromLane="1" toLane="1"/>
+    <connection from="w_to_c" to="c_to_n" fromLane="0" toLane="0"/>
+</connections>
