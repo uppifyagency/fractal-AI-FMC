@@ -119,6 +119,30 @@ R = R_alive × R_tests × (1 + R_lint) × (1 + R_diff) × (1 + R_goal)
 
 Hard constraints are direct multiplications (can go to 0). Soft contributions use `(1 + x)` to avoid zero-collapse while staying multiplicative. **Not** `R = w_0·R_0 + w_1·R_1 + ...` (additive Pareto-style).
 
+#### 4.3.1 Caveat — `relativize` is insufficient on *flat-negative* reward landscapes
+
+The plugin's `(1 + R_x)` pattern guarantees $R > 0$ everywhere by construction, so this is not a bug we hit in practice. But for researchers porting FMC to new domains with custom reward functions, a non-obvious failure mode deserves a warning.
+
+**The trap**: if the reward is *uniformly negative* across the swarm (e.g., raw $R = -0.5$ everywhere except a hidden positive goal), `relativize` does **not** save FMC. After z-scoring, all walkers have $z \approx 0$ and $\hat{R} \approx 1$ uniformly; the differentiation collapses. Walkers diffuse without directional clone signal and the swarm fails to find the goal.
+
+**Numerical evidence** ([`work/04_mathematical_tests/`](../../../work/04_mathematical_tests/) F11 Scenario A, all-negative landscape with hidden positive peak):
+
+| Variant | Reaches goal | Mean walker x (start = 1, goal = 8) |
+|---|---|---|
+| FMC with `relativize` | 0% | 0.72 — *stalled* |
+| FMC raw, sign-preserving | 0% | 0.60 — *Sergio's "fearful" agent* |
+| FMC raw, clipped at 0 | 84% | 8.04 — *only this works* |
+| Random walk | 2% | 3.97 |
+
+Sergio's claim "[reward negativ → fearful, use `relativize`]" is **necessary but not sufficient**. `relativize` prevents the *catastrophic* freeze of raw negatives, but on a flat-negative landscape the swarm still cannot find a goal it has never visited.
+
+**Sufficient conditions for FMC to converge** (refined from the paper):
+
+1. **R > 0 everywhere** (paper §2.2.3 — guaranteed by the plugin's `(1 + x)` pattern)
+2. **Some reward gradient must be reachable from the swarm's initial dispersion**. If the gradient is zero (or invisibly small) at all walker positions, FMC reduces to random walk and cannot bootstrap.
+
+In Sergio's slide F11 Scenario B (smooth gradient even though all-negative), `relativize` recovers and *outperforms* both random walk and clip-at-zero variants. So the canonical plugin reward design — multiplicative with always-positive components and at least one component that varies smoothly with progress (e.g., `R_diff` measuring lines toward goal) — is the right architecture. **Don't compose rewards that produce flat regions.**
+
 ### 4.4 Faithful: virtual reward, stochastic distance, pairwise clone
 
 The paper §4.4 specifies:
@@ -128,6 +152,8 @@ The paper §4.4 specifies:
 - Clone probability: `1` if VR_self = 0, else `0` if VR_partner ≤ VR_self, else `(VR_partner - VR_self) / VR_self`
 
 All implemented in [`scripts/fractal_reward.py`](../scripts/fractal_reward.py) (relativize: 115-134; virtual_reward: 160-194) and [`scripts/fractal_loop.py:cmd_step`](../scripts/fractal_loop.py) (clone probability formula at lines 200-210).
+
+> **Caveat — `α_code ≠ α_Gibbs`**. The implementation applies α to the *relativized* reward $\hat{R}$, not raw $R$. Because `relativize` compresses positive outliers and expands negative outliers, the effective Gibbs exponent on raw reward is larger than the code-α: $\alpha_{\text{eff}} > \alpha$. Numerically (verified in [`work/04_mathematical_tests/`](../../../work/04_mathematical_tests/) Test A), the empirical walker distribution best matches $\pi^* \propto R^1$ at **code-α ≈ 0.5**, not at code-α = 1.0. Default α = 1 produces $\pi^* \propto \hat{R}^1$, sharper than the literal "P_walker ∝ R" reading of paper eq. (3). See [`ALGORITHM.md` §4.2.1](ALGORITHM.md) for the full derivation. This is not a bug — it is the canonical FMC behaviour — but matters when comparing FMC to other Gibbs samplers where the temperature acts on raw energy.
 
 ### 4.5 Departure: perturbation at tick t > 0
 

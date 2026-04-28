@@ -8,10 +8,11 @@ Tutti i materiali sono stati scaricati e archiviati in [`sources/`](sources/):
 
 | Categoria | Path | Contenuto |
 |---|---|---|
-| 📄 Paper PDF | [`sources/papers/`](sources/papers/) | 4 PDF (3 arXiv + 1 Entropy journal) |
+| 📄 Paper PDF | [`sources/papers/`](sources/papers/) | 6 PDF (3 arXiv + 1 Entropy journal + Wissner-Gross PRL + supplemental) |
 | 📚 Drafts | [`sources/books/`](sources/books/) | Book #2, Hives, Fractal Memory Slide |
 | 📝 Blog posts | [`sources/blog_posts/`](sources/blog_posts/) | 8 post archiviati con annotazioni + INDEX |
 | 🎙️ Podcasts/interviste | [`sources/podcasts/`](sources/podcasts/) | Trascrizione integrale Radient 2026, capitolata |
+| 🎤 Talks / seminari | [`sources/talks/`](sources/talks/) | Riservato per trascrizioni di charle Sergio (vedi anche `VideoTranscriptSergio.md` al root + analisi in [`work/02_deep_dives/08_...`](../../work/02_deep_dives/08_video_seminar_extracted_insights.md)) |
 | 🔗 External refs | [`sources/external_refs/`](sources/external_refs/) | Riservato per future espansioni |
 
 **Autori principali**:
@@ -29,6 +30,7 @@ Tutti i materiali sono stati scaricati e archiviati in [`sources/`](sources/):
 
 | Anno | Tipo | Titolo | Note |
 |---|---|---|---|
+| 2013 | Phys. Rev. Lett. | [Wissner-Gross & Freer, *Causal Entropic Forces*](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.110.168702) → 📁 [`PDF locale`](sources/papers/2013_wissner_gross_causal_entropic_forces.pdf) + [`Supplemental`](sources/papers/2013_wissner_gross_causal_entropic_forces_supplemental.pdf) | **Antecedente fisico canonico** (citato esplicitamente da Sergio nel podcast cap. 2). Eq. 4: $F = T_c \nabla_X S_c$ — forza che massimizza entropia futura. Eq. 11: forma Monte Carlo operativa = limite continuo di FMC con α=0 (Common Sense). Esperimenti: particle in box, cart-pole swing-up, tool use, social cooperation |
 | 2014–2019 | Blog (multipost) | [Entropic and Fractal Intelligence](http://entropicai.blogspot.com/) | Lab notebook pubblico, 5+ anni di posts |
 | 2017 | arXiv | [General Algorithmic Search](https://arxiv.org/abs/1705.08691) → 📁 [`PDF locale`](sources/papers/2017_general_algorithmic_search_1705.08691.pdf) | **Antesignano**: meta-euristica swarm globale |
 | 2018 | Journal | [A Brief Review of Generalized Entropies](https://www.mdpi.com/1099-4300/20/11/813) → 📁 [`PDF locale`](sources/papers/2018_brief_review_generalized_entropies.pdf) | Entropy Vol. 20 No. 11. Co-autori: Amigó, Balogh. **236 citazioni** |
@@ -43,6 +45,7 @@ Tutti i materiali sono stati scaricati e archiviati in [`sources/`](sources/):
 | 2023 | arXiv | [Latent Diffusion Models for Histopathology](https://arxiv.org/abs/2312.09792) | Duran-Ballester come co-autore. **Off-topic** (medical imaging) ma rilevante per la traiettoria di carriera |
 | 2024-2026 | Codebase + docs | [`fragile-rl`](https://github.com/FragileTech/fragile-rl) + Fragile Mechanics book | Successore canonico di Book #2 |
 | 2026 | Podcast/intervista | **Radient — intervista a Sergio Hernández** (~2.5h) → 📁 [`MD capitolato locale`](sources/podcasts/2026_radient_sergio_interview.md) | **Knowledge orale di Sergio**: prima persona, 21 capitoli argomentativi, copre l'intera traiettoria (Wissner-Gross → cochecito → Atari → fractal → cooperazione → frontera caos → futuro AI) |
+| ~2019-2021 | Talk / seminario | **Charla di Sergio su slide** (Q&A audience) → 📁 raw [`VideoTranscriptSergio.md`](../../VideoTranscriptSergio.md) + analisi [`work/02_deep_dives/08_video_seminar_extracted_insights.md`](../../work/02_deep_dives/08_video_seminar_extracted_insights.md) | **Versione pedagogica con slide**: cone-entropy → ladder of simplification → algoritmo finale. Aggiunge cross-entropy collapse come framing centrale, metafora minatore (JTBD), coscienza emergente tripla, robustezza al rumore, demo razzo-uncino caotico. Discrepanza F15 sull'efficienza FMC vs MCTS rispetto a paper e Radient |
 
 ---
 
@@ -268,9 +271,24 @@ Riconosciute lacune nel materiale a nostra disposizione:
 
 3. **Documentazione interna `fragile`** — il codebase ha `docs/` con jupyter book, parzialmente esplorato.
 
-4. **Tesi/talk video non transcritti** — la playlist YouTube ha video sostanziali, mai trascritti. *(Parziale: Radient 2026 ora trascritto.)*
+4. **Tesi/talk video non transcritti** — la playlist YouTube ha video sostanziali, mai trascritti. *(Parziale: Radient 2026 trascritto + un seminario su slide trascritto in `VideoTranscriptSergio.md` + analizzato in `08_video_seminar_extracted_insights.md`.)*
 
 5. **Riferimenti incrociati con altri programmi AGI** — non abbiamo ancora cercato come questo corpus dialoga con: Yampolskiy, Schmidhuber, Hutter, Friston, Goertzel.
+
+---
+
+## 8.bis Discrepanze note tra fonti (registrate, non chiuse)
+
+Sergio enuncia in fonti orali alcuni numeri e claim che **non corrispondono** a quanto pubblicato nei paper. Le registriamo qui per evitare propagazione di affermazioni non verificate.
+
+| ID | Claim | Fonte A (orale) | Fonte B (paper / empirica) | Stato attuale |
+|---|---|---|---|---|
+| **D1** | Branching factor ottimo è "**~6**" universale | Radient 2026 cap.16 | Sweep originale [`work/07_sergio_branching_sweep/REPORT.md`](../../work/07_sergio_branching_sweep/REPORT.md) + analisi in [`work/02_deep_dives/07_wright_fisher_mapping.md`](../../work/02_deep_dives/07_wright_fisher_mapping.md): empiricamente $b_{\text{eff}}^* \approx 1.53\,K^{0.6}$ (dipende da K, non costante) | **Falsificato come universale.** "6" è caso particolare per K specifico |
+| **D2** | FMC sample efficiency vs MCTS | Radient 2026 cap.10: "**~150 000 vs ~35**" sample/azione | Paper companion 1807.01081 §5: "<1000 vs 3M" sample/azione (ratio ~3000×) | **Discrepanza non risolta.** Probabile diversa definizione di "samples per action" (rollout interno vs leaf evaluations). Vedi [`08_video_seminar_extracted_insights.md`](../../work/02_deep_dives/08_video_seminar_extracted_insights.md) §F10 |
+| **D3** | "Frontera caos/orden" come Terza Legge fisica | Radient 2026 cap.16: ipotesi articolata in voce | Mai formalizzata come hypothesis testabile in alcun paper, draft o deep-dive | **Aperta.** Candidata per futuro deep-dive 09 (formalizzazione + test empirico) |
+| **D4** | "Bengala vs láser" come limite operativo degli LLM | Radient 2026 cap.12: metafora chiave | Menzionata in [`THEORY.md`](../../plugin/fractal-coding-loop/docs/THEORY.md) §8 ma senza modello formale | **Parziale.** Il claim è plausibile ma non quantificato; servirebbe un benchmark specifico (CompilerGym? Crafter?) |
+
+**Politica**: quando si cita una di queste affermazioni in nuovi documenti, linkare questa tabella e specificare se si sta usando la versione orale (da contestualizzare) o quella verificata.
 
 ---
 

@@ -39,9 +39,9 @@
 <div class="container">
   <h1>🌀 FMC Live Simulations</h1>
   <p class="subtitle">
-    Quattro simulazioni interattive del <b>Fractal Monte Carlo</b> di
+    Nove simulazioni interattive del <b>Fractal Monte Carlo</b> di
     Hernández-Cerezo & Duran-Ballester (paper arXiv:1803.05049, 2020).<br>
-    <b>Niente training. Niente reti neurali. Niente backend.</b> Solo HTML+JS+Canvas.
+    <b>Niente training. Niente reti neurali. Niente backend.</b> Solo HTML+JS+Canvas (+WebGPU dove indicato).
     Apri ciascun file e premi ▶ — vedrai lo sciame di walker proiettare il futuro
     in tempo reale e prendere decisioni intelligenti.
   </p>
@@ -122,6 +122,98 @@
       </div>
       <div class="card-meta">
         💡 Aumenta "Repulsion" per vedere la formazione "respirare".
+      </div>
+    </a>
+
+    <a href="game_of_life_fmc.html" class="card">
+      <div class="card-icon">🧬</div>
+      <div class="card-title">Game of Life FMC</div>
+      <div class="card-tags">
+        <span class="pill">WebGPU</span>
+        <span class="pill">Wissner-Gross 2013</span>
+        <span class="pill">multi-agent emergente</span>
+      </div>
+      <div class="card-desc">
+        Mondo toroidale con 10–100 agenti, sesso M/F, 3 taglie, riproduzione su contatto
+        compatibile, niente merging. Ogni agente esegue il proprio swarm FMC su GPU
+        (compute shader batched). Reward composta moltiplicativa: cibo × accoppiamento.
+        Con α=0 si riproduce esattamente la <i>causal entropic force</i> di Wissner-Gross.
+      </div>
+      <div class="card-meta">
+        💡 Click su un agente per vederne il cono FMC. Slider α=0 → puro Wissner-Gross.
+      </div>
+    </a>
+
+    <a href="rocket_validated.html" class="card">
+      <div class="card-icon">🚀</div>
+      <div class="card-title">Rocket — validated extended</div>
+      <div class="card-tags">
+        <span class="pill">continuous control</span>
+        <span class="pill">extended physics</span>
+        <span class="pill">validation suite</span>
+      </div>
+      <div class="card-desc">
+        Versione estesa di Rocket-in-Cave con fisica più rigorosa, suite di test di
+        validazione e tracciamento delle metriche di confidenza nel tempo. Pensata
+        per dimostrare che il comportamento "intelligente" è riproducibile, non un artefatto.
+      </div>
+      <div class="card-meta">
+        💡 Confronta con <code>rocket.html</code> per vedere cosa cambia con vincoli fisici più stretti.
+      </div>
+    </a>
+
+    <a href="fmc_highway.html" class="card">
+      <div class="card-icon">🛣️</div>
+      <div class="card-title">Highway (self-driving)</div>
+      <div class="card-tags">
+        <span class="pill">multi-vehicle</span>
+        <span class="pill">per-car FMC</span>
+        <span class="pill">Bet 2</span>
+      </div>
+      <div class="card-desc">
+        Autostrada multi-corsia con N veicoli, ognuno con il proprio sciame FMC indipendente.
+        Niente coordinatore globale — la cooperazione (lane-changing, gap-keeping) emerge
+        dall'esecuzione concorrente di sciami che si vedono a vicenda come ostacoli mobili.
+      </div>
+      <div class="card-meta">
+        💡 Aumenta la densità di traffico per vedere il punto di rottura della cooperazione emergente.
+      </div>
+    </a>
+
+    <a href="sumo_intersection.html" class="card">
+      <div class="card-icon">🚦</div>
+      <div class="card-title">SUMO Intersection</div>
+      <div class="card-tags">
+        <span class="pill">traffic simulation</span>
+        <span class="pill">Bet 1</span>
+        <span class="pill">deadlock test</span>
+      </div>
+      <div class="card-desc">
+        Incrocio traffico stile SUMO: 4 direzioni, veicoli che arrivano in stream, FMC
+        decide passaggi. Test di stress per il modello di reward — verifica che FMC
+        non produca deadlock e mantenga throughput sotto carico.
+      </div>
+      <div class="card-meta">
+        💡 Bet 1 first-pass — vedi <code>work/</code> per i risultati comparativi vs traffic-light baseline.
+      </div>
+    </a>
+
+    <a href="cong_A_surface.html" class="card">
+      <div class="card-icon">📐</div>
+      <div class="card-title">b<sub>eff</sub> Surface (3D)</div>
+      <div class="card-tags">
+        <span class="pill">interactive 3D</span>
+        <span class="pill">deep-dive 07</span>
+        <span class="pill">empirical sweep</span>
+      </div>
+      <div class="card-desc">
+        Visualizzazione interattiva 3D della superficie $b_{\text{eff}}^*(N, K)$ — il
+        branching factor effettivo ottimo dello sciame FMC in funzione del numero di
+        walker e dell'orizzonte. Falsifica il claim "magic 6" di Sergio (Radient cap.16):
+        il vero ottimo è $b_{\text{eff}}^* \approx 1.53\,K^{0.6}$.
+      </div>
+      <div class="card-meta">
+        💡 Vedi <a href="../work/02_deep_dives/07_wright_fisher_mapping.md" style="color:#6ba3ff">deep-dive 07</a> + sweep numerico in <code>work/07_sergio_branching_sweep/</code>.
       </div>
     </a>
 
