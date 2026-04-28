@@ -81,7 +81,7 @@ This repo is a **research + tooling effort around the Fractal Monte Carlo (FMC) 
 3. **Pick a benchmark target** for a credible FMC paper. Top candidates (see [`DominiDaIndagare.md`](DominiDaIndagare.md)): **Procgen**, **Crafter/Craftax**, **CompilerGym**.
 4. **Theoretical deep-dives** on cloning math, SMC particle-filter view, Active Inference link, Fractal Memory. See [`work/02_deep_dives/`](work/02_deep_dives/).
 
-Language convention: **Italian for prose, English for code/comments**. ISO 8601 dates. Today: 2026-04-26.
+Language convention: **Italian for prose, English for code/comments**. ISO 8601 dates. Today: 2026-04-28.
 
 ### Canonical sources (papers + FMC + Fractal Memory)
 
@@ -93,6 +93,9 @@ Language convention: **Italian for prose, English for code/comments**. ISO 8601 
 | 2 | Hernández-Cerezo, Duran-Ballester, Baxevanakis (2018), *Solving Atari Games Using Fractals And Entropy*, arXiv:1807.01081 | [`docs/bibliography/sources/papers/2018_solving_atari_1807.01081.pdf`](docs/bibliography/sources/papers/2018_solving_atari_1807.01081.pdf) | **Companion empirical paper.** FMC beats MCTS UCT with <1000 vs 3M samples per action |
 | 3 | Hernández, Duran, Amigó (2017), *General Algorithmic Search*, arXiv:1705.08691 | [`docs/bibliography/sources/papers/2017_general_algorithmic_search_1705.08691.pdf`](docs/bibliography/sources/papers/2017_general_algorithmic_search_1705.08691.pdf) | **Predecessor.** Swarm meta-heuristic; FMC = "GAS applied to planning" |
 | 4 | Amigó, Balogh, Hernández (2018), *A Brief Review of Generalized Entropies*, Entropy 20(11):813 | [`docs/bibliography/sources/papers/2018_brief_review_generalized_entropies.pdf`](docs/bibliography/sources/papers/2018_brief_review_generalized_entropies.pdf) | **Theoretical foundation** for non-additive composite rewards |
+| 5 | Wissner-Gross & Freer (2013), *Causal Entropic Forces*, Phys. Rev. Lett. 110:168702 | [`docs/bibliography/sources/papers/2013_wissner_gross_causal_entropic_forces.pdf`](docs/bibliography/sources/papers/2013_wissner_gross_causal_entropic_forces.pdf) + [`supplemental`](docs/bibliography/sources/papers/2013_wissner_gross_causal_entropic_forces_supplemental.pdf) | **Antecedente fisico canonico** citato da Sergio. Eq. 4: $F = T_c \nabla_X S_c$. Eq. 11 = limite continuo di FMC con α=0 |
+
+**Mathematical canon** (single source of truth per formule, definizioni, teoremi): [`docs/MATH_CANON.md`](docs/MATH_CANON.md)
 
 **Full corpus index (all publications, drafts, blog, codebases, gaps)**: [`docs/bibliography/CORPUS.md`](docs/bibliography/CORPUS.md)
 
@@ -106,6 +109,9 @@ Language convention: **Italian for prose, English for code/comments**. ISO 8601 
 - SMC / particle filter view: [`work/02_deep_dives/05_smc_particle_filter_view.md`](work/02_deep_dives/05_smc_particle_filter_view.md)
 - Active Inference link: [`work/02_deep_dives/02_active_inference_link.md`](work/02_deep_dives/02_active_inference_link.md)
 - Standard Model of Cognition: [`work/02_deep_dives/03_standard_model_cognition.md`](work/02_deep_dives/03_standard_model_cognition.md)
+- Relativize axiomatics: [`work/02_deep_dives/04_relativize_axiomatics.md`](work/02_deep_dives/04_relativize_axiomatics.md)
+- Wright-Fisher mapping (falsifica empirica del "magic 6"): [`work/02_deep_dives/07_wright_fisher_mapping.md`](work/02_deep_dives/07_wright_fisher_mapping.md) + sweep numerico in [`work/07_sergio_branching_sweep/`](work/07_sergio_branching_sweep/)
+- Estrazione video-seminario Sergio (formule F1-F15 verificate): [`work/02_deep_dives/08_video_seminar_extracted_insights.md`](work/02_deep_dives/08_video_seminar_extracted_insights.md) — sintesi di [`VideoTranscriptSergio.md`](VideoTranscriptSergio.md) (raw transcript ~75 KB, da leggere insieme)
 
 **Fractal Memory documentation**:
 
@@ -121,11 +127,26 @@ Language convention: **Italian for prose, English for code/comments**. ISO 8601 
 - [`analisisPost.md`](analisisPost.md) / [`analisisPost2.md`](analisisPost2.md) — post-replication reflections
 - [`DominiDaIndagare.md`](DominiDaIndagare.md) — domain survey for benchmark selection
 
-**Sergio's oral knowledge (first-person, ~2.5h)**:
+**Sergio's oral knowledge (first-person)**:
 
-- [`docs/bibliography/sources/podcasts/2026_radient_sergio_interview.md`](docs/bibliography/sources/podcasts/2026_radient_sergio_interview.md) — Radient 2026 podcast, full transcript (~21 700 words), structured into 21 argumentative chapters with Italian theses. Spanish dialogue preserved verbatim. **Most direct source for Sergio's intuitive framing**: Wissner-Gross genesis, the one-night cochecito, the **6-fold optimal branching factor**, "frontera caos/orden" as candidate Third Law of cognition, FMC vs MCTS quantitative comparison (Sergio claims ~150,000 vs ~35 samples — verify against paper's "400"), bengala-vs-laser metaphor for LLM limits, open-source-as-entropy-maximization philosophy. **Read alongside paper #1** for the operational intuition that the math alone doesn't carry.
+- **Radient 2026 podcast** (~2.5h, ~21 700 words) → [`docs/bibliography/sources/podcasts/2026_radient_sergio_interview.md`](docs/bibliography/sources/podcasts/2026_radient_sergio_interview.md) — full transcript structured into 21 argumentative chapters with Italian theses. Spanish dialogue preserved verbatim. **Most direct source for Sergio's intuitive framing**: Wissner-Gross genesis, one-night cochecito, **6-fold optimal branching** (claim contestato — vedi sotto), "frontera caos/orden" as candidate Third Law, FMC vs MCTS quantitative comparison (claim contestato), bengala-vs-laser metaphor for LLM limits, open-source-as-entropy-maximization philosophy.
+- **Video seminario su slide** (~2019-2021, raw ~75 KB) → [`VideoTranscriptSergio.md`](VideoTranscriptSergio.md) — trascrizione automatica grezza, senza punteggiatura. Versione pedagogica con slide: cone-entropy → ladder of simplification → algoritmo finale. Aggiunge cross-entropy collapse come framing centrale, metafora minatore (JTBD), coscienza emergente tripla, robustezza al rumore, demo razzo-uncino caotico. **Sintesi strutturata + verifica numerica delle 15 formule estratte** in [`work/02_deep_dives/08_video_seminar_extracted_insights.md`](work/02_deep_dives/08_video_seminar_extracted_insights.md).
+
+**Read both alongside paper #1** for the operational intuition that the math alone doesn't carry.
+
+**⚠️ Discrepanze note tra fonti** (registrate, non chiuse):
+
+| # | Claim | Fonte A | Fonte B | Stato |
+|---|---|---|---|---|
+| D1 | Branching factor ottimo | Radient 2026 cap.16: "**~6**" | [`work/02_deep_dives/07_wright_fisher_mapping.md`](work/02_deep_dives/07_wright_fisher_mapping.md) + [`work/07_sergio_branching_sweep/REPORT.md`](work/07_sergio_branching_sweep/REPORT.md): empiricamente $b_{\text{eff}}^* \approx 1.53\,K^{0.6}$ (dipende da K) | Sergio's "6" è **falsificato come universale** — è caso particolare per K specifico |
+| D2 | FMC sample efficiency vs MCTS | Paper §5: "<1000 vs 3M" (companion paper 1807.01081) | Radient 2026 cap.10: "**~150 000 vs ~35**" | Discrepanza non risolta — probabile diversa definizione di "samples per action". Vedi [`08_video_seminar_extracted_insights.md`](work/02_deep_dives/08_video_seminar_extracted_insights.md) §F10 |
+| D3 | Frontera caos/orden come "Third Law" | Radient 2026 cap.16: ipotesi articolata | Mai formalizzata come hypothesis testabile in alcun paper o deep-dive | Aperta — candidata per deep-dive 09 |
 
 **Codebases** under [`repos/`](repos/): `FractalAI_old` (deprecated NumPy, paper #1 reference), `fragile` (PyTorch/GPU, active), `fragile-rl` (Fragile Mechanics, 2024-2026, successor to Book #2).
+
+**Reference implementation** in-repo: [`fmc-core/`](fmc-core/) — NumPy core (~400 LOC) + JS port bit-identical (1e-12 tolerance), 66 test green, K/M/N benchmark sweeps in [`fmc-core/bench/REPORT.md`](fmc-core/bench/REPORT.md).
+
+**Live simulations** ([`simulations/`](simulations/)): rocket, kart, pong, octopus, game-of-life (WebGPU multi-agent), highway, SUMO intersection, rocket validated, $b_{\text{eff}}$ surface 3D. Index in [`simulations/index.html`](simulations/index.html).
 
 ### gstack
 

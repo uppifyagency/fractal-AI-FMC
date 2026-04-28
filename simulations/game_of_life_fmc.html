@@ -1,0 +1,1608 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Game of Life FMC — Wissner-Gross causal entropic agents</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    background: #0a0a0a; color: #e8e8e8; padding: 1rem; min-height: 100vh;
+  }
+  h1 { font-size: 1.2rem; color: #f5f5f5; margin-bottom: 0.4rem; }
+  .subtitle { color: #999; font-size: 0.9rem; margin-bottom: 1rem; max-width: 1100px; }
+  .layout { max-width: 1280px; margin: 0 auto; display: grid;
+            grid-template-columns: 1fr 320px; gap: 1rem; }
+  .panel { background: #1a1a1a; padding: 1rem; border-radius: 6px;
+           border: 1px solid #333; margin-bottom: 1rem; }
+  canvas { display: block; background: #050505; border-radius: 4px;
+           width: 100%; height: auto; cursor: crosshair; }
+  .controls { display: flex; flex-wrap: wrap; gap: 0.4rem;
+              margin: 0.6rem 0; align-items: center; }
+  button { padding: 0.45rem 0.85rem; background: #2c5fa1; color: white;
+           border: none; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
+  button:hover { background: #3a7bc8; }
+  button.active { background: #b22222; }
+  button.secondary { background: #2a2a2a; border: 1px solid #444; }
+  button.secondary:hover { background: #383838; }
+  label { font-size: 0.82rem; color: #bbb; display: flex;
+          align-items: center; gap: 0.4rem; }
+  label input[type="range"] { width: 100px; }
+  label input[type="number"] { width: 56px; padding: 2px 4px;
+                                background: #0a0a0a; color: #e8e8e8;
+                                border: 1px solid #333; border-radius: 3px; }
+  .hint { color: #666; font-size: 0.78rem; }
+  .stats { display: grid; grid-template-columns: repeat(2, 1fr);
+           gap: 0.4rem 0.8rem; font-size: 0.85rem; }
+  .stats .label { color: #888; font-size: 0.7rem;
+                  text-transform: uppercase; letter-spacing: 0.5px; }
+  .stats .value { font-family: "SF Mono", Menlo, monospace;
+                  color: #4ade80; font-size: 1.0rem; }
+  .stats .value.warn { color: #f59e0b; }
+  .stats .value.bad { color: #ef4444; }
+  h3 { font-size: 0.92rem; margin: 0.6rem 0 0.4rem; color: #ccc; }
+  .legend { font-size: 0.78rem; color: #888; margin-top: 0.5rem;
+            line-height: 1.5; }
+  .legend .swatch { display: inline-block; width: 12px; height: 12px;
+                    vertical-align: middle; margin-right: 0.3rem;
+                    border-radius: 50%; border: 1px solid #555; }
+  .pill { display: inline-block; padding: 1px 6px; border-radius: 8px;
+          background: #2a3458; font-size: 0.7rem; color: #6ba3ff;
+          margin-right: 4px; }
+  #gpu-status { font-family: monospace; font-size: 0.8rem;
+                padding: 0.3rem 0.6rem; border-radius: 4px;
+                display: inline-block; margin-bottom: 0.5rem; }
+  #gpu-status.ok { background: #14532d; color: #4ade80; }
+  #gpu-status.fallback { background: #422006; color: #f59e0b; }
+  #gpu-status.error { background: #450a0a; color: #ef4444; }
+  .formula { font-family: "SF Mono", Menlo, monospace;
+             background: #0d1228; padding: 6px 10px; border-radius: 4px;
+             color: #ffd700; display: inline-block; font-size: 0.8rem; }
+  details { font-size: 0.8rem; color: #aaa; margin-top: 0.5rem; }
+  details summary { cursor: pointer; color: #6ba3ff; }
+  details p { margin-top: 0.4rem; line-height: 1.5; }
+  @media (max-width: 1000px) { .layout { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+<div>
+
+<h1>🧬 Game of Life FMC — agenti Wissner-Gross causal entropic</h1>
+<div class="subtitle">
+  Mondo 2D toroidale. Ogni agente esegue un proprio swarm FMC per decidere come muoversi.
+  Reward composta: <span class="formula">R = food_proximity · (1 + repro_drive) · energy</span>.
+  Sesso M/F, 3 taglie (S/M/L), riproduzione su contatto compatibile, niente merging.
+  Equazione cardine (Wissner-Gross 2013): <span class="formula">F = T<sub>c</sub> ∇<sub>X</sub> S<sub>c</sub>(X, τ)</span>,
+  con FMC come stimatore Monte Carlo (paper §11, footnote 13).
+</div>
+
+<div id="gpu-status">↻ inizializzazione GPU…</div>
+
+<div class="panel">
+  <canvas id="world" width="900" height="700"></canvas>
+  <div class="controls">
+    <button id="play">▶ play</button>
+    <button id="step" class="secondary">⏭ step</button>
+    <button id="reset" class="secondary">⟲ reset</button>
+    <button id="seed" class="secondary">+ random pop</button>
+    <span class="hint">click su un agente per vederne il cono FMC</span>
+  </div>
+  <div class="legend">
+    <span class="swatch" style="background:#3b82f6"></span> maschio
+    &nbsp;<span class="swatch" style="background:#ec4899"></span> femmina
+    &nbsp;· taglie: piccolo (giovane) → medio (fertile) → grande (anziano)
+    &nbsp;· puntini bianchi = cibo
+    &nbsp;· nuvola colorata = walker FMC dell'agente selezionato
+  </div>
+</div>
+
+</div>
+
+<div>
+
+<div class="panel">
+  <h3>Parametri FMC</h3>
+  <div class="controls">
+    <label>N walker <input type="range" id="nWalkers" min="8" max="128" value="32"> <span id="nWalkers-v">32</span></label>
+  </div>
+  <div class="controls">
+    <label>M tick <input type="range" id="mTicks" min="3" max="40" value="12"> <span id="mTicks-v">12</span></label>
+  </div>
+  <div class="controls">
+    <label>α (reward) <input type="range" id="alpha" min="0" max="200" value="50"> <span id="alpha-v">0.50</span></label>
+  </div>
+  <div class="controls">
+    <label>β (distanza) <input type="range" id="beta" min="0" max="200" value="100"> <span id="beta-v">1.00</span></label>
+  </div>
+  <div class="hint">α=0 = pure Wissner-Gross (Common Sense)</div>
+
+  <h3>Mondo</h3>
+  <div class="controls">
+    <label>pop iniziale <input type="number" id="initPop" min="2" max="200" value="20"></label>
+  </div>
+  <div class="controls">
+    <label>cibo/sec <input type="range" id="foodRate" min="0" max="50" value="12"> <span id="foodRate-v">12</span></label>
+  </div>
+  <div class="controls">
+    <label>energia init <input type="range" id="initEnergy" min="20" max="200" value="80"> <span id="initEnergy-v">80</span></label>
+  </div>
+  <div class="controls">
+    <label>decision Hz <input type="range" id="decideHz" min="2" max="30" value="8"> <span id="decideHz-v">8</span></label>
+  </div>
+</div>
+
+<div class="panel">
+  <h3>Stats live</h3>
+  <div class="stats">
+    <div><div class="label">popolazione</div><div class="value" id="s-pop">0</div></div>
+    <div><div class="label">cibo</div><div class="value" id="s-food">0</div></div>
+    <div><div class="label">energia media</div><div class="value" id="s-energy">0</div></div>
+    <div><div class="label">età media</div><div class="value" id="s-age">0</div></div>
+    <div><div class="label">b<sub>eff</sub> medio</div><div class="value" id="s-beff">—</div></div>
+    <div><div class="label">nascite tot</div><div class="value" id="s-births">0</div></div>
+    <div><div class="label">morti tot</div><div class="value" id="s-deaths">0</div></div>
+    <div><div class="label">FMC ms/dec</div><div class="value" id="s-fmcms">—</div></div>
+  </div>
+</div>
+
+<div class="panel">
+  <h3>Agente selezionato</h3>
+  <div id="sel-info" class="hint">click su un agente nel canvas</div>
+</div>
+
+<details class="panel">
+  <summary>Note tecniche</summary>
+  <p>
+    Implementazione: ogni agente possiede uno swarm di <i>N</i> walker che
+    proiettano <i>M</i> tick avanti la propria dinamica, ignorando il
+    movimento degli altri agenti durante la pianificazione (i.e. world-model
+    statico-non-cooperativo). Il termine di distanza β è anti-collasso (Teorema 3
+    in <code>docs/MATH_CANON.md</code>); α modula la spinta verso reward esplicita.
+    Con α=0 si riproduce esattamente la <i>causal entropic force</i> di
+    Wissner-Gross (PRL 2013, eq. 4) in approssimazione Monte Carlo.
+  </p>
+  <p style="margin-top:0.4rem">
+    <b>GPU path</b>: WebGPU compute shaders con buffer batched
+    [agents × N walker]. Una pipeline per simulator step, distance,
+    relativize+VR, clone. <i>M</i> dispatch in sequenza per la pianificazione,
+    poi un dispatch per il bincount-argmax delle initial_decisions.
+    <b>Fallback CPU</b>: stesso algoritmo in JS puro se WebGPU non disponibile,
+    con un avviso visibile.
+  </p>
+  <p style="margin-top:0.4rem">
+    <b>Equivalenza con la slide di Sergio</b>:
+    la nostra <code>VR = R<sup>α</sup> · D<sup>β</sup></code> è la formulazione
+    operativa della "virtual reward" come <code>ρ<sub>reward</sub> / ρ<sub>walker</sub></code>
+    introdotta nelle slide di Sergio (cap. 5 dell'estratto): R alta ≈ alta
+    densità di reward, D alta ≈ bassa densità locale di walker.
+    Il prodotto α=β=1 dà esattamente il rapporto di densità.
+    Reward composta multiplicativa <code>(1 + R<sub>food</sub>) · (1 + R<sub>mate</sub>)</code>
+    segue il pattern multi-obiettivo della slide cap. 7 (es. salute × energia × distanza).
+  </p>
+</details>
+
+</div>
+
+</div>
+
+<script>
+'use strict';
+
+/* ============================================================================
+ * COSTANTI E PARAMETRI
+ * ========================================================================== */
+
+const WORLD_W = 900;
+const WORLD_H = 700;
+const ACTION_DIRS = [
+  [0, 0],                     // 0: idle
+  [0, -1],                    // 1: N
+  [0.707, -0.707],            // 2: NE
+  [1, 0],                     // 3: E
+  [0.707, 0.707],             // 4: SE
+  [0, 1],                     // 5: S
+  [-0.707, 0.707],            // 6: SW
+  [-1, 0],                    // 7: W
+  [-0.707, -0.707],           // 8: NW
+];
+const NUM_ACTIONS = ACTION_DIRS.length;
+const SIZE_RADII = [4, 7, 11];           // small, medium, large (cosmetic)
+const SIZE_NAMES = ['S', 'M', 'L'];
+const REPRO_COOLDOWN_AGE = 4.0;          // seconds since last repro (reduced from 6)
+const FERTILE_MIN_AGE = 4.0;             // must be at least this old
+// NetLogo Wolf-Sheep canonical pattern: reproduction triggered by energy
+// threshold, not by hard age cap. Old agents stay fertile if well-fed —
+// natural age-related decline emerges from food competition.
+const REPRO_ENERGY_THRESHOLD = 90.0;     // both parents need this much
+const REPRO_OFFSPRING_FRACTION = 0.45;   // each parent gives this fraction to child
+const REPRO_TRANSMISSION_EFF = 0.85;     // fraction of gifted energy that reaches child
+const ADULT_AGE = 4.0;                   // S → M (cosmetic only)
+const OLD_AGE = 25.0;                    // M → L (cosmetic only — NOT a sterility cap)
+const MAX_AGE = 70.0;                    // hard death age
+const ENERGY_CAP = 180.0;                // raised from 150 to allow energy storage
+const ENERGY_DECAY = 0.5;                // per second (reduced 0.6 → 0.5)
+const MOVE_ENERGY_COST = 0.03;           // per pixel moved (reduced 0.04 → 0.03)
+const FOOD_VALUE = 22.0;                 // raised 18 → 22
+const AGENT_SPEED = 60.0;                // px/s
+const FOOD_RANGE = 80.0;                 // reward proximity cutoff
+const MATE_RANGE = 120.0;
+const VISION_RANGE = 200.0;              // FMC reward only sees food/mates within this
+
+let agents = [];
+let foods = [];
+let nextAgentId = 1;
+let nextFoodId = 1;
+let totalBirths = 0;
+let totalDeaths = 0;
+let frameCount = 0;
+let selectedAgentId = null;
+let lastFmcMs = 0;
+let avgBeff = 0;
+
+// FMC params (kept in mutable object for hot reload from controls)
+const cfg = {
+  N: 32, M: 12, alpha: 0.5, beta: 1.0,
+  foodRate: 12, initPop: 20, initEnergy: 80, decideHz: 8,
+};
+
+let isPlaying = false;
+let lastDecisionTime = 0;
+let lastTickTime = performance.now();
+
+/* ============================================================================
+ * GPU STATE (WebGPU)
+ * ========================================================================== */
+
+let gpu = null;  // { device, pipelines, buffers, ... } or null if fallback
+
+/* ============================================================================
+ * UTIL
+ * ========================================================================== */
+
+function rand(min, max) { return min + Math.random() * (max - min); }
+function randInt(n) { return Math.floor(Math.random() * n); }
+function clamp(x, lo, hi) { return Math.max(lo, Math.min(hi, x)); }
+function torWrap(x, w) { return ((x % w) + w) % w; }
+function torDist(a, b, w, h) {
+  const dx = Math.min(Math.abs(a[0] - b[0]), w - Math.abs(a[0] - b[0]));
+  const dy = Math.min(Math.abs(a[1] - b[1]), h - Math.abs(a[1] - b[1]));
+  return Math.sqrt(dx*dx + dy*dy);
+}
+function sizeBucket(age) {
+  if (age < ADULT_AGE) return 0;        // small
+  if (age < OLD_AGE)   return 1;        // medium (fertile)
+  return 2;                              // large
+}
+
+/* ============================================================================
+ * AGENT / FOOD MODEL
+ * ========================================================================== */
+
+function spawnAgent(x, y, sex, energy, age = 0) {
+  return {
+    id: nextAgentId++,
+    x, y, vx: 0, vy: 0,
+    sex, energy, age,
+    lastReproAge: -REPRO_COOLDOWN_AGE,
+    nextAction: 0,
+    bEff: 0,
+  };
+}
+
+function spawnFood(x, y) {
+  return { id: nextFoodId++, x, y, value: FOOD_VALUE };
+}
+
+function seedWorld(n) {
+  agents = [];
+  foods = [];
+  totalBirths = 0;
+  totalDeaths = 0;
+  selectedAgentId = null;
+  for (let i = 0; i < n; i++) {
+    agents.push(spawnAgent(
+      rand(0, WORLD_W), rand(0, WORLD_H),
+      Math.random() < 0.5 ? 0 : 1,
+      cfg.initEnergy,
+      rand(0, 8),
+    ));
+  }
+  for (let i = 0; i < 30; i++) {
+    foods.push(spawnFood(rand(0, WORLD_W), rand(0, WORLD_H)));
+  }
+}
+
+/* ============================================================================
+ * REWARD FUNCTION (operates on a hypothetical walker position)
+ *
+ * Used by the CPU FMC; the GPU path uses an equivalent WGSL implementation.
+ * Simplification: walkers don't interact with each other or with mobile
+ * agents during planning — only with the static snapshot of food and other
+ * agent positions captured at decision time.
+ * ========================================================================== */
+
+function rewardAt(wx, wy, agentSelf, foodSnapshot, agentSnapshot) {
+  // Hunger weight: when low energy, food matters more.
+  // Reward composition multiplies food and mate attractions (Sergio §7).
+  const hunger = clamp(1.0 - agentSelf.energy / ENERGY_CAP, 0, 1);
+
+  // Food attraction (only food within VISION_RANGE matters)
+  let rFood = 0;
+  for (let i = 0; i < foodSnapshot.length; i++) {
+    const f = foodSnapshot[i];
+    const d = torDist([wx, wy], [f.x, f.y], WORLD_W, WORLD_H);
+    if (d > VISION_RANGE) continue;
+    if (d < FOOD_RANGE) rFood += (1 - d / FOOD_RANGE);
+  }
+  // Hunger boost: starving agent gets up to 3x food reward
+  rFood *= (1 + 2 * hunger);
+
+  // Mate attraction (only if agent is fertile by NEW rules: energy threshold)
+  let rMate = 0;
+  const fertile = (
+    agentSelf.age >= FERTILE_MIN_AGE &&
+    agentSelf.energy >= REPRO_ENERGY_THRESHOLD &&
+    (agentSelf.age - agentSelf.lastReproAge) >= REPRO_COOLDOWN_AGE
+  );
+  if (fertile) {
+    for (let i = 0; i < agentSnapshot.length; i++) {
+      const o = agentSnapshot[i];
+      if (o.id === agentSelf.id) continue;
+      if (o.sex === agentSelf.sex) continue;
+      if (o.age < FERTILE_MIN_AGE) continue;
+      const d = torDist([wx, wy], [o.x, o.y], WORLD_W, WORLD_H);
+      if (d > VISION_RANGE) continue;
+      if (d < MATE_RANGE) rMate += 2.0 * (1 - d / MATE_RANGE);
+    }
+  }
+  // Multiplicative composition: avoid zero by additive 1
+  return (1 + rFood) * (1 + rMate);
+}
+
+/* ============================================================================
+ * FMC — CPU implementation (fallback / reference)
+ * ========================================================================== */
+
+function relativizeArr(arr, n) {
+  let mean = 0;
+  for (let i = 0; i < n; i++) mean += arr[i];
+  mean /= n;
+  let v = 0;
+  for (let i = 0; i < n; i++) { const d = arr[i] - mean; v += d * d; }
+  v /= n;
+  const std = Math.sqrt(v);
+  if (std < 1e-9 || !isFinite(std)) {
+    return new Float32Array(n).fill(1);
+  }
+  const out = new Float32Array(n);
+  for (let i = 0; i < n; i++) {
+    const z = (arr[i] - mean) / std;
+    if (z <= 0) out[i] = Math.exp(Math.max(z, -50));
+    else out[i] = 1 + Math.log1p(z);
+  }
+  return out;
+}
+
+function decideCPU(agent, foodSnapshot, agentSnapshot) {
+  const N = cfg.N, M = cfg.M;
+  // Walker state: x, y, vx, vy, label, cumReward, alive
+  const wx = new Float32Array(N), wy = new Float32Array(N);
+  const wvx = new Float32Array(N), wvy = new Float32Array(N);
+  const labels = new Int32Array(N);
+  const rewards = new Float32Array(N);
+  const alive = new Uint8Array(N);
+  const distances = new Float32Array(N);
+  const dt = 0.1;
+  for (let i = 0; i < N; i++) {
+    wx[i] = agent.x; wy[i] = agent.y;
+    wvx[i] = 0; wvy[i] = 0;
+    labels[i] = randInt(NUM_ACTIONS);
+    rewards[i] = 0;
+    alive[i] = 1;
+  }
+  for (let t = 0; t < M; t++) {
+    // Step
+    for (let i = 0; i < N; i++) {
+      if (!alive[i]) continue;
+      const a = (t === 0) ? labels[i] : randInt(NUM_ACTIONS);
+      const dir = ACTION_DIRS[a];
+      wvx[i] = dir[0] * AGENT_SPEED;
+      wvy[i] = dir[1] * AGENT_SPEED;
+      wx[i] = torWrap(wx[i] + wvx[i] * dt, WORLD_W);
+      wy[i] = torWrap(wy[i] + wvy[i] * dt, WORLD_H);
+      rewards[i] += rewardAt(wx[i], wy[i], agent, foodSnapshot, agentSnapshot) * dt;
+    }
+    // Distance to random partner
+    for (let i = 0; i < N; i++) {
+      let j = randInt(N);
+      if (j === i) j = (j + 1) % N;
+      const dx = Math.min(Math.abs(wx[i]-wx[j]), WORLD_W - Math.abs(wx[i]-wx[j]));
+      const dy = Math.min(Math.abs(wy[i]-wy[j]), WORLD_H - Math.abs(wy[i]-wy[j]));
+      distances[i] = Math.sqrt(dx*dx + dy*dy);
+    }
+    const Rn = relativizeArr(rewards, N);
+    const Dn = relativizeArr(distances, N);
+    const VR = new Float32Array(N);
+    for (let i = 0; i < N; i++) {
+      if (!alive[i]) { VR[i] = 0; continue; }
+      VR[i] = Math.pow(Rn[i], cfg.alpha) * Math.pow(Dn[i], cfg.beta);
+      if (!isFinite(VR[i])) VR[i] = 0;
+    }
+    // Clone
+    for (let i = 0; i < N; i++) {
+      let k = randInt(N);
+      if (k === i) k = (k + 1) % N;
+      let p;
+      if (!alive[i]) p = 1;
+      else if (VR[i] < 1e-8) p = 1;
+      else if (VR[k] <= VR[i]) p = 0;
+      else p = (VR[k] - VR[i]) / VR[i];
+      if (Math.random() < p && alive[k]) {
+        wx[i] = wx[k]; wy[i] = wy[k];
+        wvx[i] = wvx[k]; wvy[i] = wvy[k];
+        labels[i] = labels[k];
+        rewards[i] = rewards[k];
+        alive[i] = 1;
+      }
+    }
+  }
+  // Decide: bincount
+  const counts = new Int32Array(NUM_ACTIONS);
+  let totAlive = 0;
+  for (let i = 0; i < N; i++) {
+    if (!alive[i]) continue;
+    counts[labels[i]]++;
+    totAlive++;
+  }
+  let best = 0, bestCount = -1;
+  for (let a = 0; a < NUM_ACTIONS; a++) {
+    if (counts[a] > bestCount) { bestCount = counts[a]; best = a; }
+  }
+  // b_eff = exp(H(p))
+  let H = 0;
+  for (let a = 0; a < NUM_ACTIONS; a++) {
+    if (counts[a] === 0) continue;
+    const p = counts[a] / Math.max(1, totAlive);
+    H -= p * Math.log(p);
+  }
+  const beff = Math.exp(H);
+  return { action: best, bEff: beff, walkers: { wx, wy, labels, alive } };
+}
+
+/* ============================================================================
+ * FMC — GPU implementation (WebGPU compute shaders)
+ *
+ * Buffers (all storage, agentCount × N elements unless noted):
+ *   walkerPos    : vec2<f32>
+ *   walkerVel    : vec2<f32>
+ *   walkerLabel  : u32
+ *   walkerReward : f32
+ *   walkerAlive  : u32
+ *   walkerVR     : f32
+ *   walkerDist   : f32
+ *   walkerRng    : u32  (PCG state, distinct per walker)
+ *   agentSelf    : vec4<f32>  (x, y, fertile_flag, sex_packed) per-agent
+ *   foodArr      : vec4<f32>  (x, y, value, _) up to MAX_FOOD entries
+ *   otherAgents  : vec4<f32>  (x, y, sex, sizeBucket) up to MAX_OTHERS entries
+ *   stats        : vec4<f32>  per agent: (rMean, rStd, dMean, dStd)
+ *   decision     : u32 per agent
+ *   bincount     : u32 per (agent × NUM_ACTIONS)
+ *
+ * Shaders:
+ *   sim_step  : advance each walker one tick using its action
+ *   distance  : pairwise stochastic distance
+ *   stats_red : per-agent reduction → mean & std of R and D
+ *   vr_compute: per-walker virtual reward + clone in one pass
+ *   bincount  : count labels per agent
+ *   decide    : argmax over bincount, also compute b_eff
+ * ========================================================================== */
+
+const MAX_FOOD = 256;
+const MAX_OTHERS = 256;
+
+const SHADER_SIM_STEP = `
+struct Params {
+  agentCount: u32,
+  N: u32,
+  M: u32,
+  tStep: u32,           // current tick (0..M-1)
+  numActions: u32,
+  worldW: f32,
+  worldH: f32,
+  dt: f32,
+  speed: f32,
+  foodRange: f32,
+  mateRange: f32,
+  numFood: u32,
+  numOthers: u32,
+  alpha: f32,
+  beta: f32,
+  visionRange: f32,
+};
+@group(0) @binding(0) var<uniform> P: Params;
+@group(0) @binding(1) var<storage, read_write> wPos: array<vec2<f32>>;
+@group(0) @binding(2) var<storage, read_write> wLabel: array<u32>;
+@group(0) @binding(3) var<storage, read_write> wReward: array<f32>;
+@group(0) @binding(4) var<storage, read_write> wAlive: array<u32>;
+@group(0) @binding(5) var<storage, read_write> wRng: array<u32>;
+@group(0) @binding(6) var<storage, read> agentSelf: array<vec4<f32>>;
+@group(0) @binding(7) var<storage, read> foodArr: array<vec4<f32>>;
+@group(0) @binding(8) var<storage, read> otherAgents: array<vec4<f32>>;
+
+const ACTIONS = array<vec2<f32>, 9>(
+  vec2<f32>(0.0, 0.0),
+  vec2<f32>(0.0, -1.0),
+  vec2<f32>(0.707, -0.707),
+  vec2<f32>(1.0, 0.0),
+  vec2<f32>(0.707, 0.707),
+  vec2<f32>(0.0, 1.0),
+  vec2<f32>(-0.707, 0.707),
+  vec2<f32>(-1.0, 0.0),
+  vec2<f32>(-0.707, -0.707),
+);
+
+fn pcg(state: ptr<function, u32>) -> u32 {
+  *state = (*state) * 747796405u + 2891336453u;
+  let word = (((*state) >> (((*state) >> 28u) + 4u)) ^ (*state)) * 277803737u;
+  return (word >> 22u) ^ word;
+}
+fn randf(state: ptr<function, u32>) -> f32 {
+  return f32(pcg(state)) / 4294967295.0;
+}
+
+fn torWrap(x: f32, w: f32) -> f32 {
+  return x - w * floor(x / w);
+}
+fn torDist1(a: f32, b: f32, w: f32) -> f32 {
+  let d = abs(a - b);
+  return min(d, w - d);
+}
+
+fn rewardAt(p: vec2<f32>, agentIdx: u32) -> f32 {
+  let me = agentSelf[agentIdx];
+  // me.x, me.y unused here
+  // me.z packed: sign = sex (-1=M, +1=F), |z| in {1,2}: 2 = fertile
+  // me.w = hunger in [0, 1]
+  let pack = me.z;
+  let hunger = me.w;
+  let selfSex = select(0.0, 1.0, pack > 0.0);  // 0=M, 1=F
+  let fertile = abs(pack) > 1.5;
+
+  var rFood: f32 = 0.0;
+  for (var i: u32 = 0u; i < P.numFood; i = i + 1u) {
+    let f = foodArr[i];
+    let dx = torDist1(p.x, f.x, P.worldW);
+    let dy = torDist1(p.y, f.y, P.worldH);
+    let d = sqrt(dx*dx + dy*dy);
+    if (d > P.visionRange) { continue; }
+    if (d < P.foodRange) {
+      rFood = rFood + (1.0 - d / P.foodRange);
+    }
+  }
+  // Hunger boost: starving agents prioritize food up to 3x
+  rFood = rFood * (1.0 + 2.0 * hunger);
+
+  var rMate: f32 = 0.0;
+  if (fertile) {
+    for (var i: u32 = 0u; i < P.numOthers; i = i + 1u) {
+      let o = otherAgents[i];
+      // o.z = sex (0 or 1); o.w = age (for fertile-min-age check)
+      if (abs(o.z - selfSex) < 0.5) { continue; }  // same sex
+      if (o.w < 4.0) { continue; }                  // FERTILE_MIN_AGE
+      let dx = torDist1(p.x, o.x, P.worldW);
+      let dy = torDist1(p.y, o.y, P.worldH);
+      let d = sqrt(dx*dx + dy*dy);
+      if (d > P.visionRange) { continue; }
+      if (d < P.mateRange) {
+        rMate = rMate + 2.0 * (1.0 - d / P.mateRange);
+      }
+    }
+  }
+  return (1.0 + rFood) * (1.0 + rMate);
+}
+
+@compute @workgroup_size(64)
+fn main(@builtin(global_invocation_id) gid: vec3<u32>) {
+  let idx = gid.x;
+  let total = P.agentCount * P.N;
+  if (idx >= total) { return; }
+  if (wAlive[idx] == 0u) { return; }
+  let agentIdx = idx / P.N;
+  var rng = wRng[idx];
+  var action: u32;
+  if (P.tStep == 0u) {
+    action = wLabel[idx];
+  } else {
+    action = u32(randf(&rng) * f32(P.numActions));
+    if (action >= P.numActions) { action = P.numActions - 1u; }
+  }
+  let dir = ACTIONS[action];
+  var pos = wPos[idx];
+  pos.x = torWrap(pos.x + dir.x * P.speed * P.dt, P.worldW);
+  pos.y = torWrap(pos.y + dir.y * P.speed * P.dt, P.worldH);
+  wPos[idx] = pos;
+  wReward[idx] = wReward[idx] + rewardAt(pos, agentIdx) * P.dt;
+  wRng[idx] = rng;
+}
+`;
+
+const SHADER_DISTANCE = `
+struct Params {
+  agentCount: u32, N: u32, M: u32, tStep: u32, numActions: u32,
+  worldW: f32, worldH: f32, dt: f32, speed: f32,
+  foodRange: f32, mateRange: f32,
+  numFood: u32, numOthers: u32, alpha: f32, beta: f32, _pad: u32,
+};
+@group(0) @binding(0) var<uniform> P: Params;
+@group(0) @binding(1) var<storage, read> wPos: array<vec2<f32>>;
+@group(0) @binding(2) var<storage, read_write> wDist: array<f32>;
+@group(0) @binding(3) var<storage, read_write> wRng: array<u32>;
+
+fn pcg(state: ptr<function, u32>) -> u32 {
+  *state = (*state) * 747796405u + 2891336453u;
+  let word = (((*state) >> (((*state) >> 28u) + 4u)) ^ (*state)) * 277803737u;
+  return (word >> 22u) ^ word;
+}
+fn randf(state: ptr<function, u32>) -> f32 { return f32(pcg(state)) / 4294967295.0; }
+fn torDist1(a: f32, b: f32, w: f32) -> f32 {
+  let d = abs(a - b); return min(d, w - d);
+}
+
+@compute @workgroup_size(64)
+fn main(@builtin(global_invocation_id) gid: vec3<u32>) {
+  let idx = gid.x;
+  let total = P.agentCount * P.N;
+  if (idx >= total) { return; }
+  let agentIdx = idx / P.N;
+  let localIdx = idx % P.N;
+  var rng = wRng[idx];
+  var partnerLocal = u32(randf(&rng) * f32(P.N));
+  if (partnerLocal == localIdx) { partnerLocal = (partnerLocal + 1u) % P.N; }
+  let partnerIdx = agentIdx * P.N + partnerLocal;
+  let p1 = wPos[idx];
+  let p2 = wPos[partnerIdx];
+  let dx = torDist1(p1.x, p2.x, P.worldW);
+  let dy = torDist1(p1.y, p2.y, P.worldH);
+  wDist[idx] = sqrt(dx*dx + dy*dy);
+  wRng[idx] = rng;
+}
+`;
+
+const SHADER_STATS_RED = `
+// Per-agent reduction: compute mean and std of R and D over the N walkers.
+// Workgroup size 64; one workgroup per agent. We assume N <= 256.
+struct Params {
+  agentCount: u32, N: u32, M: u32, tStep: u32, numActions: u32,
+  worldW: f32, worldH: f32, dt: f32, speed: f32,
+  foodRange: f32, mateRange: f32,
+  numFood: u32, numOthers: u32, alpha: f32, beta: f32, _pad: u32,
+};
+@group(0) @binding(0) var<uniform> P: Params;
+@group(0) @binding(1) var<storage, read> wReward: array<f32>;
+@group(0) @binding(2) var<storage, read> wDist: array<f32>;
+@group(0) @binding(3) var<storage, read> wAlive: array<u32>;
+@group(0) @binding(4) var<storage, read_write> stats: array<vec4<f32>>;
+
+var<workgroup> sR: array<f32, 64>;
+var<workgroup> sR2: array<f32, 64>;
+var<workgroup> sD: array<f32, 64>;
+var<workgroup> sD2: array<f32, 64>;
+var<workgroup> sN: array<f32, 64>;
+
+@compute @workgroup_size(64)
+fn main(
+  @builtin(workgroup_id) wid: vec3<u32>,
+  @builtin(local_invocation_id) lid: vec3<u32>,
+) {
+  let agentIdx = wid.x;
+  if (agentIdx >= P.agentCount) { return; }
+  let tid = lid.x;
+  var sumR: f32 = 0.0;
+  var sumR2: f32 = 0.0;
+  var sumD: f32 = 0.0;
+  var sumD2: f32 = 0.0;
+  var cnt: f32 = 0.0;
+  // Each lane reduces a stride of N
+  var i = tid;
+  loop {
+    if (i >= P.N) { break; }
+    let g = agentIdx * P.N + i;
+    if (wAlive[g] != 0u) {
+      let r = wReward[g];
+      let d = wDist[g];
+      sumR = sumR + r; sumR2 = sumR2 + r * r;
+      sumD = sumD + d; sumD2 = sumD2 + d * d;
+      cnt = cnt + 1.0;
+    }
+    i = i + 64u;
+  }
+  sR[tid] = sumR; sR2[tid] = sumR2;
+  sD[tid] = sumD; sD2[tid] = sumD2;
+  sN[tid] = cnt;
+  workgroupBarrier();
+  // Tree reduce
+  var s = 32u;
+  loop {
+    if (s == 0u) { break; }
+    if (tid < s) {
+      sR[tid] = sR[tid] + sR[tid + s];
+      sR2[tid] = sR2[tid] + sR2[tid + s];
+      sD[tid] = sD[tid] + sD[tid + s];
+      sD2[tid] = sD2[tid] + sD2[tid + s];
+      sN[tid] = sN[tid] + sN[tid + s];
+    }
+    workgroupBarrier();
+    s = s / 2u;
+  }
+  if (tid == 0u) {
+    let n = max(sN[0], 1.0);
+    let mR = sR[0] / n;
+    let mD = sD[0] / n;
+    let varR = max(sR2[0] / n - mR * mR, 0.0);
+    let varD = max(sD2[0] / n - mD * mD, 0.0);
+    stats[agentIdx] = vec4<f32>(mR, sqrt(varR), mD, sqrt(varD));
+  }
+}
+`;
+
+const SHADER_VR_CLONE = `
+struct Params {
+  agentCount: u32, N: u32, M: u32, tStep: u32, numActions: u32,
+  worldW: f32, worldH: f32, dt: f32, speed: f32,
+  foodRange: f32, mateRange: f32,
+  numFood: u32, numOthers: u32, alpha: f32, beta: f32, _pad: u32,
+};
+@group(0) @binding(0) var<uniform> P: Params;
+@group(0) @binding(1) var<storage, read> wReward: array<f32>;
+@group(0) @binding(2) var<storage, read> wDist: array<f32>;
+@group(0) @binding(3) var<storage, read> stats: array<vec4<f32>>;
+@group(0) @binding(4) var<storage, read_write> wVR: array<f32>;
+
+fn relativize(x: f32, mean: f32, sd: f32) -> f32 {
+  let s = max(sd, 1e-9);
+  let z = (x - mean) / s;
+  if (z <= 0.0) { return exp(max(z, -50.0)); }
+  return 1.0 + log(1.0 + z);
+}
+
+@compute @workgroup_size(64)
+fn main(@builtin(global_invocation_id) gid: vec3<u32>) {
+  let idx = gid.x;
+  let total = P.agentCount * P.N;
+  if (idx >= total) { return; }
+  let agentIdx = idx / P.N;
+  let st = stats[agentIdx];
+  let r = wReward[idx];
+  let d = wDist[idx];
+  let rN = relativize(r, st.x, st.y);
+  let dN = relativize(d, st.z, st.w);
+  var vr = pow(max(rN, 1e-12), P.alpha) * pow(max(dN, 1e-12), P.beta);
+  if (vr != vr) { vr = 0.0; }   // NaN guard
+  wVR[idx] = vr;
+}
+`;
+
+const SHADER_CLONE = `
+struct Params {
+  agentCount: u32, N: u32, M: u32, tStep: u32, numActions: u32,
+  worldW: f32, worldH: f32, dt: f32, speed: f32,
+  foodRange: f32, mateRange: f32,
+  numFood: u32, numOthers: u32, alpha: f32, beta: f32, _pad: u32,
+};
+@group(0) @binding(0) var<uniform> P: Params;
+@group(0) @binding(1) var<storage, read_write> wPos: array<vec2<f32>>;
+@group(0) @binding(2) var<storage, read_write> wLabel: array<u32>;
+@group(0) @binding(3) var<storage, read_write> wReward: array<f32>;
+@group(0) @binding(4) var<storage, read_write> wAlive: array<u32>;
+@group(0) @binding(5) var<storage, read> wVR: array<f32>;
+@group(0) @binding(6) var<storage, read_write> wRng: array<u32>;
+
+fn pcg(state: ptr<function, u32>) -> u32 {
+  *state = (*state) * 747796405u + 2891336453u;
+  let word = (((*state) >> (((*state) >> 28u) + 4u)) ^ (*state)) * 277803737u;
+  return (word >> 22u) ^ word;
+}
+fn randf(state: ptr<function, u32>) -> f32 { return f32(pcg(state)) / 4294967295.0; }
+
+@compute @workgroup_size(64)
+fn main(@builtin(global_invocation_id) gid: vec3<u32>) {
+  let idx = gid.x;
+  let total = P.agentCount * P.N;
+  if (idx >= total) { return; }
+  let agentIdx = idx / P.N;
+  let localIdx = idx % P.N;
+  var rng = wRng[idx];
+  var partnerLocal = u32(randf(&rng) * f32(P.N));
+  if (partnerLocal == localIdx) { partnerLocal = (partnerLocal + 1u) % P.N; }
+  let kIdx = agentIdx * P.N + partnerLocal;
+  let vrI = wVR[idx];
+  let vrK = wVR[kIdx];
+  var pClone: f32;
+  if (wAlive[idx] == 0u) { pClone = 1.0; }
+  else if (vrI < 1e-8) { pClone = 1.0; }
+  else if (vrK <= vrI) { pClone = 0.0; }
+  else { pClone = (vrK - vrI) / vrI; }
+  let r = randf(&rng);
+  if (r < pClone && wAlive[kIdx] != 0u) {
+    wPos[idx] = wPos[kIdx];
+    wLabel[idx] = wLabel[kIdx];
+    wReward[idx] = wReward[kIdx];
+    wAlive[idx] = 1u;
+  }
+  wRng[idx] = rng;
+}
+`;
+
+const SHADER_DECIDE = `
+// One workgroup per agent. Bincount of labels among living walkers,
+// then argmax → decision. Also computes b_eff = exp(H(p)).
+struct Params {
+  agentCount: u32, N: u32, M: u32, tStep: u32, numActions: u32,
+  worldW: f32, worldH: f32, dt: f32, speed: f32,
+  foodRange: f32, mateRange: f32,
+  numFood: u32, numOthers: u32, alpha: f32, beta: f32, _pad: u32,
+};
+@group(0) @binding(0) var<uniform> P: Params;
+@group(0) @binding(1) var<storage, read> wLabel: array<u32>;
+@group(0) @binding(2) var<storage, read> wAlive: array<u32>;
+@group(0) @binding(3) var<storage, read_write> decision: array<u32>;
+@group(0) @binding(4) var<storage, read_write> beff: array<f32>;
+
+var<workgroup> bins: array<atomic<u32>, 16>;  // up to 16 actions
+var<workgroup> totAlive: atomic<u32>;
+
+@compute @workgroup_size(64)
+fn main(
+  @builtin(workgroup_id) wid: vec3<u32>,
+  @builtin(local_invocation_id) lid: vec3<u32>,
+) {
+  let agentIdx = wid.x;
+  if (agentIdx >= P.agentCount) { return; }
+  let tid = lid.x;
+  if (tid < 16u) { atomicStore(&bins[tid], 0u); }
+  if (tid == 0u) { atomicStore(&totAlive, 0u); }
+  workgroupBarrier();
+  var i = tid;
+  loop {
+    if (i >= P.N) { break; }
+    let g = agentIdx * P.N + i;
+    if (wAlive[g] != 0u) {
+      atomicAdd(&bins[wLabel[g]], 1u);
+      atomicAdd(&totAlive, 1u);
+    }
+    i = i + 64u;
+  }
+  workgroupBarrier();
+  if (tid == 0u) {
+    var best: u32 = 0u; var bestC: u32 = 0u;
+    var H: f32 = 0.0;
+    let tot = max(atomicLoad(&totAlive), 1u);
+    for (var a: u32 = 0u; a < P.numActions; a = a + 1u) {
+      let c = atomicLoad(&bins[a]);
+      if (c > bestC) { bestC = c; best = a; }
+      if (c > 0u) {
+        let p = f32(c) / f32(tot);
+        H = H - p * log(p);
+      }
+    }
+    decision[agentIdx] = best;
+    beff[agentIdx] = exp(H);
+  }
+}
+`;
+
+/* ============================================================================
+ * GPU SETUP
+ * ========================================================================== */
+
+async function initGPU() {
+  if (!navigator.gpu) {
+    return null;
+  }
+  let adapter, device;
+  try {
+    adapter = await navigator.gpu.requestAdapter();
+    if (!adapter) return null;
+    device = await adapter.requestDevice();
+  } catch (e) {
+    console.warn('WebGPU init error:', e);
+    return null;
+  }
+
+  const buildPipeline = (code) => {
+    const module = device.createShaderModule({ code });
+    return device.createComputePipeline({
+      layout: 'auto',
+      compute: { module, entryPoint: 'main' },
+    });
+  };
+
+  const pipelines = {
+    sim: buildPipeline(SHADER_SIM_STEP),
+    dist: buildPipeline(SHADER_DISTANCE),
+    stats: buildPipeline(SHADER_STATS_RED),
+    vr: buildPipeline(SHADER_VR_CLONE),
+    clone: buildPipeline(SHADER_CLONE),
+    decide: buildPipeline(SHADER_DECIDE),
+  };
+
+  return { device, pipelines, buffers: null, capacity: 0 };
+}
+
+function ensureGPUBuffers(agentCount) {
+  if (!gpu) return;
+  const N = cfg.N;
+  const total = agentCount * N;
+  // Capacity is (agents, N) — reallocate if either changed
+  if (gpu.buffers && gpu.capacity === total && gpu.bufN === N) return;
+
+  const device = gpu.device;
+  const f32size = 4;
+  const make = (size, usage) => device.createBuffer({ size, usage });
+  const STO = GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST | GPUBufferUsage.COPY_SRC;
+  const UNI = GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST;
+
+  const b = {
+    params:        make(64, UNI),
+    wPos:          make(total * 8, STO),
+    wLabel:        make(total * 4, STO),
+    wReward:       make(total * 4, STO),
+    wAlive:        make(total * 4, STO),
+    wDist:         make(total * 4, STO),
+    wVR:           make(total * 4, STO),
+    wRng:          make(total * 4, STO),
+    agentSelf:     make(Math.max(agentCount, 1) * 16, STO),
+    food:          make(MAX_FOOD * 16, STO),
+    others:        make(MAX_OTHERS * 16, STO),
+    stats:         make(Math.max(agentCount, 1) * 16, STO),
+    decision:      make(Math.max(agentCount, 1) * 4, STO),
+    beff:          make(Math.max(agentCount, 1) * 4, STO),
+    decisionRead:  device.createBuffer({
+      size: Math.max(agentCount, 1) * 4,
+      usage: GPUBufferUsage.MAP_READ | GPUBufferUsage.COPY_DST,
+    }),
+    beffRead: device.createBuffer({
+      size: Math.max(agentCount, 1) * 4,
+      usage: GPUBufferUsage.MAP_READ | GPUBufferUsage.COPY_DST,
+    }),
+  };
+  gpu.buffers = b;
+  gpu.capacity = total;
+  gpu.bufN = N;
+  gpu.bufAgents = agentCount;
+}
+
+function writeParams(agentCount, tStep, numFood, numOthers) {
+  const ab = new ArrayBuffer(64);
+  const u = new Uint32Array(ab);
+  const f = new Float32Array(ab);
+  u[0] = agentCount;
+  u[1] = cfg.N;
+  u[2] = cfg.M;
+  u[3] = tStep;
+  u[4] = NUM_ACTIONS;
+  f[5] = WORLD_W;
+  f[6] = WORLD_H;
+  f[7] = 0.1;                         // dt
+  f[8] = AGENT_SPEED;
+  f[9] = FOOD_RANGE;
+  f[10] = MATE_RANGE;
+  u[11] = numFood;
+  u[12] = numOthers;
+  f[13] = cfg.alpha;
+  f[14] = cfg.beta;
+  f[15] = VISION_RANGE;
+  gpu.device.queue.writeBuffer(gpu.buffers.params, 0, ab);
+}
+
+function packAgentSelf() {
+  // 8 floats per agent: (x, y, fertile, sex, hunger, _, _, _)
+  // Padded to vec4 alignment in shader as two vec4 = vec4<f32>(...) with stride 32 bytes.
+  // For simplicity we keep one vec4 and fold hunger into sex's higher bits — but
+  // simpler: use a second vec4. To avoid changing buffer layouts excessively,
+  // we encode hunger by repurposing slot [3] as sign(sex)+|hunger|: not done here.
+  // Instead: keep 4 floats, add hunger as separate buffer? No — keep simple:
+  // we send hunger inline as the magnitude of sex (we can't), OR we keep
+  // fertility flag as a SCALED value combining fertility+hunger.
+  // Cleanest: use vec4 = (x, y, packedFlags, hunger) where packedFlags
+  // encodes fertile (sign) and sex (magnitude).
+  const ab = new Float32Array(Math.max(agents.length, 1) * 4);
+  for (let i = 0; i < agents.length; i++) {
+    const a = agents[i];
+    const fertile = (
+      a.age >= FERTILE_MIN_AGE &&
+      a.energy >= REPRO_ENERGY_THRESHOLD &&
+      (a.age - a.lastReproAge) >= REPRO_COOLDOWN_AGE
+    );
+    // Encode: pack = (sex == 0 ? -1 : +1) * (fertile ? 2 : 1)
+    //   pack < 0  → male; pack > 0  → female
+    //   |pack| == 2 → fertile; |pack| == 1 → not fertile
+    const pack = (a.sex === 0 ? -1 : 1) * (fertile ? 2 : 1);
+    const hunger = clamp(1.0 - a.energy / ENERGY_CAP, 0, 1);
+    ab[i*4 + 0] = a.x;
+    ab[i*4 + 1] = a.y;
+    ab[i*4 + 2] = pack;
+    ab[i*4 + 3] = hunger;
+  }
+  return ab;
+}
+
+function packFood() {
+  const n = Math.min(foods.length, MAX_FOOD);
+  const ab = new Float32Array(MAX_FOOD * 4);
+  for (let i = 0; i < n; i++) {
+    ab[i*4 + 0] = foods[i].x;
+    ab[i*4 + 1] = foods[i].y;
+    ab[i*4 + 2] = foods[i].value;
+  }
+  return { buf: ab, count: n };
+}
+
+function packOthers() {
+  // Pack ALL agents (including self) — the shader filters by sex+age.
+  // (x, y, sex, age) — shader uses age >= FERTILE_MIN_AGE filter.
+  const n = Math.min(agents.length, MAX_OTHERS);
+  const ab = new Float32Array(MAX_OTHERS * 4);
+  for (let i = 0; i < n; i++) {
+    const a = agents[i];
+    ab[i*4 + 0] = a.x;
+    ab[i*4 + 1] = a.y;
+    ab[i*4 + 2] = a.sex;
+    ab[i*4 + 3] = a.age;
+  }
+  return { buf: ab, count: n };
+}
+
+function initWalkerBuffers() {
+  const N = cfg.N;
+  const total = agents.length * N;
+  if (total === 0) return;
+  const wPos = new Float32Array(total * 2);
+  const wLabel = new Uint32Array(total);
+  const wReward = new Float32Array(total);
+  const wAlive = new Uint32Array(total);
+  const wRng = new Uint32Array(total);
+  for (let a = 0; a < agents.length; a++) {
+    for (let i = 0; i < N; i++) {
+      const k = a * N + i;
+      wPos[k*2 + 0] = agents[a].x;
+      wPos[k*2 + 1] = agents[a].y;
+      wLabel[k] = randInt(NUM_ACTIONS);
+      wReward[k] = 0;
+      wAlive[k] = 1;
+      wRng[k] = (Math.random() * 0xffffffff) >>> 0;
+    }
+  }
+  const q = gpu.device.queue;
+  q.writeBuffer(gpu.buffers.wPos, 0, wPos);
+  q.writeBuffer(gpu.buffers.wLabel, 0, wLabel);
+  q.writeBuffer(gpu.buffers.wReward, 0, wReward);
+  q.writeBuffer(gpu.buffers.wAlive, 0, wAlive);
+  q.writeBuffer(gpu.buffers.wRng, 0, wRng);
+}
+
+function makeBindGroup(pipeline, entries) {
+  return gpu.device.createBindGroup({
+    layout: pipeline.getBindGroupLayout(0),
+    entries: entries.map(([binding, buffer]) => ({
+      binding, resource: { buffer }
+    })),
+  });
+}
+
+async function decideGPU() {
+  const t0 = performance.now();
+  const agentCount = agents.length;
+  if (agentCount === 0) return;
+  ensureGPUBuffers(agentCount);
+  const b = gpu.buffers;
+  const q = gpu.device.queue;
+
+  // Upload world state
+  const selfBuf = packAgentSelf();
+  q.writeBuffer(b.agentSelf, 0, selfBuf);
+  const food = packFood();
+  q.writeBuffer(b.food, 0, food.buf);
+  const oth = packOthers();
+  q.writeBuffer(b.others, 0, oth.buf);
+
+  // Init walkers from current agent positions
+  initWalkerBuffers();
+
+  const N = cfg.N;
+  const total = agentCount * N;
+  const wgsX = Math.ceil(total / 64);
+
+  // Bind groups
+  const bgSim = makeBindGroup(gpu.pipelines.sim, [
+    [0, b.params], [1, b.wPos], [2, b.wLabel], [3, b.wReward], [4, b.wAlive],
+    [5, b.wRng], [6, b.agentSelf], [7, b.food], [8, b.others],
+  ]);
+  const bgDist = makeBindGroup(gpu.pipelines.dist, [
+    [0, b.params], [1, b.wPos], [2, b.wDist], [3, b.wRng],
+  ]);
+  const bgStats = makeBindGroup(gpu.pipelines.stats, [
+    [0, b.params], [1, b.wReward], [2, b.wDist], [3, b.wAlive], [4, b.stats],
+  ]);
+  const bgVR = makeBindGroup(gpu.pipelines.vr, [
+    [0, b.params], [1, b.wReward], [2, b.wDist], [3, b.stats], [4, b.wVR],
+  ]);
+  const bgClone = makeBindGroup(gpu.pipelines.clone, [
+    [0, b.params], [1, b.wPos], [2, b.wLabel], [3, b.wReward],
+    [4, b.wAlive], [5, b.wVR], [6, b.wRng],
+  ]);
+  const bgDec = makeBindGroup(gpu.pipelines.decide, [
+    [0, b.params], [1, b.wLabel], [2, b.wAlive], [3, b.decision], [4, b.beff],
+  ]);
+
+  // M FMC ticks
+  for (let t = 0; t < cfg.M; t++) {
+    writeParams(agentCount, t, food.count, oth.count);
+    const enc = gpu.device.createCommandEncoder();
+    {
+      const pass = enc.beginComputePass();
+      pass.setPipeline(gpu.pipelines.sim);
+      pass.setBindGroup(0, bgSim);
+      pass.dispatchWorkgroups(wgsX);
+      pass.end();
+    }
+    {
+      const pass = enc.beginComputePass();
+      pass.setPipeline(gpu.pipelines.dist);
+      pass.setBindGroup(0, bgDist);
+      pass.dispatchWorkgroups(wgsX);
+      pass.end();
+    }
+    {
+      const pass = enc.beginComputePass();
+      pass.setPipeline(gpu.pipelines.stats);
+      pass.setBindGroup(0, bgStats);
+      pass.dispatchWorkgroups(agentCount);
+      pass.end();
+    }
+    {
+      const pass = enc.beginComputePass();
+      pass.setPipeline(gpu.pipelines.vr);
+      pass.setBindGroup(0, bgVR);
+      pass.dispatchWorkgroups(wgsX);
+      pass.end();
+    }
+    {
+      const pass = enc.beginComputePass();
+      pass.setPipeline(gpu.pipelines.clone);
+      pass.setBindGroup(0, bgClone);
+      pass.dispatchWorkgroups(wgsX);
+      pass.end();
+    }
+    q.submit([enc.finish()]);
+  }
+  // Decide
+  {
+    const enc = gpu.device.createCommandEncoder();
+    const pass = enc.beginComputePass();
+    pass.setPipeline(gpu.pipelines.decide);
+    pass.setBindGroup(0, bgDec);
+    pass.dispatchWorkgroups(agentCount);
+    pass.end();
+    enc.copyBufferToBuffer(b.decision, 0, b.decisionRead, 0, agentCount * 4);
+    enc.copyBufferToBuffer(b.beff, 0, b.beffRead, 0, agentCount * 4);
+    q.submit([enc.finish()]);
+  }
+  await b.decisionRead.mapAsync(GPUMapMode.READ);
+  const decArr = new Uint32Array(b.decisionRead.getMappedRange().slice(0));
+  b.decisionRead.unmap();
+  await b.beffRead.mapAsync(GPUMapMode.READ);
+  const beffArr = new Float32Array(b.beffRead.getMappedRange().slice(0));
+  b.beffRead.unmap();
+
+  let beffSum = 0;
+  for (let i = 0; i < agentCount; i++) {
+    agents[i].nextAction = decArr[i];
+    agents[i].bEff = beffArr[i];
+    beffSum += beffArr[i];
+  }
+  avgBeff = agentCount > 0 ? beffSum / agentCount : 0;
+  lastFmcMs = performance.now() - t0;
+}
+
+/* ============================================================================
+ * DECISION DISPATCHER (GPU or CPU)
+ * ========================================================================== */
+
+async function runDecisions() {
+  if (gpu) {
+    await decideGPU();
+    // Re-run CPU FMC just for the selected agent so we can render the cone.
+    // Cost: one extra single-agent swarm per decision frame — negligible.
+    if (selectedAgentId !== null) {
+      const ag = agents.find(a => a.id === selectedAgentId);
+      if (ag) {
+        const foodSnap = foods.slice();
+        const agentSnap = agents.map(a => ({
+          id: a.id, x: a.x, y: a.y, sex: a.sex, age: a.age,
+        }));
+        const r = decideCPU(ag, foodSnap, agentSnap);
+        selectedWalkers = r.walkers;
+      } else {
+        selectedWalkers = null;
+      }
+    } else {
+      selectedWalkers = null;
+    }
+    return;
+  }
+  // CPU fallback path (single-thread JS)
+  const t0 = performance.now();
+  const foodSnap = foods.slice();
+  const agentSnap = agents.map(a => ({
+    id: a.id, x: a.x, y: a.y, sex: a.sex, age: a.age,
+  }));
+  let beffSum = 0;
+  let lastWalkers = null;
+  for (const ag of agents) {
+    const r = decideCPU(ag, foodSnap, agentSnap);
+    ag.nextAction = r.action;
+    ag.bEff = r.bEff;
+    beffSum += r.bEff;
+    if (selectedAgentId === ag.id) lastWalkers = r.walkers;
+  }
+  if (lastWalkers) selectedWalkers = lastWalkers;
+  avgBeff = agents.length > 0 ? beffSum / agents.length : 0;
+  lastFmcMs = performance.now() - t0;
+}
+
+let selectedWalkers = null;     // populated by CPU path; GPU path skips for perf
+
+/* ============================================================================
+ * GAME STEP (physics, eat, reproduce, age, die)
+ * ========================================================================== */
+
+function gameStep(dt) {
+  // Apply chosen action to each agent
+  for (const a of agents) {
+    const dir = ACTION_DIRS[a.nextAction || 0];
+    a.vx = dir[0] * AGENT_SPEED;
+    a.vy = dir[1] * AGENT_SPEED;
+    const dx = a.vx * dt;
+    const dy = a.vy * dt;
+    a.x = torWrap(a.x + dx, WORLD_W);
+    a.y = torWrap(a.y + dy, WORLD_H);
+    const moved = Math.sqrt(dx*dx + dy*dy);
+    a.energy -= MOVE_ENERGY_COST * moved;
+    a.energy -= ENERGY_DECAY * dt;
+    a.age += dt;
+  }
+  // Eat food
+  for (let i = foods.length - 1; i >= 0; i--) {
+    const f = foods[i];
+    for (const a of agents) {
+      const d = torDist([a.x, a.y], [f.x, f.y], WORLD_W, WORLD_H);
+      if (d < SIZE_RADII[sizeBucket(a.age)] + 4) {
+        a.energy = Math.min(a.energy + f.value, ENERGY_CAP);
+        foods.splice(i, 1);
+        break;
+      }
+    }
+  }
+  // Reproduction: NetLogo-style energy-split.
+  // Both parents must exceed REPRO_ENERGY_THRESHOLD; each gives a fraction
+  // of own energy to child (life history theory: reproduction is costly).
+  // Removed hard "OLD_AGE" sterility cap — fertility regulated by energy.
+  const newborns = [];
+  for (let i = 0; i < agents.length; i++) {
+    const A = agents[i];
+    if (A.age < FERTILE_MIN_AGE) continue;
+    if (A.energy < REPRO_ENERGY_THRESHOLD) continue;
+    if ((A.age - A.lastReproAge) < REPRO_COOLDOWN_AGE) continue;
+    for (let j = i + 1; j < agents.length; j++) {
+      const B = agents[j];
+      if (B.sex === A.sex) continue;
+      if (B.age < FERTILE_MIN_AGE) continue;
+      if (B.energy < REPRO_ENERGY_THRESHOLD) continue;
+      if ((B.age - B.lastReproAge) < REPRO_COOLDOWN_AGE) continue;
+      const dContact = SIZE_RADII[sizeBucket(A.age)] + SIZE_RADII[sizeBucket(B.age)] + 2;
+      const d = torDist([A.x, A.y], [B.x, B.y], WORLD_W, WORLD_H);
+      if (d < dContact) {
+        // Energy split: each parent contributes a fraction of OWN energy.
+        const giftA = A.energy * REPRO_OFFSPRING_FRACTION;
+        const giftB = B.energy * REPRO_OFFSPRING_FRACTION;
+        const childEnergy = (giftA + giftB) * REPRO_TRANSMISSION_EFF;
+        A.energy -= giftA;
+        B.energy -= giftB;
+        A.lastReproAge = A.age;
+        B.lastReproAge = B.age;
+        const cx = (A.x + B.x) / 2 + rand(-8, 8);
+        const cy = (A.y + B.y) / 2 + rand(-8, 8);
+        const childSex = Math.random() < 0.5 ? 0 : 1;
+        newborns.push(spawnAgent(
+          torWrap(cx, WORLD_W), torWrap(cy, WORLD_H),
+          childSex, childEnergy, 0,
+        ));
+        totalBirths++;
+        break;
+      }
+    }
+  }
+  for (const n of newborns) agents.push(n);
+  // Death
+  for (let i = agents.length - 1; i >= 0; i--) {
+    const a = agents[i];
+    if (a.energy <= 0 || a.age > MAX_AGE) {
+      if (selectedAgentId === a.id) selectedAgentId = null;
+      agents.splice(i, 1);
+      totalDeaths++;
+    }
+  }
+  // Spawn food at configured rate
+  const expected = cfg.foodRate * dt;
+  let spawn = Math.floor(expected);
+  if (Math.random() < (expected - spawn)) spawn += 1;
+  for (let i = 0; i < spawn; i++) {
+    if (foods.length >= MAX_FOOD) break;
+    foods.push(spawnFood(rand(0, WORLD_W), rand(0, WORLD_H)));
+  }
+}
+
+/* ============================================================================
+ * RENDER
+ * ========================================================================== */
+
+const canvas = document.getElementById('world');
+const ctx = canvas.getContext('2d');
+
+function render() {
+  ctx.fillStyle = '#050505';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Grid hint
+  ctx.strokeStyle = '#0f0f1a';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < canvas.width; x += 90) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+  }
+  for (let y = 0; y < canvas.height; y += 70) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+  }
+
+  // Food
+  ctx.fillStyle = '#fff8b0';
+  for (const f of foods) {
+    ctx.beginPath();
+    ctx.arc(f.x, f.y, 3, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Selected agent's walker cloud (CPU path only — we skip GPU readback for perf)
+  if (selectedAgentId !== null && selectedWalkers) {
+    const w = selectedWalkers;
+    for (let i = 0; i < w.wx.length; i++) {
+      if (!w.alive[i]) continue;
+      const lab = w.labels[i];
+      const hue = (lab * 40) % 360;
+      ctx.fillStyle = `hsla(${hue}, 80%, 60%, 0.35)`;
+      ctx.beginPath();
+      ctx.arc(w.wx[i], w.wy[i], 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  // Agents
+  for (const a of agents) {
+    const r = SIZE_RADII[sizeBucket(a.age)];
+    const isFertile = (
+      a.age >= FERTILE_MIN_AGE &&
+      a.energy >= REPRO_ENERGY_THRESHOLD &&
+      (a.age - a.lastReproAge) >= REPRO_COOLDOWN_AGE
+    );
+    const baseColor = a.sex === 0 ? '#3b82f6' : '#ec4899';
+    ctx.fillStyle = baseColor;
+    ctx.strokeStyle = isFertile ? '#facc15' : '#1a1a1a';
+    ctx.lineWidth = isFertile ? 2 : 1;
+    ctx.beginPath();
+    ctx.arc(a.x, a.y, r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    // Energy bar
+    const barW = r * 2;
+    const enFrac = clamp(a.energy / ENERGY_CAP, 0, 1);
+    ctx.fillStyle = '#222';
+    ctx.fillRect(a.x - r, a.y - r - 6, barW, 2);
+    ctx.fillStyle = enFrac > 0.5 ? '#4ade80' : (enFrac > 0.2 ? '#f59e0b' : '#ef4444');
+    ctx.fillRect(a.x - r, a.y - r - 6, barW * enFrac, 2);
+    if (a.id === selectedAgentId) {
+      ctx.strokeStyle = '#ffd700';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(a.x, a.y, r + 4, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    // Action arrow
+    const dir = ACTION_DIRS[a.nextAction || 0];
+    if (dir[0] !== 0 || dir[1] !== 0) {
+      ctx.strokeStyle = '#ffffff60';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(a.x + dir[0] * (r + 6), a.y + dir[1] * (r + 6));
+      ctx.stroke();
+    }
+  }
+}
+
+/* ============================================================================
+ * UI / STATS
+ * ========================================================================== */
+
+function updateStats() {
+  document.getElementById('s-pop').textContent = agents.length;
+  document.getElementById('s-food').textContent = foods.length;
+  let eSum = 0, aSum = 0;
+  for (const a of agents) { eSum += a.energy; aSum += a.age; }
+  const n = Math.max(1, agents.length);
+  document.getElementById('s-energy').textContent = (eSum / n).toFixed(1);
+  document.getElementById('s-age').textContent = (aSum / n).toFixed(1);
+  document.getElementById('s-beff').textContent = avgBeff.toFixed(2);
+  document.getElementById('s-births').textContent = totalBirths;
+  document.getElementById('s-deaths').textContent = totalDeaths;
+  document.getElementById('s-fmcms').textContent = lastFmcMs.toFixed(1);
+  // Selected agent
+  const selInfo = document.getElementById('sel-info');
+  if (selectedAgentId !== null) {
+    const a = agents.find(x => x.id === selectedAgentId);
+    if (a) {
+      const sb = sizeBucket(a.age);
+      selInfo.innerHTML = `
+        <span class="pill">id ${a.id}</span>
+        <span class="pill">${a.sex === 0 ? '♂' : '♀'}</span>
+        <span class="pill">${SIZE_NAMES[sb]}</span><br>
+        età ${a.age.toFixed(1)}s · energia ${a.energy.toFixed(0)} · b<sub>eff</sub> ${a.bEff.toFixed(2)}<br>
+        ultima azione: ${a.nextAction} ${formatAction(a.nextAction)}
+      `;
+    }
+  } else {
+    selInfo.textContent = 'click su un agente nel canvas';
+  }
+}
+
+function formatAction(a) {
+  return ['·','↑','↗','→','↘','↓','↙','←','↖'][a] || '?';
+}
+
+/* ============================================================================
+ * MAIN LOOP
+ * ========================================================================== */
+
+async function tick() {
+  if (!isPlaying) return;
+  const now = performance.now();
+  const dt = Math.min((now - lastTickTime) / 1000, 0.1);
+  lastTickTime = now;
+
+  // Decision at configured Hz
+  const decideInterval = 1000 / cfg.decideHz;
+  if (now - lastDecisionTime > decideInterval) {
+    lastDecisionTime = now;
+    await runDecisions();
+  }
+  gameStep(dt);
+  render();
+  updateStats();
+  frameCount++;
+  requestAnimationFrame(tick);
+}
+
+async function singleStep() {
+  await runDecisions();
+  gameStep(1.0 / 30);
+  render();
+  updateStats();
+}
+
+/* ============================================================================
+ * EVENTS
+ * ========================================================================== */
+
+canvas.addEventListener('click', (ev) => {
+  const rect = canvas.getBoundingClientRect();
+  const sx = canvas.width / rect.width;
+  const sy = canvas.height / rect.height;
+  const x = (ev.clientX - rect.left) * sx;
+  const y = (ev.clientY - rect.top) * sy;
+  let bestId = null, bestD = 1e9;
+  for (const a of agents) {
+    const d = torDist([x, y], [a.x, a.y], WORLD_W, WORLD_H);
+    const r = SIZE_RADII[sizeBucket(a.age)] + 6;
+    if (d < r && d < bestD) { bestD = d; bestId = a.id; }
+  }
+  selectedAgentId = bestId;
+  selectedWalkers = null;
+  updateStats();
+  render();
+});
+
+document.getElementById('play').addEventListener('click', (e) => {
+  isPlaying = !isPlaying;
+  e.target.textContent = isPlaying ? '⏸ pausa' : '▶ play';
+  e.target.classList.toggle('active', isPlaying);
+  if (isPlaying) {
+    lastTickTime = performance.now();
+    tick();
+  }
+});
+
+document.getElementById('step').addEventListener('click', singleStep);
+
+document.getElementById('reset').addEventListener('click', () => {
+  isPlaying = false;
+  document.getElementById('play').textContent = '▶ play';
+  document.getElementById('play').classList.remove('active');
+  seedWorld(cfg.initPop);
+  render();
+  updateStats();
+});
+
+document.getElementById('seed').addEventListener('click', () => {
+  for (let i = 0; i < 10; i++) {
+    agents.push(spawnAgent(
+      rand(0, WORLD_W), rand(0, WORLD_H),
+      Math.random() < 0.5 ? 0 : 1,
+      cfg.initEnergy, rand(0, 8),
+    ));
+  }
+  updateStats();
+  render();
+});
+
+function bindRange(id, key, scale = 1, fmt = (v) => v) {
+  const el = document.getElementById(id);
+  const lab = document.getElementById(id + '-v');
+  const update = () => {
+    cfg[key] = parseFloat(el.value) * scale;
+    if (lab) lab.textContent = fmt(cfg[key]);
+  };
+  el.addEventListener('input', update);
+  update();
+}
+
+bindRange('nWalkers', 'N', 1, v => v.toFixed(0));
+bindRange('mTicks', 'M', 1, v => v.toFixed(0));
+bindRange('alpha', 'alpha', 0.01, v => v.toFixed(2));
+bindRange('beta', 'beta', 0.01, v => v.toFixed(2));
+bindRange('foodRate', 'foodRate', 1, v => v.toFixed(0));
+bindRange('initEnergy', 'initEnergy', 1, v => v.toFixed(0));
+bindRange('decideHz', 'decideHz', 1, v => v.toFixed(0));
+
+document.getElementById('initPop').addEventListener('change', (e) => {
+  cfg.initPop = parseInt(e.target.value) || 20;
+});
+
+/* ============================================================================
+ * INIT
+ * ========================================================================== */
+
+(async () => {
+  const status = document.getElementById('gpu-status');
+  try {
+    gpu = await initGPU();
+  } catch (e) {
+    console.error('GPU init failed', e);
+    gpu = null;
+  }
+  if (gpu) {
+    status.textContent = `✓ WebGPU attivo — ${gpu.device.adapterInfo?.architecture || 'GPU compute'}`;
+    status.className = 'ok';
+  } else {
+    status.textContent = '⚠ WebGPU non disponibile — fallback CPU (apri in Chrome 113+ per GPU)';
+    status.className = 'fallback';
+  }
+  seedWorld(cfg.initPop);
+  render();
+  updateStats();
+})();
+</script>
+
+</body>
+</html>

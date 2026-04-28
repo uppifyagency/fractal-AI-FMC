@@ -252,6 +252,24 @@ def virtual_reward(walkers, rewards, alpha=1.0, beta=1.0):
 | α = 0 | "Common Sense" / Empowerment | No reward weighting; pure diversity. Drone autopilot mode of paper §6.3 |
 | β = 0 | No exploration | Walkers collapse to high-R region (paper §4.5 lemma 4) |
 
+#### 4.2.1 Caveat — `α_code ≠ α_Gibbs` (post-`relativize` amplification)
+
+Deep dive [`01_cloning_mathematics.md`](../../../work/02_deep_dives/01_cloning_mathematics.md) Theorem 3 states the stationary walker distribution is the Gibbs measure $\pi^*(x) \propto R(x)^\alpha$. **But this α is the exponent applied to RAW reward $R$, not to relativized reward $\hat{R}$.**
+
+Because the plugin (and `FractalAI_old`) computes `VR = relativize(R)^α × relativize(D)^β`, the actual Gibbs target reached is $\pi^*(x) \propto \hat{R}(x)^\alpha$, where $\hat{R}$ is the post-`relativize` value. Since `relativize` is concave-on-positives ($\frac{d\hat{R}}{dz} = 1/(1+z)$ for $z > 0$) and convex-on-negatives ($\frac{d\hat{R}}{dz} = e^z$ for $z \le 0$), it **stretches** the bottom and **compresses** the top of the reward distribution. This makes the *effective* inverse temperature applied to raw $R$ larger than the nominal $\alpha$:
+
+$$\alpha_{\text{eff}}(\alpha, \sigma_R) > \alpha \quad \text{for } \alpha > 0 \text{ and } \sigma_R \text{ moderate}$$
+
+**Numerical evidence** ([`work/04_mathematical_tests/`](../../../work/04_mathematical_tests/) Test A, unimodal Gaussian reward): the empirical walker distribution best matches the analytic Gibbs target $R^1/Z$ at code-α = **0.5**, not at code-α = 1.0. At code-α = 1, walkers are over-concentrated relative to $R$ — the swarm behaves with $\alpha_{\text{eff}} \approx 1.5$-2 in raw-$R$ terms.
+
+**Practical implication** for the plugin and Atari runs:
+
+- `α = 1` in the code is the "standard" choice, but the swarm acts more aggressively (more exploitation) than a literal Gibbs at $\alpha = 1$ would.
+- To match the paper's eq. (3) literal claim $P_S \propto R$ on raw reward, use `α ≈ 0.5`.
+- The default `α = 1` is pragmatically correct (matches paper benchmarks and `FractalAI_old`); just don't expect $\pi^* \propto R^1$ exactly — the implementation enforces $\pi^* \propto \hat{R}^1$, which is sharper.
+
+This subtlety is not a bug: the paper's $\alpha = 1$ is the *code knob*, not the Gibbs exponent on raw $R$. But it matters for theoretical interpretation, especially when comparing FMC to other Gibbs-like samplers (Metropolis, parallel tempering) where the inverse temperature is on raw energy.
+
 ### 4.3 Why distance is computed against a random partner (O(N) stochastic)
 
 Paper §4.5: instead of computing all O(N²) pairwise distances, compute one distance per walker against a random partner. This is an unbiased Monte Carlo estimator of the local density inverse.

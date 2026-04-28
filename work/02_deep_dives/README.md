@@ -12,6 +12,8 @@
 | [`04_relativize_axiomatics.md`](04_relativize_axiomatics.md) | Caratterizzazione assiomatica della trasformazione `relativize` | 📝 outline | Book #1 §2.2.3 (12-13) |
 | [`05_smc_particle_filter_view.md`](05_smc_particle_filter_view.md) | FMC come Sequential Monte Carlo con peso virtual reward | ✅ scritto | Book #1 §4.4 (36-39) |
 | [`06_book2_badger_fractal_memory.md`](06_book2_badger_fractal_memory.md) | Book #2 (AGI Structure) + Fractal Memory: Badger di sciami nidificati, learning as collapse, FM su dataset/sinapsi/NN | ✅ scritto | Book #2 (V0.2), Hives, Fractal Memory Slide |
+| [`07_wright_fisher_mapping.md`](07_wright_fisher_mapping.md) | FMC come processo neutro Wright-Fisher; falsifica empirica del "magic 6" branching di Sergio: $b_{\text{eff}}^* \approx 1.53\,K^{0.6}$ (dipende da K). Sweep numerico in [`work/07_sergio_branching_sweep/REPORT.md`](../07_sergio_branching_sweep/REPORT.md). | ✅ scritto | n/a (analisi empirica originale; correlazione vs Radient 2026 cap.16) |
+| [`08_video_seminar_extracted_insights.md`](08_video_seminar_extracted_insights.md) | Estrazione e controverificazione delle formule e nozioni dal video-seminario su slide di Sergio (`VideoTranscriptSergio.md`); cross-entropy collapse, metafora minatore, coscienza tripla, discrepanza efficienza vs MCTS. **§7 contiene verifica numerica controllata di F12 (Gibbs equilibrium, log-Pearson 0.77 a α=1) e F11 (raw_signed produce "fearful agent" come predetto da Sergio).** Codice in [`work/04_mathematical_tests/`](../04_mathematical_tests/). | ✅ scritto + test | Confronto vs paper §2.6, §3, §4.4-5, §5; vs Radient 2026; vs THEORY/ALGORITHM |
 
 ## Convenzioni
 
@@ -31,3 +33,5 @@ In ordine di valore-per-tempo:
 4. **02 — Active Inference**. Lega Fractal AI alla cornice di Friston, oggi dominante in neuroscienze computazionali.
 5. **04 — Relativize axiomatics**. Risolve il "buco" assiomatico segnalato in §10.3 di [`ANALISIS.md`](../../ANALISIS.md).
 6. **03 — Standard Model of Cognition**. Più speculativo; richiede maggior tempo di studio dei docs `fragile-rl`.
+7. **07 — Wright-Fisher mapping** (✅ scritto). Falsifica empirica di un claim specifico di Sergio (Radient cap.16). Lavoro originale, non derivato.
+8. **08 — Video seminario** (✅ scritto + test). Sintesi della seconda fonte orale di Sergio; incrocia paper, Radient e video; chiude alcune discrepanze, ne lascia aperte altre (vedi tabella in [`CLAUDE.md`](../../CLAUDE.md)).
