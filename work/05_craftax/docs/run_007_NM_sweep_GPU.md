@@ -4,7 +4,7 @@
 **Setup**: Craftax-Classic-Symbolic-v1, FMC v4_p02_delta config, scaling sweep N x M.
 **Hardware**: MacBook Apple M1 Pro, JAX 0.10.0, **CPU backend** (JAX Metal blocca Craftax import per `default_memory_space` non implementato — vedi note tecniche).
 **Branch**: `main`
-**Budget**: 9 cell strategiche x 3 seed = 27 episodi, max_steps=500. **Wall totale: 37.4 min CPU**.
+**Budget**: 9 cell strategiche x **5 seed** = **45 episodi**, max_steps=500. **Wall totale: 66.8 min CPU** (3-seed batch + 2-seed extension).
 
 ## TL;DR
 
@@ -12,17 +12,21 @@ Decision-gate test del 2026-04-29: l'ipotesi era *"M=20 e' troppo corto per la c
 `iron_pickaxe -> diamond`, scalare M >> 20 sblocca i 4 blocker"*.
 
 Sweep N in {128, 256, 512} x M in {20, 40, 80, 160} su Craftax-Classic, plus baseline
-N=64,M=20 + corner (128,80) e (512,160). 27 episodi totali.
+N=64,M=20 + corner (128,80) e (512,160). **45 episodi totali (5 seed per cella)**.
 
-**Verdetto: HYPOTHESIS FALSIFIED**.
+**Verdetto: HYPOTHESIS FALSIFIED — definitivamente, 0/45 blocker fired.**
 
-- **Zero blocker achievements fired** in tutte le 9 celle, anche a (N=512, M=160).
+- **Zero blocker achievements fired** in tutte le 9 celle, anche a (N=512, M=160). Su 45 episodi totali.
 - I 4 achievement (`collect_diamond, make_iron_pickaxe, make_iron_sword, eat_plant`)
   restano fuori orizzonte FMC-vanilla anche con compute 64x.
-- Best score: N=128, M=20 a **21.79%** (3 seed) — replica il baseline storico 21.87%
-  (30 seed CI95, run 004) entro 0.08 pp.
-- Aumentare M ATTIVAMENTE peggiora oltre M=80 (M=160 cells = 11.7% range).
-- Aumentare N da solo non aiuta (N=512,M=20 = 14.54%, peggio del baseline N=128,M=20).
+- Best score: **N=128, M=20 a 27.23%** (5 seed, mean_ach 11.60 +/-3.95 CI95) — supera
+  baseline storico 21.87% (run 004, 30 seed) di +5.4 pp. **Trovata incidentale**: N=128
+  potrebbe essere migliore di N=64 a parita' di M=20, ma la variance e' troppo alta a
+  5 seed per concludere; un 30-seed validation andrebbe fatto separatamente.
+- Aumentare M ATTIVAMENTE peggiora oltre M=80 (M=160 cells = 17-18% range vs M=20-80
+  che sta nel 17-27% range).
+- Aumentare N da solo non aiuta: N=512,M=20 = 14.67% (peggior cella!), peggio del
+  baseline N=128,M=20.
 
 **Implicazione**: il bottleneck NON e' planning horizon. Pivot necessario verso strutture
 algoritmiche nuove (macro-actions / hybrid FMC+NN / Badger Level-1).
@@ -82,25 +86,37 @@ risultati e' attribuibile alla configurazione (N, M) o al seed, non a errori di 
 
 ## Risultati
 
-### Cell results (3 seeds each)
+### Cell results (5 seeds each, sorted by Crafter score)
 
-|   N |   M | Seeds | Crafter % | mean_ach | mean_steps | wall_s |
-|----:|----:|------:|----------:|---------:|-----------:|-------:|
-|  64 |  20 |     3 |     17.14 |     9.00 |      179.0 |   14.4 |
-| **128** |  **20** | **3** | **21.79** ★ | **10.33** |    203.0 |   22.0 |
-| 128 |  80 |     3 |     13.53 |     8.00 |      148.7 |   54.1 |
-| 256 |  20 |     3 |     14.06 |     8.67 |      180.7 |   30.5 |
-| 256 |  40 |     3 |     11.65 |    10.00 |      136.7 |   44.8 |
-| 256 |  80 |     3 |     20.70 |     9.67 |      140.3 |   84.1 |
-| 256 | 160 |     3 |     11.76 |     8.00 |      113.7 |  128.7 |
-| 512 |  20 |     3 |     14.54 |     9.00 |      158.0 |   46.9 |
-| 512 | 160 |     3 |     11.72 |    10.33 |      156.0 |  322.1 |
+|   N |   M | Seeds | Crafter % | mean_ach | CI95 (ach) | mean_steps | wall_s |
+|----:|----:|------:|----------:|---------:|----------:|-----------:|-------:|
+| **128** |  **20** | **5** | **27.23** ★ | **11.60** | +/-3.95 |  207.4 |   22.5 |
+| 256 |  80 |     5 |     24.49 |    10.20 |     +/-4.53 |  180.0 |  106.3 |
+|  64 |  20 |     5 |     21.53 |    10.20 |     +/-4.31 |  209.2 |   15.9 |
+| 256 |  40 |     5 |     18.38 |    10.60 |     +/-2.81 |  144.4 |   46.3 |
+| 256 | 160 |     5 |     18.19 |     8.80 |     +/-3.06 |  154.4 |  175.1 |
+| 256 |  20 |     5 |     17.68 |     9.60 |     +/-4.58 |  183.6 |   30.7 |
+| 512 | 160 |     5 |     17.37 |    10.40 |     +/-1.00 |  146.8 |  303.2 |
+| 128 |  80 |     5 |     16.99 |     9.20 |     +/-3.64 |  151.2 |   55.2 |
+| 512 |  20 |     5 |     14.67 |     9.20 |     +/-3.79 |  161.2 |   46.9 |
 
-★ N=128, M=20 e' il best (21.79%) e replica il baseline storico (21.87%, 30 seeds) entro
-0.08 punti percentuali. Conferma che il setup e' calibrato e che il "ceiling" di FMC
-vanilla zero-training su Craftax-Classic resta saldo a ~22%.
+★ N=128, M=20 e' il best (**27.23%**) e supera il baseline storico (21.87%, 30 seeds) di
++5.4 pp. Tre interpretazioni possibili:
+1. **Stochastic outlier** — 5 seed con CI95 sull'ach +/-3.95 lascia spazio a ~+/-3 pp
+   sul Crafter score; il vero valore potrebbe essere tra 23-31% e cadere parzialmente
+   dentro la vecchia CI di 21.87%.
+2. **Vero piccolo improvement N=64 -> N=128** — gia' la SMC theory predice O(1/sqrt(N))
+   sull'errore; raddoppiare N da 64 a 128 dovrebbe ridurre noise di ~1.41x. Sotto
+   questa lettura il jump 21.87 -> 27.23 e' coerente.
+3. **Cambio dei seed dal range 0-29 (storico) al range 42-46 (run 007)** introduce
+   variabilita' del map seed, dato che Craftax genera mappe procedurali. Non e'
+   confrontabile direttamente con storia.
 
-### Decision Gate — i 4 blocker hanno mai unlocked?
+Il "ceiling" FMC vanilla zero-training su Craftax-Classic e' saldo nel range 22-27%
+con 5 seed. Per una conferma rigorosa serve un 30-seed validation a (N=128, M=20)
+specifico — work pendente, **non bloccante per la decision gate**.
+
+### Decision Gate — i 4 blocker hanno mai unlocked? (5 seed each)
 
 | N | M | collect_diamond | make_iron_pickaxe | make_iron_sword | eat_plant |
 |---|---|---|---|---|---|
@@ -114,19 +130,26 @@ vanilla zero-training su Craftax-Classic resta saldo a ~22%.
 | 512 | 20 | . | . | . | . |
 | **512** | **160** | **.** | **.** | **.** | **.** |
 
-**Tutti zeri. 0/27 episodi con un blocker fired. Ipotesi falsificata.**
+**Tutti zeri. 0/45 episodi con un blocker fired. Ipotesi definitivamente falsificata.**
 
-### Scaling N e M — pattern non-monotonico
+### Scaling N e M — pattern non-monotonico (5-seed)
 
-Tre osservazioni controintuitive contro la SMC theory standard:
+Tre osservazioni controintuitive contro la SMC theory standard, **confermate a 5 seed**:
 
-1. **N=128, M=20 (21.79%) batte N=512, M=160 (11.72%)** — compute 64x produce score 1.86x peggiore.
+1. **N=128, M=20 (27.23%) batte N=512, M=160 (17.37%)** — compute 64x produce score
+   1.57x peggiore.
 
-2. **Curva su asse M @ N=256 e' bimodale**: M=20 (14%) -> M=40 (12%) -> M=80 (**21%**) -> M=160 (12%).
-   - M=80 e' l'isolato sweet spot, ma battuto da N=128 con M=20 a costo 4x inferiore.
+2. **Curva su asse M @ N=256 e' bimodale**: M=20 (17.7%) -> M=40 (18.4%) -> M=80
+   (**24.5%**) -> M=160 (18.2%).
+   - M=80 e' uno sweet spot ma battuto da N=128 con M=20 a costo 4-5x inferiore
+     (22.5s vs 106s wall).
 
-3. **Curva su asse N @ M=20 e' degradante**: N=64 (17%) -> N=128 (**22%**) -> N=256 (14%) -> N=512 (15%).
-   - Aggiungere walker oltre 128 peggiora.
+3. **Curva su asse N @ M=20 e' bimodale**: N=64 (21.5%) -> N=128 (**27.2%**) ->
+   N=256 (17.7%) -> N=512 (14.7%).
+   - **Aggiungere walker oltre 128 PEGGIORA monotonicamente**. Questa e' una
+     anomalia significativa rispetto a Del Moral (2004) Th. 7.4.4 — possibile
+     spiegazione: il *clip* di `relativize` su un vettore con N=512 e' troppo
+     stringente, comprimendo la varianza necessaria al cloning Metropolis-Hastings.
 
 ### Diagnosi del fenomeno
 
@@ -148,51 +171,35 @@ Questo conferma il **Caveat al Teorema 1** del MATH_CANON: la costante $c_t$ esp
 $t$ grande quando il mixing rate del kernel e' alto. Su Craftax K=17 con M=160 il mixing
 e' troppo alto per FMC-vanilla scaled.
 
-### Achievement frequency heatmap (rate di unlock su 3 seed)
+### Achievement frequency heatmap (5 seed)
 
-|           achievement | N64M20 | N128M20 | N128M80 | N256M20 | N256M40 | N256M80 | N256M160 | N512M20 | N512M160 |
-|---|---|---|---|---|---|---|---|---|---|
-|          collect_wood |   1.00 |    1.00 |    1.00 |    1.00 |    1.00 |    1.00 |     1.00 |    1.00 |     1.00 |
-|           place_table |   0.67 |    0.67 |    0.67 |    0.67 |    1.00 |    0.67 |     0.67 |    0.67 |     1.00 |
-|               eat_cow |      . |    0.33 |       . |    0.33 |       . |    0.33 |        . |    0.33 |        . |
-|       collect_sapling |   0.67 |    1.00 |    0.67 |    1.00 |    1.00 |    0.67 |     0.67 |    1.00 |     1.00 |
-|         collect_drink |   0.33 |    0.67 |    0.33 |       . |       . |    1.00 |     0.67 |    0.33 |     0.33 |
-|     make_wood_pickaxe |   0.67 |    0.67 |    0.67 |    0.67 |    1.00 |    0.67 |     0.67 |    0.67 |     1.00 |
-|    make_stone_pickaxe |   0.33 |    0.67 |    0.33 |    0.33 |    0.67 |    0.33 |     0.33 |    0.33 |     0.67 |
-|     **make_iron_pickaxe** |      . |       . |       . |       . |       . |       . |        . |       . |        . |
-|       make_wood_sword |   0.33 |    0.33 |    0.33 |    0.33 |    0.67 |    0.33 |     0.33 |    0.33 |     0.33 |
-|      make_stone_sword |   0.33 |    0.33 |    0.33 |    0.33 |    0.33 |    0.33 |     0.33 |    0.33 |        . |
-|       **make_iron_sword** |      . |       . |       . |       . |       . |       . |        . |       . |        . |
-|           place_plant |   0.67 |    1.00 |    0.67 |    1.00 |    1.00 |    0.67 |     0.67 |    1.00 |     1.00 |
-|         defeat_zombie |   0.33 |    0.33 |    0.33 |    0.33 |       . |    0.33 |        . |    0.33 |        . |
-|         collect_stone |   0.67 |    0.67 |    0.67 |    0.67 |    1.00 |    0.67 |     0.67 |    0.67 |     1.00 |
-|           place_stone |   0.67 |    0.67 |    0.67 |    0.67 |    0.67 |    0.67 |     0.67 |    0.67 |     1.00 |
-|             **eat_plant** |      . |       . |       . |       . |       . |       . |        . |       . |        . |
-|       defeat_skeleton |      . |       . |       . |       . |       . |    0.33 |        . |       . |        . |
-|          collect_iron |   0.33 |    0.33 |       . |       . |       . |       . |        . |       . |        . |
-|          collect_coal |   0.67 |    0.67 |    0.33 |    0.33 |    0.33 |    0.67 |     0.33 |    0.67 |     0.67 |
-|         place_furnace |   0.67 |    0.67 |    0.67 |    0.67 |    0.67 |    0.67 |     0.67 |    0.67 |     1.00 |
-|       **collect_diamond** |      . |       . |       . |       . |       . |       . |        . |       . |        . |
-|               wake_up |   0.67 |    0.33 |    0.33 |    0.33 |    0.67 |    0.33 |     0.33 |       . |     0.33 |
+Per i dati esatti per cella vedi
+[`results/run007_strategic_5seed.json`](../results/run007_strategic_5seed.json),
+campo `achievement_freq`. Pattern critici:
 
-`.` = 0 unlock su 3 seed.
+- **collect_wood**, **place_table**, **make_wood_pickaxe**, **collect_stone**,
+  **place_stone**: rate ~1.0 in tutte le celle. Sono i primi achievement della
+  chain, sempre raggiunti.
+- **collect_iron**: rate al baseline (N=64,M=20) ~0.4, scende a 0.0-0.2 in celle
+  N>=256. **Scalare oltre il baseline rende PIU' difficile trovare iron, non piu'
+  facile** — la proximity bonus delta-mode degrada con M (signal/noise come
+  $O(1/\sqrt{M})$).
+- **collect_diamond, make_iron_pickaxe, make_iron_sword, eat_plant**: rate = 0
+  (zero su zero) in **tutte** le 9 celle, **tutti** i 5 seed. Decisione netta.
+- **defeat_skeleton, eat_cow**: rate sporadici (0.0-0.4), non sistematicamente
+  scalabili.
 
-**Osservazione critica**: `collect_iron` rate DROPPED da 0.33 (baseline N=64,M=20)
-a 0 in cells N>=256 e in cells M>20. Cioe', **scalare oltre il baseline rende PIU'
-difficile trovare iron, non piu' facile**. Questo conferma che la signal-to-noise della
-proximity bonus delta-mode degrada con M, non migliora.
-
-### Cost scaling (mean wall sec per episode)
+### Cost scaling (mean wall sec per episode, 5-seed mean)
 
 |  N\M |     20 |     40 |     80 |    160 |
 |-----:|-------:|-------:|-------:|-------:|
-|   64 |   14.4 |      - |      - |      - |
-|  128 |   22.0 |      - |   54.1 |      - |
-|  256 |   30.5 |   44.8 |   84.1 |  128.7 |
-|  512 |   46.9 |      - |      - |  322.1 |
+|   64 |   15.9 |      - |      - |      - |
+|  128 |   22.5 |      - |   55.2 |      - |
+|  256 |   30.7 |   46.3 |  106.3 |  175.1 |
+|  512 |   46.9 |      - |      - |  303.2 |
 
 Scaling osservato: O(N^0.6 * M^1.0) approssimativamente. La cella massima (512, 160)
-costa ~22x del baseline. Pareto-frontier vinto da (128, 20) a costo basso.
+costa ~19x del baseline. Pareto-frontier vinto da (128, 20) a costo basso (22.5s).
 
 ## Verdict
 
@@ -279,16 +286,21 @@ Bug display Crafter score (100x) corretto pre-sweep.
 ```
 work/05_craftax/
 +-- scripts/
-|   +-- fmc_craftax_v4.py             # invariato (config base)
-|   +-- test_fmc_theory.py            # 15 unit test teoria-codice
-|   +-- sweep_run007_NM_GPU.py        # harness strategic 9-cell
-|   +-- analyze_run007.py             # decision-gate analyzer
+|   +-- fmc_craftax_v4.py                 # invariato (config base)
+|   +-- test_fmc_theory.py                # 15 unit test teoria-codice
+|   +-- sweep_run007_NM_GPU.py            # harness strategic 9-cell
+|   +-- analyze_run007.py                 # decision-gate analyzer (3-seed)
+|   +-- merge_run007.py                   # merge 3+2 batch -> 5-seed aggregate
 +-- results/
-|   +-- run007_strategic.json         # output sweep (raw + aggregato)
-|   +-- run007_strategic.log          # log live di stdout
-|   +-- run007_analysis.txt           # output analyzer formattato
+|   +-- run007_strategic.json             # batch 1: seeds 42,43,44 (27 ep)
+|   +-- run007_strategic_extended.json    # batch 2: seeds 45,46 (18 ep)
+|   +-- run007_strategic_5seed.json       # batch merged: 45 ep, 5 seed/cell
+|   +-- run007_strategic.log              # log batch 1
+|   +-- run007_strategic_extended.log     # log batch 2
+|   +-- run007_analysis.txt               # analyzer 3-seed
+|   +-- run007_analysis_5seed.txt         # analyzer 5-seed (final)
 +-- docs/
-    +-- run_007_NM_sweep_GPU.md       # questo file
+    +-- run_007_NM_sweep_GPU.md           # questo file
 ```
 
 ## Riferimenti
@@ -302,6 +314,13 @@ work/05_craftax/
 
 ---
 
-*Sweep completato 2026-04-29 21:30 CEST. Wall: 37.4 min CPU singolo. 27 episodi totali.
-Decision-gate verdetto: M-bottleneck **falsificato**. Pivot strutturale richiesto verso
+*Sweep completato in due batch:*
+- *Batch 1 (3 seeds 42,43,44 × 9 cells): 2026-04-29 21:30 CEST, 37.4 min CPU, 27 ep*
+- *Batch 2 (2 seeds 45,46 × 9 cells, extension): 2026-04-29 22:15 CEST, 29.5 min CPU, 18 ep*
+
+*Totale: 66.8 min CPU, 45 episodi a 5 seed/cell.*
+
+*Decision-gate verdetto: M-bottleneck **definitivamente falsificato** (0/45 blocker fired).
+Best cell N=128, M=20 a 27.23% (potenziale incidentale, +5.4 pp vs baseline storico —
+da validare con 30-seed run separato, non bloccante). Pivot strutturale richiesto verso
 macro-actions o hybrid FMC+NN. Vedi sezione "Path forward".*
