@@ -1,0 +1,2 @@
+game,n_seeds,N,M,obs_type,mean,std,ci95_lo,ci95_hi,min,max
+Boxing,5,30,15,ram,100.0,0.0,100.0,100.0,100.0,100.0

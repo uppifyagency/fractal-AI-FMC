@@ -155,15 +155,25 @@ Casi limite operativi (dal podcast cap. 16 e paper §4.2.3.3):
 - $\alpha = 1, \beta = 0$ — **greedy reward**: collassa a fitness-proportional resampling vanilla.
 - $\alpha = \beta = 1$ — default consigliato dal paper.
 
-### Definizione 4 — Cloning kernel
+### Definizione 4 — Cloning kernel (cloning rate, NOT probability)
 
 > Riferimenti: paper §4.2.4, deep dive [01 §1.2](../work/02_deep_dives/01_cloning_mathematics.md#12-probabilità-di-cloning), implementazione [`Swarm.clone_condition()`](../repos/FractalAI_old/fractalai/swarm.py#L511).
+>
+> ⚠️ **Nota terminologica (2026-04-28, P2b dell'audit DHDNA)**: il paper §4.2.4 chiama questa quantità *"probability of cloning"* ma — come riconosciuto dagli stessi autori (*"Please note that probability of cloning can be >1, feel free to clip it to 1"*, p.36) — **non è una probabilità nel senso matematico**: il caso 3 sotto ammette valori $> 1$ quando $\mathrm{VR}^{(k)} > 2 \cdot \mathrm{VR}^{(i)}$. È una **rate / intensità Metropolis-Hastings non normalizzata**. Il *clip* a $[0,1]$ non è opzionale — è la corretta interpretazione probabilistica. In questo documento usiamo il termine **"cloning rate"** $\rho_{\mathrm{clone}}$, riservando $P_{\mathrm{clone}} = \min(\rho_{\mathrm{clone}}, 1)$ alla probabilità effettiva di transizione.
 
-Il **cloning operator** $\mathcal{C}_t: (E \times A)^N \to (E \times A)^N$ è definito walker per walker. Sia $i$ il walker corrente e $k = \sigma_t(i)$ il partner casuale (per il cloning si usa una nuova permutazione, indipendente da quella usata per la distanza in Definizione 3). La probabilità che $i$ cloni $k$ è:
+Il **cloning operator** $\mathcal{C}_t: (E \times A)^N \to (E \times A)^N$ è definito walker per walker. Sia $i$ il walker corrente e $k = \sigma_t(i)$ il partner casuale (per il cloning si usa una nuova permutazione, indipendente da quella usata per la distanza in Definizione 3). Il **cloning rate** di $i$ verso $k$ è:
 
 $$
-\boxed{P_{\mathrm{clone}}(i \to k) = \begin{cases} 1 & \text{se } \mathrm{VR}^{(i)} = 0 \\ 0 & \text{se } \mathrm{VR}^{(k)} \leq \mathrm{VR}^{(i)} \\ \dfrac{\mathrm{VR}^{(k)} - \mathrm{VR}^{(i)}}{\mathrm{VR}^{(i)}} & \text{se } 0 < \mathrm{VR}^{(i)} < \mathrm{VR}^{(k)}. \end{cases}}
+\boxed{\rho_{\mathrm{clone}}(i \to k) = \begin{cases} 1 & \text{se } \mathrm{VR}^{(i)} = 0 \\ 0 & \text{se } \mathrm{VR}^{(k)} \leq \mathrm{VR}^{(i)} \\ \dfrac{\mathrm{VR}^{(k)} - \mathrm{VR}^{(i)}}{\mathrm{VR}^{(i)}} & \text{se } 0 < \mathrm{VR}^{(i)} < \mathrm{VR}^{(k)} \end{cases}}
 $$
+
+e la **probabilità effettiva di cloning** è il clip:
+
+$$
+P_{\mathrm{clone}}(i \to k) = \min\!\big(\rho_{\mathrm{clone}}(i \to k),\, 1\big) \in [0, 1].
+$$
+
+In implementazione, $\rho_{\mathrm{clone}}$ è confrontato direttamente con $u \sim \mathrm{Unif}(0,1)$: se $\rho > 1$, il clone avviene sempre (equivalente a $P = 1$).
 
 Quando il clone avviene, **sia lo stato sia l'etichetta** del walker $i$ vengono sovrascritti da quelli di $k$:
 
@@ -171,7 +181,7 @@ $$
 (W^{(i)}, \ell^{(i)}) \leftarrow (W^{(k)}, \ell^{(k)}).
 $$
 
-Questa è la regola Metropolis-Hastings con peso $\mathrm{VR}$ — il rapporto $\frac{\mathrm{VR}^{(k)} - \mathrm{VR}^{(i)}}{\mathrm{VR}^{(i)}} = \frac{\mathrm{VR}^{(k)}}{\mathrm{VR}^{(i)}} - 1$ è esattamente la quota MH troncata a $[0, 1]$.
+Questa è la regola Metropolis-Hastings con peso $\mathrm{VR}$ — il rapporto $\frac{\mathrm{VR}^{(k)} - \mathrm{VR}^{(i)}}{\mathrm{VR}^{(i)}} = \frac{\mathrm{VR}^{(k)}}{\mathrm{VR}^{(i)}} - 1$ è esattamente la quota MH che, una volta clippata, dà la probabilità di accettazione standard $P_{\mathrm{MH}} = \min(\mathrm{VR}^{(k)}/\mathrm{VR}^{(i)}, 1)$.
 
 > **Differenza con SMC standard**: il resampling FMC è **pairwise** (ogni walker si confronta con un singolo partner), non *systematic* o *multinomial*. Per $N \to \infty$ le due distribuzioni coincidono (Lemma in deep dive 05 §2.3.1), ma le proprietà di varianza finita sono diverse. È *embarrassingly parallel*.
 
@@ -319,18 +329,22 @@ Spiegazione: con $\beta$ alto, $\widehat{D}^\beta$ post-relativize amplifica le 
 
 > Una congettura, in questo documento, è una proposizione plausibile **per cui esiste un criterio di falsificabilità esplicito** — non un'opinione. Lo scopo di questa sezione è permettere a noi (o a un futuro reviewer) di rigettare in modo netto l'ipotesi.
 
-### Congettura A — Sergio's branching: $b_{\text{eff}}^* \approx 6$
+### Congettura A — Sergio's branching: $b_{\text{eff}}^* \approx 6$ — **FALSIFICATA COME UNIVERSALE**
 
-> **Fonte primaria**: podcast Radient 2026 cap. 16, [riga 474](../docs/bibliography/sources/podcasts/2026_radient_sergio_interview.md#L474):
+> ⚠️ **STATO (2026-04-28)**: la versione *universale* (numero magico ~6 indipendente da parametri) è **falsificata**. La versione *contingente* (snapshot di una superficie 4D in regime transitorio) è verificata. Vedi sintesi finale ($b_{\text{eff}}^*$ come funzione di $K, N, M, \alpha$) più sotto.
+>
+> **Fonte primaria del claim originale**: podcast Radient 2026 cap. 16, [riga 474](../docs/bibliography/sources/podcasts/2026_radient_sergio_interview.md#L474):
 > *"si va bifurcado de seis en seis... es de la manera en que la entropía crece más rápido"*.
+>
+> **Riformulazione canonica**: $b_{\text{eff}}^*(\alpha, \beta=0, K, N, M) \approx 1 + (K-1) \cdot \mathcal{F}(M/N) \cdot \mathcal{G}(\alpha, K)$ — superficie di transizione tipo Wright-Fisher tra inizializzazione uniforme ($b_{\text{eff}} \to K$) e palmera asintotica ($b_{\text{eff}} \to 1$).
 
-**Enunciato**. Per qualunque task con reward function "ottimalmente sintonizzata", esiste una configurazione di parametri $(\alpha^*, \beta^*)$ tale che il branching factor effettivo (Definizione 6) misurato a fine planning soddisfa:
+**Enunciato (storico, originale di Sergio)**. Per qualunque task con reward function "ottimalmente sintonizzata", esiste una configurazione di parametri $(\alpha^*, \beta^*)$ tale che il branching factor effettivo (Definizione 6) misurato a fine planning soddisfa:
 
 $$
 b_{\text{eff}}(\alpha^*, \beta^*) \in [5, 7].
 $$
 
-**Stato empirico**: **verificata su 3 task indipendenti** con fisica e reward landscape diversi.
+**Stato empirico**: **verificata localmente** ($K=9, M=15$) ma **falsificata come legge universale**. Vedi tabella completa più sotto.
 
 | Task | Best $b_{\text{eff}}$ | CI95 / sd | Config | Impl. | Fonte |
 |---|---|---|---|---|---|

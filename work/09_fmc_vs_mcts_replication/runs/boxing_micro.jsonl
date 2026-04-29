@@ -1,0 +1,12 @@
+{"algo": "fmc", "game": "Boxing", "obs_type": "ram", "B": 80, "seed": 0, "cum_reward": 95.0, "actions": 200, "done": false, "wall_s": 24.97}
+{"algo": "mcts", "game": "Boxing", "obs_type": "ram", "B": 80, "seed": 0, "cum_reward": 0.0, "actions": 200, "done": false, "wall_s": 24.68}
+{"algo": "fmc", "game": "Boxing", "obs_type": "ram", "B": 240, "seed": 0, "cum_reward": 100.0, "actions": 132, "done": true, "wall_s": 48.33}
+{"algo": "mcts", "game": "Boxing", "obs_type": "ram", "B": 240, "seed": 0, "cum_reward": 0.0, "actions": 200, "done": false, "wall_s": 73.16}
+{"algo": "fmc", "game": "Boxing", "obs_type": "ram", "B": 80, "seed": 1, "cum_reward": 99.0, "actions": 167, "done": true, "wall_s": 21.08}
+{"algo": "mcts", "game": "Boxing", "obs_type": "ram", "B": 80, "seed": 1, "cum_reward": -10.0, "actions": 200, "done": false, "wall_s": 25.03}
+{"algo": "fmc", "game": "Boxing", "obs_type": "ram", "B": 240, "seed": 1, "cum_reward": 100.0, "actions": 197, "done": true, "wall_s": 71.38}
+{"algo": "mcts", "game": "Boxing", "obs_type": "ram", "B": 240, "seed": 1, "cum_reward": -10.0, "actions": 200, "done": false, "wall_s": 72.88}
+{"algo": "fmc", "game": "Boxing", "obs_type": "ram", "B": 80, "seed": 2, "cum_reward": 80.0, "actions": 200, "done": false, "wall_s": 24.94}
+{"algo": "mcts", "game": "Boxing", "obs_type": "ram", "B": 80, "seed": 2, "cum_reward": -5.0, "actions": 200, "done": false, "wall_s": 24.48}
+{"algo": "fmc", "game": "Boxing", "obs_type": "ram", "B": 240, "seed": 2, "cum_reward": 100.0, "actions": 138, "done": true, "wall_s": 49.77}
+{"algo": "mcts", "game": "Boxing", "obs_type": "ram", "B": 240, "seed": 2, "cum_reward": -5.0, "actions": 200, "done": false, "wall_s": 73.05}

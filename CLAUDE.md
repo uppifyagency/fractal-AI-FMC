@@ -138,15 +138,34 @@ Language convention: **Italian for prose, English for code/comments**. ISO 8601 
 
 | # | Claim | Fonte A | Fonte B | Stato |
 |---|---|---|---|---|
-| D1 | Branching factor ottimo | Radient 2026 cap.16: "**~6**" | [`work/02_deep_dives/07_wright_fisher_mapping.md`](work/02_deep_dives/07_wright_fisher_mapping.md) + [`work/07_sergio_branching_sweep/REPORT.md`](work/07_sergio_branching_sweep/REPORT.md): empiricamente $b_{\text{eff}}^* \approx 1.53\,K^{0.6}$ (dipende da K) | Sergio's "6" è **falsificato come universale** — è caso particolare per K specifico |
-| D2 | FMC sample efficiency vs MCTS | Paper §5: "<1000 vs 3M" (companion paper 1807.01081) | Radient 2026 cap.10: "**~150 000 vs ~35**" | Discrepanza non risolta — probabile diversa definizione di "samples per action". Vedi [`08_video_seminar_extracted_insights.md`](work/02_deep_dives/08_video_seminar_extracted_insights.md) §F10 |
+| D1 | Branching factor ottimo | Radient 2026 cap.16: "**~6**" | [`docs/MATH_CANON.md`](docs/MATH_CANON.md) Cong. A v0.4.0: $b_{\text{eff}}^*(K, N, M, \alpha) \approx 1 + (K-1) \cdot \mathcal{F}(M/N) \cdot \mathcal{G}(\alpha, K)$ — superficie 4D Wright-Fisher. Power-law $K^{0.6}$ è transiente a $M=15$, non un fixed point. | **FALSIFICATO come universale**. Sergio's "6" è snapshot di $(K=9, M=15, N\sim32{-}64, \alpha=0.1)$ — *triplamente contingente*. Asintoticamente $b_{\text{eff}} \to 1$ (Teorema 2). |
+| D2 | FMC sample efficiency vs MCTS | Paper 1803.05049v5 §5.1.2: "**359× fewer**"; §6.2.1: "0.01-0.1%" (1000-10000×); §7: "2-3 OoM"; CLAUDE.md prev: "<1000 vs 3M" | Radient 2026 cap.10: "**~150 000 vs ~35**" (≈4286×) | **🟡 PARZIALMENTE CONFERMATO direzionalmente in-session** (Boxing, n=3, B∈{80,240}, RAM, CPU-only): FMC mean +91 (B=80) +100 (B=240) vs MCTS −5 entrambi → Δ ≈ 100 raw points; MCTS non migliora con budget × 3. Vedi [`work/09_fmc_vs_mcts_replication/REPORT.md`](work/09_fmc_vs_mcts_replication/REPORT.md). **Numero singolo definitivo** richiede full P0 sweep — costo revised dal cluster GPU al **single CPU overnight** (~7 h). Audit completo in [`docs/bibliography/paper_fmc_dhdna_audit.md`](docs/bibliography/paper_fmc_dhdna_audit.md). |
 | D3 | Frontera caos/orden come "Third Law" | Radient 2026 cap.16: ipotesi articolata | Mai formalizzata come hypothesis testabile in alcun paper o deep-dive | Aperta — candidata per deep-dive 09 |
 
-**Codebases** under [`repos/`](repos/): `FractalAI_old` (deprecated NumPy, paper #1 reference), `fragile` (PyTorch/GPU, active), `fragile-rl` (Fragile Mechanics, 2024-2026, successor to Book #2).
+**Codebases** under [`repos/`](repos/):
 
-**Reference implementation** in-repo: [`fmc-core/`](fmc-core/) — NumPy core (~400 LOC) + JS port bit-identical (1e-12 tolerance), 66 test green, K/M/N benchmark sweeps in [`fmc-core/bench/REPORT.md`](fmc-core/bench/REPORT.md).
+| Repo | Ruolo | Status |
+|---|---|---|
+| `FractalAI_old` | Deprecated NumPy reference (paper #1) | read-only |
+| `fragile` | PyTorch/GPU FMC swarm — `core.py:716` chiama `env.step_batch`, `core.py:839` chiama `env.set_state` | active |
+| `fragile-rl` | Fragile Mechanics, 2024-2026, successor to Book #2 | active |
+| `plangym` | **Hard dep di `fragile`**: estende Gymnasium con `get_state()/set_state()` atomico → fa esistere FMC. 8 backend (Atari/MuJoCo/Box2D/DM/Mario/Retro/Balloon/ClassicControl) + Parallel/Ray vectorization | active 2026-04 |
+| `shaolin` | **Dep di `fragile`**: dashboard `holoviews+panel+bokeh` per swarm live (graph viewer per albero walker, RGB streaming) | dep |
+| `hydraclick` | **Dep di `fragile`**: Hydra config + Click CLI per sweep di iperparametri | dep |
+| `flogging` | **Dep di `fragile`**: structured JSON logging + human-readable colorato | dep |
 
-**Live simulations** ([`simulations/`](simulations/)): rocket, kart, pong, octopus, game-of-life (WebGPU multi-agent), highway, SUMO intersection, rocket validated, $b_{\text{eff}}$ surface 3D. Index in [`simulations/index.html`](simulations/index.html).
+**Teardown architetturale completo** (cosa hanno implementato, come comporre lo stack, come usarlo come impalcatura per nuovi simulatori al posto dell'HTML): [`docs/architecture/tier1_repos_teardown.md`](docs/architecture/tier1_repos_teardown.md).
+
+**Reference implementation** in-repo: [`fmc-core/`](fmc-core/) — NumPy core (~400 LOC) + JS port bit-identical (1e-12 tolerance), 66 test green, K/M/N benchmark sweeps in [`fmc-core/bench/REPORT.md`](fmc-core/bench/REPORT.md). Adapters disponibili: CartPole, GridWorld, Navigation2D, Pendulum, Rocket, **Atari (RAM + RGB via plangym)** [`fmc-core/src/fmc/envs/atari.py`](fmc-core/src/fmc/envs/atari.py).
+
+**Empirical replication harnesses** in-repo (output del loop 2026-04-28):
+- [`work/09_fmc_vs_mcts_replication/`](work/09_fmc_vs_mcts_replication/) — **MCTS-UCT baseline** + budget sweep, Boxing micro-result mostra FMC +100 vs MCTS −5 a B=240 (n=3, CPU)
+- [`work/10_atari_replication/`](work/10_atari_replication/) — Atari multi-seed con bootstrap CI95, Boxing slice 5/5 knockout
+- [`work/11_ram_vs_img_ablation/`](work/11_ram_vs_img_ablation/) — RAM vs IMG sweep parametrico
+
+**Custom plangym simulators** ([`work/08_simulators/`](work/08_simulators/)): env Python custom che ereditano `PlanEnv` per girare FMC su scenari nostri (rocket-uncino F23, ecc.). Sostituiscono progressivamente le sims HTML statiche.
+
+**Live simulations** ([`simulations/`](simulations/)): rocket, kart, pong, octopus, game-of-life (WebGPU multi-agent), highway, SUMO intersection, rocket validated, $b_{\text{eff}}$ surface 3D. Index in [`simulations/index.html`](simulations/index.html). **In deprecazione**: vedi `work/08_simulators/` per i porting Python+plangym.
 
 ### gstack
 

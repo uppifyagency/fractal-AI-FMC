@@ -1,0 +1,5 @@
+{"game": "Boxing", "seed": 0, "N": 30, "M": 15, "obs_type": "ram", "alpha": 1.0, "beta": 1.0, "max_actions": 300, "cum_reward": 100.0, "actions": 124, "done": true, "wall_s": 84.15}
+{"game": "Boxing", "seed": 1, "N": 30, "M": 15, "obs_type": "ram", "alpha": 1.0, "beta": 1.0, "max_actions": 300, "cum_reward": 100.0, "actions": 114, "done": true, "wall_s": 76.56}
+{"game": "Boxing", "seed": 2, "N": 30, "M": 15, "obs_type": "ram", "alpha": 1.0, "beta": 1.0, "max_actions": 300, "cum_reward": 100.0, "actions": 125, "done": true, "wall_s": 83.6}
+{"game": "Boxing", "seed": 3, "N": 30, "M": 15, "obs_type": "ram", "alpha": 1.0, "beta": 1.0, "max_actions": 300, "cum_reward": 100.0, "actions": 132, "done": true, "wall_s": 89.48}
+{"game": "Boxing", "seed": 4, "N": 30, "M": 15, "obs_type": "ram", "alpha": 1.0, "beta": 1.0, "max_actions": 300, "cum_reward": 100.0, "actions": 119, "done": true, "wall_s": 79.13}
