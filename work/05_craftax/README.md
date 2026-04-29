@@ -29,7 +29,11 @@ Bersaglio: il leaderboard pubblico **[craftaxenv.github.io](https://craftaxenv.g
 ✅ **FMC + delta-proximity (v4) → 21.87% Crafter, 30 seed** — supera Curious Replay (run_004)
 ⚠️ FMC + Wigner Fractal Memory (v6) → 12.32% — regressione (run_005, errore di applicazione)
 ⚠️ FMC + max_steps=10000 / vitality bonus (v7) → episodi non si allungano + risk-take penalizzato (run_006)
-🔒 **v4_p02_delta confermato local optimum** del framework FMC vanilla zero-training
+⛔ **NxM scaling sweep N∈{128,256,512}×M∈{20,40,80,160}, 3 seed = 27 episodi → 0/27 blocker fired** (run_007, 2026-04-29).
+  M-bottleneck hypothesis FALSIFIED. Best cell N=128,M=20 = 21.79% (replica baseline). M=160 ATTIVAMENTE peggiora.
+🔒 **v4_p02_delta confermato local optimum** del framework FMC vanilla zero-training. Compute alone non sblocca diamond chain.
+   15/15 unit test teoria-codice verdi: implementazione fedele a MATH_CANON.md.
+🎯 **Path forward chiarito**: macro-actions / hybrid FMC+NN / Badger Level-1. Submit del 21.79% al leaderboard subito disponibile.
 
 ## Risultato verificato
 
@@ -98,13 +102,19 @@ Wigner-correct memory naive applicata al planning peggiora il score di 9.55 punt
 - PR su [MichaelTMatthews/Craftax](https://github.com/MichaelTMatthews/Craftax) con codice riproducibile
 - Workshop paper draft (RL Open Worlds, Generalization in RL)
 
-### Fase 5 — Spinta verso EMERALD (mesi)
-Opzioni:
-- **A.** v7 Badger-Level-1: multi-config FMC outer-loop (cf. Book #2 §3.2)
-- **B.** Episodi 10000-step (Hafner standard) invece di 500
-- **C.** N=128 walker
-- **D.** Fractal Memory con NN target (path corretto secondo Sergio)
-- **E.** Migrazione a Craftax full (1B leaderboard)
+### Fase 4.5 — N×M scaling sweep ⛔ (run_007, 2026-04-29)
+9 celle × 3 seed = 27 episodi su grid (N∈{128,256,512}, M∈{20,40,80,160}). **0/27 blocker fired**.
+M-bottleneck hypothesis falsificata. M=160 ATTIVAMENTE peggiora. Bigger isn't better. Vedi
+[`run_007_NM_sweep_GPU.md`](docs/run_007_NM_sweep_GPU.md) per diagnosi completa (walker mortality
+dominates, cross-entropy collapse @ K=17 M≥80, reward shaping non multi-step-aware).
+
+### Fase 5 — Spinta verso EMERALD (mesi) — strade VIVE post run_007
+- **A.** Macro-actions / skill primitives (`go_to_nearest`, `mine_until_inv+1`) — 3-4 settimane, riduce M effettivo
+- **B.** NN value function offline (rollout-trained Q(s,a) → init_actions priora) — 6-8 settimane, hybrid FMC+NN
+- **C.** Badger-Level-1: outer-loop FMC su (α, prox_α, σ, K, M, N) — 3-6 mesi
+- ~~Episodi 10000 step~~ (run_006 falsificato)
+- ~~N≥128 walker~~ (run_007 falsificato)
+- ~~M≥40 lookahead~~ (run_007 falsificato)
 
 ## File del progetto
 
@@ -120,6 +130,10 @@ work/05_craftax/
 │   ├── fmc_craftax_v4.py                  ← FMC v4: v3 + curriculum-gated delta-proximity ★
 │   ├── fmc_craftax_v5.py                  ← FMC v5: v4 + naive memory counter (deprecato)
 │   ├── fmc_craftax_v6.py                  ← FMC v6: v4 + Wigner-correct memory (negative)
+│   ├── fmc_craftax_v7.py                  ← FMC v7: v4 + vitality bonus (negative, run_006)
+│   ├── test_fmc_theory.py                 ← 15 unit test teoria-codice (Def. 2-4 + Crafter)
+│   ├── sweep_run007_NM_GPU.py             ← Run 007 strategic 9-cell harness
+│   ├── analyze_run007.py                  ← Run 007 decision-gate analyzer
 │   ├── sweep_seeds.py                     ← multi-seed + Crafter score (single config)
 │   ├── sweep_NM.py                        ← multi-config (N, M) sweep
 │   ├── sweep_v3.py                        ← v3 multi-config sweep harness
@@ -131,13 +145,18 @@ work/05_craftax/
 │   ├── sweep_v3_first.log, sweep_v3_alpha.log, sweep_v3_inv_10seed.log  ← Run 003
 │   ├── sweep_v4_proximity.log, sweep_v4v5.log, sweep_v4_p02delta_30seed.log ← Run 004
 │   ├── sweep_v6_wigner_10seed.log         ← Run 005 (negativo)
+│   ├── run007_strategic.json              ← Run 007 raw + aggregato (27 ep)
+│   ├── run007_strategic.log               ← Run 007 stdout live
+│   ├── run007_analysis.txt                ← Run 007 analyzer formattato
 │   └── random_baseline_seeds_*.txt
 └── docs/
     ├── run_001_first_baseline.md          ← FMC funziona (5.42%)
     ├── run_002_sweep_NM_distance.md       ← N×M sweep (6.87%)
     ├── run_003_intrinsic_shaping.md       ← intrinsic α=0.5 → 19.27% ★
     ├── run_004_delta_proximity.md         ← + delta-prox → 21.87% ★★
-    └── run_005_wigner_memory_negative.md  ← Wigner mem applicato male → 12.32% ⚠️
+    ├── run_005_wigner_memory_negative.md  ← Wigner mem applicato male → 12.32% ⚠️
+    ├── run_006_long_episode_and_vitality_negative.md  ← max_steps + vitality ⚠️
+    └── run_007_NM_sweep_GPU.md            ← N×M scaling falsifica M-bottleneck ⛔
 ```
 
 **★ Best config attuale**: `fmc_craftax_v4.py` con `intrinsic_inv_alpha=0.5, proximity_alpha=0.2, proximity_mode='delta'`.

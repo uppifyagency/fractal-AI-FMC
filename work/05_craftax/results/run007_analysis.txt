@@ -1,0 +1,88 @@
+==============================================================================
+RUN 007 — Strategic NxM Sweep Analysis
+Progress: 27/27    Elapsed: 37.4 min    Partial: False
+==============================================================================
+
+## CELL RESULTS (3 seeds each)
+
+   N    M Seeds Crafter% mean_ach mean_steps  wall_s
+----------------------------------------------------
+  64   20     3    17.14     9.00      179.0    14.4
+ 128   20     3    21.79    10.33      203.0    22.0
+ 128   80     3    13.53     8.00      148.7    54.1
+ 256   20     3    14.06     8.67      180.7    30.5
+ 256   40     3    11.65    10.00      136.7    44.8
+ 256   80     3    20.70     9.67      140.3    84.1
+ 256  160     3    11.76     8.00      113.7   128.7
+ 512   20     3    14.54     9.00      158.0    46.9
+ 512  160     3    11.72    10.33      156.0   322.1
+
+## DECISION GATE — did M increase unlock the 4 v4-blockers?
+
+Blockers: ['collect_diamond', 'make_iron_pickaxe', 'make_iron_sword', 'eat_plant']
+
+   N    M |        collect_diamond |      make_iron_pickaxe |        make_iron_sword |              eat_plant
+-------------------------------------------------------------------------------------------------------------
+  64   20 |                      . |                      . |                      . |                      .
+ 128   20 |                      . |                      . |                      . |                      .
+ 128   80 |                      . |                      . |                      . |                      .
+ 256   20 |                      . |                      . |                      . |                      .
+ 256   40 |                      . |                      . |                      . |                      .
+ 256   80 |                      . |                      . |                      . |                      .
+ 256  160 |                      . |                      . |                      . |                      .
+ 512   20 |                      . |                      . |                      . |                      .
+ 512  160 |                      . |                      . |                      . |                      .
+
+NO BLOCKER FIRED across all cells — hypothesis FALSIFIED
+
+## VS HISTORICAL BASELINE v4_p02_delta = 21.87% (30 seeds CI95)
+
+  N= 128 M=  20  Crafter=21.79%   Delta vs baseline = -0.08 pp   ach=10.3
+  N= 256 M=  80  Crafter=20.70%   Delta vs baseline = -1.17 pp   ach=9.7
+  N=  64 M=  20  Crafter=17.14%   Delta vs baseline = -4.73 pp   ach=9.0
+  N= 512 M=  20  Crafter=14.54%   Delta vs baseline = -7.33 pp   ach=9.0
+  N= 256 M=  20  Crafter=14.06%   Delta vs baseline = -7.81 pp   ach=8.7
+
+## ACHIEVEMENT FREQUENCY HEATMAP (rate of unlock across 3 seeds)
+
+           achievement | N64M20 | N128M20 | N128M80 | N256M20 | N256M40 | N256M80 | N256M160 | N512M20 | N512M160
+-----------------------------------------------------------------------------------------------------------------
+          collect_wood |   1.00 |    1.00 |    1.00 |    1.00 |    1.00 |    1.00 |     1.00 |    1.00 |     1.00
+           place_table |   0.67 |    0.67 |    0.67 |    0.67 |    1.00 |    0.67 |     0.67 |    0.67 |     1.00
+               eat_cow |      . |    0.33 |       . |    0.33 |       . |    0.33 |        . |    0.33 |        .
+       collect_sapling |   0.67 |    1.00 |    0.67 |    1.00 |    1.00 |    0.67 |     0.67 |    1.00 |     1.00
+         collect_drink |   0.33 |    0.67 |    0.33 |       . |       . |    1.00 |     0.67 |    0.33 |     0.33
+     make_wood_pickaxe |   0.67 |    0.67 |    0.67 |    0.67 |    1.00 |    0.67 |     0.67 |    0.67 |     1.00
+    make_stone_pickaxe |   0.33 |    0.67 |    0.33 |    0.33 |    0.67 |    0.33 |     0.33 |    0.33 |     0.67
+     make_iron_pickaxe |      . |       . |       . |       . |       . |       . |        . |       . |        .
+       make_wood_sword |   0.33 |    0.33 |    0.33 |    0.33 |    0.67 |    0.33 |     0.33 |    0.33 |     0.33
+      make_stone_sword |   0.33 |    0.33 |    0.33 |    0.33 |    0.33 |    0.33 |     0.33 |    0.33 |        .
+       make_iron_sword |      . |       . |       . |       . |       . |       . |        . |       . |        .
+           place_plant |   0.67 |    1.00 |    0.67 |    1.00 |    1.00 |    0.67 |     0.67 |    1.00 |     1.00
+         defeat_zombie |   0.33 |    0.33 |    0.33 |    0.33 |       . |    0.33 |        . |    0.33 |        .
+         collect_stone |   0.67 |    0.67 |    0.67 |    0.67 |    1.00 |    0.67 |     0.67 |    0.67 |     1.00
+           place_stone |   0.67 |    0.67 |    0.67 |    0.67 |    0.67 |    0.67 |     0.67 |    0.67 |     1.00
+             eat_plant |      . |       . |       . |       . |       . |       . |        . |       . |        .
+       defeat_skeleton |      . |       . |       . |       . |       . |    0.33 |        . |       . |        .
+          collect_iron |   0.33 |    0.33 |       . |       . |       . |       . |        . |       . |        .
+          collect_coal |   0.67 |    0.67 |    0.33 |    0.33 |    0.33 |    0.67 |     0.33 |    0.67 |     0.67
+         place_furnace |   0.67 |    0.67 |    0.67 |    0.67 |    0.67 |    0.67 |     0.67 |    0.67 |     1.00
+       collect_diamond |      . |       . |       . |       . |       . |       . |        . |       . |        .
+               wake_up |   0.67 |    0.33 |    0.33 |    0.33 |    0.67 |    0.33 |     0.33 |       . |     0.33
+
+## COST SCALING (mean wall sec per episode)
+
+  N\M |     20 |     40 |     80 |    160
+-----------------------------------------
+   64 |   14.4 |      - |      - |      -
+  128 |   22.0 |      - |   54.1 |      -
+  256 |   30.5 |   44.8 |   84.1 |  128.7
+  512 |   46.9 |      - |      - |  322.1
+
+## VERDICT
+HYPOTHESIS FALSIFIED:
+  No blocker achievement fired even at M=160.
+  Planning horizon is NOT the limiting factor — pivot to:
+    a) macro-actions / skill primitives (reduces effective horizon)
+    b) hybrid FMC + NN value function
+    c) Badger Level-1 (meta-FMC over reward configs)
