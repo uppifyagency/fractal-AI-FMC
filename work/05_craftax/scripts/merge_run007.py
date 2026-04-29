@@ -85,22 +85,26 @@ def aggregate(raw_runs: list[dict]) -> dict:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--batch1", default="work/05_craftax/results/run007_strategic.json")
-    ap.add_argument("--batch2", default="work/05_craftax/results/run007_strategic_extended.json")
+    ap.add_argument("--batches", nargs="+",
+                    default=["work/05_craftax/results/run007_strategic.json",
+                             "work/05_craftax/results/run007_strategic_extended.json"])
     ap.add_argument("--out", default="work/05_craftax/results/run007_strategic_5seed.json")
     args = ap.parse_args()
 
-    d1 = json.load(open(args.batch1))
-    d2 = json.load(open(args.batch2))
-    raw_combined = d1.get("raw_runs", []) + d2.get("raw_runs", [])
-    print(f"Batch 1: {len(d1.get('raw_runs', []))} raw runs", file=sys.stderr)
-    print(f"Batch 2: {len(d2.get('raw_runs', []))} raw runs", file=sys.stderr)
+    raw_combined = []
+    total_wall_input = 0.0
+    for i, path in enumerate(args.batches):
+        d = json.load(open(path))
+        raws = d.get("raw_runs", [])
+        raw_combined.extend(raws)
+        total_wall_input += d.get("elapsed_s", 0) or 0
+        print(f"Batch {i+1} ({path}): {len(raws)} raw runs", file=sys.stderr)
     print(f"Combined: {len(raw_combined)} raw runs", file=sys.stderr)
 
     summary = aggregate(raw_combined)
 
     # Total wall e seeds metadata
-    total_wall = (d1.get("elapsed_s", 0) or 0) + (d2.get("elapsed_s", 0) or 0)
+    total_wall = total_wall_input
     all_seeds = sorted(set(r["seed"] for r in raw_combined))
 
     out = {

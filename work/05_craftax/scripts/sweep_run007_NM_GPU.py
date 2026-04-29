@@ -108,6 +108,9 @@ def make_grid(mode: str = "strategic"):
     if mode == "smoke":
         # 2 cells solo per debug
         return [(64, 20), (256, 80)]
+    if mode == "missing":
+        # Le 4 celle del full 12-cell grid non coperte dallo strategic
+        return [(128, 40), (128, 160), (512, 40), (512, 80)]
     raise ValueError(f"unknown grid mode {mode}")
 
 
@@ -172,7 +175,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--seeds", type=int, nargs="+", default=[42, 43, 44])
     ap.add_argument("--max_steps", type=int, default=500)
-    ap.add_argument("--grid", choices=["strategic", "full", "smoke"], default="strategic")
+    ap.add_argument("--grid", choices=["strategic", "full", "smoke", "missing"], default="strategic")
     ap.add_argument("--out", type=str,
                     default="work/05_craftax/results/run007_sweep.json")
     ap.add_argument("--include_baseline", action="store_true",

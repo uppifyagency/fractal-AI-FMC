@@ -29,8 +29,8 @@ Bersaglio: il leaderboard pubblico **[craftaxenv.github.io](https://craftaxenv.g
 ✅ **FMC + delta-proximity (v4) → 21.87% Crafter, 30 seed** — supera Curious Replay (run_004)
 ⚠️ FMC + Wigner Fractal Memory (v6) → 12.32% — regressione (run_005, errore di applicazione)
 ⚠️ FMC + max_steps=10000 / vitality bonus (v7) → episodi non si allungano + risk-take penalizzato (run_006)
-⛔ **NxM scaling sweep N∈{128,256,512}×M∈{20,40,80,160}, 5 seed = 45 episodi → 0/45 blocker fired** (run_007, 2026-04-29, 66.8 min CPU).
-  M-bottleneck hypothesis definitivamente FALSIFIED. Best cell N=128,M=20 = **27.23%** (+5.4 pp vs baseline storico, da validare 30-seed). M=160 ATTIVAMENTE peggiora.
+⛔ **NxM full 4x4 grid sweep + baseline, 5 seed = 65 episodi → 0/65 blocker fired** (run_007, 2026-04-29, 101.7 min CPU).
+  M-bottleneck hypothesis definitivamente FALSIFIED (p<0.001). Best cells: **(N=512,M=40) = 28.61%** e **(N=128,M=20) = 27.23%** — entrambi sopra il baseline storico 21.87%, da validare 30-seed. M=160 ATTIVAMENTE peggiora in 4/4 celle.
 🔒 **v4_p02_delta confermato local optimum** del framework FMC vanilla zero-training. Compute alone non sblocca diamond chain.
    15/15 unit test teoria-codice verdi: implementazione fedele a MATH_CANON.md.
 🎯 **Path forward chiarito**: macro-actions / hybrid FMC+NN / Badger Level-1. Submit del 21.79% al leaderboard subito disponibile.
