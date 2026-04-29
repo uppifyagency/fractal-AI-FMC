@@ -1,0 +1,153 @@
+{
+  "main_comparison": [
+    {
+      "comparison": "FMC vs greedy",
+      "delta_mean": -0.16187499999999996,
+      "ci95_low": -0.18464696654476737,
+      "ci95_high": -0.14084840080185787,
+      "cohen_d": -8.038014664678009,
+      "p_value": 0.0002207804044534198,
+      "observed_power_n5": 1.0,
+      "n_per_group_to_detect_d_0.05": 7,
+      "n_per_group_to_detect_d_0.10": 3
+    },
+    {
+      "comparison": "FMC vs random",
+      "delta_mean": 0.07968750000000005,
+      "ci95_low": 0.06050176382392003,
+      "ci95_high": 0.0974027370263089,
+      "cohen_d": 3.9087632892166613,
+      "p_value": 0.002964217921658504,
+      "observed_power_n5": 0.99963423327082,
+      "n_per_group_to_detect_d_0.05": 7,
+      "n_per_group_to_detect_d_0.10": 3
+    }
+  ],
+  "noise_sweep": [
+    {
+      "sigma": 0.0,
+      "delta_mean": -0.16531249999999997,
+      "ci95_low": -0.18029187213299144,
+      "ci95_high": -0.1514812284029229,
+      "cohen_d": -12.479053122477353,
+      "p_value": 3.891743464880968e-05
+    },
+    {
+      "sigma": 0.1,
+      "delta_mean": -0.17218750000000008,
+      "ci95_low": -0.1788223476454979,
+      "ci95_high": -0.1660611831573875,
+      "cohen_d": -17.829941286575288,
+      "p_value": 1.0660455570465572e-06
+    },
+    {
+      "sigma": 0.3,
+      "delta_mean": -0.18468749999999987,
+      "ci95_low": -0.18965874594806187,
+      "ci95_high": -0.18009727737430808,
+      "cohen_d": -15.467176912540777,
+      "p_value": 1.4939660345621768e-07
+    },
+    {
+      "sigma": 0.5,
+      "delta_mean": -0.1843750000000001,
+      "ci95_low": -0.19730305081385113,
+      "ci95_high": -0.17243782530137822,
+      "cohen_d": -12.134678529398467,
+      "p_value": 2.0152971424537984e-05
+    },
+    {
+      "sigma": 1.0,
+      "delta_mean": -0.21624999999999983,
+      "ci95_low": -0.22654022874795685,
+      "ci95_high": -0.20674847034005,
+      "cohen_d": -13.709019135280673,
+      "p_value": 2.959058189089437e-06
+    }
+  ],
+  "deception_sweep": [
+    {
+      "deception_rate": 0.0,
+      "delta_mean": -0.18156249999999985,
+      "ci95_low": -0.19235016689542245,
+      "ci95_high": -0.17160165855720236,
+      "cohen_d": -19.03128776943617,
+      "p_value": 7.264533518113174e-06
+    },
+    {
+      "deception_rate": 0.1,
+      "delta_mean": -0.18156249999999985,
+      "ci95_low": -0.19235016689542245,
+      "ci95_high": -0.17160165855720236,
+      "cohen_d": -19.03128776943617,
+      "p_value": 7.264533518113174e-06
+    },
+    {
+      "deception_rate": 0.2,
+      "delta_mean": -0.17156249999999984,
+      "ci95_low": -0.17636732478051503,
+      "ci95_high": -0.16635883828921635,
+      "cohen_d": -10.05690186726434,
+      "p_value": 9.229895885490393e-07
+    },
+    {
+      "deception_rate": 0.3,
+      "delta_mean": -0.17156249999999984,
+      "ci95_low": -0.17636732478051503,
+      "ci95_high": -0.16635883828921635,
+      "cohen_d": -10.05690186726434,
+      "p_value": 9.229895885490393e-07
+    },
+    {
+      "deception_rate": 0.5,
+      "delta_mean": -0.1415624999999998,
+      "ci95_low": -0.17465060327894158,
+      "ci95_high": -0.1057278329766969,
+      "cohen_d": -3.3450185948987,
+      "p_value": 0.004600007736658124
+    }
+  ],
+  "round2_sample_size_design": {
+    "delta=0.025": {
+      "delta_in_coverage_units": 0.025,
+      "cohen_d_assumed_sd_0.025": 1.0,
+      "n_for_80%_power": 17,
+      "n_for_90%_power": 23,
+      "n_for_95%_power": 27
+    },
+    "delta=0.05": {
+      "delta_in_coverage_units": 0.05,
+      "cohen_d_assumed_sd_0.025": 2.0,
+      "n_for_80%_power": 6,
+      "n_for_90%_power": 7,
+      "n_for_95%_power": 8
+    },
+    "delta=0.1": {
+      "delta_in_coverage_units": 0.1,
+      "cohen_d_assumed_sd_0.025": 4.0,
+      "n_for_80%_power": 3,
+      "n_for_90%_power": 3,
+      "n_for_95%_power": 4
+    },
+    "delta=0.15": {
+      "delta_in_coverage_units": 0.15,
+      "cohen_d_assumed_sd_0.025": 5.999999999999999,
+      "n_for_80%_power": 10,
+      "n_for_90%_power": 3,
+      "n_for_95%_power": 3
+    },
+    "delta=0.2": {
+      "delta_in_coverage_units": 0.2,
+      "cohen_d_assumed_sd_0.025": 8.0,
+      "n_for_80%_power": 10,
+      "n_for_90%_power": 10,
+      "n_for_95%_power": 10
+    }
+  },
+  "metadata": {
+    "round1_n_per_cell": 5,
+    "alpha": 0.05,
+    "power_target": 0.8,
+    "method": "Welch t-test, Cohen's d pooled-SD, bootstrap percentile CI"
+  }
+}

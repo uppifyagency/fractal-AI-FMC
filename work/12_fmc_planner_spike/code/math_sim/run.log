@@ -1,0 +1,41 @@
+[1/5] Main comparison (FMC vs random vs greedy)...
+  fmc      cov=0.588±0.028  div=6.43  unique=19.6
+  random   cov=0.508±0.004  div=5.19  unique=19.4
+  greedy   cov=0.750±0.000  div=0.00  unique=1.0
+[2/5] Alpha sweep (entropy weight)...
+  alpha=0.0    cov=0.591  div=3.94  b_eff=1.32  unique=17.7
+  alpha=0.5    cov=0.617  div=6.66  b_eff=1.49  unique=21.7
+  alpha=1.0    cov=0.588  div=6.53  b_eff=1.53  unique=19.0
+  alpha=1.5    cov=0.597  div=7.91  b_eff=1.57  unique=21.0
+  alpha=2.0    cov=0.591  div=8.36  b_eff=1.63  unique=19.7
+[3/5] Scale invariance (n=5,20,80)...
+  n=5      cov=1.000±0.000  per-step-per-comp=0.0833
+  n=20     cov=0.550±0.014  per-step-per-comp=0.0183
+  n=80     cov=0.220±0.032  per-step-per-comp=0.0027
+[4/5] b_eff sweep (K=8..64)...
+  K=8     b_eff=1.53±0.06  unique=5.3  div=4.19
+  K=16    b_eff=1.55±0.02  unique=10.3  div=6.06
+  K=32    b_eff=1.52±0.02  unique=18.3  div=6.26
+  K=64    b_eff=1.51±0.01  unique=36.3  div=6.08
+[5/6] Noise sweep (FMC vs greedy under uncertainty)...
+    sigma=0.0    fmc=0.585  greedy=0.750  random=0.508  Δ(fmc-greedy)=-0.165
+    sigma=0.1    fmc=0.524  greedy=0.697  random=0.508  Δ(fmc-greedy)=-0.172
+    sigma=0.3    fmc=0.514  greedy=0.699  random=0.508  Δ(fmc-greedy)=-0.185
+    sigma=0.5    fmc=0.511  greedy=0.696  random=0.508  Δ(fmc-greedy)=-0.184
+    sigma=1.0    fmc=0.478  greedy=0.694  random=0.508  Δ(fmc-greedy)=-0.216
+[6/7] Deceptive landscape (the decisive test)...
+    deception=0.0      fmc=0.568±0.013  greedy_misled=0.750±0.000  Δ=-0.182
+    deception=0.1      fmc=0.568±0.013  greedy_misled=0.750±0.000  Δ=-0.182
+    deception=0.2      fmc=0.568±0.013  greedy_misled=0.740±0.020  Δ=-0.172
+    deception=0.3      fmc=0.568±0.013  greedy_misled=0.740±0.020  Δ=-0.172
+    deception=0.5      fmc=0.568±0.013  greedy_misled=0.710±0.058  Δ=-0.142
+[7/7] Symbolic checks...
+  virtual_reward_formula: d**alpha*r**beta
+  dV_dr_symbolic: beta*d**alpha*r**beta/r
+  dV_dd_symbolic: alpha*d**alpha*r**beta/d
+  P_clone_at_V_i_equals_V_j: 0
+  P_clone_at_V_i_zero: 1
+  V_at_alpha_zero: r**beta
+  relativize_formula: (x - x_min)/(x_max - x_min)
+  ergodicity_at_alpha_zero_lost: True (V loses diversity term, swarm collapses to greedy)
+  ergodicity_at_alpha_positive_preserved: True (V > 0 wherever d > 0, walkers explore)

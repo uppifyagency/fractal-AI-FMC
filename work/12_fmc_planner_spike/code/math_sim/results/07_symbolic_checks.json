@@ -1,0 +1,11 @@
+{
+  "virtual_reward_formula": "d**alpha*r**beta",
+  "dV_dr_symbolic": "beta*d**alpha*r**beta/r",
+  "dV_dd_symbolic": "alpha*d**alpha*r**beta/d",
+  "P_clone_at_V_i_equals_V_j": "0",
+  "P_clone_at_V_i_zero": "1",
+  "V_at_alpha_zero": "r**beta",
+  "relativize_formula": "(x - x_min)/(x_max - x_min)",
+  "ergodicity_at_alpha_zero_lost": "True (V loses diversity term, swarm collapses to greedy)",
+  "ergodicity_at_alpha_positive_preserved": "True (V > 0 wherever d > 0, walkers explore)"
+}

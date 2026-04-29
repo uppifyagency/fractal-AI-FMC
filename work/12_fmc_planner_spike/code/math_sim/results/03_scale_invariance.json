@@ -1,0 +1,23 @@
+{
+  "n=5": {
+    "n_components": 5,
+    "T": 12,
+    "final_coverage_mean": 1.0,
+    "final_coverage_std": 0.0,
+    "coverage_per_step_per_component": 0.08333333333333333
+  },
+  "n=20": {
+    "n_components": 20,
+    "T": 30,
+    "final_coverage_mean": 0.5499999999999999,
+    "final_coverage_std": 0.014206439267693573,
+    "coverage_per_step_per_component": 0.01833333333333333
+  },
+  "n=80": {
+    "n_components": 80,
+    "T": 80,
+    "final_coverage_mean": 0.2197916666666667,
+    "final_coverage_std": 0.03205717531457359,
+    "coverage_per_step_per_component": 0.0027473958333333335
+  }
+}

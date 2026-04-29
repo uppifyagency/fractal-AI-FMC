@@ -1,0 +1,11 @@
+Scheme               Cov  ESS_avg  ESS_min    H_avg    H_min   Div_post
+---------------------------------------------------------------------------
+fmc_pairwise       0.454     6.42     1.19     1.65     0.18       20.9
+multinomial        0.613    12.58     1.00     2.00     0.00        6.8
+residual           0.592    12.65     1.00     2.05     0.00        7.5
+stratified         0.600    12.20     1.00     1.94     0.00        7.4
+
+(K=32, T=20, n_components=15, n_seeds=5)
+ESS max possible = 32 (all weights uniform)
+ESS = 1 means single-particle dominates (degeneracy)
+H max = log(32) = 3.466 (uniform)

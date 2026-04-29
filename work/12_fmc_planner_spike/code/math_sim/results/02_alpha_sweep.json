@@ -1,0 +1,42 @@
+{
+  "alpha=0.0": {
+    "alpha": 0.0,
+    "final_coverage_mean": 0.5911458333333334,
+    "final_coverage_std": 0.029573061597038326,
+    "final_diversity_mean": 3.9361559139784945,
+    "final_unique_plans_mean": 17.666666666666668,
+    "b_eff_mean": 1.319459993906895
+  },
+  "alpha=0.5": {
+    "alpha": 0.5,
+    "final_coverage_mean": 0.6166666666666666,
+    "final_coverage_std": 0.0239470081928597,
+    "final_diversity_mean": 6.661290322580645,
+    "final_unique_plans_mean": 21.666666666666668,
+    "b_eff_mean": 1.494747870271752
+  },
+  "alpha=1.0": {
+    "alpha": 1.0,
+    "final_coverage_mean": 0.5880208333333333,
+    "final_coverage_std": 0.00849453459911465,
+    "final_diversity_mean": 6.525537634408603,
+    "final_unique_plans_mean": 19.0,
+    "b_eff_mean": 1.5312123982938257
+  },
+  "alpha=1.5": {
+    "alpha": 1.5,
+    "final_coverage_mean": 0.5973958333333333,
+    "final_coverage_std": 0.0140528516283667,
+    "final_diversity_mean": 7.914650537634408,
+    "final_unique_plans_mean": 21.0,
+    "b_eff_mean": 1.5713400230646675
+  },
+  "alpha=2.0": {
+    "alpha": 2.0,
+    "final_coverage_mean": 0.5906250000000001,
+    "final_coverage_std": 0.014377264314419018,
+    "final_diversity_mean": 8.358870967741936,
+    "final_unique_plans_mean": 19.666666666666668,
+    "b_eff_mean": 1.6262071400628564
+  }
+}

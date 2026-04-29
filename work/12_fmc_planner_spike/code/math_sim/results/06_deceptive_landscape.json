@@ -1,0 +1,47 @@
+{
+  "deception=0.0": {
+    "deception_rate": 0.0,
+    "fmc_mean": 0.5684375000000002,
+    "fmc_std": 0.013491895715576779,
+    "greedy_misled_mean": 0.75,
+    "greedy_misled_std": 0.0,
+    "random_mean": 0.508125,
+    "fmc_minus_greedy": -0.18156249999999985
+  },
+  "deception=0.1": {
+    "deception_rate": 0.1,
+    "fmc_mean": 0.5684375000000002,
+    "fmc_std": 0.013491895715576779,
+    "greedy_misled_mean": 0.75,
+    "greedy_misled_std": 0.0,
+    "random_mean": 0.508125,
+    "fmc_minus_greedy": -0.18156249999999985
+  },
+  "deception=0.2": {
+    "deception_rate": 0.2,
+    "fmc_mean": 0.5684375000000002,
+    "fmc_std": 0.013491895715576779,
+    "greedy_misled_mean": 0.74,
+    "greedy_misled_std": 0.020000000000000018,
+    "random_mean": 0.508125,
+    "fmc_minus_greedy": -0.17156249999999984
+  },
+  "deception=0.3": {
+    "deception_rate": 0.3,
+    "fmc_mean": 0.5684375000000002,
+    "fmc_std": 0.013491895715576779,
+    "greedy_misled_mean": 0.74,
+    "greedy_misled_std": 0.020000000000000018,
+    "random_mean": 0.508125,
+    "fmc_minus_greedy": -0.17156249999999984
+  },
+  "deception=0.5": {
+    "deception_rate": 0.5,
+    "fmc_mean": 0.5684375000000002,
+    "fmc_std": 0.013491895715576779,
+    "greedy_misled_mean": 0.71,
+    "greedy_misled_std": 0.058309518948453015,
+    "random_mean": 0.508125,
+    "fmc_minus_greedy": -0.1415624999999998
+  }
+}
