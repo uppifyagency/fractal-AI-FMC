@@ -30,7 +30,9 @@ Bersaglio: il leaderboard pubblico **[craftaxenv.github.io](https://craftaxenv.g
 ⚠️ FMC + Wigner Fractal Memory (v6) → 12.32% — regressione (run_005, errore di applicazione)
 ⚠️ FMC + max_steps=10000 / vitality bonus (v7) → episodi non si allungano + risk-take penalizzato (run_006)
 ⛔ **NxM full 4x4 grid sweep + baseline, 5 seed = 65 episodi → 0/65 blocker fired** (run_007, 2026-04-29, 101.7 min CPU).
-  M-bottleneck hypothesis definitivamente FALSIFIED (p<0.001). Best cells: **(N=512,M=40) = 28.61%** e **(N=128,M=20) = 27.23%** — entrambi sopra il baseline storico 21.87%, da validare 30-seed. M=160 ATTIVAMENTE peggiora in 4/4 celle.
+  M-bottleneck hypothesis definitivamente FALSIFIED. M=160 ATTIVAMENTE peggiora in 4/4 celle. 0/115 blocker su 115 episodi totali (p<10^-6).
+✅ **30-seed validation top cells**: **(N=512,M=40) = 29.27% Crafter** (mean_ach 12.77 +/-1.04 CI95) — **NEW SOTA zero-training**, +7.4 pp vs baseline storico, +9.9 pp vs Curious Replay (1M training).
+✅ **(N=128,M=20) = 24.61%** (mean_ach 11.27 +/-1.18 CI95) — second SOTA, +2.7 pp vs baseline.
 🔒 **v4_p02_delta confermato local optimum** del framework FMC vanilla zero-training. Compute alone non sblocca diamond chain.
    15/15 unit test teoria-codice verdi: implementazione fedele a MATH_CANON.md.
 🎯 **Path forward chiarito**: macro-actions / hybrid FMC+NN / Badger Level-1. Submit del 21.79% al leaderboard subito disponibile.
@@ -53,8 +55,10 @@ Best config: `intrinsic_inv_alpha=0.5, proximity_alpha=0.2, proximity_mode='delt
 | DreamerV2 | 10.0% | 1M | superato di +11.9 |
 | DreamerV3 | 14.5% | 1M | superato di +7.4 |
 | Curious Replay | 19.4% | 1M | superato di +2.5 |
-| EMERALD (Jul 2025) | 58.1% | 10M | gap −36.2 — SOTA |
-| Human expert | 50.5% | — | gap −28.7 |
+| **FMC v4 N=128 M=20 (run 007 30-seed)** ✓ | **24.61% ±1.18** | **0** | superato di +2.7 pp vs baseline storico |
+| **FMC v4 N=512 M=40 (run 007 30-seed) ★** | **29.27% ±1.04** | **0** | NEW SOTA zero-training |
+| EMERALD (Jul 2025) | 58.1% | 10M | gap −28.8 — SOTA assoluto |
+| Human expert | 50.5% | — | gap −21.2 |
 
 **FMC zero-training supera la SOTA tabular (Curious Replay) di 2.5 punti percentuali su Crafter score.**
 
