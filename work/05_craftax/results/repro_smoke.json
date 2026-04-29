@@ -1,0 +1,77 @@
+{
+  "config": "fast",
+  "n_walkers": 128,
+  "time_horizon": 20,
+  "n_seeds": 1,
+  "seeds": [
+    99
+  ],
+  "crafter_score_pct": 27.69,
+  "mean_achievements": 16.0,
+  "mean_achievements_ci95": 0.0,
+  "achievement_frequencies": {
+    "collect_wood": 1.0,
+    "place_table": 1.0,
+    "eat_cow": 0.0,
+    "collect_sapling": 1.0,
+    "collect_drink": 1.0,
+    "make_wood_pickaxe": 1.0,
+    "make_stone_pickaxe": 1.0,
+    "make_iron_pickaxe": 0.0,
+    "make_wood_sword": 1.0,
+    "make_stone_sword": 1.0,
+    "make_iron_sword": 0.0,
+    "place_plant": 1.0,
+    "defeat_zombie": 1.0,
+    "collect_stone": 1.0,
+    "place_stone": 1.0,
+    "eat_plant": 0.0,
+    "defeat_skeleton": 1.0,
+    "collect_iron": 1.0,
+    "collect_coal": 1.0,
+    "place_furnace": 1.0,
+    "collect_diamond": 0.0,
+    "wake_up": 0.0
+  },
+  "elapsed_min": 0.5,
+  "raw": [
+    {
+      "reward": 15.099999986588955,
+      "n_steps_decisions": 278,
+      "n_steps_env": 278,
+      "achievements_unlocked": 16,
+      "achievements_list": [
+        "collect_coal",
+        "collect_drink",
+        "collect_iron",
+        "collect_sapling",
+        "collect_stone",
+        "collect_wood",
+        "defeat_skeleton",
+        "defeat_zombie",
+        "make_stone_pickaxe",
+        "make_stone_sword",
+        "make_wood_pickaxe",
+        "make_wood_sword",
+        "place_furnace",
+        "place_plant",
+        "place_stone",
+        "place_table"
+      ],
+      "wall_time_s": 25.197484016418457,
+      "decisions_per_sec": 11.032847558068006,
+      "samples_per_decision": 2560,
+      "config": {
+        "n_walkers": 128,
+        "time_horizon": 20,
+        "alpha": 1.0,
+        "beta": 1.0,
+        "action_repeat": 1,
+        "intrinsic_inv_alpha": 0.5,
+        "proximity_alpha": 0.2,
+        "proximity_sigma": 10.0
+      },
+      "seed": 99
+    }
+  ]
+}
