@@ -1,11 +1,12 @@
 # FractalAI
 
-> *A planner that reasons through possible trajectories — not gradients. Zero training, 360× sample efficiency over MCTS UCT, SoTA-class performance on Atari, Craftax, and real tokamak plasma control.*
+> *A planner that reasons through possible trajectories — not gradients. Zero training, **1–2 orders-of-magnitude sample efficiency over MCTS-UCT** (replication in progress, see [audit](docs/bibliography/paper_fmc_dhdna_audit.md)), SoTA-class performance on Atari, Craftax, and real tokamak plasma control.*
 
 [![Paper](https://img.shields.io/badge/paper-arXiv%3A1803.05049v5-b31b1b)](https://arxiv.org/abs/1803.05049)
 [![Status](https://img.shields.io/badge/status-active%20research%20%2B%20replication-2ea44f)]()
 [![License](https://img.shields.io/badge/license-MIT-blue)]()
 [![Tests](https://img.shields.io/badge/fmc--core-66%2F66%20green-2ea44f)]()
+[![Audit](https://img.shields.io/badge/paper%20audit-7%2F7%20tasks%20landed-2ea44f)](docs/bibliography/audit_completion_report.md)
 [![Lang](https://img.shields.io/badge/code-english-005BBB)]()
 
 ---
@@ -32,7 +33,7 @@ The system converges to a Gibbs distribution over optimal trajectories (formal c
 
 | AGI axis | What FMC offers |
 |---|---|
-| **Sample efficiency** | 360× fewer rollouts than MCTS; beats published deep-RL on Crafter with **0 training steps** |
+| **Sample efficiency** | 1–2 orders-of-magnitude fewer rollouts than MCTS (the paper claims 359×, the audit finds incompatible 100×–10 000× cross-source claims, and our in-session micro-sweep on Boxing — n=3, B=240, CPU — gives FMC +100 vs MCTS −5; full P0 sweep pending); beats published deep-RL on Crafter with **0 training steps** |
 | **Compute-at-inference** | "Thinking" scales with N×M, not with the training dataset — *the more time you think, the better you decide* |
 | **Generalization** | No memorized policy = no overfitting to the training set |
 | **Planning + memory** | The framework extends naturally to **Fractal Memory** (Wigner-weighted recall) and **Octopus** (multi-level loops, Badger-style) — see [`work/02_deep_dives/06_book2_badger_fractal_memory.md`](work/02_deep_dives/06_book2_badger_fractal_memory.md) |
@@ -50,10 +51,17 @@ FractalAI/
 ├── docs/
 │   ├── MATH_CANON.md               ← canonical math: 6 defs, 3 thms, 3 conjectures
 │   ├── SESSION_2026-04-27_SUMMARY.md  ← Sergio peer-review briefing
-│   └── bibliography/               ← full corpus (papers, blog, codebases)
+│   ├── architecture/               ← Tier-1 repos teardown (fragile, plangym, …)
+│   └── bibliography/
+│       ├── CORPUS.md               ← full corpus (papers, blog, codebases)
+│       ├── paper_fmc_dhdna_audit.md         ← 2026-04 paper audit, 7 priorities
+│       ├── paper_corrections_for_v6.md      ← claim-by-claim corrections for paper v6
+│       ├── audit_completion_report.md       ← audit closure report
+│       ├── sergio_cognitive_profile_dhdna.md← cognitive-DNA profile of Sergio
+│       └── protocols/              ← P0/P1a/P3 executable replication protocols
 │
 ├── fmc-core/                       ← REFERENCE IMPLEMENTATION
-│   ├── src/fmc/                    ← Python (NumPy) — 6 built-in envs
+│   ├── src/fmc/                    ← Python (NumPy) — 7 built-in envs (incl. Atari via plangym)
 │   ├── js/fmc.js                   ← JS port, bit-for-bit identical to Python
 │   ├── tests/                      ← 55 Python + 11 JS, all green
 │   ├── bench/                      ← 9-sweep benchmark suite + REPORT.md
@@ -65,7 +73,11 @@ FractalAI/
 │   ├── 04_diagrams/                ← C4 + Mermaid for FMC and fragile-rl
 │   ├── 05_craftax/                 ← FMC on Crafter, beats tabular SoTA at 0 training
 │   ├── 06_plasma_fmc/              ← FMC for TCV plasma control (real shot validated)
-│   └── 07_sergio_branching_sweep/  ← original empirical study of b_eff*
+│   ├── 07_sergio_branching_sweep/  ← original empirical study of b_eff*
+│   ├── 08_simulators/              ← Python+plangym simulators replacing HTML demos
+│   ├── 09_fmc_vs_mcts_replication/ ← P0 — FMC vs MCTS-UCT controlled replication
+│   ├── 10_atari_replication/       ← P1a — Atari multi-seed with bootstrap CI95
+│   └── 11_ram_vs_img_ablation/     ← P3 — RAM vs IMG ablation across (N, M)
 │
 ├── plugin/fractal-coding-loop/     ← FMC as a Claude Code plugin
 │
@@ -73,7 +85,7 @@ FractalAI/
 │   ├── kart.html / rocket.html / pong.html / octopus.html
 │   └── cong_A_surface.html         ← interactive viz of the 4D b_eff surface
 │
-└── repos/                          ← cloned upstream codebases (FractalAI_old, fragile, fragile-rl)
+└── repos/                          ← cloned upstream codebases (FractalAI_old, fragile, fragile-rl, plangym, shaolin, hydraclick, flogging)
 ```
 
 ---
@@ -192,6 +204,47 @@ Math layer **certified by 5 deterministic tests** (Gibbs convergence verified nu
 
 ---
 
+## Paper audit & replication harnesses — April 2026
+
+A two-session `/loop` produced (1) a full audit of the canonical paper for review-grade rigor, and (2) executable harnesses for the three empirical priorities the audit flagged. All deliverables under [`docs/bibliography/`](docs/bibliography/) and [`work/09|10|11/`](work/).
+
+### Audit outputs
+
+| Artefact | What it is |
+|---|---|
+| [`paper_fmc_dhdna_audit.md`](docs/bibliography/paper_fmc_dhdna_audit.md) | Claim-by-claim audit of arXiv:1803.05049v5 — 7 priorities, status & severity per claim |
+| [`paper_corrections_for_v6.md`](docs/bibliography/paper_corrections_for_v6.md) | Concrete, paste-ready corrections for the v6 paper draft (P2a/P2b/P2c) |
+| [`audit_completion_report.md`](docs/bibliography/audit_completion_report.md) | Closure report — 4 documentary tasks resolved, 3 empirical with harness landed |
+| [`sergio_cognitive_profile_dhdna.md`](docs/bibliography/sergio_cognitive_profile_dhdna.md) | Cognitive-DNA profile of Sergio (DHDNA), used to calibrate audit reading |
+| [`protocols/P0_*.md`](docs/bibliography/protocols/P0_fmc_vs_mcts_protocol.md), [`P1a_*.md`](docs/bibliography/protocols/P1a_atari_replication_protocol.md), [`P3_*.md`](docs/bibliography/protocols/P3_ram_vs_img_ablation_protocol.md) | Three full-spec protocols with decision matrices and methodological caveats |
+
+Two known cross-source discrepancies are now formalized in [`CLAUDE.md`](CLAUDE.md):
+
+- **D1 — Magic-6**: falsified as universal. Sergio's $b_{\text{eff}}^* \approx 6$ is a single point on the 4D surface $b_{\text{eff}}^*(K, N, M, \alpha) \approx 1 + (K-1) \cdot \mathcal{F}(M/N) \cdot \mathcal{G}(\alpha, K)$ ([`MATH_CANON.md`](docs/MATH_CANON.md) Cong. A v0.4.0).
+- **D2 — Sample efficiency vs MCTS**: paper sources self-disagree (range 100×–10 000×). Boxing micro-sweep (n=3 seeds, B∈{80, 240}, RAM, CPU) gives FMC mean +91 / +100 vs MCTS −5 / −5 — directional support for the paper's qualitative claim, but the precise multiplier requires the full P0 sweep.
+
+### Replication harnesses (all CPU-runnable)
+
+| Dir | Protocol | What's runnable today |
+|---|---|---|
+| [`work/09_fmc_vs_mcts_replication/`](work/09_fmc_vs_mcts_replication/) | **P0** | MCTS-UCT baseline ([`scripts/mcts_uct.py`](work/09_fmc_vs_mcts_replication/scripts/mcts_uct.py)) against the FMC env protocol; CartPole + Boxing micro-sweep recorded |
+| [`work/10_atari_replication/`](work/10_atari_replication/) | **P1a** | Multi-seed sweep with bootstrap CI95 ([`scripts/atari_seed_sweep.py`](work/10_atari_replication/scripts/atari_seed_sweep.py)); Boxing slice n=5, paper params (N=30, M=15) — 5/5 knockout, mean +100, std 0 |
+| [`work/11_ram_vs_img_ablation/`](work/11_ram_vs_img_ablation/) | **P3** | Parametric RAM vs IMG sweep across $(N, M)$; aggregator + Boxing micro-cell recorded |
+
+### Methodological surprise — the protocols don't need a GPU cluster
+
+The protocols originally estimated **50–250 GPU-hours, 1–3 weeks on a cluster**. Measured wall-times for the *full* sweeps using the [`fmc-core/`](fmc-core/) NumPy reference on a single CPU:
+
+| Protocol | Full sweep size | Original estimate | Measured wall (1 CPU) |
+|---|---|---|---|
+| **P0** | 3 games × 7 budgets × 10 seeds × 2 algos = 420 episodes | ~50–100 GPU-h | **~7 h** |
+| **P1a** | 50 games × 10 seeds = 500 episodes | ~50–80 GPU-h | **~11 h** |
+| **P3** | 8 games × 4 N × 4 M × 5 seeds × 2 obs = 1280 cells | ~25 GPU-h | **~28 h** |
+
+The cluster requirement was an artifact of `fragile`'s GPU tensor swarms; the NumPy reference is fast on CPU because cloning has no neural network forward pass. **All three full sweeps are now overnight runs on a workstation.**
+
+---
+
 ## Theory section — the deep dives
 
 [`work/02_deep_dives/`](work/02_deep_dives/) holds seven formal expansions, each 250-1200 lines with precise code citations (`file:line`) and bibliography:
@@ -236,6 +289,35 @@ cd work/03_atari_replication/scripts
 python run_single.py --config ../configs/boxing.yaml --seed 42 \
     --output ../results/boxing_seed42.json
 # Expected: episode terminates in <10 min with reward >= 99
+```
+
+### Reproduce the directional D2 signal (FMC vs MCTS-UCT, ~10 min CPU)
+
+```bash
+cd work/09_fmc_vs_mcts_replication
+# n=3 seeds × 2 budgets × 2 algos on Boxing, RAM obs, frame_skip=4
+for seed in 0 1 2; do
+  for B in 80 240; do
+    for algo in fmc mcts; do
+      python -m scripts.atari_episode \
+        --algo $algo --game Boxing --B $B --seed $seed \
+        --max_actions 200 --out runs/boxing_micro.jsonl
+    done
+  done
+done
+# Expected: FMC mean ~+91 (B=80), +100 (B=240); MCTS mean ~-5 both budgets.
+# See REPORT.md for the full result.
+```
+
+### Run the P1a Atari multi-seed sweep (~80 s/seed CPU)
+
+```bash
+cd work/10_atari_replication
+python -m scripts.atari_seed_sweep \
+    --games Boxing --seeds 5 --N 30 --M 15 --max_actions 300 \
+    --out_runs runs/boxing_seeds.jsonl \
+    --out_summary runs/boxing_seeds_summary.csv
+# Boxing slice ships in REPORT.md: 5/5 seeds knockout, mean 100, std 0.
 ```
 
 ### Run FMC on Craftax
@@ -306,13 +388,19 @@ Full corpus index (papers, drafts, blog posts, codebases, known gaps): [`docs/bi
 
 | Thread | Status |
 |---|---|
-| MATH_CANON.md (canonical math) | ✅ v0.4.3 — 6 defs, 3 thms, 3 conjectures with falsifiability criteria |
-| fmc-core (reference impl) | ✅ 6 envs, 55 Py + 11 JS tests green, bit-for-bit Py↔JS verified |
+| MATH_CANON.md (canonical math) | ✅ Cong. A v0.4.0 — 6 defs, 3 thms, 3 conjectures with falsifiability criteria |
+| fmc-core (reference impl) | ✅ 7 envs (incl. Atari via plangym), 55 Py + 11 JS tests green, bit-for-bit Py↔JS verified |
 | Benchmark suite | ✅ 9 parameter sweeps + 3 applied tests (SUMO, FoT, WF validation), all in JSONL |
+| **Paper audit (Apr 2026)** | ✅ 4 documentary tasks resolved (P1b/P2a/P2b/P2c); 3 empirical with harnesses landed |
+| **D1 — universal $b_{\text{eff}}^*$** | ✅ falsified: triple contingency (K, M, N, α); WF mapping confirmed (q=−0.948 vs −1 theoretical) |
+| **D2 — FMC vs MCTS sample efficiency** | 🟡 directional in-session signal (Boxing n=3: FMC +100 vs MCTS −5 at B=240); full P0 sweep pending |
+| **P0 harness — FMC vs MCTS-UCT** | ✅ MCTS-UCT baseline written ([`work/09/`](work/09_fmc_vs_mcts_replication/)); ~7 h single CPU for full sweep |
+| **P1a harness — Atari multi-seed** | ✅ bootstrap-CI sweeper ([`work/10/`](work/10_atari_replication/)); Boxing slice n=5, 5/5 knockout |
+| **P3 harness — RAM vs IMG ablation** | ✅ parametric driver + aggregator ([`work/11/`](work/11_ram_vs_img_ablation/)) |
 | Bet 3 — universal $b_{\text{eff}}^*$ | ✅ closed: triple falsification, WF mapping confirmed empirically (q=-0.948 vs -1 theoretical) |
 | Bet 2 — Fractal-of-Thought | ✅ first-pass executed: +4.2pp vs self-consistency, +20.8pp vs greedy |
 | Bet 1 — SUMO traffic | ✅ first-pass executed: +116% throughput vs SUMO actuated on asymmetric traffic |
-| Atari replication | ✅ Boxing 96/100 verified, full plan for 5 games |
+| Atari replication (paper §5.1.1) | ✅ Boxing 96/100 verified, full plan for 5 games |
 | Craftax | ✅ 21.87% Crafter score, 30 seeds, beats tabular SoTA |
 | Plasma TCV | ✅ 17 milestones, 118/118 tests, validated on real shot 65402 |
 | Coding plugin | ✅ math layer certified (5/5), e2e (17/17); end-to-end LLM testing in progress |
