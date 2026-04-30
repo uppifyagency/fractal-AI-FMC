@@ -1,0 +1,6 @@
+commit	crafter_pct	n_seeds	mean_ach	ach_ci95	blocker_fired	status	description
+abc1234	29.27	30	12.77	1.04	0	keep	baseline (run_007 SOTA, frozen reference)
+def5678	30.50	28	13.20	1.10	0	keep	added wood_pickaxe priority shaping
+fed4321	28.10	14	11.50	1.80	0	discard	tried action_repeat=4
+000abcd	0.00	0	0.00	0.00	0	crash	N=2048 OOM
+zzz9999	29.40	22	12.85	1.30	1	keep	*** macro-action go_to_iron unlocked make_iron_pickaxe at 5% rate ***

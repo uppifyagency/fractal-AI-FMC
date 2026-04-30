@@ -1,0 +1,14 @@
+# Runtime artifacts that should NOT be committed:
+# - results.tsv: experiment log (regenerated per session)
+# - *.log: per-experiment stdout/stderr
+# - *.json: per-experiment full result dumps (often large)
+# - run.log: Karpathy convention for the latest experiment output
+
+results.tsv
+*.log
+run.log
+baseline_lock.json
+*_run.json
+
+# But keep the example/template files
+!example_results.tsv
