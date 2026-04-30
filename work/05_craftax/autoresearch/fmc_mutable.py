@@ -1,23 +1,22 @@
-"""fmc_mutable.py — autoresearch experiment 10: stone-tier boost on exp09.
+"""fmc_mutable.py — autoresearch experiment 11: wood-tier boost on exp10.
 
-Built on exp09 (42.89% Crafter, 3/4 blockers, NEW RECORD) — current best.
+Built on exp10 (44.14% Crafter, 3/4 blockers, NEW RECORD) — current best.
 
-Hypothesis (exp10):
-  exp09 boosted iron-tier inventory weights (iron, coal, diamond, iron-tools)
-  but kept stone-tier untouched. Walkers in the wood->stone transition phase
-  get the same gradient as v4 baseline. Boosting stone & stone-tools may
-  amplify the wood->stone->iron gradient end-to-end, particularly helping
-  walkers that haven't yet crafted a stone_pickaxe.
+Hypothesis (exp11):
+  exp09 boosted iron-tier; exp10 boosted stone-tier; both compounded (+1.93,
+  +1.24pp). Wood-tier remains at v4 baseline. The chain reasoning extends:
+  amplifying the entire wood->stone->iron->diamond gradient may continue to
+  give returns, even if smaller. Cheapest test before pivoting to multi-pop.
 
-  Same logic that gave exp09 its win: orthogonal compounding mechanism
-  layered on top of exp03's ach-fire bonus.
+  Risk: wood collection is near-saturated (collect_wood ach is the easiest).
+  Boosting it might just shift mid-tier reward without lifting blockers.
 
-Mutation (delta vs exp09):
-    stone          2  -> 4    (2x)
-    stone_pickaxe  6  -> 12   (2x)
-    stone_sword    6  -> 12   (2x)
-  iron-tier weights from exp09 unchanged (coal 8, iron 16, diamond 64,
-  iron_pickaxe 24, iron_sword 24). ACH_WEIGHTS unchanged.
+Mutation (delta vs exp10):
+    wood          1  -> 2    (2x)
+    wood_pickaxe  3  -> 6    (2x)
+    wood_sword    3  -> 6    (2x)
+  Stone-tier and iron-tier weights from exp10 unchanged.
+  ACH_WEIGHTS unchanged from exp03.
 """
 from __future__ import annotations
 
@@ -43,21 +42,21 @@ from fmc_craftax_v4 import (
 )
 
 
-# exp10 mutation: stone-tier boost layered on exp09 iron-tier boost
+# exp11 mutation: wood-tier boost layered on exp10 (stone+iron-tier already boosted)
 def inventory_total(state) -> jnp.ndarray:
     inv = state.inventory
     return (
-        inv.wood.astype(jnp.float32) * 1.0
-        + inv.stone.astype(jnp.float32) * 4.0          # exp10: 2 -> 4 (2x)
+        inv.wood.astype(jnp.float32) * 2.0             # exp11: 1 -> 2 (2x)
+        + inv.stone.astype(jnp.float32) * 4.0          # exp10
         + inv.coal.astype(jnp.float32) * 8.0           # exp09
         + inv.iron.astype(jnp.float32) * 16.0          # exp09
         + inv.diamond.astype(jnp.float32) * 64.0       # exp09
         + inv.sapling.astype(jnp.float32) * 0.5
-        + inv.wood_pickaxe.astype(jnp.float32) * 3.0
-        + inv.stone_pickaxe.astype(jnp.float32) * 12.0 # exp10: 6 -> 12 (2x)
+        + inv.wood_pickaxe.astype(jnp.float32) * 6.0   # exp11: 3 -> 6 (2x)
+        + inv.stone_pickaxe.astype(jnp.float32) * 12.0 # exp10
         + inv.iron_pickaxe.astype(jnp.float32) * 24.0  # exp09
-        + inv.wood_sword.astype(jnp.float32) * 3.0
-        + inv.stone_sword.astype(jnp.float32) * 12.0   # exp10: 6 -> 12 (2x)
+        + inv.wood_sword.astype(jnp.float32) * 6.0     # exp11: 3 -> 6 (2x)
+        + inv.stone_sword.astype(jnp.float32) * 12.0   # exp10
         + inv.iron_sword.astype(jnp.float32) * 24.0    # exp09
     )
 
@@ -300,7 +299,7 @@ def run_episode(seed: int, max_steps: int = 500,
             "proximity_alpha": CONFIG.proximity_alpha,
             "proximity_sigma": CONFIG.proximity_sigma,
             "proximity_mode": CONFIG.proximity_mode,
-            "_mutation": "exp10: exp09 + stone-tier boost (stone 2x, stone_pickaxe 2x, stone_sword 2x)",
+            "_mutation": "exp11: exp10 + wood-tier boost (wood 2x, wood_pickaxe 2x, wood_sword 2x)",
         },
         "seed": seed,
     }
