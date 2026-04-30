@@ -1,43 +1,29 @@
-"""fmc_mutable.py — THE FILE THE AGENT EDITS.
+"""fmc_mutable.py — autoresearch experiment 02: achievement-fire bonus.
 
-Initial state: a thin wrapper around fmc_craftax_v4 with the run_007 SOTA config:
-  N=512, M=40, intrinsic_inv_alpha=0.5, proximity_alpha=0.2, sigma=10, mode='delta'
+Hypothesis (autoresearch exp02):
+  exp01 iron-boost (inv weight amplification) was neutral (29.30% vs 29.27
+  baseline). The signal "more iron in inv" is too DENSE — walker gets reward
+  every tile mined. The REAL sparse-reward signal in Craftax is
+  ACHIEVEMENT UNLOCK: state.achievements[i] flips False -> True at the
+  exact moment a goal completes. Targeting this directly biases search
+  toward chain progression rather than incremental hoarding.
 
-This achieves 29.27% Crafter (30 seeds, +/- 1.04 CI95). The agent should edit
-this file freely to try to improve it. It MUST keep the run_episode signature
-intact since prepare_craftax.evaluate() calls it.
+Mutation:
+  - ACHIEVEMENT_BONUS = 50.0 added to cum_reward per newly-unlocked
+    achievement during walker simulation (since planning root).
+  - Tracks baseline_achievements at root, computes new-since-root each tick.
+  - Stacks ON TOP of inv-delta + delta-proximity shaping (additive).
 
-REQUIRED INTERFACE (do not break):
-    run_episode(seed: int, max_steps: int = 500,
-                env_name: str = "Craftax-Classic-Symbolic-v1") -> dict
+Why bonus = 50:
+  - Wood-tier inv = 1 unit, intrinsic_inv_alpha=0.5 -> wood gives +0.5/wood
+  - Typical episode collects ~30 wood = +15 inv signal at end of M=40 horizon
+  - Single achievement unlock = +50 -> dominates 3x ANY other shaping signal
+  - Keeps intrinsic shaping useful as exploration prior, but achievement
+    unlock becomes the SUPREME goal.
 
-    The returned dict MUST have these keys (others are fine):
-      - 'reward': float
-      - 'achievements_list': list[str]   (subset of CRAFTAX_CLASSIC_ACHIEVEMENTS)
-      - 'achievements_unlocked': int     (= len(achievements_list))
-      - 'n_steps_decisions': int
-      - 'wall_time_s': float
-      - 'decisions_per_sec': float
-
-LIBERTY (full freedom under level B):
-  - Modify any function, the FMC core, the reward shaping, the scanning policy
-  - Add helper functions, classes, modules
-  - Import anything already in the project's pyproject (no new deps)
-  - Replace FMC entirely with a different planner if you want — the metric is what matters
-
-CONSTRAINTS:
-  - Cannot modify prepare_craftax.py (FROZEN evaluation harness)
-  - Cannot modify test_fmc_theory.py (FROZEN theory invariants)
-  - If your modified algorithm still claims to be "FMC" it should pass the
-    15 unit tests; if you break the FMC invariants intentionally, document
-    that you've moved to a non-FMC algorithm in the description tag.
-
-Read these for context BEFORE editing:
-  - ../../docs/MATH_CANON.md — the math invariants of FMC (Def 2-4)
-  - ../docs/run_005_wigner_memory_negative.md — naive memory FAILED (-9.5pp)
-  - ../docs/run_006_long_episode_and_vitality_negative.md — vitality FAILED
-  - ../docs/run_007_NM_sweep_GPU.md — N x M scaling FAILED to crack diamond chain
-  - ../docs/run_007_addendum_fragile_port_analysis.md — why GPU port doesn't help
+Risk: if relativize collapses on bimodal cum_reward (many walkers at +0,
+few at +50), cloning kernel might over-concentrate. Mitigated by relativize's
+sub-exponential asymptote (Def 2 prop 4).
 """
 from __future__ import annotations
 
@@ -46,55 +32,224 @@ import sys
 import time
 from pathlib import Path
 
-# Force CPU before JAX import (Metal blocks Craftax)
 os.environ.setdefault("JAX_PLATFORMS", "cpu")
 
-# Add the parent scripts dir so we can import fmc_craftax_v4 verbatim
+import jax
+import jax.numpy as jnp
+from craftax.craftax_env import make_craftax_env_from_name
+
+
 HERE = Path(__file__).resolve().parent
 SCRIPTS = HERE.parent / "scripts"
 if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 
-from fmc_craftax_v4 import FMCConfig, run_episode as _v4_run_episode  # noqa: E402
+from fmc_craftax_v4 import (
+    relativize, proximity_bonus_single, inventory_total, FMCConfig,
+)
 
 
-# Initial config = run_007 SOTA at (N=512, M=40).
-# The agent can change these or replace the whole pipeline below.
+# ============================================================================
+# MUTATION exp02: achievement-fire bonus
+# ============================================================================
+
+ACHIEVEMENT_BONUS = 50.0   # reward per newly-unlocked achievement (since root)
+
+
+def make_fmc_decide(env, params, n_actions: int, cfg: FMCConfig):
+    N = cfg.n_walkers
+    M = cfg.time_horizon
+    K = cfg.action_repeat
+    INV_A = cfg.intrinsic_inv_alpha
+    PROX_A = cfg.proximity_alpha
+    SIGMA = cfg.proximity_sigma
+    PROX_DELTA = cfg.proximity_mode == "delta"
+    ACH_BONUS = ACHIEVEMENT_BONUS
+
+    def step_walker(rng, state, action):
+        return env.step(rng, state, action, params)
+
+    vmapped_step = jax.vmap(step_walker, in_axes=(0, 0, 0))
+    vmapped_inv = jax.vmap(inventory_total)
+    vmapped_prox = jax.vmap(lambda s: proximity_bonus_single(s, SIGMA))
+
+    # Achievement count per walker: state.achievements is bool[22]
+    vmapped_ach_count = jax.vmap(
+        lambda s: jnp.sum(s.achievements.astype(jnp.float32))
+    )
+
+    def fmc_decide(rng, root_state):
+        walker_states = jax.tree_util.tree_map(
+            lambda x: jnp.broadcast_to(x, (N,) + x.shape) if hasattr(x, "shape") else x,
+            root_state,
+        )
+
+        rng, k_init = jax.random.split(rng)
+        init_actions = jax.random.randint(k_init, (N,), 0, n_actions)
+        cum_rewards = jnp.zeros(N)
+        alive = jnp.ones(N, dtype=jnp.bool_)
+        inv_baseline = vmapped_inv(walker_states)
+        prox_prev = vmapped_prox(walker_states) if PROX_A > 0.0 else jnp.zeros(N)
+        # NEW: track baseline achievement count at planning root (per walker, broadcasted)
+        ach_baseline = vmapped_ach_count(walker_states)
+
+        def tick_body(carry, t):
+            walker_states, init_actions, cum_rewards, alive, prox_prev, rng = carry
+
+            rng, k_act = jax.random.split(rng)
+            random_actions = jax.random.randint(k_act, (N,), 0, n_actions)
+            actions = jnp.where(t == 0, init_actions, random_actions)
+
+            def inner_step(carry_inner, _):
+                ws, cr, al, rng_in = carry_inner
+                rng_in, k_step = jax.random.split(rng_in)
+                step_keys = jax.random.split(k_step, N)
+                obs_in, ws, r, d, _ = vmapped_step(step_keys, ws, actions)
+                cr = jnp.where(al, cr + r, cr)
+                al = al & ~d
+                return (ws, cr, al, rng_in), obs_in
+
+            (walker_states, cum_rewards, alive, rng), obs_seq = jax.lax.scan(
+                inner_step, (walker_states, cum_rewards, alive, rng), jnp.arange(K)
+            )
+            obs = obs_seq[-1]
+
+            if INV_A > 0.0:
+                cur_inv = vmapped_inv(walker_states)
+                inv_delta = jnp.maximum(cur_inv - inv_baseline, 0.0)
+                cum_rewards = cum_rewards + INV_A * inv_delta
+
+            if PROX_A > 0.0:
+                prox = vmapped_prox(walker_states)
+                if PROX_DELTA:
+                    delta = jnp.maximum(prox - prox_prev, 0.0)
+                    cum_rewards = cum_rewards + PROX_A * delta
+                    prox_prev = prox
+                else:
+                    cum_rewards = cum_rewards + PROX_A * prox
+
+            # NEW: achievement-fire bonus
+            cur_ach = vmapped_ach_count(walker_states)
+            new_ach_count = jnp.maximum(cur_ach - ach_baseline, 0.0)
+            cum_rewards = cum_rewards + ACH_BONUS * new_ach_count
+
+            new_alive = alive
+            new_cum = cum_rewards
+
+            rng, k_perm = jax.random.split(rng)
+            perm = jax.random.permutation(k_perm, N)
+            perm = jnp.where(perm == jnp.arange(N), (perm + 1) % N, perm)
+            partner_obs = obs[perm]
+            distances = jnp.linalg.norm(obs - partner_obs, axis=-1)
+
+            R_norm = relativize(new_cum) * new_alive
+            D_norm = relativize(distances) * new_alive
+            VR = (R_norm ** cfg.alpha) * (D_norm ** cfg.beta)
+
+            rng, k_perm2 = jax.random.split(rng)
+            perm2 = jax.random.permutation(k_perm2, N)
+            perm2 = jnp.where(perm2 == jnp.arange(N), (perm2 + 1) % N, perm2)
+            VR_self = VR
+            VR_other = VR[perm2]
+            denom = jnp.where(VR_self > 1e-8, VR_self, 1e-8)
+            clone_prob = jnp.clip((VR_other - VR_self) / denom, 0, 1)
+            clone_prob = jnp.where(new_alive, clone_prob, 1.0)
+
+            rng, k_draw = jax.random.split(rng)
+            draws = jax.random.uniform(k_draw, (N,))
+            will_clone = (draws < clone_prob) & new_alive[perm2]
+
+            def clone_field(field):
+                if not hasattr(field, "shape") or len(field.shape) == 0:
+                    return field
+                wc = will_clone.reshape(will_clone.shape + (1,) * (len(field.shape) - 1))
+                return jnp.where(wc, field[perm2], field)
+
+            walker_states = jax.tree_util.tree_map(clone_field, walker_states)
+            init_actions = jnp.where(will_clone, init_actions[perm2], init_actions)
+            new_cum = jnp.where(will_clone, new_cum[perm2], new_cum)
+            new_alive = jnp.where(will_clone, new_alive[perm2], new_alive)
+            prox_prev = jnp.where(will_clone, prox_prev[perm2], prox_prev)
+
+            return (walker_states, init_actions, new_cum, new_alive, prox_prev, rng), None
+
+        carry = (walker_states, init_actions, cum_rewards, alive, prox_prev, rng)
+        carry, _ = jax.lax.scan(tick_body, carry, jnp.arange(M))
+        _, init_actions, _, alive, _, _ = carry
+
+        votes = jnp.zeros(n_actions)
+        votes = votes.at[init_actions].add(alive.astype(jnp.float32))
+        return jnp.argmax(votes), alive.sum()
+
+    return jax.jit(fmc_decide)
+
+
 CONFIG = FMCConfig(
-    n_walkers=512,
-    time_horizon=40,
-    alpha=1.0,
-    beta=1.0,
-    action_repeat=1,
-    intrinsic_inv_alpha=0.5,
-    proximity_alpha=0.2,
-    proximity_sigma=10.0,
-    proximity_mode="delta",
+    n_walkers=512, time_horizon=40,
+    alpha=1.0, beta=1.0, action_repeat=1,
+    intrinsic_inv_alpha=0.5, proximity_alpha=0.2,
+    proximity_sigma=10.0, proximity_mode="delta",
 )
 
 
 def run_episode(seed: int, max_steps: int = 500,
                 env_name: str = "Craftax-Classic-Symbolic-v1") -> dict:
-    """Run one episode with the current CONFIG. The agent typically EITHER
-    edits CONFIG above OR replaces this function body.
+    env = make_craftax_env_from_name(env_name, auto_reset=False)
+    params = env.default_params
+    n_actions = env.action_space(params).n
 
-    Must return a dict with the keys listed in the module docstring.
-    """
-    return _v4_run_episode(
-        seed=seed, cfg=CONFIG, max_steps=max_steps, verbose=False,
-        env_name=env_name,
-    )
+    fmc_decide = make_fmc_decide(env, params, n_actions, CONFIG)
 
+    rng = jax.random.PRNGKey(seed)
+    rng, k_reset = jax.random.split(rng)
+    obs, state = env.reset(k_reset, params)
 
-if __name__ == "__main__":
-    # Quick local check: 1 seed, prints summary
-    import json
-    t0 = time.time()
-    r = run_episode(seed=42)
-    print(json.dumps({
-        "seed": 42,
-        "achievements_unlocked": r["achievements_unlocked"],
-        "reward": r["reward"],
-        "n_steps_decisions": r["n_steps_decisions"],
-        "wall_s": time.time() - t0,
-    }, indent=2))
+    cum_reward = 0.0
+    t_start = time.time()
+    done = False
+    n_steps = 0
+    info = {}
+
+    for step in range(max_steps):
+        rng, k_dec = jax.random.split(rng)
+        action, n_alive = fmc_decide(k_dec, state)
+        action = int(action)
+        for _ in range(CONFIG.action_repeat):
+            rng, k_step = jax.random.split(rng)
+            obs, state, reward, done, info = env.step(k_step, state, action, params)
+            cum_reward += float(reward)
+            if done:
+                break
+        n_steps += 1
+        if done:
+            break
+
+    achievements_dict = {}
+    if isinstance(info, dict):
+        for k, v in info.items():
+            if k.startswith("Achievements/") and float(v) > 0:
+                achievements_dict[k.replace("Achievements/", "")] = float(v)
+
+    wall = time.time() - t_start
+    decisions = max(1, n_steps)
+    return {
+        "reward": float(cum_reward),
+        "n_steps_decisions": int(n_steps),
+        "n_steps_env": int(n_steps * CONFIG.action_repeat),
+        "achievements_unlocked": int(len(achievements_dict)),
+        "achievements_list": sorted(achievements_dict.keys()),
+        "wall_time_s": float(wall),
+        "decisions_per_sec": float(decisions / wall),
+        "samples_per_decision": int(CONFIG.n_walkers * CONFIG.time_horizon * CONFIG.action_repeat),
+        "config": {
+            "n_walkers": CONFIG.n_walkers, "time_horizon": CONFIG.time_horizon,
+            "alpha": CONFIG.alpha, "beta": CONFIG.beta,
+            "action_repeat": CONFIG.action_repeat,
+            "intrinsic_inv_alpha": CONFIG.intrinsic_inv_alpha,
+            "proximity_alpha": CONFIG.proximity_alpha,
+            "proximity_sigma": CONFIG.proximity_sigma,
+            "proximity_mode": CONFIG.proximity_mode,
+            "_mutation": f"exp02-ach-bonus: ACHIEVEMENT_BONUS={ACHIEVEMENT_BONUS}",
+        },
+        "seed": seed,
+    }
