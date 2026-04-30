@@ -1,22 +1,23 @@
-"""fmc_mutable.py — autoresearch experiment 11: wood-tier boost on exp10.
+"""fmc_mutable.py — autoresearch experiment 12: proximity_alpha doubled.
 
-Built on exp10 (44.14% Crafter, 3/4 blockers, NEW RECORD) — current best.
+Built on exp11 (45.94% Crafter, 3/4 blockers, NEW RECORD) — current best.
 
-Hypothesis (exp11):
-  exp09 boosted iron-tier; exp10 boosted stone-tier; both compounded (+1.93,
-  +1.24pp). Wood-tier remains at v4 baseline. The chain reasoning extends:
-  amplifying the entire wood->stone->iron->diamond gradient may continue to
-  give returns, even if smaller. Cheapest test before pivoting to multi-pop.
+Hypothesis (exp12):
+  Inventory tier-boosts have compounded for 3 experiments in a row (+iron,
+  +stone, +wood). Tier-saturation reached. Pivot to an orthogonal channel:
+  the proximity_bonus reward, currently scaled by proximity_alpha=0.2.
 
-  Risk: wood collection is near-saturated (collect_wood ach is the easiest).
-  Boosting it might just shift mid-tier reward without lifting blockers.
+  proximity_bonus_single emits a curriculum-gated gradient toward needed
+  resources (wood when need_wood, stone when has_wood_pickaxe & need_stone,
+  diamond when has_iron_pickaxe & need_diamond, etc.). Doubling the alpha
+  amplifies this navigation signal without changing what's prioritized.
 
-Mutation (delta vs exp10):
-    wood          1  -> 2    (2x)
-    wood_pickaxe  3  -> 6    (2x)
-    wood_sword    3  -> 6    (2x)
-  Stone-tier and iron-tier weights from exp10 unchanged.
-  ACH_WEIGHTS unchanged from exp03.
+  Risk: proximity_alpha was tuned in v4. Doubling may overshadow the
+  ach-fire bonus for walkers in early-stage chains. Falsifiable.
+
+Mutation (delta vs exp11):
+    proximity_alpha   0.2  -> 0.4  (2x)
+  Inventory weights and ACH_WEIGHTS unchanged.
 """
 from __future__ import annotations
 
@@ -237,7 +238,7 @@ def make_fmc_decide(env, params, n_actions: int, cfg: FMCConfig):
 CONFIG = FMCConfig(
     n_walkers=512, time_horizon=40,
     alpha=1.0, beta=1.0, action_repeat=1,
-    intrinsic_inv_alpha=0.5, proximity_alpha=0.2,
+    intrinsic_inv_alpha=0.5, proximity_alpha=0.4,  # exp12: 0.2 -> 0.4 (2x)
     proximity_sigma=10.0, proximity_mode="delta",
 )
 
@@ -299,7 +300,7 @@ def run_episode(seed: int, max_steps: int = 500,
             "proximity_alpha": CONFIG.proximity_alpha,
             "proximity_sigma": CONFIG.proximity_sigma,
             "proximity_mode": CONFIG.proximity_mode,
-            "_mutation": "exp11: exp10 + wood-tier boost (wood 2x, wood_pickaxe 2x, wood_sword 2x)",
+            "_mutation": "exp12: exp11 + proximity_alpha 0.2 -> 0.4 (2x)",
         },
         "seed": seed,
     }
