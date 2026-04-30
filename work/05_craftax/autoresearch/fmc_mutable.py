@@ -1,29 +1,23 @@
-"""fmc_mutable.py — autoresearch experiment 09: STACK inv-boost on exp03 ach.
+"""fmc_mutable.py — autoresearch experiment 10: stone-tier boost on exp09.
 
-Built on exp03 (40.96% Crafter, 3/4 blockers fired) — current best.
+Built on exp09 (42.89% Crafter, 3/4 blockers, NEW RECORD) — current best.
 
-Hypothesis (exp09):
-  exp01 alone (iron-tier inv-boost) was neutral vs baseline (29.30%, 0 blockers).
-  But exp01 was tested BEFORE the ach-fire bonus existed. With exp03's
-  tier-weighted ach bonus driving the cloning kernel toward blockers, the
-  iron-tier inv-boost may now amplify the IRON-stage gradient specifically
-  (collect_iron, collect_coal, make_iron_pickaxe), giving a small structural
-  boost to the chain.
+Hypothesis (exp10):
+  exp09 boosted iron-tier inventory weights (iron, coal, diamond, iron-tools)
+  but kept stone-tier untouched. Walkers in the wood->stone transition phase
+  get the same gradient as v4 baseline. Boosting stone & stone-tools may
+  amplify the wood->stone->iron gradient end-to-end, particularly helping
+  walkers that haven't yet crafted a stone_pickaxe.
 
-  This is Tier 1C from HANDOFF.md: "Stack exp03 weights with iron-tier
-  inv-boost (exp01 weights)."
+  Same logic that gave exp09 its win: orthogonal compounding mechanism
+  layered on top of exp03's ach-fire bonus.
 
-Mutation:
-  Override the v4 `inventory_total` with iron-tier-boosted weights.
-  Original (v4) -> exp09:
-    iron       8 -> 16   (2x)
-    coal       4 ->  8   (2x)
-    diamond   16 -> 64   (4x)
-    iron_p    12 -> 24   (2x)
-    iron_s    12 -> 24   (2x)
-  Other inventory weights unchanged.
-
-  ACH_WEIGHTS unchanged from exp03 (tier-weighted blockers 150-300).
+Mutation (delta vs exp09):
+    stone          2  -> 4    (2x)
+    stone_pickaxe  6  -> 12   (2x)
+    stone_sword    6  -> 12   (2x)
+  iron-tier weights from exp09 unchanged (coal 8, iron 16, diamond 64,
+  iron_pickaxe 24, iron_sword 24). ACH_WEIGHTS unchanged.
 """
 from __future__ import annotations
 
@@ -49,22 +43,22 @@ from fmc_craftax_v4 import (
 )
 
 
-# exp09 mutation: iron-tier-boosted inventory_total
+# exp10 mutation: stone-tier boost layered on exp09 iron-tier boost
 def inventory_total(state) -> jnp.ndarray:
     inv = state.inventory
     return (
         inv.wood.astype(jnp.float32) * 1.0
-        + inv.stone.astype(jnp.float32) * 2.0
-        + inv.coal.astype(jnp.float32) * 8.0          # 4 -> 8 (2x)
-        + inv.iron.astype(jnp.float32) * 16.0         # 8 -> 16 (2x)
-        + inv.diamond.astype(jnp.float32) * 64.0      # 16 -> 64 (4x)
+        + inv.stone.astype(jnp.float32) * 4.0          # exp10: 2 -> 4 (2x)
+        + inv.coal.astype(jnp.float32) * 8.0           # exp09
+        + inv.iron.astype(jnp.float32) * 16.0          # exp09
+        + inv.diamond.astype(jnp.float32) * 64.0       # exp09
         + inv.sapling.astype(jnp.float32) * 0.5
         + inv.wood_pickaxe.astype(jnp.float32) * 3.0
-        + inv.stone_pickaxe.astype(jnp.float32) * 6.0
-        + inv.iron_pickaxe.astype(jnp.float32) * 24.0  # 12 -> 24 (2x)
+        + inv.stone_pickaxe.astype(jnp.float32) * 12.0 # exp10: 6 -> 12 (2x)
+        + inv.iron_pickaxe.astype(jnp.float32) * 24.0  # exp09
         + inv.wood_sword.astype(jnp.float32) * 3.0
-        + inv.stone_sword.astype(jnp.float32) * 6.0
-        + inv.iron_sword.astype(jnp.float32) * 24.0    # 12 -> 24 (2x)
+        + inv.stone_sword.astype(jnp.float32) * 12.0   # exp10: 6 -> 12 (2x)
+        + inv.iron_sword.astype(jnp.float32) * 24.0    # exp09
     )
 
 
@@ -306,7 +300,7 @@ def run_episode(seed: int, max_steps: int = 500,
             "proximity_alpha": CONFIG.proximity_alpha,
             "proximity_sigma": CONFIG.proximity_sigma,
             "proximity_mode": CONFIG.proximity_mode,
-            "_mutation": "exp09-stack: exp03 ach + exp01 iron-tier inv-boost (iron/coal 2x, diamond 4x, iron-tools 2x)",
+            "_mutation": "exp10: exp09 + stone-tier boost (stone 2x, stone_pickaxe 2x, stone_sword 2x)",
         },
         "seed": seed,
     }
