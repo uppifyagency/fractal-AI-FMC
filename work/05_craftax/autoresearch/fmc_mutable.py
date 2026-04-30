@@ -1,23 +1,16 @@
-"""fmc_mutable.py — autoresearch experiment 12: proximity_alpha doubled.
+"""fmc_mutable.py — autoresearch experiment 13: proximity_alpha sweet spot.
 
-Built on exp11 (45.94% Crafter, 3/4 blockers, NEW RECORD) — current best.
+exp12 (proximity 0.4) gave 46.45% Crafter (+0.51pp over exp11) BUT lost
+the diamond blocker entirely (3/4 -> 2/4). Mid-tier mean_ach jumped
+massively (13.92 -> 15.27) but chain completion regressed.
 
-Hypothesis (exp12):
-  Inventory tier-boosts have compounded for 3 experiments in a row (+iron,
-  +stone, +wood). Tier-saturation reached. Pivot to an orthogonal channel:
-  the proximity_bonus reward, currently scaled by proximity_alpha=0.2.
+Hypothesis (exp13):
+  proximity_alpha=0.4 over-prioritizes navigation, walkers hover near
+  resources instead of crafting. Half-step at 0.3 may capture mid-tier
+  gain without sacrificing diamond completion.
 
-  proximity_bonus_single emits a curriculum-gated gradient toward needed
-  resources (wood when need_wood, stone when has_wood_pickaxe & need_stone,
-  diamond when has_iron_pickaxe & need_diamond, etc.). Doubling the alpha
-  amplifies this navigation signal without changing what's prioritized.
-
-  Risk: proximity_alpha was tuned in v4. Doubling may overshadow the
-  ach-fire bonus for walkers in early-stage chains. Falsifiable.
-
-Mutation (delta vs exp11):
-    proximity_alpha   0.2  -> 0.4  (2x)
-  Inventory weights and ACH_WEIGHTS unchanged.
+Mutation (delta vs exp12):
+    proximity_alpha   0.4  -> 0.3  (1.5x vs baseline exp11)
 """
 from __future__ import annotations
 
@@ -238,7 +231,7 @@ def make_fmc_decide(env, params, n_actions: int, cfg: FMCConfig):
 CONFIG = FMCConfig(
     n_walkers=512, time_horizon=40,
     alpha=1.0, beta=1.0, action_repeat=1,
-    intrinsic_inv_alpha=0.5, proximity_alpha=0.4,  # exp12: 0.2 -> 0.4 (2x)
+    intrinsic_inv_alpha=0.5, proximity_alpha=0.3,  # exp13: sweet spot between exp11 (0.2) and exp12 (0.4)
     proximity_sigma=10.0, proximity_mode="delta",
 )
 
@@ -300,7 +293,7 @@ def run_episode(seed: int, max_steps: int = 500,
             "proximity_alpha": CONFIG.proximity_alpha,
             "proximity_sigma": CONFIG.proximity_sigma,
             "proximity_mode": CONFIG.proximity_mode,
-            "_mutation": "exp12: exp11 + proximity_alpha 0.2 -> 0.4 (2x)",
+            "_mutation": "exp13: proximity_alpha 0.3 (sweet spot search)",
         },
         "seed": seed,
     }
