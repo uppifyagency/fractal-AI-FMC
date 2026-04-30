@@ -1,26 +1,29 @@
-"""fmc_mutable.py — autoresearch experiment 03: TIER-WEIGHTED achievement bonus.
+"""fmc_mutable.py — autoresearch experiment 09: STACK inv-boost on exp03 ach.
 
-Built on exp02 (uniform +50 per ach unlock, achieved 37.75% Crafter, KEPT,
-broke 2/4 blockers: make_iron_pickaxe=18%, make_iron_sword=9%).
+Built on exp03 (40.96% Crafter, 3/4 blockers fired) — current best.
 
-Hypothesis (exp03):
-  Uniform +50 per achievement is suboptimal. Easy achievements (wood, table)
-  are sampled by ~all walkers in early M=40 ticks (saturate). Hard chain end
-  (diamond) is rare. Tier-weighted bonus: small for easy, big for blockers,
-  amplifies the gradient toward the unsolved chain.
+Hypothesis (exp09):
+  exp01 alone (iron-tier inv-boost) was neutral vs baseline (29.30%, 0 blockers).
+  But exp01 was tested BEFORE the ach-fire bonus existed. With exp03's
+  tier-weighted ach bonus driving the cloning kernel toward blockers, the
+  iron-tier inv-boost may now amplify the IRON-stage gradient specifically
+  (collect_iron, collect_coal, make_iron_pickaxe), giving a small structural
+  boost to the chain.
+
+  This is Tier 1C from HANDOFF.md: "Stack exp03 weights with iron-tier
+  inv-boost (exp01 weights)."
 
 Mutation:
-  Per-achievement weight vector ACH_WEIGHTS[22], applied as:
-    new_ach_bool[w][a] = current_ach[w][a] AND NOT ach_baseline[w][a]
-    bonus[w] = sum_a (new_ach_bool[w][a] * ACH_WEIGHTS[a])
-    cum_rewards += bonus
+  Override the v4 `inventory_total` with iron-tier-boosted weights.
+  Original (v4) -> exp09:
+    iron       8 -> 16   (2x)
+    coal       4 ->  8   (2x)
+    diamond   16 -> 64   (4x)
+    iron_p    12 -> 24   (2x)
+    iron_s    12 -> 24   (2x)
+  Other inventory weights unchanged.
 
-  Weights span 10x range:
-    - 10-30: easy & filler (wood, place_table, place_stone, place_plant, wake_up)
-    - 50-80: gateway (make_stone_*, collect_iron, collect_coal, place_furnace, eat_cow,
-             collect_drink, defeat_*, collect_sapling)
-    - 150-300: BLOCKERS (make_iron_pickaxe=150, make_iron_sword=150,
-             eat_plant=200, collect_diamond=300)
+  ACH_WEIGHTS unchanged from exp03 (tier-weighted blockers 150-300).
 """
 from __future__ import annotations
 
@@ -42,8 +45,27 @@ if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 
 from fmc_craftax_v4 import (
-    relativize, proximity_bonus_single, inventory_total, FMCConfig,
+    relativize, proximity_bonus_single, FMCConfig,
 )
+
+
+# exp09 mutation: iron-tier-boosted inventory_total
+def inventory_total(state) -> jnp.ndarray:
+    inv = state.inventory
+    return (
+        inv.wood.astype(jnp.float32) * 1.0
+        + inv.stone.astype(jnp.float32) * 2.0
+        + inv.coal.astype(jnp.float32) * 8.0          # 4 -> 8 (2x)
+        + inv.iron.astype(jnp.float32) * 16.0         # 8 -> 16 (2x)
+        + inv.diamond.astype(jnp.float32) * 64.0      # 16 -> 64 (4x)
+        + inv.sapling.astype(jnp.float32) * 0.5
+        + inv.wood_pickaxe.astype(jnp.float32) * 3.0
+        + inv.stone_pickaxe.astype(jnp.float32) * 6.0
+        + inv.iron_pickaxe.astype(jnp.float32) * 24.0  # 12 -> 24 (2x)
+        + inv.wood_sword.astype(jnp.float32) * 3.0
+        + inv.stone_sword.astype(jnp.float32) * 6.0
+        + inv.iron_sword.astype(jnp.float32) * 24.0    # 12 -> 24 (2x)
+    )
 
 
 # ============================================================================
@@ -284,7 +306,7 @@ def run_episode(seed: int, max_steps: int = 500,
             "proximity_alpha": CONFIG.proximity_alpha,
             "proximity_sigma": CONFIG.proximity_sigma,
             "proximity_mode": CONFIG.proximity_mode,
-            "_mutation": "exp03-tier-weighted: blockers 150-300, gateway 50-80, easy 10-30",
+            "_mutation": "exp09-stack: exp03 ach + exp01 iron-tier inv-boost (iron/coal 2x, diamond 4x, iron-tools 2x)",
         },
         "seed": seed,
     }
