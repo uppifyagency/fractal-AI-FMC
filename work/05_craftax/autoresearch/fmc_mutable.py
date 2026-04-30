@@ -1,29 +1,26 @@
-"""fmc_mutable.py — autoresearch experiment 02: achievement-fire bonus.
+"""fmc_mutable.py — autoresearch experiment 03: TIER-WEIGHTED achievement bonus.
 
-Hypothesis (autoresearch exp02):
-  exp01 iron-boost (inv weight amplification) was neutral (29.30% vs 29.27
-  baseline). The signal "more iron in inv" is too DENSE — walker gets reward
-  every tile mined. The REAL sparse-reward signal in Craftax is
-  ACHIEVEMENT UNLOCK: state.achievements[i] flips False -> True at the
-  exact moment a goal completes. Targeting this directly biases search
-  toward chain progression rather than incremental hoarding.
+Built on exp02 (uniform +50 per ach unlock, achieved 37.75% Crafter, KEPT,
+broke 2/4 blockers: make_iron_pickaxe=18%, make_iron_sword=9%).
+
+Hypothesis (exp03):
+  Uniform +50 per achievement is suboptimal. Easy achievements (wood, table)
+  are sampled by ~all walkers in early M=40 ticks (saturate). Hard chain end
+  (diamond) is rare. Tier-weighted bonus: small for easy, big for blockers,
+  amplifies the gradient toward the unsolved chain.
 
 Mutation:
-  - ACHIEVEMENT_BONUS = 50.0 added to cum_reward per newly-unlocked
-    achievement during walker simulation (since planning root).
-  - Tracks baseline_achievements at root, computes new-since-root each tick.
-  - Stacks ON TOP of inv-delta + delta-proximity shaping (additive).
+  Per-achievement weight vector ACH_WEIGHTS[22], applied as:
+    new_ach_bool[w][a] = current_ach[w][a] AND NOT ach_baseline[w][a]
+    bonus[w] = sum_a (new_ach_bool[w][a] * ACH_WEIGHTS[a])
+    cum_rewards += bonus
 
-Why bonus = 50:
-  - Wood-tier inv = 1 unit, intrinsic_inv_alpha=0.5 -> wood gives +0.5/wood
-  - Typical episode collects ~30 wood = +15 inv signal at end of M=40 horizon
-  - Single achievement unlock = +50 -> dominates 3x ANY other shaping signal
-  - Keeps intrinsic shaping useful as exploration prior, but achievement
-    unlock becomes the SUPREME goal.
-
-Risk: if relativize collapses on bimodal cum_reward (many walkers at +0,
-few at +50), cloning kernel might over-concentrate. Mitigated by relativize's
-sub-exponential asymptote (Def 2 prop 4).
+  Weights span 10x range:
+    - 10-30: easy & filler (wood, place_table, place_stone, place_plant, wake_up)
+    - 50-80: gateway (make_stone_*, collect_iron, collect_coal, place_furnace, eat_cow,
+             collect_drink, defeat_*, collect_sapling)
+    - 150-300: BLOCKERS (make_iron_pickaxe=150, make_iron_sword=150,
+             eat_plant=200, collect_diamond=300)
 """
 from __future__ import annotations
 
@@ -50,10 +47,46 @@ from fmc_craftax_v4 import (
 
 
 # ============================================================================
-# MUTATION exp02: achievement-fire bonus
+# MUTATION exp03: tier-weighted achievement-fire bonus
 # ============================================================================
 
-ACHIEVEMENT_BONUS = 50.0   # reward per newly-unlocked achievement (since root)
+# Order matches CRAFTAX_CLASSIC_ACHIEVEMENTS in prepare_craftax.py
+# but here we need the order matching state.achievements[22] which is the
+# Craftax internal order.
+# From craftax/craftax_classic/constants.py Achievement enum:
+#  0:COLLECT_WOOD, 1:PLACE_TABLE, 2:EAT_COW, 3:COLLECT_SAPLING, 4:COLLECT_DRINK,
+#  5:MAKE_WOOD_PICKAXE, 6:MAKE_STONE_PICKAXE, 7:MAKE_IRON_PICKAXE,
+#  8:MAKE_WOOD_SWORD, 9:MAKE_STONE_SWORD, 10:MAKE_IRON_SWORD,
+#  11:PLACE_PLANT, 12:DEFEAT_ZOMBIE, 13:COLLECT_STONE, 14:PLACE_STONE,
+#  15:EAT_PLANT, 16:DEFEAT_SKELETON, 17:COLLECT_IRON, 18:COLLECT_COAL,
+#  19:PLACE_FURNACE, 20:COLLECT_DIAMOND, 21:WAKE_UP
+
+ACH_WEIGHTS_LIST = [
+    10.0,   # 0: COLLECT_WOOD (easy)
+    10.0,   # 1: PLACE_TABLE (easy)
+    30.0,   # 2: EAT_COW (gateway, requires combat)
+    20.0,   # 3: COLLECT_SAPLING
+    20.0,   # 4: COLLECT_DRINK
+    20.0,   # 5: MAKE_WOOD_PICKAXE (gateway)
+    50.0,   # 6: MAKE_STONE_PICKAXE (key gateway)
+    150.0,  # 7: MAKE_IRON_PICKAXE *** BLOCKER ***
+    20.0,   # 8: MAKE_WOOD_SWORD
+    50.0,   # 9: MAKE_STONE_SWORD
+    150.0,  # 10: MAKE_IRON_SWORD *** BLOCKER ***
+    20.0,   # 11: PLACE_PLANT
+    30.0,   # 12: DEFEAT_ZOMBIE
+    30.0,   # 13: COLLECT_STONE
+    20.0,   # 14: PLACE_STONE
+    200.0,  # 15: EAT_PLANT *** BLOCKER (time-based) ***
+    50.0,   # 16: DEFEAT_SKELETON
+    80.0,   # 17: COLLECT_IRON (gateway to iron chain)
+    50.0,   # 18: COLLECT_COAL (gateway to iron chain)
+    50.0,   # 19: PLACE_FURNACE (gateway to iron chain)
+    300.0,  # 20: COLLECT_DIAMOND *** ULTIMATE BLOCKER ***
+    20.0,   # 21: WAKE_UP
+]
+ACH_WEIGHTS = jnp.array(ACH_WEIGHTS_LIST, dtype=jnp.float32)
+assert ACH_WEIGHTS.shape == (22,)
 
 
 def make_fmc_decide(env, params, n_actions: int, cfg: FMCConfig):
@@ -64,7 +97,6 @@ def make_fmc_decide(env, params, n_actions: int, cfg: FMCConfig):
     PROX_A = cfg.proximity_alpha
     SIGMA = cfg.proximity_sigma
     PROX_DELTA = cfg.proximity_mode == "delta"
-    ACH_BONUS = ACHIEVEMENT_BONUS
 
     def step_walker(rng, state, action):
         return env.step(rng, state, action, params)
@@ -73,10 +105,8 @@ def make_fmc_decide(env, params, n_actions: int, cfg: FMCConfig):
     vmapped_inv = jax.vmap(inventory_total)
     vmapped_prox = jax.vmap(lambda s: proximity_bonus_single(s, SIGMA))
 
-    # Achievement count per walker: state.achievements is bool[22]
-    vmapped_ach_count = jax.vmap(
-        lambda s: jnp.sum(s.achievements.astype(jnp.float32))
-    )
+    # Achievement bool[22] per walker; tier-weighted bonus = sum(new * weights)
+    vmapped_ach_bool = jax.vmap(lambda s: s.achievements.astype(jnp.float32))
 
     def fmc_decide(rng, root_state):
         walker_states = jax.tree_util.tree_map(
@@ -90,8 +120,8 @@ def make_fmc_decide(env, params, n_actions: int, cfg: FMCConfig):
         alive = jnp.ones(N, dtype=jnp.bool_)
         inv_baseline = vmapped_inv(walker_states)
         prox_prev = vmapped_prox(walker_states) if PROX_A > 0.0 else jnp.zeros(N)
-        # NEW: track baseline achievement count at planning root (per walker, broadcasted)
-        ach_baseline = vmapped_ach_count(walker_states)
+        # Track baseline achievement bitmask at planning root (N x 22 bool/float)
+        ach_baseline_bool = vmapped_ach_bool(walker_states)
 
         def tick_body(carry, t):
             walker_states, init_actions, cum_rewards, alive, prox_prev, rng = carry
@@ -128,10 +158,15 @@ def make_fmc_decide(env, params, n_actions: int, cfg: FMCConfig):
                 else:
                     cum_rewards = cum_rewards + PROX_A * prox
 
-            # NEW: achievement-fire bonus
-            cur_ach = vmapped_ach_count(walker_states)
-            new_ach_count = jnp.maximum(cur_ach - ach_baseline, 0.0)
-            cum_rewards = cum_rewards + ACH_BONUS * new_ach_count
+            # NEW: tier-weighted achievement-fire bonus
+            #   cur_ach[w][a] in {0,1}, baseline same.
+            #   new_ach[w][a] = max(cur - baseline, 0) -> 1 only if newly unlocked
+            #   bonus[w] = sum_a (new_ach[w][a] * ACH_WEIGHTS[a])
+            cur_ach_bool = vmapped_ach_bool(walker_states)
+            new_ach_per_walker = jnp.maximum(cur_ach_bool - ach_baseline_bool, 0.0)
+            # weighted sum across the 22 achievements per walker
+            weighted_bonus = jnp.sum(new_ach_per_walker * ACH_WEIGHTS, axis=-1)
+            cum_rewards = cum_rewards + weighted_bonus
 
             new_alive = alive
             new_cum = cum_rewards
@@ -249,7 +284,7 @@ def run_episode(seed: int, max_steps: int = 500,
             "proximity_alpha": CONFIG.proximity_alpha,
             "proximity_sigma": CONFIG.proximity_sigma,
             "proximity_mode": CONFIG.proximity_mode,
-            "_mutation": f"exp02-ach-bonus: ACHIEVEMENT_BONUS={ACHIEVEMENT_BONUS}",
+            "_mutation": "exp03-tier-weighted: blockers 150-300, gateway 50-80, easy 10-30",
         },
         "seed": seed,
     }
