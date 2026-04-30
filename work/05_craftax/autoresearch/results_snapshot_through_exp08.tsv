@@ -1,0 +1,11 @@
+commit	crafter_pct	n_seeds	mean_ach	ach_ci95	blocker_fired	status	description
+a5b97f2	27.4449	10	11.90	1.97	0	keep	baseline lock: untouched fmc_mutable.py = v4 N=512 M=40 SOTA
+b536935	8.9666	4	7.00	4.60	0	discard	sanity: action_repeat=2
+1ec70a5	29.2987	9	12.33	2.31	0	discard	exp01: iron-boost (iron+coal 2x, diamond 4x, iron_tools 2x)
+e2b9da6	37.7521	11	12.64	3.07	2	keep	exp02: achievement-fire bonus +50/new-ach during walker sim
+1739552	40.9601	13	12.62	2.76	3	keep	exp03: tier-weighted ach bonus (blockers 150-300, gateway 50-80, easy 10-30)
+92376ae	36.9407	11	13.00	2.23	2	keep	exp04: ultra-aggressive blocker weights (diamond 1000, iron_tools 500, eat_plant 500)
+0996532	33.0474	9	12.78	2.95	1	keep	exp05: M=40 -> M=60 with exp03 tier-weighted bonus (longer diamond chain planning)
+dec236d	36.9210	12	13.75	2.32	1	keep	exp06: action curriculum + tier-weighted bonus (effective K reduction via mask)
+61fa1b3	39.9588	10	14.70	2.30	1	keep	exp07: beta=2.0 (more diversity pressure) + exp03 tier-weighted
+3ef3b0e	30.2492	2	15.00	0.00	0	discard	exp08: N=1024 (2x walkers) + exp03 tier-weighted

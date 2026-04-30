@@ -12,3 +12,6 @@ baseline_lock.json
 
 # But keep the example/template files
 !example_results.tsv
+
+# Keep snapshot copies of results for handoff history
+!results_snapshot_*.tsv
