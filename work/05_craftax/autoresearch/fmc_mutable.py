@@ -1,23 +1,33 @@
-"""fmc_mutable.py — autoresearch experiment 12: proximity_alpha doubled.
+"""fmc_mutable.py — autoresearch experiment 14: multi-pop swarm.
 
-Built on exp11 (45.94% Crafter, 3/4 blockers, NEW RECORD) — current best.
+Built on exp12 (46.45% Crafter, 2/4 blockers) — current numerical best.
+Falls back to exp11 (45.94, 3/4 blockers) as the structural reference.
 
-Hypothesis (exp12):
-  Inventory tier-boosts have compounded for 3 experiments in a row (+iron,
-  +stone, +wood). Tier-saturation reached. Pivot to an orthogonal channel:
-  the proximity_bonus reward, currently scaled by proximity_alpha=0.2.
+Hypothesis (exp14):
+  Single pool of 512 walkers all share the same shaping. The cloning kernel
+  preferentially clones high-VR walkers, so the population converges around
+  whatever shaping rewards. This homogenizes the search.
 
-  proximity_bonus_single emits a curriculum-gated gradient toward needed
-  resources (wood when need_wood, stone when has_wood_pickaxe & need_stone,
-  diamond when has_iron_pickaxe & need_diamond, etc.). Doubling the alpha
-  amplifies this navigation signal without changing what's prioritized.
+  Multi-pop swarm = 2 sub-pops of N=256 with DIFFERENT shaping. Cloning is
+  WITHIN each pop, never across, so each pop maintains its own gradient.
+  At decision time, action votes from both pops are summed.
 
-  Risk: proximity_alpha was tuned in v4. Doubling may overshadow the
-  ach-fire bonus for walkers in early-stage chains. Falsifiable.
+  Pop A (specialist): exp12 config — boosted inv weights + tier-weighted
+    ach (300 for diamond, 150 for iron-tools) + proximity_alpha=0.4. Drives
+    the chain end (iron->diamond).
 
-Mutation (delta vs exp11):
-    proximity_alpha   0.2  -> 0.4  (2x)
-  Inventory weights and ACH_WEIGHTS unchanged.
+  Pop B (explorer): v4 baseline inv weights + uniform ach +50 (exp02-style)
+    + proximity_alpha=0.2. Broader exploration, less greedy on chain end.
+
+  Combined vote bias toward actions that BOTH pops favor — robust consensus.
+
+Mutation:
+  Refactored make_fmc_decide to accept (ach_weights, inv_total_fn) params.
+  Two JIT'd functions called sequentially per env step. fmc_decide returns
+  vote ARRAY (shape n_actions) instead of argmax, so caller can sum.
+
+Cost: 2 * (256 * 40) = 20480 walker-steps per decision = same total compute
+as exp11's single 512-pop. ~10s extra JIT compile (one per pop). Memory 2x.
 """
 from __future__ import annotations
 
@@ -43,69 +53,76 @@ from fmc_craftax_v4 import (
 )
 
 
-# exp11 mutation: wood-tier boost layered on exp10 (stone+iron-tier already boosted)
-def inventory_total(state) -> jnp.ndarray:
+# ============================================================================
+# Pop A (specialist): exp12 boosted inv + tier-weighted ach
+# ============================================================================
+
+def inv_total_boosted(state) -> jnp.ndarray:
+    """Pop A inventory weights (exp11 boost: wood 2x, stone 2x, iron-tier 2x, diamond 4x)."""
     inv = state.inventory
     return (
-        inv.wood.astype(jnp.float32) * 2.0             # exp11: 1 -> 2 (2x)
-        + inv.stone.astype(jnp.float32) * 4.0          # exp10
-        + inv.coal.astype(jnp.float32) * 8.0           # exp09
-        + inv.iron.astype(jnp.float32) * 16.0          # exp09
-        + inv.diamond.astype(jnp.float32) * 64.0       # exp09
+        inv.wood.astype(jnp.float32) * 2.0
+        + inv.stone.astype(jnp.float32) * 4.0
+        + inv.coal.astype(jnp.float32) * 8.0
+        + inv.iron.astype(jnp.float32) * 16.0
+        + inv.diamond.astype(jnp.float32) * 64.0
         + inv.sapling.astype(jnp.float32) * 0.5
-        + inv.wood_pickaxe.astype(jnp.float32) * 6.0   # exp11: 3 -> 6 (2x)
-        + inv.stone_pickaxe.astype(jnp.float32) * 12.0 # exp10
-        + inv.iron_pickaxe.astype(jnp.float32) * 24.0  # exp09
-        + inv.wood_sword.astype(jnp.float32) * 6.0     # exp11: 3 -> 6 (2x)
-        + inv.stone_sword.astype(jnp.float32) * 12.0   # exp10
-        + inv.iron_sword.astype(jnp.float32) * 24.0    # exp09
+        + inv.wood_pickaxe.astype(jnp.float32) * 6.0
+        + inv.stone_pickaxe.astype(jnp.float32) * 12.0
+        + inv.iron_pickaxe.astype(jnp.float32) * 24.0
+        + inv.wood_sword.astype(jnp.float32) * 6.0
+        + inv.stone_sword.astype(jnp.float32) * 12.0
+        + inv.iron_sword.astype(jnp.float32) * 24.0
     )
 
 
-# ============================================================================
-# MUTATION exp03: tier-weighted achievement-fire bonus
-# ============================================================================
-
-# Order matches CRAFTAX_CLASSIC_ACHIEVEMENTS in prepare_craftax.py
-# but here we need the order matching state.achievements[22] which is the
-# Craftax internal order.
-# From craftax/craftax_classic/constants.py Achievement enum:
-#  0:COLLECT_WOOD, 1:PLACE_TABLE, 2:EAT_COW, 3:COLLECT_SAPLING, 4:COLLECT_DRINK,
-#  5:MAKE_WOOD_PICKAXE, 6:MAKE_STONE_PICKAXE, 7:MAKE_IRON_PICKAXE,
-#  8:MAKE_WOOD_SWORD, 9:MAKE_STONE_SWORD, 10:MAKE_IRON_SWORD,
-#  11:PLACE_PLANT, 12:DEFEAT_ZOMBIE, 13:COLLECT_STONE, 14:PLACE_STONE,
-#  15:EAT_PLANT, 16:DEFEAT_SKELETON, 17:COLLECT_IRON, 18:COLLECT_COAL,
-#  19:PLACE_FURNACE, 20:COLLECT_DIAMOND, 21:WAKE_UP
-
-ACH_WEIGHTS_LIST = [
-    10.0,   # 0: COLLECT_WOOD (easy)
-    10.0,   # 1: PLACE_TABLE (easy)
-    30.0,   # 2: EAT_COW (gateway, requires combat)
-    20.0,   # 3: COLLECT_SAPLING
-    20.0,   # 4: COLLECT_DRINK
-    20.0,   # 5: MAKE_WOOD_PICKAXE (gateway)
-    50.0,   # 6: MAKE_STONE_PICKAXE (key gateway)
-    150.0,  # 7: MAKE_IRON_PICKAXE *** BLOCKER ***
-    20.0,   # 8: MAKE_WOOD_SWORD
-    50.0,   # 9: MAKE_STONE_SWORD
-    150.0,  # 10: MAKE_IRON_SWORD *** BLOCKER ***
-    20.0,   # 11: PLACE_PLANT
-    30.0,   # 12: DEFEAT_ZOMBIE
-    30.0,   # 13: COLLECT_STONE
-    20.0,   # 14: PLACE_STONE
-    200.0,  # 15: EAT_PLANT *** BLOCKER (time-based) ***
-    50.0,   # 16: DEFEAT_SKELETON
-    80.0,   # 17: COLLECT_IRON (gateway to iron chain)
-    50.0,   # 18: COLLECT_COAL (gateway to iron chain)
-    50.0,   # 19: PLACE_FURNACE (gateway to iron chain)
-    300.0,  # 20: COLLECT_DIAMOND *** ULTIMATE BLOCKER ***
-    20.0,   # 21: WAKE_UP
+# Pop A: tier-weighted ach (exp03), blockers 150-300, gateway 50-80, easy 10-30
+ACH_WEIGHTS_TIER_LIST = [
+    10.0, 10.0, 30.0, 20.0, 20.0, 20.0, 50.0, 150.0, 20.0, 50.0, 150.0,
+    20.0, 30.0, 30.0, 20.0, 200.0, 50.0, 80.0, 50.0, 50.0, 300.0, 20.0,
 ]
-ACH_WEIGHTS = jnp.array(ACH_WEIGHTS_LIST, dtype=jnp.float32)
-assert ACH_WEIGHTS.shape == (22,)
+ACH_WEIGHTS_TIER = jnp.array(ACH_WEIGHTS_TIER_LIST, dtype=jnp.float32)
 
 
-def make_fmc_decide(env, params, n_actions: int, cfg: FMCConfig):
+# ============================================================================
+# Pop B (explorer): v4 baseline inv + uniform ach +50 (exp02-style)
+# ============================================================================
+
+def inv_total_v4(state) -> jnp.ndarray:
+    """Pop B inventory weights (v4 baseline, no boost)."""
+    inv = state.inventory
+    return (
+        inv.wood.astype(jnp.float32) * 1.0
+        + inv.stone.astype(jnp.float32) * 2.0
+        + inv.coal.astype(jnp.float32) * 4.0
+        + inv.iron.astype(jnp.float32) * 8.0
+        + inv.diamond.astype(jnp.float32) * 16.0
+        + inv.sapling.astype(jnp.float32) * 0.5
+        + inv.wood_pickaxe.astype(jnp.float32) * 3.0
+        + inv.stone_pickaxe.astype(jnp.float32) * 6.0
+        + inv.iron_pickaxe.astype(jnp.float32) * 12.0
+        + inv.wood_sword.astype(jnp.float32) * 3.0
+        + inv.stone_sword.astype(jnp.float32) * 6.0
+        + inv.iron_sword.astype(jnp.float32) * 12.0
+    )
+
+
+# Pop B: uniform +50 per ach unlock (exp02-style)
+ACH_WEIGHTS_UNIFORM = jnp.full((22,), 50.0, dtype=jnp.float32)
+
+
+# Module-level alias used by `inventory_total` consumers / smoke tests
+ACH_WEIGHTS = ACH_WEIGHTS_TIER  # backward-compat with prior smoke tests
+inventory_total = inv_total_boosted  # backward-compat
+
+
+# ============================================================================
+# Parameterized make_fmc_decide
+# ============================================================================
+
+def make_fmc_decide(env, params, n_actions: int, cfg: FMCConfig,
+                    ach_weights, inv_total_fn):
+    """Build a JIT'd fmc_decide returning a VOTE ARRAY of shape (n_actions,)."""
     N = cfg.n_walkers
     M = cfg.time_horizon
     K = cfg.action_repeat
@@ -118,10 +135,8 @@ def make_fmc_decide(env, params, n_actions: int, cfg: FMCConfig):
         return env.step(rng, state, action, params)
 
     vmapped_step = jax.vmap(step_walker, in_axes=(0, 0, 0))
-    vmapped_inv = jax.vmap(inventory_total)
+    vmapped_inv = jax.vmap(inv_total_fn)
     vmapped_prox = jax.vmap(lambda s: proximity_bonus_single(s, SIGMA))
-
-    # Achievement bool[22] per walker; tier-weighted bonus = sum(new * weights)
     vmapped_ach_bool = jax.vmap(lambda s: s.achievements.astype(jnp.float32))
 
     def fmc_decide(rng, root_state):
@@ -136,7 +151,6 @@ def make_fmc_decide(env, params, n_actions: int, cfg: FMCConfig):
         alive = jnp.ones(N, dtype=jnp.bool_)
         inv_baseline = vmapped_inv(walker_states)
         prox_prev = vmapped_prox(walker_states) if PROX_A > 0.0 else jnp.zeros(N)
-        # Track baseline achievement bitmask at planning root (N x 22 bool/float)
         ach_baseline_bool = vmapped_ach_bool(walker_states)
 
         def tick_body(carry, t):
@@ -174,14 +188,9 @@ def make_fmc_decide(env, params, n_actions: int, cfg: FMCConfig):
                 else:
                     cum_rewards = cum_rewards + PROX_A * prox
 
-            # NEW: tier-weighted achievement-fire bonus
-            #   cur_ach[w][a] in {0,1}, baseline same.
-            #   new_ach[w][a] = max(cur - baseline, 0) -> 1 only if newly unlocked
-            #   bonus[w] = sum_a (new_ach[w][a] * ACH_WEIGHTS[a])
             cur_ach_bool = vmapped_ach_bool(walker_states)
             new_ach_per_walker = jnp.maximum(cur_ach_bool - ach_baseline_bool, 0.0)
-            # weighted sum across the 22 achievements per walker
-            weighted_bonus = jnp.sum(new_ach_per_walker * ACH_WEIGHTS, axis=-1)
+            weighted_bonus = jnp.sum(new_ach_per_walker * ach_weights, axis=-1)
             cum_rewards = cum_rewards + weighted_bonus
 
             new_alive = alive
@@ -228,17 +237,37 @@ def make_fmc_decide(env, params, n_actions: int, cfg: FMCConfig):
         carry, _ = jax.lax.scan(tick_body, carry, jnp.arange(M))
         _, init_actions, _, alive, _, _ = carry
 
+        # exp14: return votes ARRAY (not argmax) so multiple pops can sum
         votes = jnp.zeros(n_actions)
         votes = votes.at[init_actions].add(alive.astype(jnp.float32))
-        return jnp.argmax(votes), alive.sum()
+        return votes, alive.sum()
 
     return jax.jit(fmc_decide)
 
 
-CONFIG = FMCConfig(
-    n_walkers=512, time_horizon=40,
+# ============================================================================
+# Two pop configs (specialist + explorer), each N=256
+# ============================================================================
+
+CONFIG_A = FMCConfig(
+    n_walkers=256, time_horizon=40,
     alpha=1.0, beta=1.0, action_repeat=1,
-    intrinsic_inv_alpha=0.5, proximity_alpha=0.4,  # exp12: 0.2 -> 0.4 (2x)
+    intrinsic_inv_alpha=0.5, proximity_alpha=0.4,
+    proximity_sigma=10.0, proximity_mode="delta",
+)
+
+CONFIG_B = FMCConfig(
+    n_walkers=256, time_horizon=40,
+    alpha=1.0, beta=1.0, action_repeat=1,
+    intrinsic_inv_alpha=0.5, proximity_alpha=0.2,
+    proximity_sigma=10.0, proximity_mode="delta",
+)
+
+# Backward-compat single-pop CONFIG (used by some places that read CONFIG.n_walkers)
+CONFIG = FMCConfig(
+    n_walkers=512, time_horizon=40,  # combined effective N
+    alpha=1.0, beta=1.0, action_repeat=1,
+    intrinsic_inv_alpha=0.5, proximity_alpha=0.4,
     proximity_sigma=10.0, proximity_mode="delta",
 )
 
@@ -249,7 +278,10 @@ def run_episode(seed: int, max_steps: int = 500,
     params = env.default_params
     n_actions = env.action_space(params).n
 
-    fmc_decide = make_fmc_decide(env, params, n_actions, CONFIG)
+    fmc_a = make_fmc_decide(env, params, n_actions, CONFIG_A,
+                             ACH_WEIGHTS_TIER, inv_total_boosted)
+    fmc_b = make_fmc_decide(env, params, n_actions, CONFIG_B,
+                             ACH_WEIGHTS_UNIFORM, inv_total_v4)
 
     rng = jax.random.PRNGKey(seed)
     rng, k_reset = jax.random.split(rng)
@@ -262,9 +294,11 @@ def run_episode(seed: int, max_steps: int = 500,
     info = {}
 
     for step in range(max_steps):
-        rng, k_dec = jax.random.split(rng)
-        action, n_alive = fmc_decide(k_dec, state)
-        action = int(action)
+        rng, k_a, k_b = jax.random.split(rng, 3)
+        votes_a, _ = fmc_a(k_a, state)
+        votes_b, _ = fmc_b(k_b, state)
+        combined = votes_a + votes_b
+        action = int(jnp.argmax(combined))
         for _ in range(CONFIG.action_repeat):
             rng, k_step = jax.random.split(rng)
             obs, state, reward, done, info = env.step(k_step, state, action, params)
@@ -291,16 +325,20 @@ def run_episode(seed: int, max_steps: int = 500,
         "achievements_list": sorted(achievements_dict.keys()),
         "wall_time_s": float(wall),
         "decisions_per_sec": float(decisions / wall),
-        "samples_per_decision": int(CONFIG.n_walkers * CONFIG.time_horizon * CONFIG.action_repeat),
+        "samples_per_decision": int((CONFIG_A.n_walkers + CONFIG_B.n_walkers) * CONFIG.time_horizon * CONFIG.action_repeat),
         "config": {
-            "n_walkers": CONFIG.n_walkers, "time_horizon": CONFIG.time_horizon,
+            "n_walkers_total": CONFIG_A.n_walkers + CONFIG_B.n_walkers,
+            "n_walkers_pop_a": CONFIG_A.n_walkers,
+            "n_walkers_pop_b": CONFIG_B.n_walkers,
+            "time_horizon": CONFIG.time_horizon,
             "alpha": CONFIG.alpha, "beta": CONFIG.beta,
             "action_repeat": CONFIG.action_repeat,
             "intrinsic_inv_alpha": CONFIG.intrinsic_inv_alpha,
-            "proximity_alpha": CONFIG.proximity_alpha,
+            "proximity_alpha_a": CONFIG_A.proximity_alpha,
+            "proximity_alpha_b": CONFIG_B.proximity_alpha,
             "proximity_sigma": CONFIG.proximity_sigma,
             "proximity_mode": CONFIG.proximity_mode,
-            "_mutation": "exp12: exp11 + proximity_alpha 0.2 -> 0.4 (2x)",
+            "_mutation": "exp14: multi-pop swarm (specialist exp12 + explorer baseline-uniform), N=256+256",
         },
         "seed": seed,
     }
