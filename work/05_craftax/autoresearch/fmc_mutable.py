@@ -1,17 +1,22 @@
-"""fmc_mutable.py — autoresearch experiment 18: conservative diamond push on exp17.
+"""fmc_mutable.py — autoresearch experiment 19: diamond proximity 4x.
 
-Built on exp17 (50.95% Crafter, 3/4 blockers, HUMAN-EXPERT+).
+Built on exp17 (50.95% Crafter, 3/4 blockers). exp18 showed diamond ach push
+had zero effect (50.95% identical) — bottleneck is walkers REACHING diamond,
+not their reward signal once they have it.
 
-Hypothesis (exp18):
-  exp16's success (iron 150->200, +4.7pp) suggests 1.33x is a safe amplification
-  multiplier. exp15 attempted 1.67x on diamond (300->500) and HUNG (likely
-  relativize stress). exp18 tries a much smaller 1.17x on diamond (300->350).
-  This should test whether the diamond signal can be amplified at all without
-  collapse, before attempting larger pushes.
+Hypothesis (exp19):
+  proximity_bonus_single rewards being near diamond ore when has_iron_pickaxe
+  & need_diamond. Current weight = 16 (with proximity_alpha=0.2 multiplier
+  the per-tick contribution is up to 0.2 * 16 * exp(-d/sigma) = ~3.2 max).
+  This is dwarfed by the iron-pickaxe ach reward (200 per tick after firing).
 
-Mutation (delta vs exp17):
-    ACH_WEIGHTS[20] (COLLECT_DIAMOND)  300 -> 350  (1.17x)
-  Iron-tier, gateway-tier, and inv weights unchanged.
+  Boosting diamond proximity weight to 64 (4x) makes navigation toward diamond
+  the dominant gradient AFTER iron_pickaxe is acquired. Walkers should now
+  actively seek diamond ore once they're chain-ready.
+
+Mutation:
+  Override proximity_bonus_single locally with diamond weight 16 -> 64.
+  All other proximity weights unchanged. ACH_WEIGHTS, inv_total, CONFIG = exp17.
 """
 from __future__ import annotations
 
@@ -33,8 +38,57 @@ if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 
 from fmc_craftax_v4 import (
-    relativize, proximity_bonus_single, FMCConfig,
+    relativize, FMCConfig,
+    TREE_ID, STONE_ID, COAL_ID, IRON_ID, DIAMOND_ID, WATER_ID, RIPE_PLANT_ID,
 )
+
+
+# exp19: override proximity_bonus with diamond weight 4x (16 -> 64)
+def proximity_bonus_single(state, sigma: float = 10.0) -> jnp.ndarray:
+    px = state.player_position[0]
+    py = state.player_position[1]
+    map_arr = state.map
+
+    H, W = map_arr.shape
+    xs = jnp.arange(H).reshape(H, 1)
+    ys = jnp.arange(W).reshape(1, W)
+    d_grid = jnp.abs(xs - px) + jnp.abs(ys - py)
+
+    def min_dist(target_id):
+        mask = (map_arr == target_id)
+        d_masked = jnp.where(mask, d_grid.astype(jnp.float32), jnp.float32(1e6))
+        return d_masked.min()
+
+    d_tree = min_dist(TREE_ID)
+    d_stone = min_dist(STONE_ID)
+    d_coal = min_dist(COAL_ID)
+    d_iron = min_dist(IRON_ID)
+    d_diamond = min_dist(DIAMOND_ID)
+    d_water = min_dist(WATER_ID)
+    d_ripe = min_dist(RIPE_PLANT_ID)
+
+    inv = state.inventory
+    need_wood = (inv.wood < 1).astype(jnp.float32)
+    has_wood_p = (inv.wood_pickaxe > 0).astype(jnp.float32)
+    has_stone_p = (inv.stone_pickaxe > 0).astype(jnp.float32)
+    has_iron_p = (inv.iron_pickaxe > 0).astype(jnp.float32)
+    need_stone = ((inv.stone < 5) | (inv.stone_pickaxe < 1)).astype(jnp.float32)
+    need_coal = (inv.coal < 1).astype(jnp.float32)
+    need_iron = (inv.iron < 1).astype(jnp.float32)
+    need_diamond = (inv.diamond < 1).astype(jnp.float32)
+    need_water = (state.player_drink < 5).astype(jnp.float32)
+    need_ripe = (inv.sapling > 0).astype(jnp.float32)
+
+    bonus = (
+        1.0 * need_wood * jnp.exp(-d_tree / sigma)
+        + 2.0 * has_wood_p * need_stone * jnp.exp(-d_stone / sigma)
+        + 4.0 * has_stone_p * need_coal * jnp.exp(-d_coal / sigma)
+        + 8.0 * has_stone_p * need_iron * jnp.exp(-d_iron / sigma)
+        + 64.0 * has_iron_p * need_diamond * jnp.exp(-d_diamond / sigma)  # exp19: 16 -> 64
+        + 0.5 * need_water * jnp.exp(-d_water / sigma)
+        + 0.5 * need_ripe * jnp.exp(-d_ripe / sigma)
+    )
+    return bonus
 
 
 # Inventory weights: exp11 (full tier-stack)
@@ -67,7 +121,7 @@ ACH_WEIGHTS_LIST = [
     120.0,                    # 17: COLLECT_IRON *** exp17: 80 -> 120 ***
     80.0,                     # 18: COLLECT_COAL *** exp17: 50 -> 80 ***
     80.0,                     # 19: PLACE_FURNACE *** exp17: 50 -> 80 ***
-    350.0,                    # 20: COLLECT_DIAMOND *** exp18: 300 -> 350 (1.17x) ***
+    300.0,                    # 20: COLLECT_DIAMOND (back to exp17 since exp18 had zero effect)
     20.0,
 ]
 ACH_WEIGHTS = jnp.array(ACH_WEIGHTS_LIST, dtype=jnp.float32)
@@ -261,7 +315,7 @@ def run_episode(seed: int, max_steps: int = 500,
             "proximity_alpha": CONFIG.proximity_alpha,
             "proximity_sigma": CONFIG.proximity_sigma,
             "proximity_mode": CONFIG.proximity_mode,
-            "_mutation": "exp18: exp17 + diamond ach push 300 -> 350 (conservative 1.17x)",
+            "_mutation": "exp19: diamond proximity weight 16 -> 64 (4x), targeting reach-diamond bottleneck",
         },
         "seed": seed,
     }
