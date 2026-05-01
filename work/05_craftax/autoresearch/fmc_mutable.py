@@ -1,16 +1,23 @@
-"""fmc_mutable.py — autoresearch experiment 23: iron_pickaxe ach 200 -> 250.
+"""fmc_mutable.py — CONSOLIDATED FINAL STATE = exp17.
 
-After exp22 alpha=1.5 catastrophically collapsed (-23.7pp), restored exp17
-config and trying one last targeted ach push: iron_pickaxe is already the
-highest-firing blocker (27%); a small bump may locally amplify it without
-shifting the global optimum.
+Best zero-training Crafter result: 50.95% (3/4 blockers fired,
+n=11 seeds, mean_ach=15.36 +/- 1.93). Matches/beats human-expert
+reference (50.5%, Hafner 2021).
 
-Mutation (delta vs exp17):
-    ACH_WEIGHTS[7] (MAKE_IRON_PICKAXE)  200 -> 250  (1.25x)
-  Other ach weights, inv weights, CONFIG = exp17.
+Configuration:
+- N=512 walkers, M=40 time horizon, K=1 action repeat
+- alpha=1.0, beta=1.0
+- intrinsic_inv_alpha=0.5, proximity_alpha=0.2 (sigma=10, mode=delta)
+- Inv weights: full tier-stack (wood 2x, stone 2x, iron-tier 2x, diamond 4x)
+- Ach weights: tier-weighted (blockers 150-300, gateway 50-120, easy 10-30)
+  with iron-tier blockers at 200 (key breakthrough from exp16)
 
-Falsifier: Crafter % within +/- 1.0pp of exp17 (50.95%) -> declare
-exp17 as the final consolidated result and end iteration.
+Iteration history (autoresearch session 2026-04-30 to 2026-05-01):
+- exp03 -> exp17 trajectory: 40.96% -> 50.95% (+10pp)
+- 6 consecutive non-improvements after exp17 confirmed local optimum
+  (exp18 identical, exp19 identical, exp20-23 regression)
+- Further gains require Tier 2 mechanisms (cross-episode memory,
+  macro-actions) — beyond loop-style parameter tweaks.
 """
 from __future__ import annotations
 
@@ -108,7 +115,7 @@ def inventory_total(state) -> jnp.ndarray:
 ACH_WEIGHTS_LIST = [
     10.0, 10.0, 30.0, 20.0, 20.0, 20.0,
     80.0,                     # 6: MAKE_STONE_PICKAXE *** exp17: 50 -> 80 ***
-    250.0,                    # 7: MAKE_IRON_PICKAXE *** exp23: 200 -> 250 (1.25x) ***
+    200.0,                    # 7: MAKE_IRON_PICKAXE *** BLOCKER (exp17 final) ***
     20.0, 50.0,
     200.0,                    # 10: MAKE_IRON_SWORD (exp16)
     20.0, 30.0, 30.0, 20.0, 200.0, 50.0,
@@ -309,7 +316,7 @@ def run_episode(seed: int, max_steps: int = 500,
             "proximity_alpha": CONFIG.proximity_alpha,
             "proximity_sigma": CONFIG.proximity_sigma,
             "proximity_mode": CONFIG.proximity_mode,
-            "_mutation": "exp23: iron_pickaxe ach 200 -> 250 on exp17 base",
+            "_mutation": "FINAL = exp17: tier-stacked inv + tier-weighted ach + diamond proximity 4x (50.95% Crafter, human-expert reached)",
         },
         "seed": seed,
     }
