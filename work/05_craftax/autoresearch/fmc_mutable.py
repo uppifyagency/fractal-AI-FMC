@@ -1,20 +1,17 @@
-"""fmc_mutable.py — autoresearch experiment 17: gateway tier ach push on exp16.
+"""fmc_mutable.py — autoresearch experiment 18: conservative diamond push on exp17.
 
-Built on exp16 (50.65% Crafter, 3/4 blockers, HUMAN-EXPERT REACHED).
+Built on exp17 (50.95% Crafter, 3/4 blockers, HUMAN-EXPERT+).
 
-Hypothesis (exp17):
-  exp16 amplified iron-tier blockers (make_iron_pickaxe, make_iron_sword 150->200)
-  and unlocked +4.7pp gain. The chain that produces those blockers passes through
-  the gateway tier: make_stone_pickaxe (50), collect_iron (80), collect_coal (50),
-  place_furnace (50). Propagating amplification backward through the chain should
-  give walkers a stronger gradient at each stage, compounding the iron-tier wins.
+Hypothesis (exp18):
+  exp16's success (iron 150->200, +4.7pp) suggests 1.33x is a safe amplification
+  multiplier. exp15 attempted 1.67x on diamond (300->500) and HUNG (likely
+  relativize stress). exp18 tries a much smaller 1.17x on diamond (300->350).
+  This should test whether the diamond signal can be amplified at all without
+  collapse, before attempting larger pushes.
 
-Mutation (delta vs exp16):
-    ACH_WEIGHTS[6]  (MAKE_STONE_PICKAXE)  50 -> 80   (1.6x)
-    ACH_WEIGHTS[17] (COLLECT_IRON)        80 -> 120  (1.5x)
-    ACH_WEIGHTS[18] (COLLECT_COAL)        50 -> 80   (1.6x)
-    ACH_WEIGHTS[19] (PLACE_FURNACE)       50 -> 80   (1.6x)
-  Iron-tier (200) and diamond (300) unchanged. Inv weights unchanged.
+Mutation (delta vs exp17):
+    ACH_WEIGHTS[20] (COLLECT_DIAMOND)  300 -> 350  (1.17x)
+  Iron-tier, gateway-tier, and inv weights unchanged.
 """
 from __future__ import annotations
 
@@ -70,7 +67,7 @@ ACH_WEIGHTS_LIST = [
     120.0,                    # 17: COLLECT_IRON *** exp17: 80 -> 120 ***
     80.0,                     # 18: COLLECT_COAL *** exp17: 50 -> 80 ***
     80.0,                     # 19: PLACE_FURNACE *** exp17: 50 -> 80 ***
-    300.0,                    # 20: COLLECT_DIAMOND
+    350.0,                    # 20: COLLECT_DIAMOND *** exp18: 300 -> 350 (1.17x) ***
     20.0,
 ]
 ACH_WEIGHTS = jnp.array(ACH_WEIGHTS_LIST, dtype=jnp.float32)
@@ -264,7 +261,7 @@ def run_episode(seed: int, max_steps: int = 500,
             "proximity_alpha": CONFIG.proximity_alpha,
             "proximity_sigma": CONFIG.proximity_sigma,
             "proximity_mode": CONFIG.proximity_mode,
-            "_mutation": "exp17: exp16 + gateway-tier ach push (stone_pickaxe 50->80, collect_iron 80->120, collect_coal 50->80, place_furnace 50->80)",
+            "_mutation": "exp18: exp17 + diamond ach push 300 -> 350 (conservative 1.17x)",
         },
         "seed": seed,
     }
