@@ -1,22 +1,20 @@
-"""fmc_mutable.py — autoresearch experiment 20: adaptive M (Tier 1B).
+"""fmc_mutable.py — autoresearch experiment 21: N=768 (1.5x walkers).
 
-After 3 IDENTICAL results in a row (exp17/18/19 = 50.9524%), the FMC search
-is in a stable local optimum where small reward perturbations don't shift
-action policy. Need a structural mechanism change.
+exp20 adaptive M regressed (-1.79pp). After 3 identical 50.95% results
+(exp17/18/19) and exp20 regression, FMC is solidly in a local optimum.
 
-Hypothesis (exp20):
-  exp05 tried M=40 -> M=60 globally and FAILED (33%, 1 blocker) — uniform
-  longer M dilutes early-stage signal. Adaptive M only extends planning
-  horizon AFTER stone_pickaxe is acquired (mid-chain), giving walkers
-  more lookahead during the iron+diamond stages where exploration is hard.
+Hypothesis (exp21):
+  More walkers = more diverse trajectory sampling = more chances for ANY
+  walker to discover the diamond chain. exp08 tried N=1024 and was too
+  slow. N=768 (1.5x of exp17's N=512) is a middle ground.
+
+  Theoretical: with N walkers, the probability that AT LEAST ONE samples
+  a rare-but-rewarding action sequence scales as 1 - (1-p)^N. Going from
+  N=512 to N=768 boosts this for chains with p~0.001 from ~40% to ~54%.
 
 Mutation:
-  Build TWO JIT'd functions: fmc_short (M=40) and fmc_long (M=64).
-  In run_episode, dispatch based on state.inventory.stone_pickaxe > 0:
-    - No stone_pickaxe yet: use fmc_short (M=40) — maintain early-stage perf
-    - Has stone_pickaxe: use fmc_long (M=64) — extend planning for chain end
-
-  Diamond proximity stays at 64 (exp19) since it's only relevant later anyway.
+  N=512 -> N=768 (single-pop). Other config = exp17 baseline.
+  Compute: 1.5x slower per decision. Expect 7-8 seeds completed in budget.
 """
 from __future__ import annotations
 
@@ -251,15 +249,7 @@ def make_fmc_decide(env, params, n_actions: int, cfg: FMCConfig):
 
 
 CONFIG = FMCConfig(
-    n_walkers=512, time_horizon=40,
-    alpha=1.0, beta=1.0, action_repeat=1,
-    intrinsic_inv_alpha=0.5, proximity_alpha=0.2,
-    proximity_sigma=10.0, proximity_mode="delta",
-)
-
-# exp20: long-planning config used once stone_pickaxe is acquired
-CONFIG_LONG = FMCConfig(
-    n_walkers=512, time_horizon=64,
+    n_walkers=768, time_horizon=40,  # exp21: 512 -> 768 (1.5x)
     alpha=1.0, beta=1.0, action_repeat=1,
     intrinsic_inv_alpha=0.5, proximity_alpha=0.2,
     proximity_sigma=10.0, proximity_mode="delta",
@@ -272,8 +262,7 @@ def run_episode(seed: int, max_steps: int = 500,
     params = env.default_params
     n_actions = env.action_space(params).n
 
-    fmc_short = make_fmc_decide(env, params, n_actions, CONFIG)
-    fmc_long = make_fmc_decide(env, params, n_actions, CONFIG_LONG)
+    fmc_decide = make_fmc_decide(env, params, n_actions, CONFIG)
 
     rng = jax.random.PRNGKey(seed)
     rng, k_reset = jax.random.split(rng)
@@ -287,9 +276,6 @@ def run_episode(seed: int, max_steps: int = 500,
 
     for step in range(max_steps):
         rng, k_dec = jax.random.split(rng)
-        # exp20: adaptive M — short while early-game, long once stone_pickaxe acquired
-        has_stone_p = bool(state.inventory.stone_pickaxe > 0)
-        fmc_decide = fmc_long if has_stone_p else fmc_short
         action, n_alive = fmc_decide(k_dec, state)
         action = int(action)
         for _ in range(CONFIG.action_repeat):
@@ -327,7 +313,7 @@ def run_episode(seed: int, max_steps: int = 500,
             "proximity_alpha": CONFIG.proximity_alpha,
             "proximity_sigma": CONFIG.proximity_sigma,
             "proximity_mode": CONFIG.proximity_mode,
-            "_mutation": "exp20: adaptive M (40 short, 64 long once stone_pickaxe acquired) + exp19 diamond proximity 4x",
+            "_mutation": "exp21: N=512 -> N=768 (1.5x walkers) on exp19 base (diamond prox 4x, exp17 ach weights)",
         },
         "seed": seed,
     }
