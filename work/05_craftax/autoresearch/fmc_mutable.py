@@ -1,20 +1,20 @@
-"""fmc_mutable.py — autoresearch experiment 16: exp11 baseline + iron-tier ach push.
+"""fmc_mutable.py — autoresearch experiment 17: gateway tier ach push on exp16.
 
-Restoring single-pop exp11 baseline (45.94% Crafter, 3/4 blockers) after three
-regressions in a row (exp13 proximity=0.3, exp14 multi-pop, exp15 diamond=500
-which got STUCK after 8h, likely relativize collapse).
+Built on exp16 (50.65% Crafter, 3/4 blockers, HUMAN-EXPERT REACHED).
 
-Hypothesis (exp16):
-  Iron-tier blockers (make_iron_pickaxe=150, make_iron_sword=150) are the
-  GATEWAY to diamond chain completion. Modest bump to 200 each should
-  amplify the iron-stage gradient without triggering collapse (exp04
-  doubled from 150 to 500+1000 and crashed; exp15 went from 300 to 500
-  on diamond and hung).
+Hypothesis (exp17):
+  exp16 amplified iron-tier blockers (make_iron_pickaxe, make_iron_sword 150->200)
+  and unlocked +4.7pp gain. The chain that produces those blockers passes through
+  the gateway tier: make_stone_pickaxe (50), collect_iron (80), collect_coal (50),
+  place_furnace (50). Propagating amplification backward through the chain should
+  give walkers a stronger gradient at each stage, compounding the iron-tier wins.
 
-Mutation (delta vs exp11):
-    ACH_WEIGHTS[7]  (MAKE_IRON_PICKAXE)  150 -> 200  (1.33x)
-    ACH_WEIGHTS[10] (MAKE_IRON_SWORD)    150 -> 200  (1.33x)
-  Other ach weights, inv weights, and CONFIG = exp11 unchanged.
+Mutation (delta vs exp16):
+    ACH_WEIGHTS[6]  (MAKE_STONE_PICKAXE)  50 -> 80   (1.6x)
+    ACH_WEIGHTS[17] (COLLECT_IRON)        80 -> 120  (1.5x)
+    ACH_WEIGHTS[18] (COLLECT_COAL)        50 -> 80   (1.6x)
+    ACH_WEIGHTS[19] (PLACE_FURNACE)       50 -> 80   (1.6x)
+  Iron-tier (200) and diamond (300) unchanged. Inv weights unchanged.
 """
 from __future__ import annotations
 
@@ -59,14 +59,18 @@ def inventory_total(state) -> jnp.ndarray:
     )
 
 
-# exp16: exp11 weights with iron-tier blockers bumped 150 -> 200
+# exp17: exp16 weights + gateway tier push (stone_pickaxe, iron, coal, furnace)
 ACH_WEIGHTS_LIST = [
-    10.0, 10.0, 30.0, 20.0, 20.0, 20.0, 50.0,
-    200.0,                    # 7: MAKE_IRON_PICKAXE *** exp16: 150 -> 200 ***
+    10.0, 10.0, 30.0, 20.0, 20.0, 20.0,
+    80.0,                     # 6: MAKE_STONE_PICKAXE *** exp17: 50 -> 80 ***
+    200.0,                    # 7: MAKE_IRON_PICKAXE (exp16)
     20.0, 50.0,
-    200.0,                    # 10: MAKE_IRON_SWORD *** exp16: 150 -> 200 ***
-    20.0, 30.0, 30.0, 20.0, 200.0, 50.0, 80.0, 50.0, 50.0,
-    300.0,                    # 20: COLLECT_DIAMOND (unchanged from exp11)
+    200.0,                    # 10: MAKE_IRON_SWORD (exp16)
+    20.0, 30.0, 30.0, 20.0, 200.0, 50.0,
+    120.0,                    # 17: COLLECT_IRON *** exp17: 80 -> 120 ***
+    80.0,                     # 18: COLLECT_COAL *** exp17: 50 -> 80 ***
+    80.0,                     # 19: PLACE_FURNACE *** exp17: 50 -> 80 ***
+    300.0,                    # 20: COLLECT_DIAMOND
     20.0,
 ]
 ACH_WEIGHTS = jnp.array(ACH_WEIGHTS_LIST, dtype=jnp.float32)
@@ -260,7 +264,7 @@ def run_episode(seed: int, max_steps: int = 500,
             "proximity_alpha": CONFIG.proximity_alpha,
             "proximity_sigma": CONFIG.proximity_sigma,
             "proximity_mode": CONFIG.proximity_mode,
-            "_mutation": "exp16: exp11 baseline + iron-tier ach push (150 -> 200 for make_iron_pickaxe and make_iron_sword)",
+            "_mutation": "exp17: exp16 + gateway-tier ach push (stone_pickaxe 50->80, collect_iron 80->120, collect_coal 50->80, place_furnace 50->80)",
         },
         "seed": seed,
     }
