@@ -1,22 +1,22 @@
-"""fmc_mutable.py — autoresearch experiment 19: diamond proximity 4x.
+"""fmc_mutable.py — autoresearch experiment 20: adaptive M (Tier 1B).
 
-Built on exp17 (50.95% Crafter, 3/4 blockers). exp18 showed diamond ach push
-had zero effect (50.95% identical) — bottleneck is walkers REACHING diamond,
-not their reward signal once they have it.
+After 3 IDENTICAL results in a row (exp17/18/19 = 50.9524%), the FMC search
+is in a stable local optimum where small reward perturbations don't shift
+action policy. Need a structural mechanism change.
 
-Hypothesis (exp19):
-  proximity_bonus_single rewards being near diamond ore when has_iron_pickaxe
-  & need_diamond. Current weight = 16 (with proximity_alpha=0.2 multiplier
-  the per-tick contribution is up to 0.2 * 16 * exp(-d/sigma) = ~3.2 max).
-  This is dwarfed by the iron-pickaxe ach reward (200 per tick after firing).
-
-  Boosting diamond proximity weight to 64 (4x) makes navigation toward diamond
-  the dominant gradient AFTER iron_pickaxe is acquired. Walkers should now
-  actively seek diamond ore once they're chain-ready.
+Hypothesis (exp20):
+  exp05 tried M=40 -> M=60 globally and FAILED (33%, 1 blocker) — uniform
+  longer M dilutes early-stage signal. Adaptive M only extends planning
+  horizon AFTER stone_pickaxe is acquired (mid-chain), giving walkers
+  more lookahead during the iron+diamond stages where exploration is hard.
 
 Mutation:
-  Override proximity_bonus_single locally with diamond weight 16 -> 64.
-  All other proximity weights unchanged. ACH_WEIGHTS, inv_total, CONFIG = exp17.
+  Build TWO JIT'd functions: fmc_short (M=40) and fmc_long (M=64).
+  In run_episode, dispatch based on state.inventory.stone_pickaxe > 0:
+    - No stone_pickaxe yet: use fmc_short (M=40) — maintain early-stage perf
+    - Has stone_pickaxe: use fmc_long (M=64) — extend planning for chain end
+
+  Diamond proximity stays at 64 (exp19) since it's only relevant later anyway.
 """
 from __future__ import annotations
 
@@ -257,6 +257,14 @@ CONFIG = FMCConfig(
     proximity_sigma=10.0, proximity_mode="delta",
 )
 
+# exp20: long-planning config used once stone_pickaxe is acquired
+CONFIG_LONG = FMCConfig(
+    n_walkers=512, time_horizon=64,
+    alpha=1.0, beta=1.0, action_repeat=1,
+    intrinsic_inv_alpha=0.5, proximity_alpha=0.2,
+    proximity_sigma=10.0, proximity_mode="delta",
+)
+
 
 def run_episode(seed: int, max_steps: int = 500,
                 env_name: str = "Craftax-Classic-Symbolic-v1") -> dict:
@@ -264,7 +272,8 @@ def run_episode(seed: int, max_steps: int = 500,
     params = env.default_params
     n_actions = env.action_space(params).n
 
-    fmc_decide = make_fmc_decide(env, params, n_actions, CONFIG)
+    fmc_short = make_fmc_decide(env, params, n_actions, CONFIG)
+    fmc_long = make_fmc_decide(env, params, n_actions, CONFIG_LONG)
 
     rng = jax.random.PRNGKey(seed)
     rng, k_reset = jax.random.split(rng)
@@ -278,6 +287,9 @@ def run_episode(seed: int, max_steps: int = 500,
 
     for step in range(max_steps):
         rng, k_dec = jax.random.split(rng)
+        # exp20: adaptive M — short while early-game, long once stone_pickaxe acquired
+        has_stone_p = bool(state.inventory.stone_pickaxe > 0)
+        fmc_decide = fmc_long if has_stone_p else fmc_short
         action, n_alive = fmc_decide(k_dec, state)
         action = int(action)
         for _ in range(CONFIG.action_repeat):
@@ -315,7 +327,7 @@ def run_episode(seed: int, max_steps: int = 500,
             "proximity_alpha": CONFIG.proximity_alpha,
             "proximity_sigma": CONFIG.proximity_sigma,
             "proximity_mode": CONFIG.proximity_mode,
-            "_mutation": "exp19: diamond proximity weight 16 -> 64 (4x), targeting reach-diamond bottleneck",
+            "_mutation": "exp20: adaptive M (40 short, 64 long once stone_pickaxe acquired) + exp19 diamond proximity 4x",
         },
         "seed": seed,
     }
