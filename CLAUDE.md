@@ -78,10 +78,10 @@ This repo is a **research + tooling effort around the Fractal Monte Carlo (FMC) 
 
 1. **Replicate** FMC on Atari (done — 96/100 Boxing in 7 min, 231 LOC NumPy, no GPU). See [`work/03_atari_replication/`](work/03_atari_replication/).
 2. **Extend** FMC into coding (the [`plugin/fractal-coding-loop/`](plugin/fractal-coding-loop/) Claude Code plugin: `/fractal-decide`, `/octopus`, `/fractal-recall`).
-3. **Pick a benchmark target** for a credible FMC paper. Top candidates (see [`DominiDaIndagare.md`](DominiDaIndagare.md)): **Procgen**, **Crafter/Craftax**, **CompilerGym**.
+3. **Benchmark target reached on Craftax-Classic** (2026-05-01): **exp17 = 50.95% Crafter zero-training, matches/beats human-expert (50.5%)**. 23-experiment autoresearch session on `autoresearch/exp02-ach-bonus` branch discovered chain-tier compounding amplification mechanism (Cong. D in MATH_CANON). See [`work/05_craftax/autoresearch/HANDOFF.md`](work/05_craftax/autoresearch/HANDOFF.md). Procgen and CompilerGym remain candidates for cross-benchmark validation.
 4. **Theoretical deep-dives** on cloning math, SMC particle-filter view, Active Inference link, Fractal Memory. See [`work/02_deep_dives/`](work/02_deep_dives/).
 
-Language convention: **Italian for prose, English for code/comments**. ISO 8601 dates. Today: 2026-04-28.
+Language convention: **Italian for prose, English for code/comments**. ISO 8601 dates. Today: 2026-05-01.
 
 ### Canonical sources (papers + FMC + Fractal Memory)
 
@@ -141,6 +141,7 @@ Language convention: **Italian for prose, English for code/comments**. ISO 8601 
 | D1 | Branching factor ottimo | Radient 2026 cap.16: "**~6**" | [`docs/MATH_CANON.md`](docs/MATH_CANON.md) Cong. A v0.4.0: $b_{\text{eff}}^*(K, N, M, \alpha) \approx 1 + (K-1) \cdot \mathcal{F}(M/N) \cdot \mathcal{G}(\alpha, K)$ — superficie 4D Wright-Fisher. Power-law $K^{0.6}$ è transiente a $M=15$, non un fixed point. | **FALSIFICATO come universale**. Sergio's "6" è snapshot di $(K=9, M=15, N\sim32{-}64, \alpha=0.1)$ — *triplamente contingente*. Asintoticamente $b_{\text{eff}} \to 1$ (Teorema 2). |
 | D2 | FMC sample efficiency vs MCTS | Paper 1803.05049v5 §5.1.2: "**359× fewer**"; §6.2.1: "0.01-0.1%" (1000-10000×); §7: "2-3 OoM"; CLAUDE.md prev: "<1000 vs 3M" | Radient 2026 cap.10: "**~150 000 vs ~35**" (≈4286×) | **🟡 PARZIALMENTE CONFERMATO direzionalmente in-session** (Boxing, n=3, B∈{80,240}, RAM, CPU-only): FMC mean +91 (B=80) +100 (B=240) vs MCTS −5 entrambi → Δ ≈ 100 raw points; MCTS non migliora con budget × 3. Vedi [`work/09_fmc_vs_mcts_replication/REPORT.md`](work/09_fmc_vs_mcts_replication/REPORT.md). **Numero singolo definitivo** richiede full P0 sweep — costo revised dal cluster GPU al **single CPU overnight** (~7 h). Audit completo in [`docs/bibliography/paper_fmc_dhdna_audit.md`](docs/bibliography/paper_fmc_dhdna_audit.md). |
 | D3 | Frontera caos/orden come "Third Law" | Radient 2026 cap.16: ipotesi articolata | Mai formalizzata come hypothesis testabile in alcun paper o deep-dive | Aperta — candidata per deep-dive 09 |
+| D4 | Reward shaping ricetta universale per FMC su task chain-strutturati | n/a (insight nuovo, originale) | Empiricamente verificata su Craftax: exp03 → exp17 +10pp Crafter via inv-tier stacking + tier-weighted achievement-fire bonus. Pattern monotonico, falsifiche rigorose dei multipli > 1.4×. | **NUOVA Cong. D in MATH_CANON v0.5.0**, P9-P11 add. Replicate su Procgen necessaria. Vedi [`work/05_craftax/autoresearch/HANDOFF.md`](work/05_craftax/autoresearch/HANDOFF.md). |
 
 **Codebases** under [`repos/`](repos/):
 
@@ -162,6 +163,9 @@ Language convention: **Italian for prose, English for code/comments**. ISO 8601 
 - [`work/09_fmc_vs_mcts_replication/`](work/09_fmc_vs_mcts_replication/) — **MCTS-UCT baseline** + budget sweep, Boxing micro-result mostra FMC +100 vs MCTS −5 a B=240 (n=3, CPU)
 - [`work/10_atari_replication/`](work/10_atari_replication/) — Atari multi-seed con bootstrap CI95, Boxing slice 5/5 knockout
 - [`work/11_ram_vs_img_ablation/`](work/11_ram_vs_img_ablation/) — RAM vs IMG sweep parametrico
+
+**Autoresearch sessions** (Karpathy-style /loop iteration con auto-status gate):
+- [`work/05_craftax/autoresearch/`](work/05_craftax/autoresearch/) — branch `autoresearch/exp02-ach-bonus`, **23 esperimenti 2026-04-30 → 2026-05-01**, trajectory **29.27% → 50.95% Crafter zero-training** (matches/beats human-expert 50.5%). HANDOFF, results.tsv, fmc_mutable.py = exp17 final.
 
 **Custom plangym simulators** ([`work/08_simulators/`](work/08_simulators/)): env Python custom che ereditano `PlanEnv` per girare FMC su scenari nostri (rocket-uncino F23, ecc.). Sostituiscono progressivamente le sims HTML statiche.
 

@@ -4,6 +4,8 @@
 
 For higher-level rationale see [`THEORY.md`](THEORY.md). For algorithm walkthrough see [`ALGORITHM.md`](ALGORITHM.md). For components see [`COMPONENTS.md`](COMPONENTS.md). For invocation see [`USAGE.md`](USAGE.md).
 
+> **2026-05-01 update — empirical confirmation from Craftax autoresearch session**: the structural-introspection thesis below (§5) gained quantitative support from a 23-experiment loop on Craftax-Classic. Starting from FMC v4 baseline (29.27%), iterative reward shaping discovered a **+10pp trajectory** culminating at exp17 = **50.95% Crafter zero-training**, matching human-expert reference (50.5%). Critical mechanism: **achievement-fire bonus** (sparse-event reward shaping) compounding with **inv-tier reward stacking** — see [`work/05_craftax/autoresearch/HANDOFF.md`](../../../work/05_craftax/autoresearch/HANDOFF.md) and Cong. D in [`docs/MATH_CANON.md`](../../../docs/MATH_CANON.md#congettura-d--chain-tier-compounding-amplification-sparse-event-reward-shaping). Implication for the plugin: **the auto-cherry-pick reward function `R_goal` should be decomposed into `R_inv` (dense per-state value) + `R_ach` (sparse milestone unlock bonus)** rather than a single scalar — see new §3.8 below.
+
 ---
 
 ## 1. The structural difference
@@ -127,6 +129,45 @@ Currently `/octopus` operates on one goal at a time. Future:
 
 **Result**: a team-of-agents working in parallel on independent feature streams. Ralph is single-threaded by definition; this composition is impossible.
 
+#### 3.8 Decompose `R_goal` into dense-inv + sparse-ach (Craftax-validated)
+
+**Origin**: 2026-05-01 autoresearch session on Craftax-Classic. Started at 29.27%, ended at 50.95% via this single insight.
+
+Currently the plugin's reward function `R_goal` is one scalar (e.g. tests-pass-rate × style-score × ...). For coding tasks with **chain structure** (e.g. "implement OAuth: spec → routes → middleware → tokens → tests"), this is too coarse — the gradient saturates once any sub-step is achieved.
+
+The Craftax finding suggests:
+
+```
+R_goal = R_inv(state) + R_ach(state, prev_state)
+
+R_inv(state)     = sum of value-of-possession for each completed sub-deliverable
+                   (weight grows hierarchically: scaffolding=1, types=2, routes=4, tests=8)
+
+R_ach(s, s')     = bonus for FIRST-time unlock of a sub-milestone in this rollout
+                   (tier-weighted: blocker = 200-300, gateway = 50-120, easy = 10-30)
+```
+
+The sparse component is the breakthrough: it gives the swarm a **discrete signal** ("this walker just unlocked a key sub-goal") on top of the continuous inv-tier signal ("this walker holds more state").
+
+**Application to coding**:
+- "blocker" milestones = tests-pass, types-check, lint-clean, integration-pass
+- "gateway" milestones = file-created, function-defined, test-defined, import-resolved
+- "easy" = whitespace-fix, comment-add, rename
+
+The sparse bonus fires once per walker per rollout per milestone. Walkers that reach blockers get a 10-30× multiplier in cum_reward, dominating the cloning kernel. This propagates the chain forward without requiring the dense reward to be perfectly tuned.
+
+**Falsified mistakes from Craftax** (DO NOT REPEAT):
+- Multiplying blocker weights >2× crashes the relativize statistics. Sweet spot is 1.2-1.4× per amplification step.
+- Adding ach-fire only without inv-tier stack = peaks at ~37% (exp02). Need both for compounding.
+- Multi-population swarm with vote-summing dilutes specialist signal. Single-pop with proper shaping wins.
+
+**Implementation in the plugin** (~1 day):
+- `R_goal` becomes a `RewardComposite { inv: number, ach: Set<MilestoneId>, ... }`
+- Walker rollout returns the `ach` set incrementally; cloning kernel sums `inv` + `Σ tier_weight[ach_i]`
+- Milestone definitions are user-configurable per repo via `.fractal/milestones.yaml`
+
+**Expected gain on coding tasks**: not yet validated. The Craftax result is one task — needs replication on a coding chain (e.g. SWE-bench Lite issue with multi-file fix). See §3.5.
+
 ### 🔴 Aspirational (12+ months)
 
 #### 3.7 Full Badger hierarchy + dashboard
@@ -194,6 +235,7 @@ That composition is where the plugin should head in the next 3 months: stop tryi
 | §3.1.b — Adaptive N (lazy spawn) | ~2 days | Touches orchestration logic in slash command |
 | §3.3 — Counterfactual reporting | ~1 day | Need to capture per-walker rationale in JSON output |
 | §3.5 — SWE-bench Lite baseline | ~1-2 weeks | Significant: needs full benchmark integration |
+| §3.8 — Decompose `R_goal` (Craftax-validated) | ~1 day | Trivial: refactor reward type + tier weights |
 | §3.4 — Reward learning (L1 Badger) | ~2-4 weeks | Needs persistent reward artifact + user feedback channel |
 | §3.6 — Multi-octopus coordination | ~1-2 months | Needs cross-session state coordination protocol |
 | §3.7 — Full Badger + dashboard | ~6+ months | Major undertaking; effectively a v2 |

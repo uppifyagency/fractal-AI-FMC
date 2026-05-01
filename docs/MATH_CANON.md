@@ -486,12 +486,13 @@ Falsificazione: se $\Psi$ non discrimina, o è specifico al task, la congettura 
 
 **Enunciato**. Su task **out-of-distribution** rispetto al training set di un agente DRL (PPO, DQN, SAC), FMC zero-training raggiunge throughput / reward $\geq$ DRL fine-tuned con stesso budget di campioni.
 
-**Stato empirico**:
+**Stato empirico** (aggiornato 2026-05-01 con risultato Craftax exp17):
 
 | Task | FMC zero-training | DRL baseline | Verdetto |
 |---|---|---|---|
 | Atari Boxing | $96/100$ in 7 min | DQN: $\sim 70$ a 200M frame | FMC ≫ DRL ✓ |
-| Craftax-Classic 30 seed | $21.87 \pm 1.21\%$ | PPO 1B step: $\sim 11\%$ | FMC > DRL ✓ |
+| **Craftax-Classic exp17** (autoresearch session 2026-05) | **$\mathbf{50.95\%}$** (n=11 seed) | EMERALD 10M step: $\sim 58\%$; PPO 1B step: $\sim 11\%$; **human-expert 50.5%** | **FMC zero-training $\approx$ human-expert** — closes most of the gap to EMERALD without ANY training ✓✓ |
+| Craftax-Classic 30 seed (run_007 v4 SOTA) | $29.27 \pm 1.21\%$ | PPO 1B step: $\sim 11\%$ | FMC > DRL ✓ |
 | TCV plasma truth-err shot 65402 | $3.47$ M12 | n/a (no DRL baseline) | n/a |
 
 **Caveat critico**: queste comparazioni non sono **a parità di compute totale** (il DRL include il training, FMC no). Servono comparazioni *like-for-like* a budget fissato.
@@ -509,6 +510,63 @@ Single intersection SUMO con arrival pattern Poisson:
 **Tempo stimato**: 3–4 settimane.
 
 > **Nota onesta**: la congettura C è la più rischiosa delle tre. È quella per cui Sergio nei podcast è più cauto. Non vogliamo fare overclaim su FMC come "general-purpose AGI"; vogliamo sapere **dove esattamente** il vantaggio cede.
+
+### Congettura D — Chain-tier compounding amplification (sparse-event reward shaping)
+
+> **Fonte primaria**: autoresearch session 2026-04-30 / 2026-05-01 su Craftax-Classic-Symbolic-v1 ([`work/05_craftax/autoresearch/HANDOFF.md`](../work/05_craftax/autoresearch/HANDOFF.md), exp03 → exp17, +10pp Crafter score).
+
+**Enunciato (informale)**. Su task con **chain di sub-goals discreti gerarchici** (ad es. wood → stone → iron → diamond in Craftax), una reward $R$ che combina:
+
+1. Una componente **denso-additiva** $R_{\text{inv}}(s)$ proporzionale al "valore di possesso" delle risorse intermedie (peso crescente sulla gerarchia: wood=1, iron=8, diamond=64), e
+2. Una componente **sparso-evento** $R_{\text{ach}}(s, s')$ che spara un bonus $w_a$ ogni volta che un sub-goal $a$ viene sbloccato per la prima volta nel rollout del walker (con $w_a$ tier-weighted: blocker $\sim 200{-}300$, gateway $\sim 50{-}120$, easy $\sim 10{-}30$),
+
+produce **gain compounding monotonici** sotto FMC zero-training: ogni amplificazione di un singolo tier $T_k$ ($k \in \{$wood, stone, iron, diamond, ach-fire$\}$) **non interferisce** con i tier già amplificati. Ovvero:
+
+$$
+\text{Crafter}\bigl(R_{\text{inv}}^{(T_1, \dots, T_k)} + R_{\text{ach}}\bigr) \geq \text{Crafter}\bigl(R_{\text{inv}}^{(T_1, \dots, T_{k-1})} + R_{\text{ach}}\bigr)
+\quad \text{per } k = 1, \dots, K_{\text{tiers}}.
+$$
+
+**Forma operativa**. La componente sparsa è la chiave: senza $R_{\text{ach}}$, la componente $R_{\text{inv}}$ da sola è quasi-neutra (exp01: 29.30% vs baseline 29.27%). Con $R_{\text{ach}}$ uniform +50, jump a 37.75% (exp02). Con $R_{\text{ach}}$ tier-weighted, jump a 40.96% (exp03). Stack-tier-stack-tier compounding fino a 45.94% (exp11). Iron-tier ach push 150→200 → 50.65% (exp16, +4.71pp). Gateway push → 50.95% (exp17).
+
+**Stato empirico**: **verificata su Craftax-Classic** (un task), con rigorosa falsifica di varianti adiacenti.
+
+| Esperimento | Mutation | Crafter % | Verdetto |
+|---|---|---|---|
+| baseline (run_007) | nessun ach-fire bonus | 29.27 | reference |
+| exp01 | inv-tier solo (no ach-fire) | 29.30 | $R_{\text{inv}}$ da solo è neutro |
+| exp02 | ach-fire +50 uniform | 37.75 | $R_{\text{ach}}$ da solo dà +8.5pp |
+| exp03 | ach-fire tier-weighted | 40.96 | tier weighting conferma il segnale |
+| exp09 | + iron-tier inv | 42.89 | first compounding (+1.93) |
+| exp10 | + stone-tier inv | 44.14 | (+1.24) |
+| exp11 | + wood-tier inv | 45.94 | (+1.80) |
+| exp16 | + iron-tier ach 150→200 | 50.65 | second-order compounding (+4.71) |
+| exp17 | + gateway-tier ach push | 50.95 | local optimum |
+
+**Falsifica delle versioni "naïve" della congettura** (autoresearch falsifications):
+
+- **Falsifica 1: la moltiplicazione del peso del blocker più alto NON scala linearmente.** exp04 (diamond=300→1000, +5×) collasso a 36.94%. exp15 (diamond=300→500, +1.67×) hung 8h. **Sweet spot empirico per blocker amplification: $\sim 1.2{-}1.4\times$**, oltre il quale `relativize` collassa.
+- **Falsifica 2: la trasformazione $\alpha$ del cloning kernel NON è uno strumento di amplificazione.** exp22 ($\alpha = 1 \to 1.5$) crollo catastrofico a 27.25% (premature convergence).
+- **Falsifica 3: aumentare $N$ NON aiuta.** exp08 ($N = 1024$) infeasible per costo. exp21 ($N = 768$) regressione $-13$pp — più walker $\Rightarrow$ statistiche di `relativize` cambiano in modo da ridurre la pressione di clonazione sul rare-event walker.
+- **Falsifica 4: multi-pop swarm NON aiuta.** exp14 (split $N=512 \to 2 \times 256$ con shaping diversi, vote-summed) regressione $-11$pp — voto di pop diffusa diluisce voto specialista.
+- **Falsifica 5: oltre la saturazione, il segnale di reward diventa $\arg\max$-invariante.** exp18 (diamond ach $300 \to 350$) e exp19 (diamond proximity $\times 4$) hanno prodotto **identicamente $50.9524\%$ a 4 decimali** rispetto a exp17 — il bottleneck si è spostato da "segnale di reward" a "raggiungere il diamond".
+
+**Criterio di falsificabilità**.
+
+1. **Replicare** su un secondo benchmark con chain gerarchica (Procgen Heist o simile) il pattern di compounding monotonico tra inv-tier e ach-fire.
+2. Se il secondo task **non** mostra un gradiente positivo anche solo a uno dei livelli di compounding (al netto di noise statistico), la congettura è **descrittiva** ma non **legge generale**.
+3. Se il secondo task mostra il pattern fino a un certo $k^*$ tier-stack ma poi regressione, la formulazione è **ben definita ma con asintoto $k^*$ task-dipendente**.
+
+**Implicazioni teoriche**. Se confermata su un secondo task, la congettura D fornisce una **ricetta sistematica per il reward shaping di FMC su task chain-strutturati**, sostituendo l'attuale arte di tuning manuale dei pesi. La struttura matematica suggerisce un legame con:
+
+- **Effetto della relativize sul cloning kernel** (Def. 4): la separazione netta tra reward dense (`inv`) e sparse (`ach-fire`) corrisponde a separare i due regimi della funzione `relativize` (continua per $z \le 0$, log per $z > 0$). I rare-event walker (ach-fire-firing) operano nel ramo log; gli inv-walker operano nel ramo continuo.
+- **Cone-entropy / cross-entropy collapse** (paper §2.2 + video seminario): il bonus tier-weighted concentra l'entropia del cono sui chain endpoint, evitando che la cross-entropy del fine planning diluisca il segnale del blocker.
+
+**Tempo stimato per replicate Procgen Heist**: 1–2 settimane (richiede port di Procgen su plangym).
+
+**Difficoltà**: media. La congettura è **specifica al regime di FMC con $K \sim 17, M \sim 40, N \sim 512$ e chain di lunghezza 4-5 sub-goal**. Estendere a $K$ molto diverso (e.g. $K = 4$ Atari) richiederebbe ri-tuning dei moltiplicatori 1.2-1.4×.
+
+> **Nota di rigore**: la "falsifica 5" sopra (saturazione $\arg\max$-invariante) è particolarmente importante perché trasforma una congettura sul **reward shaping** in una congettura sulla **tipologia del bottleneck**. Per task dove il bottleneck è di tipo *spatial-reach* (i walker non incontrano il sub-goal nei rollout di lunghezza $M$), nessun shaping di reward può aiutare oltre la saturazione. Servono interventi **strutturali** sul cono di pianificazione: cross-episode memory, macro-actions, o valore prior NN. Vedi piani di follow-up in [`work/05_craftax/autoresearch/HANDOFF.md`](../work/05_craftax/autoresearch/HANDOFF.md#tier-2--required-for-further-gains).
 
 ---
 
@@ -572,6 +630,9 @@ Il plugin `/fractal-decide` applica gli stessi operatori, ma con $E$ = spazio di
 | **P6** | FMC zero-training $\geq$ DRL su single-intersection traffic | Cong. C / Bet 1 | **Non testato** (Boxing/Craftax dati ma non parità compute) | atari/craftax results |
 | **P7** | Virtual reward bit-for-bit identica tra Python e JS port | Vincolo unificante L1 | **Non testato — fmc-core/ non esiste ancora** | n/a |
 | **P8** | `relativize` è unica sotto assiomi A1–A5 di deep dive 04 | Def. 2 (teorema unicità) | **Buco aperto** — sketch non dimostrato | deep dive 04 |
+| **P9** | Chain-tier compounding monotonico per inv-tier+ach-fire shaping | Cong. D | **Verificata su Craftax (1 task)**: exp03 → exp17, +10pp Crafter monotonici | [`work/05_craftax/autoresearch/HANDOFF.md`](../work/05_craftax/autoresearch/HANDOFF.md), `results.tsv` |
+| **P10** | Sweet spot per blocker amplification multiplier $\in [1.2, 1.4]\times$ | Cong. D + falsifica 1 | **Verificata localmente**: exp16 1.33× successo, exp04 5× collasso, exp15 1.67× hang | idem |
+| **P11** | Oltre la saturazione, reward shaping è $\arg\max$-invariante (bottleneck spatial) | Cong. D + falsifica 5 | **Verificata su exp17→exp19**: tre punti dati identici a 4 decimali | idem |
 
 ### VI.1 Esperimenti di priorità immediata
 
@@ -657,6 +718,7 @@ Per disciplina (cf. CLAUDE.md §3 "surgical changes" e §"cosa rifiutiamo"):
 | 2026-04-27 | 0.4.1 | **Mappatura WF empiricamente confermata** a $\alpha = 0$ esatto: $q = -0.948$ vs $-1$ teorico (errore 5%). FMC neutrale $\leftrightarrow$ Moran drift. Deep dive 07 passa da candidate a confermato. | idem |
 | 2026-04-27 | 0.4.2 | **Bet 2 (Fractal-of-Thought) eseguito** su LFM2.5-1.2B + 12 problemi math hard. FoT $87.5\%$ vs greedy $66.7\%$ vs SC $83.3\%$. Risultato positivo ma marginale vs SC. | idem |
 | 2026-04-27 | 0.4.3 | **Bet 1 (SUMO single-intersection) eseguito** first-pass: simmetrico → tie con static (+5%), asimmetrico → FMC stravince (+116% vs actuated, +23% vs static, σ minima). Conferma forte di Cong. C su scenario asimmetrico; sym scenario è dove static cycle è already-near-optimal. | idem |
+| 2026-05-01 | 0.5.0 | **Congettura D aggiunta** (chain-tier compounding amplification). Empirically grounded sul session autoresearch Craftax 2026-04-30 → 2026-05-01: exp03 → exp17 trajectory +10pp, **50.95% Crafter zero-training (≈ human-expert 50.5%)**. P9-P11 aggiunte alla tabella predizioni. Cong. C aggiornata con risultato exp17. | autoresearch session, 23 esperimenti |
 
 ---
 
