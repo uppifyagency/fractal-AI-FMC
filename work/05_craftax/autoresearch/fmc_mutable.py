@@ -1,17 +1,16 @@
-"""fmc_mutable.py — autoresearch experiment 22: alpha=1.5 (sharper cloning).
+"""fmc_mutable.py — autoresearch experiment 23: iron_pickaxe ach 200 -> 250.
 
-After exp17/18/19 all returned 50.9524% identical, then exp20 (-1.79),
-exp21 (-13.4) regressed. The local optimum is robust to parameter changes.
-Final cheap test: sharpen the cloning preference via alpha exponent.
+After exp22 alpha=1.5 catastrophically collapsed (-23.7pp), restored exp17
+config and trying one last targeted ach push: iron_pickaxe is already the
+highest-firing blocker (27%); a small bump may locally amplify it without
+shifting the global optimum.
 
-Hypothesis (exp22):
-  VR = R_norm^alpha * D_norm^beta. Currently alpha=beta=1.0. Bumping alpha
-  to 1.5 makes the cloning preference sharper toward high-reward walkers.
-  This may help the rare-event walker (diamond fire) win cloning votes
-  more decisively, propagating through more walkers.
+Mutation (delta vs exp17):
+    ACH_WEIGHTS[7] (MAKE_IRON_PICKAXE)  200 -> 250  (1.25x)
+  Other ach weights, inv weights, CONFIG = exp17.
 
-Risk: alpha too high causes premature convergence (similar to exp04 which
-over-weighted blocker rewards and collapsed). 1.5 is moderate.
+Falsifier: Crafter % within +/- 1.0pp of exp17 (50.95%) -> declare
+exp17 as the final consolidated result and end iteration.
 """
 from __future__ import annotations
 
@@ -109,7 +108,7 @@ def inventory_total(state) -> jnp.ndarray:
 ACH_WEIGHTS_LIST = [
     10.0, 10.0, 30.0, 20.0, 20.0, 20.0,
     80.0,                     # 6: MAKE_STONE_PICKAXE *** exp17: 50 -> 80 ***
-    200.0,                    # 7: MAKE_IRON_PICKAXE (exp16)
+    250.0,                    # 7: MAKE_IRON_PICKAXE *** exp23: 200 -> 250 (1.25x) ***
     20.0, 50.0,
     200.0,                    # 10: MAKE_IRON_SWORD (exp16)
     20.0, 30.0, 30.0, 20.0, 200.0, 50.0,
@@ -247,7 +246,7 @@ def make_fmc_decide(env, params, n_actions: int, cfg: FMCConfig):
 
 CONFIG = FMCConfig(
     n_walkers=512, time_horizon=40,
-    alpha=1.5, beta=1.0, action_repeat=1,  # exp22: alpha 1.0 -> 1.5
+    alpha=1.0, beta=1.0, action_repeat=1,  # exp23: revert alpha to 1.0
     intrinsic_inv_alpha=0.5, proximity_alpha=0.2,
     proximity_sigma=10.0, proximity_mode="delta",
 )
@@ -310,7 +309,7 @@ def run_episode(seed: int, max_steps: int = 500,
             "proximity_alpha": CONFIG.proximity_alpha,
             "proximity_sigma": CONFIG.proximity_sigma,
             "proximity_mode": CONFIG.proximity_mode,
-            "_mutation": "exp22: alpha 1.0 -> 1.5 (sharper cloning preference)",
+            "_mutation": "exp23: iron_pickaxe ach 200 -> 250 on exp17 base",
         },
         "seed": seed,
     }
