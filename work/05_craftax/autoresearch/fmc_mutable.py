@@ -1,20 +1,17 @@
-"""fmc_mutable.py — autoresearch experiment 21: N=768 (1.5x walkers).
+"""fmc_mutable.py — autoresearch experiment 22: alpha=1.5 (sharper cloning).
 
-exp20 adaptive M regressed (-1.79pp). After 3 identical 50.95% results
-(exp17/18/19) and exp20 regression, FMC is solidly in a local optimum.
+After exp17/18/19 all returned 50.9524% identical, then exp20 (-1.79),
+exp21 (-13.4) regressed. The local optimum is robust to parameter changes.
+Final cheap test: sharpen the cloning preference via alpha exponent.
 
-Hypothesis (exp21):
-  More walkers = more diverse trajectory sampling = more chances for ANY
-  walker to discover the diamond chain. exp08 tried N=1024 and was too
-  slow. N=768 (1.5x of exp17's N=512) is a middle ground.
+Hypothesis (exp22):
+  VR = R_norm^alpha * D_norm^beta. Currently alpha=beta=1.0. Bumping alpha
+  to 1.5 makes the cloning preference sharper toward high-reward walkers.
+  This may help the rare-event walker (diamond fire) win cloning votes
+  more decisively, propagating through more walkers.
 
-  Theoretical: with N walkers, the probability that AT LEAST ONE samples
-  a rare-but-rewarding action sequence scales as 1 - (1-p)^N. Going from
-  N=512 to N=768 boosts this for chains with p~0.001 from ~40% to ~54%.
-
-Mutation:
-  N=512 -> N=768 (single-pop). Other config = exp17 baseline.
-  Compute: 1.5x slower per decision. Expect 7-8 seeds completed in budget.
+Risk: alpha too high causes premature convergence (similar to exp04 which
+over-weighted blocker rewards and collapsed). 1.5 is moderate.
 """
 from __future__ import annotations
 
@@ -249,8 +246,8 @@ def make_fmc_decide(env, params, n_actions: int, cfg: FMCConfig):
 
 
 CONFIG = FMCConfig(
-    n_walkers=768, time_horizon=40,  # exp21: 512 -> 768 (1.5x)
-    alpha=1.0, beta=1.0, action_repeat=1,
+    n_walkers=512, time_horizon=40,
+    alpha=1.5, beta=1.0, action_repeat=1,  # exp22: alpha 1.0 -> 1.5
     intrinsic_inv_alpha=0.5, proximity_alpha=0.2,
     proximity_sigma=10.0, proximity_mode="delta",
 )
@@ -313,7 +310,7 @@ def run_episode(seed: int, max_steps: int = 500,
             "proximity_alpha": CONFIG.proximity_alpha,
             "proximity_sigma": CONFIG.proximity_sigma,
             "proximity_mode": CONFIG.proximity_mode,
-            "_mutation": "exp21: N=512 -> N=768 (1.5x walkers) on exp19 base (diamond prox 4x, exp17 ach weights)",
+            "_mutation": "exp22: alpha 1.0 -> 1.5 (sharper cloning preference)",
         },
         "seed": seed,
     }
