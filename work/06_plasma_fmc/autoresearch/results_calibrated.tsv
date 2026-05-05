@@ -1,0 +1,3 @@
+commit	score	mean_err	phys_pct	n_scenarios	n_seeds	status	description
+ccdc798	-2.4648	6.9851	45.20	7	21	baseline	M21_exp39: exp39 BEST config on CALIBRATED sim
+ccdc798	-2.2089	4.0321	18.23	7	21	discard	M21_baseline: vanilla FMC on CALIBRATED sim

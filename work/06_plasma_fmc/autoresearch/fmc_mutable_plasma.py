@@ -45,14 +45,14 @@ from fmc_plasma_hierarchical import (
 
 # === MUTATION SURFACE: edit values below between experiments ===
 
-N_WALKERS = 2048  # exp39 verified peak
+N_WALKERS = 64  # M21 vanilla baseline on CALIBRATED sim
 HORIZON = 10
 DT = 1e-3
-VOLTAGE_STD = 120.0  # exp39 verified peak (122/125/130 all regress)
-P_AUX = 1e6
-GAS_PUFF = 5e20  # exp46: 0.5x default (lower density, exp45 2x regressed -0.21)
+VOLTAGE_STD = 50.0  # vanilla
+P_AUX = 5e5  # vanilla
+GAS_PUFF = 1e21
 
-SHAPE_WEIGHTS = [640.0, 640.0, 320.0, 320.0]  # exp39 W 1.6x verified peak
+SHAPE_WEIGHTS = [100.0, 100.0, 10.0, 10.0]  # vanilla default
 
 USE_HIERARCHICAL = False  # reverted from exp05 (-0.012 score)
 TIER_WEIGHTS = list(map(float, DEFAULT_TIER_WEIGHTS.tolist()))
