@@ -180,7 +180,7 @@ def main():
     }
 
     n_ticks = 30
-    n_seeds = 2
+    n_seeds = 4  # firmer stat power vs M20's 2 seeds
     print(f"\n[config] M21_BEST = {M21_BEST}")
     print(f"[run] {n_ticks} ticks × {n_seeds} seeds × {len(targets)} targets × "
           f"{len(controllers)} controllers")
