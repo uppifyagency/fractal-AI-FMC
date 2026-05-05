@@ -45,14 +45,14 @@ from fmc_plasma_hierarchical import (
 
 # === MUTATION SURFACE: edit values below between experiments ===
 
-N_WALKERS = 256  # exp18 best
-HORIZON = 15  # exp21: HORIZON 15 on exp18 best — re-test in V_STD=100+N=256 regime
+N_WALKERS = 1024  # exp27: N=1024 + W 1.5x + P_AUX 2x kitchen sink (all wins combined)
+HORIZON = 10  # exp19 best: H=10 invariant winner
 DT = 1e-3
 VOLTAGE_STD = 100.0  # exp18 BEST: V_STD=100
-P_AUX = 5e5
+P_AUX = 1e6  # exp24: P_AUX 2x retest in exp19 regime
 GAS_PUFF = 1e21
 
-SHAPE_WEIGHTS = [400.0, 400.0, 200.0, 200.0]  # exp14 BEST: W asym kappa/delta 5x
+SHAPE_WEIGHTS = [600.0, 600.0, 300.0, 300.0]  # exp27: W 1.5x kitchen sink
 
 USE_HIERARCHICAL = False  # reverted from exp05 (-0.012 score)
 TIER_WEIGHTS = list(map(float, DEFAULT_TIER_WEIGHTS.tolist()))
