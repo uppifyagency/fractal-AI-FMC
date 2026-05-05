@@ -45,10 +45,10 @@ from fmc_plasma_hierarchical import (
 
 # === MUTATION SURFACE: edit values below between experiments ===
 
-N_WALKERS = 256  # exp18: N=256 on exp14 best (test if V_STD breakthrough scales with N)
-HORIZON = 10
+N_WALKERS = 256  # exp18 best
+HORIZON = 15  # exp21: HORIZON 15 on exp18 best — re-test in V_STD=100+N=256 regime
 DT = 1e-3
-VOLTAGE_STD = 100.0  # exp14 BEST: V_STD=100
+VOLTAGE_STD = 100.0  # exp18 BEST: V_STD=100
 P_AUX = 5e5
 GAS_PUFF = 1e21
 

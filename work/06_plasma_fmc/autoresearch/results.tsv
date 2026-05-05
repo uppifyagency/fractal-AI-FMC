@@ -30,3 +30,9 @@ HEAD	0.0392	1.0800	11.20	7	21	keep	exp15: P_AUX 4x + N=256 + W 4x (modest +0.024
 418c449	0.1125	1.3149	14.27	7	21	discard	exp16: V_STD 100->75 (sweet-spot search lower; peak above 75)
 418c449	0.2292	1.9600	21.89	7	21	discard	exp17: V_STD 100->150 (plateau, tie with exp14)
 418c449	0.3511	1.4600	18.10	7	21	keep	exp18: N=128->256 on exp14 best (NEW BEST +0.121, V_STD breakthrough scales with N)
+47f62b9	0.3376	1.7516	20.89	7	21	discard	exp20: V_STD 100->125 fine search on exp18 best
+47f62b9	0.4287	1.5279	19.57	7	21	discard	exp19: N=256->512 scaling on exp18 best (test if V_STD breakthrough still scales)
+47f62b9	0.2032	1.5260	17.29	7	21	discard	exp21: HORIZON 10->15 on exp18 best (re-test after V_STD breakthrough)
+47f62b9	0.4287	1.5300	19.60	7	21	keep	exp19: N=256->512 scaling on exp18 (NEW BEST +0.078 vs exp18, sub-linear scaling continues)
+47f62b9	0.3376	1.7500	20.90	7	21	discard	exp20: V_STD 100->125 fine search (-0.014, V_STD=100 confirmed peak)
+47f62b9	0.2032	1.5300	17.30	7	21	discard	exp21: H 10->15 in V_STD=100+N=256 regime (-0.148, HORIZON=10 invariant winner)
