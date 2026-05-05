@@ -77,7 +77,7 @@ re-running serial in main and comparing 16-decimal score precision.
 | SHAPE_WEIGHTS | **6.4× asym** [640,640,320,320] | base 1× (-1.05), 4× sym (-1.07), 5× asym (-1.04), 6× sym [600,600,300,300] (-0.06), 7× sym (-0.10), 8× sym (-0.10) |
 | P_AUX | **1e6 (2×)** | 5e5 (-0.06), 2e6 (-0.11) |
 | HORIZON | **10** ticks | 15 (-0.15), 20 (-0.11), 25 (-0.18) |
-| GAS_PUFF | **1e21** | 2e21 (-0.21), 5e20 (TBD via exp46) |
+| GAS_PUFF | **1e21** | 5e20 (-0.12), 2e21 (-0.21) — both directions regress |
 
 ## Key scientific findings
 
