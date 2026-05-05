@@ -34,10 +34,10 @@ from fmc_plasma_jax import FMCPlasmaJaxController
 
 # exp02: V_STD 50 -> 25 (half baseline). Calibrated S × 10 means equivalent
 # physical perturbation needs ~10× lower V_STD. Start half-baseline.
-N_WALKERS = 64
+N_WALKERS = 2048
 HORIZON = 10
 DT = 1e-3
-VOLTAGE_STD = 12.0
+VOLTAGE_STD = 8.0
 P_AUX = 5e5
 GAS_PUFF = 1e21
 

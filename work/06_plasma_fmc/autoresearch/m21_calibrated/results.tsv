@@ -2,3 +2,7 @@ commit	score	mean_err	phys_pct	n_scenarios	n_seeds	status	description
 ccdc798	-2.2089	4.0321	18.23	7	21	baseline	exp00 baseline calibrated: N=64 V=50 W=default (= M19 exp00 hyperparams on calibrated sim)
 ccdc798	-2.4648	6.9851	45.20	7	21	discard	exp01: M19 exp39 hyperparams (N=2048 V=120 W 1.6x P=1e6) on calibrated sim — transfer test
 ccdc798	-1.5889	2.9778	13.89	7	21	discard	exp02: V_STD 50 -> 25 (half baseline; calibrated S x10 needs lower V)
+edbdf4f	-1.1944	2.2343	10.40	7	21	keep	exp03: V_STD 25 -> 12 (~1/10 baseline; S x10 sensitivity match)
+edbdf4f	-1.1767	2.1554	9.79	7	21	keep	exp04: V_STD 12 -> 8 (further down V axis)
+edbdf4f	-1.1879	2.1424	9.55	7	21	keep	exp05: V_STD 8 -> 5 (extreme low V probe)
+edbdf4f	-1.1784	2.1598	9.81	7	21	keep	exp06: V=8 + N=256 (4x baseline walkers, V locked from V plateau)
