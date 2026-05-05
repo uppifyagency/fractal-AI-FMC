@@ -1,0 +1,68 @@
+======================================================================
+autoresearch-plasma: experiment driver
+======================================================================
+  jax_backend: cpu
+  jax_devices: ['cpu:0']
+  n_published_targets: 6
+  n_real_targets: 1
+  total_targets: 7
+  wall_budget_s: 600
+  n_seeds_default: 3
+
+  Loading fmc_mutable_plasma.py...
+
+  Starting evaluation...
+  scenario=iter_like_ramp  duration=1.00s
+    seed=0: mean_err=   1.32  phys= 14.1%  dec=1112µs
+    seed=1: mean_err=   1.52  phys= 16.7%  dec=874µs
+    seed=2: mean_err=   1.43  phys= 14.3%  dec=939µs
+  scenario=negative_triangularity  duration=0.80s
+    seed=0: mean_err=   4.82  phys= 17.6%  dec=946µs
+    seed=1: mean_err=   4.84  phys= 20.9%  dec=935µs
+    seed=2: mean_err=   4.81  phys= 17.9%  dec=942µs
+  scenario=high_elongation  duration=0.60s
+    seed=0: mean_err=   2.07  phys= 23.5%  dec=865µs
+    seed=1: mean_err=   2.02  phys= 27.8%  dec=862µs
+    seed=2: mean_err=   2.22  phys= 26.8%  dec=894µs
+  scenario=z_position_swing  duration=0.50s
+    seed=0: mean_err=   2.66  phys= 28.2%  dec=879µs
+    seed=1: mean_err=   2.48  phys= 30.2%  dec=883µs
+    seed=2: mean_err=   2.60  phys= 28.8%  dec=1002µs
+  scenario=r_axis_shift  duration=0.60s
+    seed=0: mean_err=   1.91  phys= 25.8%  dec=874µs
+    seed=1: mean_err=   1.99  phys= 27.2%  dec=948µs
+    seed=2: mean_err=   2.40  phys= 27.0%  dec=953µs
+  scenario=combined_complex  duration=1.20s
+    seed=0: mean_err=   2.52  phys= 11.8%  dec=910µs
+    seed=1: mean_err=   2.66  phys= 13.9%  dec=961µs
+    seed=2: mean_err=   2.65  phys= 11.9%  dec=872µs
+  scenario=M16_real_TCV_65402  duration=0.50s
+    seed=0: mean_err=   2.65  phys= 31.0%  dec=894µs
+    seed=1: mean_err=   2.36  phys= 32.2%  dec=876µs
+    seed=2: mean_err=   2.65  phys= 28.8%  dec=804µs
+
+---
+score:               -0.3309
+mean_err:            2.5996
+physicality_pct:     22.69
+n_scenarios:         7/7
+n_seeds:             21
+wall_s:              27.9
+decisions_per_sec:   558.5
+
+  per scenario:
+    iter_like_ramp                  err=   1.42± 0.10  phys= 15.0%
+    negative_triangularity          err=   4.83± 0.01  phys= 18.8%
+    high_elongation                 err=   2.11± 0.11  phys= 26.1%
+    z_position_swing                err=   2.58± 0.09  phys= 29.1%
+    r_axis_shift                    err=   2.10± 0.26  phys= 26.7%
+    combined_complex                err=   2.61± 0.08  phys= 12.5%
+    M16_real_TCV_65402              err=   2.55± 0.17  phys= 30.7%
+
+status (auto):       discard
+baseline_score:      -0.0723
+vs_baseline:         -0.2586
+description:         exp02: VOLTAGE_STD 50 -> 200 (4x walker exploration)
+
+  Logged to results.tsv (commit 835533b)
+  Saved results/exp02.json

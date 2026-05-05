@@ -1,0 +1,68 @@
+======================================================================
+autoresearch-plasma: experiment driver
+======================================================================
+  jax_backend: cpu
+  jax_devices: ['cpu:0']
+  n_published_targets: 6
+  n_real_targets: 1
+  total_targets: 7
+  wall_budget_s: 600
+  n_seeds_default: 3
+
+  Loading fmc_mutable_plasma.py...
+
+  Starting evaluation...
+  scenario=iter_like_ramp  duration=1.00s
+    seed=0: mean_err=   0.36  phys=  7.0%  dec=920µs
+    seed=1: mean_err=   0.37  phys=  7.1%  dec=929µs
+    seed=2: mean_err=   0.36  phys=  6.8%  dec=902µs
+  scenario=negative_triangularity  duration=0.80s
+    seed=0: mean_err=   3.53  phys=  8.9%  dec=898µs
+    seed=1: mean_err=   3.52  phys=  8.9%  dec=862µs
+    seed=2: mean_err=   3.50  phys=  8.4%  dec=865µs
+  scenario=high_elongation  duration=0.60s
+    seed=0: mean_err=   0.22  phys= 11.8%  dec=874µs
+    seed=1: mean_err=   0.20  phys= 11.8%  dec=861µs
+    seed=2: mean_err=   0.27  phys= 12.5%  dec=869µs
+  scenario=z_position_swing  duration=0.50s
+    seed=0: mean_err=   0.79  phys= 14.0%  dec=872µs
+    seed=1: mean_err=   0.79  phys= 14.2%  dec=870µs
+    seed=2: mean_err=   0.78  phys= 13.6%  dec=858µs
+  scenario=r_axis_shift  duration=0.60s
+    seed=0: mean_err=   0.18  phys= 11.8%  dec=865µs
+    seed=1: mean_err=   0.18  phys= 11.8%  dec=866µs
+    seed=2: mean_err=   0.24  phys= 12.5%  dec=874µs
+  scenario=combined_complex  duration=1.20s
+    seed=0: mean_err=   1.75  phys=  5.9%  dec=864µs
+    seed=1: mean_err=   1.75  phys=  5.9%  dec=861µs
+    seed=2: mean_err=   1.74  phys=  5.7%  dec=871µs
+  scenario=M16_real_TCV_65402  duration=0.50s
+    seed=0: mean_err=   0.69  phys= 14.2%  dec=870µs
+    seed=1: mean_err=   0.69  phys= 14.2%  dec=872µs
+    seed=2: mean_err=   0.72  phys= 13.6%  dec=865µs
+
+---
+score:               -0.0265
+mean_err:            1.0773
+physicality_pct:     10.51
+n_scenarios:         7/7
+n_seeds:             21
+wall_s:              25.4
+decisions_per_sec:   614.4
+
+  per scenario:
+    iter_like_ramp                  err=   0.36± 0.00  phys=  7.0%
+    negative_triangularity          err=   3.52± 0.01  phys=  8.7%
+    high_elongation                 err=   0.23± 0.04  phys= 12.1%
+    z_position_swing                err=   0.79± 0.01  phys= 13.9%
+    r_axis_shift                    err=   0.20± 0.04  phys= 12.1%
+    combined_complex                err=   1.74± 0.00  phys=  5.8%
+    M16_real_TCV_65402              err=   0.70± 0.02  phys= 14.0%
+
+status (auto):       discard
+baseline_score:      -0.0723
+vs_baseline:         +0.0458
+description:         exp06: SHAPE_WEIGHTS 4x [400,400,40,40] (extend exp04 +0.029 direction)
+
+  Logged to results.tsv (commit 835533b)
+  Saved results/exp06.json

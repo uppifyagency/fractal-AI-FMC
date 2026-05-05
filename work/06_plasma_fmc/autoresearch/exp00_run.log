@@ -1,0 +1,72 @@
+======================================================================
+autoresearch-plasma: experiment driver
+======================================================================
+  jax_backend: cpu
+  jax_devices: ['cpu:0']
+  n_published_targets: 6
+  n_real_targets: 1
+  total_targets: 7
+  wall_budget_s: 600
+  n_seeds_default: 3
+
+  Loading fmc_mutable_plasma.py...
+
+  Starting evaluation...
+  scenario=iter_like_ramp  duration=1.00s
+    seed=0: mean_err=   0.38  phys=  7.0%  dec=913µs
+    seed=1: mean_err=   0.39  phys=  7.1%  dec=890µs
+    seed=2: mean_err=   0.38  phys=  6.7%  dec=901µs
+  scenario=negative_triangularity  duration=0.80s
+    seed=0: mean_err=   3.53  phys=  8.8%  dec=921µs
+    seed=1: mean_err=   3.54  phys=  8.6%  dec=924µs
+    seed=2: mean_err=   3.52  phys=  8.2%  dec=947µs
+  scenario=high_elongation  duration=0.60s
+    seed=0: mean_err=   0.23  phys= 11.7%  dec=957µs
+    seed=1: mean_err=   0.23  phys= 11.8%  dec=977µs
+    seed=2: mean_err=   0.28  phys= 11.3%  dec=948µs
+  scenario=z_position_swing  duration=0.50s
+    seed=0: mean_err=   0.86  phys= 14.0%  dec=983µs
+    seed=1: mean_err=   0.80  phys= 13.8%  dec=938µs
+    seed=2: mean_err=   0.85  phys= 13.6%  dec=923µs
+  scenario=r_axis_shift  duration=0.60s
+    seed=0: mean_err=   0.21  phys= 11.8%  dec=889µs
+    seed=1: mean_err=   0.21  phys= 11.8%  dec=881µs
+    seed=2: mean_err=   0.23  phys= 11.7%  dec=885µs
+  scenario=combined_complex  duration=1.20s
+    seed=0: mean_err=   1.75  phys=  5.8%  dec=890µs
+    seed=1: mean_err=   1.76  phys=  5.9%  dec=911µs
+    seed=2: mean_err=   1.75  phys=  5.4%  dec=986µs
+  scenario=M16_real_TCV_65402  duration=0.50s
+    seed=0: mean_err=   0.69  phys= 12.6%  dec=940µs
+    seed=1: mean_err=   0.70  phys= 13.8%  dec=973µs
+    seed=2: mean_err=   0.76  phys= 13.6%  dec=947µs
+
+---
+score:               -0.0723
+mean_err:            1.0969
+physicality_pct:     10.25
+n_scenarios:         7/7
+n_seeds:             21
+wall_s:              27.6
+decisions_per_sec:   564.8
+
+  per scenario:
+    iter_like_ramp                  err=   0.38± 0.01  phys=  6.9%
+    negative_triangularity          err=   3.53± 0.01  phys=  8.5%
+    high_elongation                 err=   0.24± 0.03  phys= 11.6%
+    z_position_swing                err=   0.84± 0.03  phys= 13.8%
+    r_axis_shift                    err=   0.22± 0.01  phys= 11.8%
+    combined_complex                err=   1.75± 0.01  phys=  5.7%
+    M16_real_TCV_65402              err=   0.71± 0.04  phys= 13.3%
+
+status (auto):       baseline
+description:         exp00 baseline: vanilla FMC N=64 H=10 V=50 (M15+M16 surface)
+
+  Logged to results.tsv (commit 835533b)
+Traceback (most recent call last):
+  File "/Users/vladvrinceanu/Desktop/PROGETTI ANTYGRAVITY/FractalAI/work/06_plasma_fmc/autoresearch/evaluate_plasma.py", line 188, in <module>
+    main()
+  File "/Users/vladvrinceanu/Desktop/PROGETTI ANTYGRAVITY/FractalAI/work/06_plasma_fmc/autoresearch/evaluate_plasma.py", line 180, in main
+    with open(args.out_json, "w") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'results/exp00_baseline.json'

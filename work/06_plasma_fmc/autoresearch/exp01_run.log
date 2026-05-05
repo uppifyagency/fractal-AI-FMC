@@ -1,0 +1,68 @@
+======================================================================
+autoresearch-plasma: experiment driver
+======================================================================
+  jax_backend: cpu
+  jax_devices: ['cpu:0']
+  n_published_targets: 6
+  n_real_targets: 1
+  total_targets: 7
+  wall_budget_s: 600
+  n_seeds_default: 3
+
+  Loading fmc_mutable_plasma.py...
+
+  Starting evaluation...
+  scenario=iter_like_ramp  duration=1.00s
+    seed=0: mean_err=   0.38  phys=  7.1%  dec=896µs
+    seed=1: mean_err=   0.39  phys=  7.1%  dec=892µs
+    seed=2: mean_err=   0.38  phys=  6.7%  dec=885µs
+  scenario=negative_triangularity  duration=0.80s
+    seed=0: mean_err=   3.54  phys=  8.9%  dec=887µs
+    seed=1: mean_err=   3.54  phys=  8.9%  dec=893µs
+    seed=2: mean_err=   3.55  phys=  9.0%  dec=891µs
+  scenario=high_elongation  duration=0.60s
+    seed=0: mean_err=   0.24  phys= 11.8%  dec=889µs
+    seed=1: mean_err=   0.33  phys= 12.0%  dec=891µs
+    seed=2: mean_err=   0.21  phys= 11.2%  dec=910µs
+  scenario=z_position_swing  duration=0.50s
+    seed=0: mean_err=   0.83  phys= 13.8%  dec=889µs
+    seed=1: mean_err=   0.85  phys= 14.2%  dec=901µs
+    seed=2: mean_err=   0.84  phys= 14.4%  dec=884µs
+  scenario=r_axis_shift  duration=0.60s
+    seed=0: mean_err=   0.21  phys= 11.8%  dec=1002µs
+    seed=1: mean_err=   0.22  phys= 12.0%  dec=1214µs
+    seed=2: mean_err=   0.24  phys= 12.0%  dec=1053µs
+  scenario=combined_complex  duration=1.20s
+    seed=0: mean_err=   1.76  phys=  5.9%  dec=992µs
+    seed=1: mean_err=   1.79  phys=  6.0%  dec=915µs
+    seed=2: mean_err=   1.75  phys=  5.6%  dec=968µs
+  scenario=M16_real_TCV_65402  duration=0.50s
+    seed=0: mean_err=   0.72  phys= 13.8%  dec=925µs
+    seed=1: mean_err=   0.79  phys= 14.2%  dec=923µs
+    seed=2: mean_err=   0.74  phys= 13.4%  dec=954µs
+
+---
+score:               -0.0630
+mean_err:            1.1096
+physicality_pct:     10.47
+n_scenarios:         7/7
+n_seeds:             21
+wall_s:              28.8
+decisions_per_sec:   542.2
+
+  per scenario:
+    iter_like_ramp                  err=   0.38± 0.00  phys=  7.0%
+    negative_triangularity          err=   3.54± 0.01  phys=  8.9%
+    high_elongation                 err=   0.26± 0.06  phys= 11.7%
+    z_position_swing                err=   0.84± 0.01  phys= 14.1%
+    r_axis_shift                    err=   0.22± 0.02  phys= 11.9%
+    combined_complex                err=   1.77± 0.02  phys=  5.8%
+    M16_real_TCV_65402              err=   0.75± 0.04  phys= 13.8%
+
+status (auto):       discard
+baseline_score:      -0.0723
+vs_baseline:         +0.0093
+description:         exp01: P_AUX 5e5 -> 1e6 (2x heating to sustain I_p)
+
+  Logged to results.tsv (commit 835533b)
+  Saved results/exp01.json

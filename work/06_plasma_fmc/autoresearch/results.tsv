@@ -1,0 +1,8 @@
+commit	score	mean_err	phys_pct	n_scenarios	n_seeds	status	description
+835533b	-0.0723	1.0969	10.25	7	21	baseline	exp00 baseline: vanilla FMC N=64 H=10 V=50 (M15+M16 surface)
+835533b	-0.0630	1.1096	10.47	7	21	discard	exp01: P_AUX 5e5 -> 1e6 (2x heating to sustain I_p)
+835533b	-0.3309	2.5996	22.69	7	21	discard	exp02: VOLTAGE_STD 50 -> 200 (4x walker exploration)
+835533b	-0.1846	1.0537	8.69	7	21	discard	exp03: HORIZON 10 -> 25 (longer lookahead to pre-empt I_p decay)
+835533b	-0.0430	1.0819	10.39	7	21	discard	exp04: STRUCTURAL SHAPE_WEIGHTS 2x [200,200,20,20] (amplify track signal)
+835533b	-0.0846	1.0949	10.10	7	21	discard	exp05: STRUCTURAL swap to FMCHierarchical (M18 ach-fire on M15 time-varying targets)
+835533b	-0.0265	1.0773	10.51	7	21	discard	exp06: SHAPE_WEIGHTS 4x [400,400,40,40] (extend exp04 +0.029 direction)
