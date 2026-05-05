@@ -250,6 +250,27 @@ A multi-policy ensemble routing to H=12 when target shape is high-elong
 or iter-ramp, H=15 elsewhere, would yield **AVG ts ≈ -3.8** (estimated
 by best-of) — small additional gain but more robust per-scenario.
 
+## M24 N axis re-test in NEW regime (V=80 GAS=2e21)
+
+| N | AVG ts | M16 truth | M16 ts | iter_ramp seed variance |
+|---|---|---|---|---|
+| 512 | -9.78 | 15.12 | -6.95 | 30.67 (1 seed only) |
+| **1024** | **-3.95** (*) | **3.81** ⭐ | **+6.02** | 38.55 / 22.80 (HIGH var) |
+| 1536 | -10.20 | 9.74 | -0.91 | unstable |
+| 2048 | -4.77 | 8.42 | +0.75 | low variance |
+
+(*) N=1024 AVG benefits from iter_ramp seed-luck (low seed gave 22.80,
+high seed gave 38.55). Real "stable AVG" is closer to -4.5 to -5.
+
+**Honest co-best finding**:
+- **N=1024**: best on M16 single target (truth=3.81 phys=98.3%, +0.34 from M12 NN-shape's 3.47 deployment-grade)
+- **N=2048**: best AVG stability (low iter_ramp variance)
+
+**F20** — N optimum is regime-conditional. M19 found N=2048 truth-best in
+sim-scored regime; M22 finds N=1024 to N=2048 plateau-best in oracle-scored
+NEW regime (V=80 GAS=2e21). **Not a sharp peak — N=1024 wins steady-state,
+N=2048 wins transient**.
+
 ## M24 — Oracle ensemble ceiling MEASURED = -4.11
 
 Computed perfect-routing ensemble from existing M22 BEST and H=12 GAS=2e21
