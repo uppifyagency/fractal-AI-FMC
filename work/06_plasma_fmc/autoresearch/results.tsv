@@ -6,3 +6,9 @@ commit	score	mean_err	phys_pct	n_scenarios	n_seeds	status	description
 835533b	-0.0430	1.0819	10.39	7	21	discard	exp04: STRUCTURAL SHAPE_WEIGHTS 2x [200,200,20,20] (amplify track signal)
 835533b	-0.0846	1.0949	10.10	7	21	discard	exp05: STRUCTURAL swap to FMCHierarchical (M18 ach-fire on M15 time-varying targets)
 835533b	-0.0265	1.0773	10.51	7	21	discard	exp06: SHAPE_WEIGHTS 4x [400,400,40,40] (extend exp04 +0.029 direction)
+d0a0645	0.0153	1.0868	11.02	7	21	discard	exp07: N_walkers 64->128 cumulative on W 4x
+d0a0645	0.0106	1.0819	10.92	7	21	discard	exp09: SHAPE_WEIGHTS asym kappa/delta 5x [400,400,200,200]
+d0a0645	-0.1098	1.0546	9.45	7	21	discard	exp08: HORIZON 10->20 cumulative on W 4x
+835533b	0.0153	1.0868	11.02	7	21	keep	exp07: N_walkers 64->128 cumulative on W 4x (NEW BEST, delta+0.087)
+835533b	-0.1098	1.0546	9.45	7	21	discard	exp08: HORIZON 10->20 cumulative on W 4x (phys regresses)
+835533b	0.0106	1.0819	10.92	7	21	keep	exp09: SHAPE_WEIGHTS asym [400,400,200,200] kappa/delta 5x (second best)

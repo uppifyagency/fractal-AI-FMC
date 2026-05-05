@@ -46,13 +46,13 @@ from fmc_plasma_hierarchical import (
 # === MUTATION SURFACE: edit values below between experiments ===
 
 N_WALKERS = 64
-HORIZON = 10  # reverted from exp03 (-0.11 score; phys regression > err gain)
+HORIZON = 20  # exp08: 2x deeper sim cumulative on W 4x
 DT = 1e-3
 VOLTAGE_STD = 50.0
 P_AUX = 5e5
 GAS_PUFF = 1e21
 
-SHAPE_WEIGHTS = [400.0, 400.0, 40.0, 40.0]  # exp06: 4x (extend exp04 direction)
+SHAPE_WEIGHTS = [400.0, 400.0, 40.0, 40.0]  # exp08: W 4x (cumulative base)
 
 USE_HIERARCHICAL = False  # reverted from exp05 (-0.012 score)
 TIER_WEIGHTS = list(map(float, DEFAULT_TIER_WEIGHTS.tolist()))
