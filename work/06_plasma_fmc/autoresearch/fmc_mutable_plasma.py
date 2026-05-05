@@ -45,14 +45,14 @@ from fmc_plasma_hierarchical import (
 
 # === MUTATION SURFACE: edit values below between experiments ===
 
-N_WALKERS = 2048  # exp35: force N=2048 (exp28 base) for P_AUX 2x test
+N_WALKERS = 2048  # exp42: exp39 verified base
 HORIZON = 10  # exp19 best: H=10 invariant winner
 DT = 1e-3
-VOLTAGE_STD = 100.0  # exp35: revert to exp28 base V_STD=100
-P_AUX = 2e6  # exp35: P_AUX 1e6->2e6 (4x baseline) heating direction scaling probe
+VOLTAGE_STD = 125.0  # exp42: V_STD fine probe between exp39 (120) and exp37_redo (130)
+P_AUX = 1e6  # exp34 base: P_AUX 1e6
 GAS_PUFF = 1e21
 
-SHAPE_WEIGHTS = [600.0, 600.0, 300.0, 300.0]  # exp35: exp28 base W
+SHAPE_WEIGHTS = [640.0, 640.0, 320.0, 320.0]  # exp42: W 1.6x (exp39 winner)
 
 USE_HIERARCHICAL = False  # reverted from exp05 (-0.012 score)
 TIER_WEIGHTS = list(map(float, DEFAULT_TIER_WEIGHTS.tolist()))
