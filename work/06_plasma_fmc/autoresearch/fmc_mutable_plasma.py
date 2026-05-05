@@ -45,10 +45,10 @@ from fmc_plasma_hierarchical import (
 
 # === MUTATION SURFACE: edit values below between experiments ===
 
-N_WALKERS = 128  # exp14 NEW BEST: V_STD 100 + W asym + N=128 (+0.230)
+N_WALKERS = 256  # exp18: N=256 on exp14 best (test if V_STD breakthrough scales with N)
 HORIZON = 10
 DT = 1e-3
-VOLTAGE_STD = 100.0  # exp14 BEST: 50->100 (sweet spot for walker divergence)
+VOLTAGE_STD = 100.0  # exp14 BEST: V_STD=100
 P_AUX = 5e5
 GAS_PUFF = 1e21
 
