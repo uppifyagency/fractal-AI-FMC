@@ -36,3 +36,18 @@ HEAD	0.0392	1.0800	11.20	7	21	keep	exp15: P_AUX 4x + N=256 + W 4x (modest +0.024
 47f62b9	0.4287	1.5300	19.60	7	21	keep	exp19: N=256->512 scaling on exp18 (NEW BEST +0.078 vs exp18, sub-linear scaling continues)
 47f62b9	0.3376	1.7500	20.90	7	21	discard	exp20: V_STD 100->125 fine search (-0.014, V_STD=100 confirmed peak)
 47f62b9	0.2032	1.5300	17.30	7	21	discard	exp21: H 10->15 in V_STD=100+N=256 regime (-0.148, HORIZON=10 invariant winner)
+59db81f	0.4686	1.4718	19.40	7	21	discard	exp23: W 1.5x [600,600,300,300] fine tune on exp19
+59db81f	0.4904	1.4706	19.61	7	21	discard	exp24: P_AUX 5e5->1e6 retest in V_STD=100+N=512 regime
+59db81f	0.4814	1.4835	19.65	7	21	discard	exp22: N=512->1024 final scaling test on exp19
+59db81f	0.5287	1.4653	19.94	7	21	discard	exp25: N=1024 + P_AUX 2x compose top wins
+59db81f	0.5929	1.4166	20.09	7	21	discard	exp26: N=1024 + W 1.5x compose exp22+exp23
+c381de5	0.5929	1.4166	20.09	7	21	discard	exp27: N=1024 + W 1.5x + P_AUX 2x kitchen sink (re-run main, exp27_agent_did_not_complete)
+e061605	0.4011	1.3155	17.17	7	21	discard	exp30: V_STD 100->80 retest in exp27 kitchen sink regime
+e061605	0.7899	1.4367	22.27	7	21	discard	exp28: N=2048 plateau test on exp27 kitchen sink
+e061605	0.7403	1.4203	21.61	7	21	discard	exp29: W 1.75x [700,700,350,350] edge test
+64d2680	0.7899	1.4367	22.27	7	21	discard	exp32: N=2048->4096 super-linear scaling test
+64d2680	0.7437	1.4131	21.57	7	21	discard	exp33: W 2x [800,800,400,400] re-test in N=2048 regime
+64d2680	0.7403	1.4203	21.61	7	21	discard	exp31: N=2048 + W 1.75x compose exp28+exp29
+64d2680	0.7403	1.4203	21.61	7	21	discard	exp32_redo: N=2048->4096 plateau test (first run race condition, redo serial main)
+64d2680	0.8144	1.4899	23.04	7	21	discard	exp34: V_STD 100->110 fine search in N=2048 regime
+64d2680	0.6819	1.4100	20.92	7	21	discard	exp35: P_AUX 1e6->2e6 (4x baseline) in N=2048 regime

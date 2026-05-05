@@ -1,0 +1,68 @@
+======================================================================
+autoresearch-plasma: experiment driver
+======================================================================
+  jax_backend: cpu
+  jax_devices: ['cpu:0']
+  n_published_targets: 6
+  n_real_targets: 1
+  total_targets: 7
+  wall_budget_s: 600
+  n_seeds_default: 3
+
+  Loading fmc_mutable_plasma.py...
+
+  Starting evaluation...
+  scenario=iter_like_ramp  duration=1.00s
+    seed=0: mean_err=   0.62  phys= 13.5%  dec=7777µs
+    seed=1: mean_err=   0.65  phys= 13.3%  dec=7762µs
+    seed=2: mean_err=   0.59  phys= 13.4%  dec=7734µs
+  scenario=negative_triangularity  duration=0.80s
+    seed=0: mean_err=   3.82  phys= 16.9%  dec=7756µs
+    seed=1: mean_err=   3.82  phys= 16.6%  dec=7753µs
+    seed=2: mean_err=   3.82  phys= 16.8%  dec=7747µs
+  scenario=high_elongation  duration=0.60s
+    seed=0: mean_err=   0.65  phys= 22.5%  dec=7750µs
+    seed=1: mean_err=   0.63  phys= 22.2%  dec=7759µs
+    seed=2: mean_err=   0.59  phys= 22.3%  dec=7759µs
+  scenario=z_position_swing  duration=0.50s
+    seed=0: mean_err=   1.20  phys= 27.0%  dec=7784µs
+    seed=1: mean_err=   1.13  phys= 26.6%  dec=7768µs
+    seed=2: mean_err=   1.16  phys= 26.8%  dec=7806µs
+  scenario=r_axis_shift  duration=0.60s
+    seed=0: mean_err=   0.68  phys= 24.0%  dec=7740µs
+    seed=1: mean_err=   0.55  phys= 22.2%  dec=7757µs
+    seed=2: mean_err=   0.56  phys= 22.7%  dec=7746µs
+  scenario=combined_complex  duration=1.20s
+    seed=0: mean_err=   1.96  phys= 11.2%  dec=7723µs
+    seed=1: mean_err=   1.95  phys= 11.1%  dec=7740µs
+    seed=2: mean_err=   1.94  phys= 11.2%  dec=7696µs
+  scenario=M16_real_TCV_65402  duration=0.50s
+    seed=0: mean_err=   1.19  phys= 28.4%  dec=7655µs
+    seed=1: mean_err=   1.13  phys= 26.6%  dec=7676µs
+    seed=2: mean_err=   1.09  phys= 26.8%  dec=7669µs
+
+---
+score:               0.5929
+mean_err:            1.4166
+physicality_pct:     20.09
+n_scenarios:         7/7
+n_seeds:             21
+wall_s:              133.9
+decisions_per_sec:   116.5
+
+  per scenario:
+    iter_like_ramp                  err=   0.62± 0.03  phys= 13.4%
+    negative_triangularity          err=   3.82± 0.00  phys= 16.8%
+    high_elongation                 err=   0.62± 0.03  phys= 22.3%
+    z_position_swing                err=   1.16± 0.03  phys= 26.8%
+    r_axis_shift                    err=   0.60± 0.07  phys= 22.9%
+    combined_complex                err=   1.95± 0.01  phys= 11.2%
+    M16_real_TCV_65402              err=   1.14± 0.05  phys= 27.3%
+
+status (auto):       discard
+baseline_score:      -0.0723
+vs_baseline:         +0.6652
+description:         exp27: N=1024 + W 1.5x + P_AUX 2x kitchen sink (re-run main, exp27_agent_did_not_complete)
+
+  Logged to results.tsv (commit c381de5)
+  Saved results/exp27.json
