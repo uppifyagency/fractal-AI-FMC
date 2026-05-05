@@ -250,6 +250,20 @@ A multi-policy ensemble routing to H=12 when target shape is high-elong
 or iter-ramp, H=15 elsewhere, would yield **AVG ts ≈ -3.8** (estimated
 by best-of) — small additional gain but more robust per-scenario.
 
+## ✅ F17 (GAS=2e21) 5-seed validation: CONFIRMED ROBUST
+
+5-seed comparison of GAS=2e21 vs GAS=1e21 on full M22 BEST base:
+
+| config | AVG ts (5-seed) | M16 truth ± std | AVG phys |
+|---|---|---|---|
+| **M22 BEST GAS=2e21** | **-4.42** | **7.65 ± 1.29** | 89.3% |
+| GAS=1e21 (prev best) | -5.44 | 7.90 ± **4.45** | 88.0% |
+| Δ | **+1.02** (was +1.41 at 2-seed) | tied (much lower variance!) | +1.3 pp |
+
+F17 holds: GAS=2e21 truly truth-better. Bonus finding: **GAS=2e21
+dramatically reduces M16 seed variance** (1.29 vs 4.45) — high-density
+gas creates robust walker dynamics, not just lower truth-err.
+
 ## 🎯 PAPER-GRADE 5-SEED VALIDATION (M22 BEST + vanilla)
 
 5-seed re-run of M22 BEST (N=2048 H=15 V=80 GAS=2e21 W=1.6×) and vanilla
