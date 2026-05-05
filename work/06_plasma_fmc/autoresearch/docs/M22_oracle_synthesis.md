@@ -250,6 +250,33 @@ A multi-policy ensemble routing to H=12 when target shape is high-elong
 or iter-ramp, H=15 elsewhere, would yield **AVG ts ≈ -3.8** (estimated
 by best-of) — small additional gain but more robust per-scenario.
 
+## 🎯 PAPER-GRADE 5-SEED VALIDATION (M22 BEST + vanilla)
+
+5-seed re-run of M22 BEST (N=2048 H=15 V=80 GAS=2e21 W=1.6×) and vanilla
+on 7 targets. Definitive numbers for publication:
+
+| controller | AVG truth | AVG phys | AVG ts | M16 truth | M16 phys | M16 ts |
+|---|---|---|---|---|---|---|
+| vanilla 5-seed | 22.15 ± noise | 74.5% | -14.70 | 23.52 ± 15.30 | 67.3% | -16.79 |
+| **M22 BEST 5-seed** | **13.35 ± noise** | **89.3%** | **-4.42** | **7.65 ± 1.29** | **92.7%** | **+1.62** |
+| Δ (M22 - vanilla) | -8.80 truth | +14.8 pp phys | **+10.28 ts** | -15.87 truth | +25.4 pp phys | +18.41 |
+
+**Paper-grade gain: +10.28 truth-score units AVG** (5-seed validated, was
++20.63 with 2-seed but vanilla also had high variance under 2-seed
+measurement — both were noisy).
+
+### vs historical M16 baselines (Apr 27 single-seed runs)
+
+| controller | M16 truth-err steady | physicality |
+|---|---|---|
+| vanilla baseline FMC | 23.52 ± 15.30 (5-seed) | 67% |
+| M16 historical FMC online | 21.57 | 63% |
+| **M22 BEST (this work)** | **7.65 ± 1.29** | **93%** |
+| M16 historical M12 NN-shape | 3.47 | 100% |
+
+**M22 BEST beats M16 historical FMC online by 2.8×** on real TCV shot
+truth-err. Gap to M12 NN-shape (deployment-ready) = 4.18 truth-err units.
+
 ## ⚠️ HONEST RETRACTION — N=1024 finding was 2-seed seed-luck
 
 The "N=1024 truth=3.81 near-M12-deployment" claim above was based on
