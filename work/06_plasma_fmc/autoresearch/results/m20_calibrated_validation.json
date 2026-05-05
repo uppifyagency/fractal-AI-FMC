@@ -1,0 +1,184 @@
+{
+  "n_ticks": 30,
+  "n_seeds": 2,
+  "weights": [
+    100.0,
+    100.0,
+    10.0,
+    10.0
+  ],
+  "results": {
+    "exp39_BEST": {
+      "M16_real_TCV_65402": {
+        "mean_truth_err_avg": 11.034522466612572,
+        "steady_truth_err_avg": 12.473536301127368,
+        "physicality_avg": 0.9,
+        "n_seeds": 2,
+        "per_seed": [
+          {
+            "n_steps": 30,
+            "mean_truth_err": 9.29897716795755,
+            "mean_self_err": 5.645022794314173,
+            "steady_truth_err_last10": 2.47304296444486,
+            "physicality": 0.9333333333333333,
+            "decision_us_p50": 21444.75000022794,
+            "wall_s": 1.756505165998533,
+            "seed": 0
+          },
+          {
+            "n_steps": 30,
+            "mean_truth_err": 12.770067765267592,
+            "mean_self_err": 5.18688746271486,
+            "steady_truth_err_last10": 22.474029637809874,
+            "physicality": 0.8666666666666667,
+            "decision_us_p50": 21397.854001406813,
+            "wall_s": 1.3958674589994189,
+            "seed": 1
+          }
+        ]
+      },
+      "M15_iter_like_ramp_steady": {
+        "mean_truth_err_avg": 37.98779253497277,
+        "steady_truth_err_avg": 50.6950096664396,
+        "physicality_avg": 0.55,
+        "n_seeds": 2,
+        "per_seed": [
+          {
+            "n_steps": 30,
+            "mean_truth_err": 37.64678800839131,
+            "mean_self_err": 8.850263605345154,
+            "steady_truth_err_last10": 43.82236268583948,
+            "physicality": 0.6,
+            "decision_us_p50": 21596.875001705484,
+            "wall_s": 1.5016309170023305,
+            "seed": 0
+          },
+          {
+            "n_steps": 30,
+            "mean_truth_err": 38.328797061554226,
+            "mean_self_err": 8.164067879370123,
+            "steady_truth_err_last10": 57.56765664703973,
+            "physicality": 0.5,
+            "decision_us_p50": 21321.062498827814,
+            "wall_s": 1.4355890420010837,
+            "seed": 1
+          }
+        ]
+      },
+      "M15_high_elongation_steady": {
+        "mean_truth_err_avg": 18.575677152314515,
+        "steady_truth_err_avg": 17.84931509131224,
+        "physicality_avg": 0.85,
+        "n_seeds": 2,
+        "per_seed": [
+          {
+            "n_steps": 30,
+            "mean_truth_err": 12.245078524721068,
+            "mean_self_err": 7.461887789550929,
+            "steady_truth_err_last10": 8.923709375024321,
+            "physicality": 0.9666666666666667,
+            "decision_us_p50": 21456.79200111772,
+            "wall_s": 1.410459250000713,
+            "seed": 0
+          },
+          {
+            "n_steps": 30,
+            "mean_truth_err": 24.90627577990796,
+            "mean_self_err": 7.934259400293688,
+            "steady_truth_err_last10": 26.774920807600154,
+            "physicality": 0.7333333333333333,
+            "decision_us_p50": 21436.687502500718,
+            "wall_s": 1.4450990000004822,
+            "seed": 1
+          }
+        ]
+      }
+    },
+    "baseline_FMC_online": {
+      "M16_real_TCV_65402": {
+        "mean_truth_err_avg": 37.702169731361714,
+        "steady_truth_err_avg": 60.68040226475952,
+        "physicality_avg": 0.44999999999999996,
+        "n_seeds": 2,
+        "per_seed": [
+          {
+            "n_steps": 30,
+            "mean_truth_err": 49.9049478210677,
+            "mean_self_err": 5.620757409269107,
+            "steady_truth_err_last10": 66.96160305608126,
+            "physicality": 0.26666666666666666,
+            "decision_us_p50": 1087.8119992412394,
+            "wall_s": 0.8766424169989477,
+            "seed": 0
+          },
+          {
+            "n_steps": 30,
+            "mean_truth_err": 25.499391641655723,
+            "mean_self_err": 5.1658739730664704,
+            "steady_truth_err_last10": 54.39920147343779,
+            "physicality": 0.6333333333333333,
+            "decision_us_p50": 1088.5210012929747,
+            "wall_s": 0.7731222090005758,
+            "seed": 1
+          }
+        ]
+      },
+      "M15_iter_like_ramp_steady": {
+        "mean_truth_err_avg": 40.70421941305176,
+        "steady_truth_err_avg": 60.39947957629156,
+        "physicality_avg": 0.44999999999999996,
+        "n_seeds": 2,
+        "per_seed": [
+          {
+            "n_steps": 30,
+            "mean_truth_err": 48.648418802056206,
+            "mean_self_err": 6.518839002410957,
+            "steady_truth_err_last10": 63.89304440280498,
+            "physicality": 0.3333333333333333,
+            "decision_us_p50": 1112.68749969895,
+            "wall_s": 0.8868188339984044,
+            "seed": 0
+          },
+          {
+            "n_steps": 30,
+            "mean_truth_err": 32.760020024047314,
+            "mean_self_err": 6.981756782467528,
+            "steady_truth_err_last10": 56.90591474977814,
+            "physicality": 0.5666666666666667,
+            "decision_us_p50": 1088.0000008910429,
+            "wall_s": 0.8106100000004517,
+            "seed": 1
+          }
+        ]
+      },
+      "M15_high_elongation_steady": {
+        "mean_truth_err_avg": 34.52708449608527,
+        "steady_truth_err_avg": 50.33183911650316,
+        "physicality_avg": 0.5666666666666667,
+        "n_seeds": 2,
+        "per_seed": [
+          {
+            "n_steps": 30,
+            "mean_truth_err": 51.32908953757397,
+            "mean_self_err": 5.911163420990836,
+            "steady_truth_err_last10": 67.71603793525415,
+            "physicality": 0.3333333333333333,
+            "decision_us_p50": 1075.9789984149393,
+            "wall_s": 0.8085205829993356,
+            "seed": 0
+          },
+          {
+            "n_steps": 30,
+            "mean_truth_err": 17.725079454596578,
+            "mean_self_err": 6.114310245082986,
+            "steady_truth_err_last10": 32.94764029775217,
+            "physicality": 0.8,
+            "decision_us_p50": 1084.583498595748,
+            "wall_s": 0.7581117910012836,
+            "seed": 1
+          }
+        ]
+      }
+    }
+  }
+}

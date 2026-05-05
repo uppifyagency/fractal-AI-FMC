@@ -54,7 +54,34 @@ M12 wins on every dimension that matters for deployment. The
 autoresearch loop optimized FMC's own hyperparameters but didn't
 match the policy distillation pipeline's gain.
 
-## Honest interpretation
+## ⚡ UPDATE 2026-05-05 (post-calibrated validation): MAJOR REVERSAL
+
+The original M20 used `build_jax_params()` (uncalibrated). Re-running with
+`build_calibrated_jax_params()` (M9-calibrated, matching M16 historical
+methodology) produces a **dramatically different result**:
+
+| controller | M16 truth_steady (calibrated) | phys% |
+|---|---|---|
+| **exp39 BEST** | **12.47** | **90.0%** |
+| baseline FMC vanilla | 60.68 | 45.0% |
+| M16 historical FMC online | 21.57 | 63% |
+| M16 historical M12 NN-shape | 3.47 (still leads) | 100% |
+
+**exp39 BEATS M16 historical FMC online by 42%** truth-err and +27pp phys.
+The autoresearch loop produced the **first real FMC improvement** since M3.
+
+**Revised score-to-truth mapping**: on calibrated sim, exp39 sim score
++1.0440 maps to truth-err 12.47 (vs vanilla -0.0723 → 60.68). Ratio
+~5×, NOT 22× — closer to the M14 historical 6-13× envelope.
+
+The original (uncalibrated) M20 result was a **calibration bias artifact**,
+not an in-sim overfit. Reported below for record but superseded.
+
+See `m20_calibrated_validation.json` for full per-seed data.
+
+---
+
+## Honest interpretation (original, uncalibrated — superseded)
 
 The autoresearch found:
 1. **Real plasma control improvement** vs vanilla FMC online (2× truth-err)
