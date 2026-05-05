@@ -250,7 +250,25 @@ A multi-policy ensemble routing to H=12 when target shape is high-elong
 or iter-ramp, H=15 elsewhere, would yield **AVG ts ≈ -3.8** (estimated
 by best-of) — small additional gain but more robust per-scenario.
 
-## M24 N axis re-test in NEW regime (V=80 GAS=2e21)
+## ⚠️ HONEST RETRACTION — N=1024 finding was 2-seed seed-luck
+
+The "N=1024 truth=3.81 near-M12-deployment" claim above was based on
+n_seeds=2. 5-seed re-run revealed M16 truth=7.98 (std=3.61), per-seed
+[3.41, 4.21, 12.87, 9.73, 9.69] — first 2 seeds were lucky low end.
+
+**Real M22 BEST stays N=2048** with M16 truth=8.42, AVG ts=-4.77.
+
+| N | n_seeds | AVG ts | M16 truth | reliability |
+|---|---|---|---|---|
+| 1024 | 2 | -3.95 (lucky) | 3.81 | unreliable |
+| 1024 | 5 | -6.88 | 7.98 | robust → REGRESSION |
+| 2048 | 2 | -4.77 | 8.42 | reasonably robust |
+
+**Lesson**: autoresearch with n_seeds=2 produces unreliable rankings.
+Future loops require ≥5 seeds for robust mutation comparison. F20
+**retracted**: N=2048 IS truth-best across regimes.
+
+## M24 N axis re-test in NEW regime (V=80 GAS=2e21) — CONTAINS RETRACTED CLAIM
 
 | N | AVG ts | M16 truth | M16 ts | iter_ramp seed variance |
 |---|---|---|---|---|
