@@ -250,6 +250,35 @@ A multi-policy ensemble routing to H=12 when target shape is high-elong
 or iter-ramp, H=15 elsewhere, would yield **AVG ts ≈ -3.8** (estimated
 by best-of) — small additional gain but more robust per-scenario.
 
+## M24 — Oracle ensemble ceiling MEASURED = -4.11
+
+Computed perfect-routing ensemble from existing M22 BEST and H=12 GAS=2e21
+data. Picks the truth-best controller per target:
+
+| target | route | truth-score |
+|---|---|---|
+| M16 | H=15 | +0.75 |
+| iter_ramp | H=12 | -15.49 |
+| neg_tri | H=15 | -1.96 |
+| high_elong | H=12 | +2.38 |
+| z_swing | H=15 | -6.26 |
+| r_shift | H=15 | -6.26 |
+| combined | H=15 | -1.96 |
+| **ORACLE ENSEMBLE AVG** | | **-4.11** |
+
+Heuristic router that achieves this oracle ceiling:
+```python
+def route(target):
+    if target.kappa >= 1.8 or target.delta > 0.4:
+        return 'H=12_V=80_GAS=2e21'
+    return 'H=15_V=80_GAS=2e21'  # M22 BEST default
+```
+
+Verified on 7/7 targets. **+0.66 gain over M22 single-config best**.
+Modest gain — confirms that single-controller M22 BEST is already
+near the ensemble ceiling. Per-target peaks are not far from each
+other, suggesting the FMC tunable space is well-explored.
+
 ## Final M22 BEST configuration
 
 ```
