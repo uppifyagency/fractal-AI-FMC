@@ -56,9 +56,9 @@ M21_BEST = {
     "horizon": 10,
     "dt": 1e-3,
     "voltage_std": 8.0,    # F10: V optimum at S × 10 sensitivity
-    "P_aux": 5e5,
-    "gas_puff": 1e21,
-    "shape_weights": [100.0, 100.0, 10.0, 10.0],  # default
+    "P_aux": 1e6,          # exp12 KEEP: heating x 2
+    "gas_puff": 5e20,      # exp13 KEEP: lower density (best so far -1.168)
+    "shape_weights": [100.0, 100.0, 10.0, 10.0],  # default (W axis flat)
 }
 
 

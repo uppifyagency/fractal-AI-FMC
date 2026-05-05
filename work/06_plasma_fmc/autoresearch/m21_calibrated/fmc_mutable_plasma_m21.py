@@ -34,14 +34,14 @@ from fmc_plasma_jax import FMCPlasmaJaxController
 
 # exp02: V_STD 50 -> 25 (half baseline). Calibrated S × 10 means equivalent
 # physical perturbation needs ~10× lower V_STD. Start half-baseline.
-N_WALKERS = 2048
+N_WALKERS = 64  # F11: N invariance — keep small for fast eval
 HORIZON = 10
 DT = 1e-3
-VOLTAGE_STD = 8.0
-P_AUX = 5e5
-GAS_PUFF = 1e21
+VOLTAGE_STD = 8.0  # F10: V optimum at S × 10 sensitivity
+P_AUX = 1e6  # exp12 KEEP heating x 2
+GAS_PUFF = 5e20  # exp13 lower density
 
-SHAPE_WEIGHTS = [100.0, 100.0, 10.0, 10.0]
+SHAPE_WEIGHTS = [100.0, 100.0, 10.0, 10.0]  # default (back to baseline W)
 
 # === END MUTATION SURFACE ===
 

@@ -1,0 +1,233 @@
+{
+  "score": -1.1695881621042887,
+  "mean_err": 2.149469114485241,
+  "physicality_pct": 9.798809523809524,
+  "n_scenarios_completed": 7,
+  "n_seeds_completed": 21,
+  "wall_s": 27.578582763671875,
+  "decisions_per_sec": 565.6563331655038,
+  "per_scenario": {
+    "iter_like_ramp": {
+      "mean_err_mean": 2.6719247500101724,
+      "mean_err_std": 0.007071857519199946,
+      "physicality_pct_mean": 6.533333333333334,
+      "n_seeds": 3,
+      "duration_s": 1.0
+    },
+    "negative_triangularity": {
+      "mean_err_mean": 2.135197162628174,
+      "mean_err_std": 0.009266432906892736,
+      "physicality_pct_mean": 8.125,
+      "n_seeds": 3,
+      "duration_s": 0.8
+    },
+    "high_elongation": {
+      "mean_err_mean": 2.258076032002767,
+      "mean_err_std": 0.016257621320991927,
+      "physicality_pct_mean": 10.722222222222223,
+      "n_seeds": 3,
+      "duration_s": 0.6
+    },
+    "z_position_swing": {
+      "mean_err_mean": 3.0063059329986572,
+      "mean_err_std": 0.003528851043907525,
+      "physicality_pct_mean": 12.933333333333332,
+      "n_seeds": 3,
+      "duration_s": 0.5
+    },
+    "r_axis_shift": {
+      "mean_err_mean": 1.9975733359654744,
+      "mean_err_std": 0.005135881477334157,
+      "physicality_pct_mean": 12.277777777777779,
+      "n_seeds": 3,
+      "duration_s": 0.6
+    },
+    "combined_complex": {
+      "mean_err_mean": 2.468546231587728,
+      "mean_err_std": 0.009262143210097176,
+      "physicality_pct_mean": 5.333333333333333,
+      "n_seeds": 3,
+      "duration_s": 1.2
+    },
+    "M16_real_TCV_65402": {
+      "mean_err_mean": 0.508660356203715,
+      "mean_err_std": 0.006539741083655682,
+      "physicality_pct_mean": 12.666666666666666,
+      "n_seeds": 3,
+      "duration_s": 0.5
+    }
+  },
+  "description": "exp12: V=8 N=64 H=10 P_AUX 5e5 -> 1e6 (heating x 2)",
+  "status": "keep",
+  "raw_runs": [
+    {
+      "scenario": "iter_like_ramp",
+      "seed": 0,
+      "mean_err": 2.664423942565918,
+      "physicality_pct": 6.4,
+      "n_ticks": 1000,
+      "decision_us_p50": 968.75
+    },
+    {
+      "scenario": "iter_like_ramp",
+      "seed": 1,
+      "mean_err": 2.6784706115722656,
+      "physicality_pct": 6.800000000000001,
+      "n_ticks": 1000,
+      "decision_us_p50": 932.4580078125
+    },
+    {
+      "scenario": "iter_like_ramp",
+      "seed": 2,
+      "mean_err": 2.672879695892334,
+      "physicality_pct": 6.4,
+      "n_ticks": 1000,
+      "decision_us_p50": 923.4580078125
+    },
+    {
+      "scenario": "negative_triangularity",
+      "seed": 0,
+      "mean_err": 2.1351118087768555,
+      "physicality_pct": 8.125,
+      "n_ticks": 800,
+      "decision_us_p50": 963.3544921875
+    },
+    {
+      "scenario": "negative_triangularity",
+      "seed": 1,
+      "mean_err": 2.125973701477051,
+      "physicality_pct": 8.125,
+      "n_ticks": 800,
+      "decision_us_p50": 955.9169921875
+    },
+    {
+      "scenario": "negative_triangularity",
+      "seed": 2,
+      "mean_err": 2.1445059776306152,
+      "physicality_pct": 8.125,
+      "n_ticks": 800,
+      "decision_us_p50": 902.45849609375
+    },
+    {
+      "scenario": "high_elongation",
+      "seed": 0,
+      "mean_err": 2.2521543502807617,
+      "physicality_pct": 10.666666666666668,
+      "n_ticks": 600,
+      "decision_us_p50": 901.9580078125
+    },
+    {
+      "scenario": "high_elongation",
+      "seed": 1,
+      "mean_err": 2.2456092834472656,
+      "physicality_pct": 10.833333333333334,
+      "n_ticks": 600,
+      "decision_us_p50": 930.29150390625
+    },
+    {
+      "scenario": "high_elongation",
+      "seed": 2,
+      "mean_err": 2.2764644622802734,
+      "physicality_pct": 10.666666666666668,
+      "n_ticks": 600,
+      "decision_us_p50": 908.97900390625
+    },
+    {
+      "scenario": "z_position_swing",
+      "seed": 0,
+      "mean_err": 3.003533363342285,
+      "physicality_pct": 12.8,
+      "n_ticks": 500,
+      "decision_us_p50": 915.02099609375
+    },
+    {
+      "scenario": "z_position_swing",
+      "seed": 1,
+      "mean_err": 3.0102782249450684,
+      "physicality_pct": 13.0,
+      "n_ticks": 500,
+      "decision_us_p50": 911.3544921875
+    },
+    {
+      "scenario": "z_position_swing",
+      "seed": 2,
+      "mean_err": 3.005106210708618,
+      "physicality_pct": 13.0,
+      "n_ticks": 500,
+      "decision_us_p50": 911.1875
+    },
+    {
+      "scenario": "r_axis_shift",
+      "seed": 0,
+      "mean_err": 1.9943959712982178,
+      "physicality_pct": 12.333333333333334,
+      "n_ticks": 600,
+      "decision_us_p50": 975.1669921875
+    },
+    {
+      "scenario": "r_axis_shift",
+      "seed": 1,
+      "mean_err": 2.0034985542297363,
+      "physicality_pct": 12.166666666666668,
+      "n_ticks": 600,
+      "decision_us_p50": 911.5625
+    },
+    {
+      "scenario": "r_axis_shift",
+      "seed": 2,
+      "mean_err": 1.9948254823684692,
+      "physicality_pct": 12.333333333333334,
+      "n_ticks": 600,
+      "decision_us_p50": 991.8330078125
+    },
+    {
+      "scenario": "combined_complex",
+      "seed": 0,
+      "mean_err": 2.458632469177246,
+      "physicality_pct": 5.333333333333334,
+      "n_ticks": 1200,
+      "decision_us_p50": 947.6455078125
+    },
+    {
+      "scenario": "combined_complex",
+      "seed": 1,
+      "mean_err": 2.4700281620025635,
+      "physicality_pct": 5.333333333333334,
+      "n_ticks": 1200,
+      "decision_us_p50": 908.75
+    },
+    {
+      "scenario": "combined_complex",
+      "seed": 2,
+      "mean_err": 2.476978063583374,
+      "physicality_pct": 5.333333333333334,
+      "n_ticks": 1200,
+      "decision_us_p50": 902.66650390625
+    },
+    {
+      "scenario": "M16_real_TCV_65402",
+      "seed": 0,
+      "mean_err": 0.5161968469619751,
+      "physicality_pct": 12.6,
+      "n_ticks": 500,
+      "decision_us_p50": 920.5
+    },
+    {
+      "scenario": "M16_real_TCV_65402",
+      "seed": 1,
+      "mean_err": 0.5053034424781799,
+      "physicality_pct": 12.6,
+      "n_ticks": 500,
+      "decision_us_p50": 808.8330078125
+    },
+    {
+      "scenario": "M16_real_TCV_65402",
+      "seed": 2,
+      "mean_err": 0.50448077917099,
+      "physicality_pct": 12.8,
+      "n_ticks": 500,
+      "decision_us_p50": 918.56298828125
+    }
+  ],
+  "baseline_score": -2.2089
+}

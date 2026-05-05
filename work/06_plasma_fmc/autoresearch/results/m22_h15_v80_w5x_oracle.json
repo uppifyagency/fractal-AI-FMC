@@ -1,0 +1,184 @@
+{
+  "n_ticks": 30,
+  "n_seeds": 2,
+  "weights": [
+    100.0,
+    100.0,
+    10.0,
+    10.0
+  ],
+  "results": {
+    "exp39_BEST": {
+      "M16_real_TCV_65402": {
+        "mean_truth_err_avg": 8.284830508316865,
+        "steady_truth_err_avg": 9.719139390236654,
+        "physicality_avg": 0.9166666666666667,
+        "n_seeds": 2,
+        "per_seed": [
+          {
+            "n_steps": 30,
+            "mean_truth_err": 6.879547066888567,
+            "mean_self_err": 4.6809318736474665,
+            "steady_truth_err_last10": 3.225834223777313,
+            "physicality": 0.9333333333333333,
+            "decision_us_p50": 32103.645498864353,
+            "wall_s": 2.0735011670003587,
+            "seed": 0
+          },
+          {
+            "n_steps": 30,
+            "mean_truth_err": 9.690113949745164,
+            "mean_self_err": 3.4692987498263506,
+            "steady_truth_err_last10": 16.212444556695996,
+            "physicality": 0.9,
+            "decision_us_p50": 31369.91700012004,
+            "wall_s": 1.7235471669991966,
+            "seed": 1
+          }
+        ]
+      },
+      "M15_iter_like_ramp_steady": {
+        "mean_truth_err_avg": 32.93871866221474,
+        "steady_truth_err_avg": 37.89416553208213,
+        "physicality_avg": 0.6166666666666667,
+        "n_seeds": 2,
+        "per_seed": [
+          {
+            "n_steps": 30,
+            "mean_truth_err": 25.383331925866887,
+            "mean_self_err": 8.565464405723409,
+            "steady_truth_err_last10": 24.626618936717126,
+            "physicality": 0.7333333333333333,
+            "decision_us_p50": 31392.166498335428,
+            "wall_s": 1.7460251249976864,
+            "seed": 0
+          },
+          {
+            "n_steps": 30,
+            "mean_truth_err": 40.494105398562596,
+            "mean_self_err": 8.654010090661663,
+            "steady_truth_err_last10": 51.16171212744713,
+            "physicality": 0.5,
+            "decision_us_p50": 31688.875000327243,
+            "wall_s": 1.8138146249984857,
+            "seed": 1
+          }
+        ]
+      },
+      "M15_high_elongation_steady": {
+        "mean_truth_err_avg": 11.033697704040598,
+        "steady_truth_err_avg": 16.91878515124059,
+        "physicality_avg": 0.95,
+        "n_seeds": 2,
+        "per_seed": [
+          {
+            "n_steps": 30,
+            "mean_truth_err": 10.246961052504277,
+            "mean_self_err": 7.248105146406336,
+            "steady_truth_err_last10": 17.572207929740948,
+            "physicality": 0.9666666666666667,
+            "decision_us_p50": 31271.0625003092,
+            "wall_s": 1.7380470419993799,
+            "seed": 0
+          },
+          {
+            "n_steps": 30,
+            "mean_truth_err": 11.82043435557692,
+            "mean_self_err": 6.523726536064714,
+            "steady_truth_err_last10": 16.265362372740235,
+            "physicality": 0.9333333333333333,
+            "decision_us_p50": 31499.14549976529,
+            "wall_s": 1.6669897090032464,
+            "seed": 1
+          }
+        ]
+      }
+    },
+    "baseline_FMC_online": {
+      "M16_real_TCV_65402": {
+        "mean_truth_err_avg": 37.702169731361714,
+        "steady_truth_err_avg": 60.68040226475952,
+        "physicality_avg": 0.44999999999999996,
+        "n_seeds": 2,
+        "per_seed": [
+          {
+            "n_steps": 30,
+            "mean_truth_err": 49.9049478210677,
+            "mean_self_err": 5.620757409269107,
+            "steady_truth_err_last10": 66.96160305608126,
+            "physicality": 0.26666666666666666,
+            "decision_us_p50": 1065.9789986675605,
+            "wall_s": 0.8763188750017434,
+            "seed": 0
+          },
+          {
+            "n_steps": 30,
+            "mean_truth_err": 25.499391641655723,
+            "mean_self_err": 5.1658739730664704,
+            "steady_truth_err_last10": 54.39920147343779,
+            "physicality": 0.6333333333333333,
+            "decision_us_p50": 1099.3124997185078,
+            "wall_s": 0.7743750829977216,
+            "seed": 1
+          }
+        ]
+      },
+      "M15_iter_like_ramp_steady": {
+        "mean_truth_err_avg": 40.70421941305176,
+        "steady_truth_err_avg": 60.39947957629156,
+        "physicality_avg": 0.44999999999999996,
+        "n_seeds": 2,
+        "per_seed": [
+          {
+            "n_steps": 30,
+            "mean_truth_err": 48.648418802056206,
+            "mean_self_err": 6.518839002410957,
+            "steady_truth_err_last10": 63.89304440280498,
+            "physicality": 0.3333333333333333,
+            "decision_us_p50": 1110.604500354384,
+            "wall_s": 0.8425769999994372,
+            "seed": 0
+          },
+          {
+            "n_steps": 30,
+            "mean_truth_err": 32.760020024047314,
+            "mean_self_err": 6.981756782467528,
+            "steady_truth_err_last10": 56.90591474977814,
+            "physicality": 0.5666666666666667,
+            "decision_us_p50": 1129.5419990347,
+            "wall_s": 0.8595543330011424,
+            "seed": 1
+          }
+        ]
+      },
+      "M15_high_elongation_steady": {
+        "mean_truth_err_avg": 34.52708449608527,
+        "steady_truth_err_avg": 50.33183911650316,
+        "physicality_avg": 0.5666666666666667,
+        "n_seeds": 2,
+        "per_seed": [
+          {
+            "n_steps": 30,
+            "mean_truth_err": 51.32908953757397,
+            "mean_self_err": 5.911163420990836,
+            "steady_truth_err_last10": 67.71603793525415,
+            "physicality": 0.3333333333333333,
+            "decision_us_p50": 1083.478999134968,
+            "wall_s": 0.8057795830027317,
+            "seed": 0
+          },
+          {
+            "n_steps": 30,
+            "mean_truth_err": 17.725079454596578,
+            "mean_self_err": 6.114310245082986,
+            "steady_truth_err_last10": 32.94764029775217,
+            "physicality": 0.8,
+            "decision_us_p50": 1112.0625003968598,
+            "wall_s": 0.8114302920002956,
+            "seed": 1
+          }
+        ]
+      }
+    }
+  }
+}
