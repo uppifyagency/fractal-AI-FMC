@@ -12,3 +12,15 @@ d0a0645	-0.1098	1.0546	9.45	7	21	discard	exp08: HORIZON 10->20 cumulative on W 4
 835533b	0.0153	1.0868	11.02	7	21	keep	exp07: N_walkers 64->128 cumulative on W 4x (NEW BEST, delta+0.087)
 835533b	-0.1098	1.0546	9.45	7	21	discard	exp08: HORIZON 10->20 cumulative on W 4x (phys regresses)
 835533b	0.0106	1.0819	10.92	7	21	keep	exp09: SHAPE_WEIGHTS asym [400,400,200,200] kappa/delta 5x (second best)
+82e7744	-0.0845	1.0641	9.80	7	21	discard	exp10: W 8x [800,800,80,80] extending monotonic direction
+82e7744	0.0106	1.0819	10.92	7	21	discard	exp12: N=128 H=10 W asym (revert H=20, combine all wins)
+82e7744	0.0106	1.0819	10.92	7	21	discard	exp11: N=128 + W asym kappa/delta 5x (combine exp07+exp09 wins)
+82e7744	-0.0845	1.0600	9.80	7	21	discard	exp10: W 8x [800,800,80,80] BREAKS monotonic (Cong D sweet spot bound)
+82e7744	0.0106	1.0800	10.92	7	21	discard	exp11: N=128 + W asym (saturated, identical to exp09)
+82e7744	0.0106	1.0819	10.92	7	21	discard	exp12: N=128 H=10 W asym (saturated, identical to exp11)
+82e7744	0.0082	1.0851	10.93	7	21	discard	exp13: SHAPE_WEIGHTS delta-dominant [400,400,40,1000] target negative_triangularity bottleneck
+82e7744	0.2300	1.4699	17.00	7	21	discard	exp14: V_STD 50->100 + W asym kappa/delta + N=128 (intermediate exploration target neg_tri)
+82e7744	0.0392	1.0761	11.15	7	21	discard	exp15: P_AUX 4x + N=256 + W 4x (extreme search target negative_triangularity)
+HEAD	0.0082	1.0850	10.93	7	21	discard	exp13: SHAPE_WEIGHTS delta-dominant [400,400,40,1000] (neg_tri NOT cracked, falsifies under-weighted hypothesis)
+HEAD	0.2300	1.4700	17.00	7	21	keep	exp14: V_STD 50->100 + W asym + N=128 (BREAKTHROUGH +0.215 vs exp07, NEW BEST)
+HEAD	0.0392	1.0800	11.20	7	21	keep	exp15: P_AUX 4x + N=256 + W 4x (modest +0.024 vs exp07)

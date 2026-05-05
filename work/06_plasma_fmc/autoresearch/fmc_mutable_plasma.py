@@ -45,14 +45,14 @@ from fmc_plasma_hierarchical import (
 
 # === MUTATION SURFACE: edit values below between experiments ===
 
-N_WALKERS = 64
-HORIZON = 20  # exp08: 2x deeper sim cumulative on W 4x
+N_WALKERS = 128  # exp14 NEW BEST: V_STD 100 + W asym + N=128 (+0.230)
+HORIZON = 10
 DT = 1e-3
-VOLTAGE_STD = 50.0
+VOLTAGE_STD = 100.0  # exp14 BEST: 50->100 (sweet spot for walker divergence)
 P_AUX = 5e5
 GAS_PUFF = 1e21
 
-SHAPE_WEIGHTS = [400.0, 400.0, 40.0, 40.0]  # exp08: W 4x (cumulative base)
+SHAPE_WEIGHTS = [400.0, 400.0, 200.0, 200.0]  # exp14 BEST: W asym kappa/delta 5x
 
 USE_HIERARCHICAL = False  # reverted from exp05 (-0.012 score)
 TIER_WEIGHTS = list(map(float, DEFAULT_TIER_WEIGHTS.tolist()))
