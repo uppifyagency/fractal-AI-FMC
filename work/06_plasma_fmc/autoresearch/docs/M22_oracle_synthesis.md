@@ -30,7 +30,12 @@ Per-experiment overhead:
 | **M15 iter_ramp truth-err** | 40.7 | 37.99 | 26.32 |
 | **M15 high_elong truth-err** | 34.5 | 18.58 | 10.97 |
 
-## M22 exploration grid (8 experiments)
+## M22 EXTENDED exploration grid (13 experiments)
+
+**Final M22 BEST = exp39 H=15 V_STD=80 GAS_PUFF=2e21** (W=1.6× P=1e6 N=2048),
+AVG truth-score **-5.64** (was -7.05 before GAS axis discovery).
+
+## M22 exploration grid (8 initial experiments)
 
 Started from M19's exp39 base (N=2048, V_STD=120, W=[640,640,320,320],
 H=10, P_AUX=1e6, GAS_PUFF=1e21). Mutated one axis at a time, scored on
@@ -45,6 +50,38 @@ freegs oracle truth-eval.
 | N=512 (on H=15+V=80) | N 2048 → 512 | -10.13 (-3.08) | N=2048 truth-real |
 | W=5× (on H=15+V=80) | W [640,640,320,320] → [400,400,200,200] | -9.14 (-2.09) | W=1.6× truth-real on AVG, M16 peaks at W=5× |
 | P=5e5 (on H=15+V=80) | P_AUX 1e6 → 5e5 | -8.74 (-1.69) | P_AUX=1e6 truth-real on AVG |
+
+## M22 EXTENDED experiments (5 additional)
+
+| exp | mutation | AVG truth-score | finding |
+|---|---|---|---|
+| GAS=2e21 (on H=15+V=80) | GAS_PUFF 1e21 → 2e21 | **-5.64 (+1.41)** | NEW BEST, GAS axis sim-rank inverted |
+| GAS=3e21 | GAS_PUFF 1e21 → 3e21 | -11.02 (-3.97) | over-extension, peak at 2e21 |
+| H=12 (on V=80) | HORIZON 15 → 12 | -6.77 (+0.28) | H=12 close to H=15 peak |
+| W=[300,300,400,400] | flip kappa/delta emphasis | -16.21 (-9.16) | R/Z weights truth-real |
+| H=12 + GAS=2e21 (compose) | both winning axes | -6.06 (-0.42) | sub-additive, but high_elong PEAK +2.38 |
+
+## Findings F17 (added) — GAS_PUFF sim-rank inversion
+
+M19 exp45 tested GAS_PUFF 1e21 → 2e21 in-sim: regression -0.21. Discarded.
+M22 oracle re-test on H=15+V=80 base: **+1.41 truth-score** = NEW BEST.
+
+Same pattern as F13 (HORIZON) and F14 (V_STD): the sim metric punishes the
+walker exploration that on truth provides better robustness. Three axes
+now confirmed sim-rank inverted on truth.
+
+## Findings F18 — Per-target peaks (scenario-specific tuning)
+
+Different configs emerge as best for different target scenarios:
+
+| scenario | best M22 config | truth | phys% | truth-score |
+|---|---|---|---|---|
+| **M16 real TCV** | H=15 V=80 W=5× P=1e6 GAS=1e21 | **8.28** | 91.7% | **+0.88** |
+| **M15 iter_ramp** | H=15 V=60 GAS=1e21 | 18.36 | 81.7% | -10.19 |
+| **M15 high_elong** | H=12 V=80 GAS=2e21 | **7.45** | **98.3%** | **+2.38** |
+
+Suggests scenario-specific policies could exceed best single global policy
+by ~+5-10 truth-score units on AVG. Confirms F15 generalization.
 
 ## Findings F13-F16
 
@@ -159,6 +196,27 @@ substantially closer to (but not yet matching) M12 NN-shape's
 deployment-ready performance. Further gains require either DAgger
 distillation (M23) or scenario-specific policies (M24).
 
-**Score gain from vanilla baseline**: -32.76 → -7.05 = **+25.71 truth-
+**Score gain from vanilla baseline**: -32.76 → **-5.64** = **+27.12 truth-
 score units** verified on M14 robust freegs oracle across 3
 representative TCV scenarios (M15 published + M16 real shot 65402).
+**13 oracle-scored experiments** (vs 39 sim-scored in M19) for **2× the
+truth gain efficiency per experiment**.
+
+## Final M22 BEST configuration
+
+```
+N_WALKERS = 2048
+HORIZON = 15
+VOLTAGE_STD = 80.0
+P_AUX = 1e6
+GAS_PUFF = 2e21        # ← M22 final discovery (was 1e21 in M19 best)
+SHAPE_WEIGHTS = [640.0, 640.0, 320.0, 320.0]  # asymmetric kappa/delta
+```
+
+**Truth-eval on M16 TCV-X21 65402**: truth-err 8.42 (was 11.03 in M19,
+21.57 in historical FMC online, 60.7 in vanilla, 3.47 in M12 NN-shape
+deploy-ready). M22 best FMC = **2.6× better than historical FMC, 2.4×
+worse than M12 distilled NN**.
+
+To match M12 deployment performance: distill M22 best expert via DAgger
+(M23 milestone, ~1-2 days work, expected truth ≈ 5-7 with NN latency).

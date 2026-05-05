@@ -1,0 +1,184 @@
+{
+  "n_ticks": 30,
+  "n_seeds": 2,
+  "weights": [
+    100.0,
+    100.0,
+    10.0,
+    10.0
+  ],
+  "results": {
+    "exp39_BEST": {
+      "M16_real_TCV_65402": {
+        "mean_truth_err_avg": 8.42099452864149,
+        "steady_truth_err_avg": 1.9756049767731827,
+        "physicality_avg": 0.9166666666666667,
+        "n_seeds": 2,
+        "per_seed": [
+          {
+            "n_steps": 30,
+            "mean_truth_err": 9.619550549511029,
+            "mean_self_err": 4.192841825846092,
+            "steady_truth_err_last10": 1.1610536228950834,
+            "physicality": 0.9,
+            "decision_us_p50": 32730.083499700413,
+            "wall_s": 2.176391415996477,
+            "seed": 0
+          },
+          {
+            "n_steps": 30,
+            "mean_truth_err": 7.222438507771949,
+            "mean_self_err": 4.913417462214056,
+            "steady_truth_err_last10": 2.790156330651282,
+            "physicality": 0.9333333333333333,
+            "decision_us_p50": 31462.833499972476,
+            "wall_s": 1.8110546669995529,
+            "seed": 1
+          }
+        ]
+      },
+      "M15_iter_like_ramp_steady": {
+        "mean_truth_err_avg": 24.18880224346781,
+        "steady_truth_err_avg": 28.639861901599126,
+        "physicality_avg": 0.7333333333333334,
+        "n_seeds": 2,
+        "per_seed": [
+          {
+            "n_steps": 30,
+            "mean_truth_err": 21.430354228147113,
+            "mean_self_err": 7.610295044733296,
+            "steady_truth_err_last10": 31.10784136139494,
+            "physicality": 0.7666666666666667,
+            "decision_us_p50": 31279.645998438355,
+            "wall_s": 1.7892112080007792,
+            "seed": 0
+          },
+          {
+            "n_steps": 30,
+            "mean_truth_err": 26.947250258788504,
+            "mean_self_err": 7.58802452855889,
+            "steady_truth_err_last10": 26.171882441803312,
+            "physicality": 0.7,
+            "decision_us_p50": 31572.083000355633,
+            "wall_s": 1.8202519580008811,
+            "seed": 1
+          }
+        ]
+      },
+      "M15_high_elongation_steady": {
+        "mean_truth_err_avg": 10.14746240554755,
+        "steady_truth_err_avg": 6.252018380167495,
+        "physicality_avg": 0.9333333333333333,
+        "n_seeds": 2,
+        "per_seed": [
+          {
+            "n_steps": 30,
+            "mean_truth_err": 12.400081768471617,
+            "mean_self_err": 6.650575638258336,
+            "steady_truth_err_last10": 6.380370830223032,
+            "physicality": 0.9,
+            "decision_us_p50": 31767.97950072796,
+            "wall_s": 1.7173088749987073,
+            "seed": 0
+          },
+          {
+            "n_steps": 30,
+            "mean_truth_err": 7.894843042623484,
+            "mean_self_err": 6.8736106735456515,
+            "steady_truth_err_last10": 6.12366593011196,
+            "physicality": 0.9666666666666667,
+            "decision_us_p50": 31780.89550056029,
+            "wall_s": 3.225360417000047,
+            "seed": 1
+          }
+        ]
+      }
+    },
+    "baseline_FMC_online": {
+      "M16_real_TCV_65402": {
+        "mean_truth_err_avg": 37.702169731361714,
+        "steady_truth_err_avg": 60.68040226475952,
+        "physicality_avg": 0.44999999999999996,
+        "n_seeds": 2,
+        "per_seed": [
+          {
+            "n_steps": 30,
+            "mean_truth_err": 49.9049478210677,
+            "mean_self_err": 5.620757409269107,
+            "steady_truth_err_last10": 66.96160305608126,
+            "physicality": 0.26666666666666666,
+            "decision_us_p50": 1097.1249994327081,
+            "wall_s": 0.8453951249975944,
+            "seed": 0
+          },
+          {
+            "n_steps": 30,
+            "mean_truth_err": 25.499391641655723,
+            "mean_self_err": 5.1658739730664704,
+            "steady_truth_err_last10": 54.39920147343779,
+            "physicality": 0.6333333333333333,
+            "decision_us_p50": 1202.4579991702922,
+            "wall_s": 0.8674506669995026,
+            "seed": 1
+          }
+        ]
+      },
+      "M15_iter_like_ramp_steady": {
+        "mean_truth_err_avg": 40.70421941305176,
+        "steady_truth_err_avg": 60.39947957629156,
+        "physicality_avg": 0.44999999999999996,
+        "n_seeds": 2,
+        "per_seed": [
+          {
+            "n_steps": 30,
+            "mean_truth_err": 48.648418802056206,
+            "mean_self_err": 6.518839002410957,
+            "steady_truth_err_last10": 63.89304440280498,
+            "physicality": 0.3333333333333333,
+            "decision_us_p50": 1133.7915020703804,
+            "wall_s": 0.8614996249998512,
+            "seed": 0
+          },
+          {
+            "n_steps": 30,
+            "mean_truth_err": 32.760020024047314,
+            "mean_self_err": 6.981756782467528,
+            "steady_truth_err_last10": 56.90591474977814,
+            "physicality": 0.5666666666666667,
+            "decision_us_p50": 1259.0414989972487,
+            "wall_s": 0.9817650000004505,
+            "seed": 1
+          }
+        ]
+      },
+      "M15_high_elongation_steady": {
+        "mean_truth_err_avg": 34.52708449608527,
+        "steady_truth_err_avg": 50.33183911650316,
+        "physicality_avg": 0.5666666666666667,
+        "n_seeds": 2,
+        "per_seed": [
+          {
+            "n_steps": 30,
+            "mean_truth_err": 51.32908953757397,
+            "mean_self_err": 5.911163420990836,
+            "steady_truth_err_last10": 67.71603793525415,
+            "physicality": 0.3333333333333333,
+            "decision_us_p50": 1173.2285001926357,
+            "wall_s": 0.8475897919997806,
+            "seed": 0
+          },
+          {
+            "n_steps": 30,
+            "mean_truth_err": 17.725079454596578,
+            "mean_self_err": 6.114310245082986,
+            "steady_truth_err_last10": 32.94764029775217,
+            "physicality": 0.8,
+            "decision_us_p50": 1307.0834993413882,
+            "wall_s": 0.8935982910006715,
+            "seed": 1
+          }
+        ]
+      }
+    }
+  }
+}
