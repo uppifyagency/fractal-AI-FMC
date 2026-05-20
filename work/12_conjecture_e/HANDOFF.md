@@ -2,7 +2,7 @@
 
 > **Per il prossimo agente AI che riprende questo lavoro.**
 > Leggi questo file *per intero* prima di toccare qualsiasi cosa.
-> Aggiornato: 2026-05-20.
+> Aggiornato: 2026-05-21.
 
 ---
 
@@ -25,9 +25,16 @@ sono gli esponenti α e β del virtual reward.
 - **E1-robustness** ✓ caveat di geometria respinto (2026-05-20) — vedi
   [`E1_ROBUSTNESS_RESULT.md`](E1_ROBUSTNESS_RESULT.md). Non un nuovo test E:
   chiude il caveat "lava isolata" di E1-base.
-- **E1-LLM** ✗ non fatta — richiede prima di sciogliere il muro di compute (P13).
+- **E1-LLM** ✗ non eseguita — ma **non più bloccata a livello di design**: il muro
+  di compute P13 è ora un design doc pre-registrato ([`P13_DESIGN.md`](P13_DESIGN.md)),
+  con un esperimento proxy eseguibile su `fmc-core`. Resta da *eseguire* il proxy.
 
-MATH_CANON è a **v0.6.3**. Memoria di sessione: i file in
+**Direzioni teoriche chiuse (2026-05-21)**:
+- **P13** ✓ design pre-registrato — [`P13_DESIGN.md`](P13_DESIGN.md).
+- **Deep-dive 09** ✓ scritto — formalizzazione della frontiera caos/ordine
+  (Congettura B): [`../02_deep_dives/09_chaos_order_frontier_formalization.md`](../02_deep_dives/09_chaos_order_frontier_formalization.md).
+
+MATH_CANON è a **v0.7.0**. Memoria di sessione: i file in
 `~/.claude/projects/.../memory/` (`project_research_partner_program.md`,
 `feedback_tooling_decisions.md`) — caricati automaticamente all'avvio.
 
@@ -87,6 +94,29 @@ caveat è **falso al primo anello** — il cloning ammassa i walker sulla *stess
 cella assorbente → distanza reciproca → 0 → VR_lava/VR_free ≈ 0.8. Una cella
 assorbente è un **pozzo di VR**, non una sorgente (converso locale del Teorema 3).
 
+### P13 — design doc pre-registrato (MATH_CANON v0.7.0)
+[`P13_DESIGN.md`](P13_DESIGN.md). Scioglie il blocco di E1-LLM a livello di
+progettazione. Mosse chiave: (1) il muro $N\cdot M$ di chiamate-LLM è decomposto
+in **R1** (costo/latenza — inviluppo d'ingegneria; stima: E1-LLM full ~$18k–270k,
+*non* un run-overnight) e **R2** (degradazione della ricerca — la domanda
+scientifica, **testabile senza LLM**); (2) i 3 schemi sparsi (S1 root+surrogato,
+S2 distillazione, S3 macro-azioni) formalizzati con complessità e modo di
+fallimento; (3) **argomento VR-rank** — FMC non richiede un world-model
+traiettoria-accurato, solo uno il cui errore sia al peggio *monotono* in $R,d$
+(la decisione $a^*$ è un argmax, robusto al rango); (4) **esperimento proxy**
+pre-registrato che emula i 3 schemi sul gridworld di E1, eseguibile su `fmc-core`
+in minuti.
+
+### Deep-dive 09 — frontiera caos/ordine (MATH_CANON v0.7.0)
+[`../02_deep_dives/09_chaos_order_frontier_formalization.md`](../02_deep_dives/09_chaos_order_frontier_formalization.md).
+Formalizza la **Congettura B** (discrepanza D3 di CLAUDE.md). Esito da scettico:
+la "terza legge universale" è downgradata a *diagnostica di reward* su $\lambda_1$
+(esponente di Lyapunov dello swarm); la candidata $\Psi_3=b_{\text{eff}}$ è
+**falsificata** come statistica di frontiera (empiricamente — transitorio WF senza
+punto fisso — e strutturalmente — lo spazio-etichette è monotonamente
+contrattivo); $\Psi_2$ assorbita in $\Psi_1$ via Pesin. Resta una congettura
+falsificabile: H-B1a/b/c, harness $\lambda_1$ su `fmc-core`.
+
 ---
 
 ## Skill: quali stiamo usando, quali sono disponibili
@@ -102,6 +132,9 @@ bottiglia non è il tooling. (Vedi memoria `feedback_tooling_decisions`.)
 |---|---|
 | `statistical-analysis` (skill) | disegno + analisi statistica di E2 (potenza, test, reporting) |
 | `numpy`, `scipy`, `statsmodels`, `pandas`, `matplotlib` | sweep, GLM logistico, figure (pyenv 3.11.7) |
+| `hypothesis-generation` (skill) | strutturazione delle ipotesi testabili H-B1a/b/c del deep-dive 09 |
+| `scientific-critical-thinking` (skill) | review da scettico di P13_DESIGN.md e deep-dive 09 prima del commit |
+| `WebSearch` | ancoraggio bibliografico (edge-of-chaos, LLM-world-model) di dd09 e P13 |
 
 ### Disponibili e rilevanti per i prossimi passi (curate — non l'intero elenco)
 | Fase di ricerca | Skill da usare |
@@ -123,19 +156,34 @@ maggioranza è biologia/chimica/genomica — ignorala per FMC.
 
 ## Come continuare — opzioni in avanti (ranked)
 
-La Congettura E ha 2/3 test fatti + il caveat di robustezza geometrica chiuso.
-Due direzioni rimaste, in ordine di valore atteso:
+La Congettura E ha **2/3 test verificati** (E1-base, E2) + caveat di robustezza
+geometrica chiuso. Le due direzioni teoriche del precedente handoff sono **fatte**:
+P13 ha un design doc pre-registrato, il deep-dive 09 è scritto. I prossimi passi
+sono **esecutivi**, in ordine di valore atteso:
 
-1. **E1-LLM** (il test che chiude la stella polare). Sostituire il simulatore
-   con un world-model fornito da un LLM. **Bloccante**: la sotto-domanda di
-   fattibilità **P13** — lo swarm impone N·M (~10³) chiamate-LLM per decisione.
-   Prima va scelto/validato uno schema di interrogazione sparsa (LLM solo a
-   root/leaf → O(N); o distillazione; o gerarchico). Senza P13, E1-LLM non è
-   eseguibile. *Iniziare da un design doc su P13.*
+1. **Eseguire il proxy di P13** → `P13_RESULT.md`. Implementare `p13_proxy.py`
+   secondo [`P13_DESIGN.md`](P13_DESIGN.md) §6: i 3 bracci (S1/S2/S3-proxy) sul
+   gridworld di E1; metriche death/goal-rate + decision-agreement + diagnostica
+   VR-rank; verdetto go/no-go pre-registrato (§6.5). Costo: minuti CPU. È il gate
+   che rende E1-LLM eseguibile.
 
-2. **Deep-dive 09** — `work/02_deep_dives/09_fmc_agentic_core_llm_organ.md`:
-   l'inquadramento architetturale lungo (inversione dello stack, mappa ad Active
-   Inference / empowerment / seminario Sergio). Mai scritto. Teoria pura.
+2. **E1-LLM** (il test che chiude la stella polare). Solo dopo un GO del proxy.
+   Per E1-LLM *come test* (gridworld chiuso) lo schema S2 (distillazione) basta —
+   vedi [`P13_DESIGN.md`](P13_DESIGN.md) §7.
+
+3. **Harness λ₁ + H-B1a** (deep-dive 09 §6). Misuratore dell'esponente di Lyapunov
+   dello swarm su `fmc-core` (traiettorie gemelle, separazione finita alla
+   Benettin); sweep α → cercare l'attraversamento dello zero. Economico, è il
+   go/no-go della Congettura B. Indipendente da E — priorità più bassa di 1–2.
+
+> **Nota di numerazione (risolta 2026-05-21).** L'handoff precedente prenotava lo
+> slot deep-dive 09 per `09_fmc_agentic_core_llm_organ.md` (inquadramento
+> architetturale LLM-organo). CLAUDE.md (tabella D3) assegna invece lo slot 09
+> alla formalizzazione caos/ordine — e prevale, essendo file di project-instruction.
+> Lo slot 09 è quindi la frontiera caos/ordine. L'inquadramento architetturale
+> LLM-organo (inversione dello stack, i 4 organi) è confluito in
+> [`P13_DESIGN.md`](P13_DESIGN.md) §2, sua sede naturale (è il contesto di P13).
+> Se in futuro serve un deep-dive di teoria pura LLM-organo a sé, sarà lo slot 10.
 
 ✓ *Fatto* — **Robustezza geometrica**: il caveat "lava isolata e distante" di
 E1-base è stato testato (3 layout avversariali, disegno pre-registrato) e
@@ -206,6 +254,7 @@ E2_DESIGN.md              disegno E2 PRE-REGISTRATO
 E2_RESULT.md              report E2 (con le 4 figure inline)
 E1_ROBUSTNESS_DESIGN.md   disegno E1-robustness PRE-REGISTRATO
 E1_ROBUSTNESS_RESULT.md   report E1-robustness (caveat geometria respinto)
+P13_DESIGN.md             design doc P13 PRE-REGISTRATO (sblocca E1-LLM)
 HANDOFF.md                questo file
 results/                  e1_base.json, e2_*, e1_robustness.json,
                           e1_robustness_mechanism.png, log
@@ -236,6 +285,8 @@ ha corretto la congettura coi dati — è esattamente il modo di lavorare richie
 
 Il PI vuole momentum e onestà: niente overclaim, falsifica anche le ipotesi
 "belle", e quando un risultato corregge una congettura, **registralo e dillo**.
-Buon lavoro.
+La sessione 2026-05-21 ha fatto esattamente questo: P13 ha un design eseguibile, e
+il deep-dive 09 ha *falsificato* una delle candidate della Congettura B invece di
+limitarsi a formalizzarla. Buon lavoro.
 
-— Claude (research partner), 2026-05-20
+— Claude (research partner), 2026-05-21

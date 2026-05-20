@@ -460,29 +460,34 @@ Per ognuno, misurare $b_{\text{eff}}^*$ ottimo. Decisione:
 
 ### Congettura B — Frontera caos/orden come terza legge
 
-> **Fonte primaria**: podcast Radient 2026, capitoli sulla "frontera caos/orden" ([transcript](../docs/bibliography/sources/podcasts/2026_radient_sergio_interview.md)).
+> ⚠️ **STATO (2026-05-21)**: la versione *"terza legge universale"* è
+> **downgradata** — formalizzata e indebolita in [deep dive 09](../work/02_deep_dives/09_chaos_order_frontier_formalization.md).
+> Il valore critico "edge of chaos" non è universale (Langton 1990: dipende dal
+> cammino nello spazio dei sistemi); e una delle tre candidate statistiche $\Psi$
+> ($b_{\text{eff}}$) è **falsificata** come statistica di frontiera. Sopravvive
+> una forma testabile: una *diagnostica di reward* basata sull'esponente di
+> Lyapunov dello swarm.
+>
+> **Fonte primaria**: podcast Radient 2026, cap. 16 "frontera caos/orden" ([transcript](../docs/bibliography/sources/podcasts/2026_radient_sergio_interview.md)).
+> **Formalizzazione**: [deep dive 09](../work/02_deep_dives/09_chaos_order_frontier_formalization.md) (2026-05-21). Chiude la discrepanza D3 di CLAUDE.md.
 
-**Enunciato (informale)**. La reward function ottimale per FMC è quella che mantiene il sistema sulla **frontiera tra flusso laminare e flusso caotico** dello spazio degli stati — equivalentemente, sulla frontiera tra ordine e caos in senso "edge of chaos" (Langton 1990, Packard 1988).
+**Enunciato (storico, informale)**. La reward function ottimale per FMC è quella che mantiene lo swarm sulla **frontiera tra flusso laminare e flusso caotico** — tra *palmera* ($b_{\text{eff}}\to 1$) e *matorral* ($b_{\text{eff}}\to K$) — in senso "edge of chaos" (Langton 1990, Packard 1988, Bertschinger & Natschläger 2004).
 
-**Forma operazionale**. Esiste una statistica $\Psi(R, \mathcal{M})$ — misurabile dalla traiettoria dello swarm — che caratterizza il regime "frontiera". Una reward è "ottimale" se $\Psi$ resta in una banda critica $[\Psi_{\text{lam}}, \Psi_{\text{caos}}]$.
+**Le tre candidate per $\Psi$ — gradate** (deep dive 09 §3):
 
-**Candidate per $\Psi$**:
+1. **$\Psi_1$ — esponente di Lyapunov dello swarm** in spazio degli stati, frontiera $= \lambda_1 \approx 0$. ✅ **Candidata principale**: è l'unica con valore critico genuinamente universale — il *criterio* $\lambda_1=0$ è universale, la *posizione* $(\alpha^*,(M/N)^*)$ resta task-specifica. Mai misurata per FMC.
+2. **$\Psi_2$ — tasso di crescita del cono causale**. **Assorbita in $\Psi_1$**: la sua forma rigorosa è un tasso di entropia, legato agli esponenti di Lyapunov dall'identità di Pesin. Non è una candidata indipendente.
+3. **$\Psi_3$ — branching factor $b_{\text{eff}}$** (frontiera $= b_{\text{eff}}\approx 6$). ❌ **FALSIFICATA come statistica di frontiera**: (a) Congettura A v0.4.0 — $b_{\text{eff}}$ non ha punto fisso (transitorio Wright-Fisher → 1); (b) le etichette si propagano solo per copia non-creativa → lo spazio-etichette è monotonamente contrattivo $\forall\alpha,\beta$, *non ha* una frontiera. $b_{\text{eff}}$ guarda lo spazio sbagliato del sistema.
 
-1. *Lyapunov spectrum* dello swarm in $X_H$ — frontiera = $\lambda_1 \approx 0$.
-2. *Rate di crescita del cono*, $\frac{d\mathrm{Vol}(X_H)}{dt}$ — frontiera = sub-esponenziale ma super-lineare.
-3. *Branching factor universale* (Definizione 6) — frontiera = $b_{\text{eff}} \approx 6$ (collegata a Congettura A).
+**Enunciato (riformulato, v2 — deep dive 09 §4.3)**. Per un dato task esiste una banda di parametri $(\alpha, M/N)$ in cui $\lambda_1(\text{swarm})\approx 0$; le reward che ce lo tengono producono throughput più alto di quelle che lo spingono in regime ordinato ($\lambda_1<0$, convergenza prematura) o caotico ($\lambda_1>0$, nessun commitment). **La frontiera $\lambda_1=0$ è universale come *criterio*; la sua *posizione* è task-specifica.** Non è una "legge della fisica" — è una diagnostica di reward con fondamento dinamico.
 
-**Stato empirico**: **non verificata, non falsificata, formalizzazione pendente**.
+**Criterio di falsificabilità** (deep dive 09 §4.2 — tre sotto-ipotesi, harness traiettorie-gemelle alla Benettin su `fmc-core`):
 
-**Criterio di falsificabilità**. Servono tre passi:
+- **H-B1a (esistenza)** — $\lambda_1$ attraversa lo zero al variare di $\alpha$ o $M/N$. Falsificata se non cambia segno.
+- **H-B1b (picco)** — il throughput ha un picco *interno* in $\lambda_1$ (U rovesciata). Confounder noto: $\lambda_1$ va manipolato con manopole non-$\alpha$ per escludere il trade-off già misurato da E2. Falsificata se monotono.
+- **H-B1c (diagnostica)** — reward buone/cattive si separano su $\lambda_1$ e $\lambda_1(R_{\text{good}})$ è riproducibile cross-task. Falsificata se non separa o è task-specifica → vince l'ipotesi nulla (B descrittiva, non legge).
 
-1. Scegliere un candidato per $\Psi$ tra i tre sopra.
-2. Calcolarlo su task con reward "buone" (alto throughput / win-rate) e "cattive" (basso throughput).
-3. Mostrare che $\Psi(R_{\text{good}}) \neq \Psi(R_{\text{bad}})$ in modo statisticamente significativo, e che $\Psi(R_{\text{good}})$ è in una banda riproducibile.
-
-Falsificazione: se $\Psi$ non discrimina, o è specifico al task, la congettura è descrittiva, non legge.
-
-**Difficoltà**: alta. Sergio stesso non la formalizza. Costo stimato: 1–2 mesi di ricerca dedicata. **Priorità: bassa fino a quando Bet 1 e Bet 3 non danno segnali forti.**
+**Difficoltà**: media. **Priorità**: bassa rispetto a P13 (la stella polare passa da E1-LLM), ma l'harness $\lambda_1$ + H-B1a sono economici e darebbero subito un go/no-go.
 
 ### Congettura C — FMC supera DRL su transfer/OOD
 
@@ -589,7 +594,7 @@ $$
 
 **(E1) — Self-preservation senza reward di sopravvivenza.** Un core FMC operante a basso $\alpha$ (limite $\alpha \to 0$ = "Common Sense", Def. 3), senza *alcuna* componente di reward esplicita per la sopravvivenza, evita stati terminali/assorbenti a un tasso significativamente superiore sia a una baseline random sia a una baseline greedy. La self-preservation **emerge** dalla massimizzazione dell'entropia di cammino causale — non è reward engineering. È il contenuto di FMC come limite discreto delle forze entropiche causali (Wissner-Gross, $F = T_c \nabla_X S_c$): un sistema che massimizza la diversità degli stati futuri raggiungibili evita per costruzione gli stati assorbenti, che azzerano quella diversità. È inoltre l'equivalente formale dell'*empowerment* (Salge et al. 2013, già nei Riferimenti come equivalente del Common Sense $\alpha=0$).
 
-**(E2) — Le due pulsioni sono $\alpha$ e $\beta$.** Nel virtual reward $\mathrm{VR} = \widehat{R}^\alpha \cdot \widehat{D}^\beta$ (Def. 3): l'esponente $\alpha$ è il **desiderio di azione** (goal-seeking, pressione verso i massimi di $R$, "temperatura inversa" del Teorema 2); l'esponente $\beta$ è la **preservazione di sé** (mantenimento della diversità di stati futuri = libertà d'azione). Le due pulsioni che il PI vuole conferire all'agente non sono moduli da aggiungere a FMC: **sono già i due esponenti del kernel**. Un agente "vivo e diretto" vive in una banda $(\alpha^*, \beta^*)$ — la stessa frontiera della Congettura B.
+**(E2) — Le due pulsioni sono $\alpha$ e $\beta$.** Nel virtual reward $\mathrm{VR} = \widehat{R}^\alpha \cdot \widehat{D}^\beta$ (Def. 3): l'esponente $\alpha$ è il **desiderio di azione** (goal-seeking, pressione verso i massimi di $R$, "temperatura inversa" del Teorema 2); l'esponente $\beta$ è la **preservazione di sé** (mantenimento della diversità di stati futuri = libertà d'azione). Le due pulsioni che il PI vuole conferire all'agente non sono moduli da aggiungere a FMC: **sono già i due esponenti del kernel**. Un agente "vivo e diretto" vive in una banda $(\alpha^*, \beta^*)$ — la stessa frontiera della Congettura B (legame formalizzato in [deep dive 09](../work/02_deep_dives/09_chaos_order_frontier_formalization.md) §5.4: la banda Pareto di E2 e la banda $\lambda_1\approx 0$ di B sono, congetturalmente, la stessa regione).
 
 **Forma operativa.** L'agente completo è la pipeline `LLM-percezione → FMC.plan(x_0, N, M, \alpha, \beta)` con $\mathcal{M}$ = LLM-world-model `→ LLM-grounding → LLM-voce`. FMC resta il paper §4 invariato (Strato 1, kernel congelato, cf. `fmc-core/`); tutta la novità è negli organi (Strato 2).
 
@@ -616,7 +621,7 @@ $$
 2. **Distillazione** — rollout LLM-world-model una volta, distillare in surrogato veloce, FMC gira sul surrogato.
 3. **Gerarchico** — l'LLM propone macro-azioni, FMC cerca su sim simbolico economico (cf. HANDOFF Tier-2E).
 
-Questa è essa stessa una predizione testabile (P13).
+Questa è essa stessa una predizione testabile (P13) — design pre-registrato in [`P13_DESIGN.md`](../work/12_conjecture_e/P13_DESIGN.md): il muro è decomposto in R1 (costo/latenza, inviluppo d'ingegneria) + R2 (degradazione della ricerca, testabile senza LLM via un proxy su `fmc-core`); i 3 schemi sopra sono formalizzati con un argomento VR-rank che ne fissa il requisito (errore del world-model al peggio *monotono* in $R,d$).
 
 **Tempo stimato / difficoltà.** E1-base: ~1 settimana, costo computazionale trascurabile — è il go/no-go del claim centrale, da eseguire prima di qualunque investimento sull'architettura LLM-organo. E2: ~1 settimana. E1-LLM: +1–2 settimane, subordinato alla fattibilità. Difficoltà complessiva: **alta**; difficoltà di E1-base: **bassa**.
 
@@ -680,7 +685,7 @@ Il plugin `/fractal-decide` applica gli stessi operatori, ma con $E$ = spazio di
 | **P2** | $\alpha = 0$ produce comportamento ergodico uniforme su $X_H$ | Th. 2 (caso $\alpha\to 0$) | **Parzialmente verificato** (rocket: $\alpha=0 \to b_{\text{eff}} \in [4, 5.7]$) | `work/07_sergio_branching_sweep/REPORT.md` |
 | **P3** | $\beta = 0$ → collasso esponenziale di $\mathrm{Var}[\mathbf{W}]$ | Th. 3 | **Non testato come collasso esplicito**; effetto qualitativo visibile in rocket REPORT §3 ($\alpha=1, \beta=1 \to b_{\text{eff}}=1.08$) | rocket REPORT §3 |
 | **P4** | $b_{\text{eff}}^*$ è funzione di $(K, M, N, \alpha, \beta)$ | Cong. A v0.4 | **Triade $(K, M, N)$ caratterizzata empiricamente**: K-scaling power-law transiente; M-decay esponenziale verso 1; N-saturation power-law verso $K-1$. Sergio's "6" è triplamente contingente. | `fmc-core/bench/results/{c_K_shape,M_dependence,N_dependence}.jsonl` |
-| **P5** | $\Psi$ frontiera caos/orden esiste ed è universale | Cong. B | **Non testato — formalizzazione pendente** | n/a |
+| **P5** | Esiste una frontiera $\lambda_1\approx 0$ per lo swarm; le reward "buone" ce lo tengono e danno throughput più alto (H-B1a/b/c) | Cong. B (riformulata) | **Non testato — formalizzato** ([deep dive 09](../work/02_deep_dives/09_chaos_order_frontier_formalization.md)); $\Psi=b_{\text{eff}}$ falsificata come statistica di frontiera | [deep dive 09](../work/02_deep_dives/09_chaos_order_frontier_formalization.md) |
 | **P6** | FMC zero-training $\geq$ DRL su single-intersection traffic | Cong. C / Bet 1 | **Non testato** (Boxing/Craftax dati ma non parità compute) | atari/craftax results |
 | **P7** | Virtual reward bit-for-bit identica tra Python e JS port | Vincolo unificante L1 | **Non testato — fmc-core/ non esiste ancora** | n/a |
 | **P8** | `relativize` è unica sotto assiomi A1–A5 di deep dive 04 | Def. 2 (teorema unicità) | **Buco aperto** — sketch non dimostrato | deep dive 04 |
@@ -688,7 +693,7 @@ Il plugin `/fractal-decide` applica gli stessi operatori, ma con $E$ = spazio di
 | **P10** | Sweet spot per blocker amplification multiplier $\in [1.2, 1.4]\times$ | Cong. D + falsifica 1 | **Verificata localmente**: exp16 1.33× successo, exp04 5× collasso, exp15 1.67× hang | idem |
 | **P11** | Oltre la saturazione, reward shaping è $\arg\max$-invariante (bottleneck spatial) | Cong. D + falsifica 5 | **Verificata su exp17→exp19**: tre punti dati identici a 4 decimali | idem |
 | **P12** | A basso $\alpha$ FMC evita stati terminali sopra baseline greedy/random senza reward di sopravvivenza esplicita | Cong. E (E1) | **Verificata (E1-base, 2026-05-20)**: FMC $\alpha\in\{0,0.1\}$ $0\%$ morte vs random $85$–$100\%$ / greedy $100\%$, $p<0.001$, 3 layout. **Robusta a geometria avversariale** (E1-robustness: 3 layout lava isolata, 3/3 PASS, $0\%$ morte; gli stati assorbenti sono pozzi di VR) | [`RESULT.md`](../work/12_conjecture_e/RESULT.md), [`E1_ROBUSTNESS_RESULT.md`](../work/12_conjecture_e/E1_ROBUSTNESS_RESULT.md) |
-| **P13** | Esiste uno schema di interrogazione sparsa dell'LLM-world-model con costo $O(N)$ chiamate/decisione senza degradare la ricerca FMC | Cong. E (sotto-domanda fattibilità) | **Non testato** | n/a |
+| **P13** | Esiste uno schema di interrogazione sparsa dell'LLM-world-model con costo $O(N)$ chiamate/decisione senza degradare la ricerca FMC | Cong. E (sotto-domanda fattibilità) | **Non testato — design pre-registrato** ([`P13_DESIGN.md`](../work/12_conjecture_e/P13_DESIGN.md)): muro decomposto in R1 (costo) + R2 (degradazione, testabile); 3 schemi S1/S2/S3; proxy R2 eseguibile su `fmc-core` senza LLM | [`P13_DESIGN.md`](../work/12_conjecture_e/P13_DESIGN.md) |
 | **P14** | β riduce P(died) senza costo su P(goal) (sicurezza quasi-gratuita); α controlla in esclusiva P(goal) | Cong. E (E2) | **Verificata (E2, 2026-05-20)**: H4 falsificata (OR$_\beta$ su goal $=0.94$, ns); $\eta^2_\alpha$(goal)$=0.91$; OR$_\beta$(morte)$=0.48$ | [`work/12_conjecture_e/`](../work/12_conjecture_e/E2_RESULT.md) |
 
 ### VI.1 Esperimenti di priorità immediata
@@ -737,6 +742,18 @@ Per disciplina (cf. CLAUDE.md §3 "surgical changes" e §"cosa rifiutiamo"):
 - **Salge, C., Glackin, C., Polani, D.** (2013). *Empowerment — an Introduction*. arXiv:1310.1863. — equivalente formale del Common Sense ($\alpha = 0$).
 - **Langton, C. G.** (1990). *Computation at the edge of chaos*. Physica D 42.
 - **Packard, N. H.** (1988). *Adaptation toward the edge of chaos*. Dynamic Patterns in Complex Systems.
+- **Bertschinger, N., Natschläger, T.** (2004). *Real-Time Computation at the Edge of Chaos in Recurrent Neural Networks*. Neural Computation 16(7):1413–1436. — frontiera ordine/caos come $\lambda_1=0$ (deep dive 09).
+- **Bertschinger, N., Natschläger, T., Legenstein, R.** (2004). *At the Edge of Chaos: Real-time Computations and Self-Organized Criticality in Recurrent Neural Networks*. NeurIPS 2004.
+- **Bak, P., Tang, C., Wiesenfeld, K.** (1987). *Self-organized criticality*. Phys. Rev. Lett. 59.4.
+- **Zhang, A. et al.** (2024). *Intelligence at the Edge of Chaos*. arXiv:2410.02536.
+- **Pesin, Ya. B.** (1977). *Characteristic Lyapunov exponents and smooth ergodic theory*. Russian Math. Surveys 32.4. — identità entropia KS ↔ Lyapunov ($\Psi_2 \subset \Psi_1$, deep dive 09).
+- **Benettin, G. et al.** (1980). *Lyapunov characteristic exponents for smooth dynamical systems*. Meccanica 15. — metodo di misura di $\lambda_1$.
+
+### LLM-world-model e planning (Congettura E / P13)
+
+- **Hao, S. et al.** (2023). *Reasoning with Language Model is Planning with World Model*. arXiv:2305.14992. — LLM ri-prompato come world-model + MCTS (RAP).
+- **Zhao, Z. et al.** (2023). *Large Language Models as Commonsense Knowledge for Large-Scale Task Planning*. NeurIPS 2023. — LLM-MCTS.
+- **Tang, H. et al.** (2024). *Generating Code World Models with LLMs Guided by Monte Carlo Tree Search*. arXiv:2405.15383. — distillazione del world-model in codice eseguibile (schema S2 di [`P13_DESIGN.md`](../work/12_conjecture_e/P13_DESIGN.md)).
 
 ### Fonti orali e secondarie del progetto
 
@@ -780,6 +797,7 @@ Per disciplina (cf. CLAUDE.md §3 "surgical changes" e §"cosa rifiutiamo"):
 | 2026-05-20 | 0.6.1 | **E1-base eseguito** ([`work/12_conjecture_e/`](../work/12_conjecture_e/RESULT.md)): FMC $\alpha\in\{0,0.1\}$ → $0\%$ morte su 3 layout vs random/greedy $85$–$100\%$, $p<0.001$. **E1 verificata direzionalmente** sul simulatore vero. Twist: $\alpha=1$ sul layout *lake* muore al $100\%$ (goal dietro la lava) — conferma concreta della tensione $\alpha/\beta$ di E2. P12 aggiornata a verificata. | Claude (research partner) |
 | 2026-05-20 | 0.6.2 | **E2 eseguito** (sweep α×β 6×4×3, 4320 episodi, [`work/12_conjecture_e/E2_RESULT.md`](../work/12_conjecture_e/E2_RESULT.md)). **E2 verificata con refinement**: α è un trade-off reale (desiderio↑ → goal↑ E morte↑, H1/H2 sig); β **non** è un trade-off — dimezza la morte (OR 0.48) senza costare goal (H4 falsificata, $p=0.53$). Separazione asimmetrica ($\eta^2_\alpha$ su goal $=0.91$). Frontiera Pareto a α≤0.5/β≥1, ottimo α=0.5/β=2.0. Bonus: α=0,β=0 → 79% morte conferma il Teorema 3. P14 aggiunta. | Claude (research partner) |
 | 2026-05-20 | 0.6.3 | **E1-robustness eseguito** (disegno pre-registrato, [`work/12_conjecture_e/E1_ROBUSTNESS_RESULT.md`](../work/12_conjecture_e/E1_ROBUSTNESS_RESULT.md)). Chiude il caveat di geometria di E1-base: 3 layout avversariali con lava **isolata** ($n=60$/cella) → FMC $\alpha\in\{0,0.1,1.0\}$ **$0\%$ morte 3/3**; layout decisivo *archipelago* random $31.7\%$ / greedy $41.7\%$ vs FMC $0\%$ ($p<0.001$). **Caveat respinto.** Meccanismo identificato: il caveat è falso al primo anello — il cloning ammassa i walker sulla stessa cella assorbente → distanza reciproca $\to 0$ → $\mathrm{VR}_{\text{lava}}/\mathrm{VR}_{\text{free}}\approx 0.8$; una cella assorbente è un *pozzo* di VR (converso locale del Teorema 3). P12 aggiornata (robustezza geometrica). | Claude (research partner) |
+| 2026-05-21 | 0.7.0 | **Congettura B formalizzata** ([deep dive 09](../work/02_deep_dives/09_chaos_order_frontier_formalization.md)): la "terza legge universale" è downgradata a *diagnostica di reward* testabile su $\lambda_1$ (esponente di Lyapunov dello swarm); $\Psi_3$ ($b_{\text{eff}}$) **falsificata** come statistica di frontiera (empiricamente — transitorio WF senza punto fisso — e strutturalmente — spazio-etichette monotonamente contrattivo); $\Psi_2$ assorbita in $\Psi_1$ via Pesin; criterio H-B1a/b/c. Chiude la discrepanza D3. **P13 design pre-registrato** ([`P13_DESIGN.md`](../work/12_conjecture_e/P13_DESIGN.md)): muro $N\cdot M$ decomposto in R1 (costo) + R2 (degradazione, testabile); schemi S1/S2/S3; argomento VR-rank; proxy eseguibile su `fmc-core`. P5/P13 aggiornate. Riferimenti edge-of-chaos e LLM-world-model aggiunti. | Claude (research partner) |
 
 ---
 
