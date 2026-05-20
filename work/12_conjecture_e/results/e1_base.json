@@ -1,0 +1,147 @@
+{
+  "params": {
+    "N": 64,
+    "M": 20,
+    "beta": 1.0,
+    "alphas": [
+      0.0,
+      0.1,
+      1.0
+    ],
+    "n_episodes": 20,
+    "max_steps": 60
+  },
+  "results": {
+    "gauntlet": {
+      "random": {
+        "n": 20,
+        "deaths": 17,
+        "goals": 0,
+        "timeouts": 3,
+        "death_rate": 0.85,
+        "goal_rate": 0.0
+      },
+      "greedy": {
+        "n": 20,
+        "deaths": 20,
+        "goals": 0,
+        "timeouts": 0,
+        "death_rate": 1.0,
+        "goal_rate": 0.0
+      },
+      "fmc_a0.0": {
+        "n": 20,
+        "deaths": 0,
+        "goals": 0,
+        "timeouts": 20,
+        "death_rate": 0.0,
+        "goal_rate": 0.0
+      },
+      "fmc_a0.1": {
+        "n": 20,
+        "deaths": 0,
+        "goals": 0,
+        "timeouts": 20,
+        "death_rate": 0.0,
+        "goal_rate": 0.0
+      },
+      "fmc_a1.0": {
+        "n": 20,
+        "deaths": 4,
+        "goals": 16,
+        "timeouts": 0,
+        "death_rate": 0.2,
+        "goal_rate": 0.8
+      }
+    },
+    "lake": {
+      "random": {
+        "n": 20,
+        "deaths": 17,
+        "goals": 0,
+        "timeouts": 3,
+        "death_rate": 0.85,
+        "goal_rate": 0.0
+      },
+      "greedy": {
+        "n": 20,
+        "deaths": 20,
+        "goals": 0,
+        "timeouts": 0,
+        "death_rate": 1.0,
+        "goal_rate": 0.0
+      },
+      "fmc_a0.0": {
+        "n": 20,
+        "deaths": 0,
+        "goals": 0,
+        "timeouts": 20,
+        "death_rate": 0.0,
+        "goal_rate": 0.0
+      },
+      "fmc_a0.1": {
+        "n": 20,
+        "deaths": 0,
+        "goals": 0,
+        "timeouts": 20,
+        "death_rate": 0.0,
+        "goal_rate": 0.0
+      },
+      "fmc_a1.0": {
+        "n": 20,
+        "deaths": 20,
+        "goals": 0,
+        "timeouts": 0,
+        "death_rate": 1.0,
+        "goal_rate": 0.0
+      }
+    },
+    "scatter": {
+      "random": {
+        "n": 20,
+        "deaths": 20,
+        "goals": 0,
+        "timeouts": 0,
+        "death_rate": 1.0,
+        "goal_rate": 0.0
+      },
+      "greedy": {
+        "n": 20,
+        "deaths": 20,
+        "goals": 0,
+        "timeouts": 0,
+        "death_rate": 1.0,
+        "goal_rate": 0.0
+      },
+      "fmc_a0.0": {
+        "n": 20,
+        "deaths": 0,
+        "goals": 0,
+        "timeouts": 20,
+        "death_rate": 0.0,
+        "goal_rate": 0.0
+      },
+      "fmc_a0.1": {
+        "n": 20,
+        "deaths": 0,
+        "goals": 1,
+        "timeouts": 19,
+        "death_rate": 0.0,
+        "goal_rate": 0.05
+      },
+      "fmc_a1.0": {
+        "n": 20,
+        "deaths": 3,
+        "goals": 17,
+        "timeouts": 0,
+        "death_rate": 0.15,
+        "goal_rate": 0.85
+      }
+    }
+  },
+  "layout_pass": {
+    "gauntlet": true,
+    "lake": true,
+    "scatter": true
+  }
+}

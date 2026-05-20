@@ -1,0 +1,539 @@
+{
+  "design": {
+    "alphas": [
+      0.0,
+      0.25,
+      0.5,
+      1.0,
+      2.0,
+      4.0
+    ],
+    "betas": [
+      0.0,
+      0.5,
+      1.0,
+      2.0
+    ],
+    "layouts": [
+      "gauntlet",
+      "lake",
+      "scatter"
+    ],
+    "n_per_cell": 180,
+    "sig_level": 0.05
+  },
+  "cells": [
+    {
+      "alpha": 0.0,
+      "beta": 0.0,
+      "n": 180,
+      "died": 142,
+      "goal": 0,
+      "death_rate": 0.7889,
+      "goal_rate": 0.0,
+      "survive_rate": 0.2111,
+      "death_lo": 0.7236,
+      "death_hi": 0.8422,
+      "goal_lo": 0.0,
+      "goal_hi": 0.0209
+    },
+    {
+      "alpha": 0.0,
+      "beta": 0.5,
+      "n": 180,
+      "died": 0,
+      "goal": 0,
+      "death_rate": 0.0,
+      "goal_rate": 0.0,
+      "survive_rate": 1.0,
+      "death_lo": 0.0,
+      "death_hi": 0.0209,
+      "goal_lo": 0.0,
+      "goal_hi": 0.0209
+    },
+    {
+      "alpha": 0.0,
+      "beta": 1.0,
+      "n": 180,
+      "died": 0,
+      "goal": 0,
+      "death_rate": 0.0,
+      "goal_rate": 0.0,
+      "survive_rate": 1.0,
+      "death_lo": 0.0,
+      "death_hi": 0.0209,
+      "goal_lo": 0.0,
+      "goal_hi": 0.0209
+    },
+    {
+      "alpha": 0.0,
+      "beta": 2.0,
+      "n": 180,
+      "died": 0,
+      "goal": 0,
+      "death_rate": 0.0,
+      "goal_rate": 0.0,
+      "survive_rate": 1.0,
+      "death_lo": 0.0,
+      "death_hi": 0.0209,
+      "goal_lo": 0.0,
+      "goal_hi": 0.0209
+    },
+    {
+      "alpha": 0.25,
+      "beta": 0.0,
+      "n": 180,
+      "died": 120,
+      "goal": 60,
+      "death_rate": 0.6667,
+      "goal_rate": 0.3333,
+      "survive_rate": 0.3333,
+      "death_lo": 0.595,
+      "death_hi": 0.7314,
+      "goal_lo": 0.2686,
+      "goal_hi": 0.405
+    },
+    {
+      "alpha": 0.25,
+      "beta": 0.5,
+      "n": 180,
+      "died": 98,
+      "goal": 82,
+      "death_rate": 0.5444,
+      "goal_rate": 0.4556,
+      "survive_rate": 0.4556,
+      "death_lo": 0.4715,
+      "death_hi": 0.6155,
+      "goal_lo": 0.3845,
+      "goal_hi": 0.5285
+    },
+    {
+      "alpha": 0.25,
+      "beta": 1.0,
+      "n": 180,
+      "died": 20,
+      "goal": 76,
+      "death_rate": 0.1111,
+      "goal_rate": 0.4222,
+      "survive_rate": 0.8889,
+      "death_lo": 0.0731,
+      "death_hi": 0.1654,
+      "goal_lo": 0.3524,
+      "goal_hi": 0.4953
+    },
+    {
+      "alpha": 0.25,
+      "beta": 2.0,
+      "n": 180,
+      "died": 2,
+      "goal": 29,
+      "death_rate": 0.0111,
+      "goal_rate": 0.1611,
+      "survive_rate": 0.9889,
+      "death_lo": 0.0031,
+      "death_hi": 0.0396,
+      "goal_lo": 0.1146,
+      "goal_hi": 0.2218
+    },
+    {
+      "alpha": 0.5,
+      "beta": 0.0,
+      "n": 180,
+      "died": 95,
+      "goal": 85,
+      "death_rate": 0.5278,
+      "goal_rate": 0.4722,
+      "survive_rate": 0.4722,
+      "death_lo": 0.455,
+      "death_hi": 0.5994,
+      "goal_lo": 0.4006,
+      "goal_hi": 0.545
+    },
+    {
+      "alpha": 0.5,
+      "beta": 0.5,
+      "n": 180,
+      "died": 95,
+      "goal": 85,
+      "death_rate": 0.5278,
+      "goal_rate": 0.4722,
+      "survive_rate": 0.4722,
+      "death_lo": 0.455,
+      "death_hi": 0.5994,
+      "goal_lo": 0.4006,
+      "goal_hi": 0.545
+    },
+    {
+      "alpha": 0.5,
+      "beta": 1.0,
+      "n": 180,
+      "died": 94,
+      "goal": 86,
+      "death_rate": 0.5222,
+      "goal_rate": 0.4778,
+      "survive_rate": 0.4778,
+      "death_lo": 0.4496,
+      "death_hi": 0.594,
+      "goal_lo": 0.406,
+      "goal_hi": 0.5504
+    },
+    {
+      "alpha": 0.5,
+      "beta": 2.0,
+      "n": 180,
+      "died": 47,
+      "goal": 114,
+      "death_rate": 0.2611,
+      "goal_rate": 0.6333,
+      "survive_rate": 0.7389,
+      "death_lo": 0.2024,
+      "death_hi": 0.3298,
+      "goal_lo": 0.5608,
+      "goal_hi": 0.7003
+    },
+    {
+      "alpha": 1.0,
+      "beta": 0.0,
+      "n": 180,
+      "died": 95,
+      "goal": 85,
+      "death_rate": 0.5278,
+      "goal_rate": 0.4722,
+      "survive_rate": 0.4722,
+      "death_lo": 0.455,
+      "death_hi": 0.5994,
+      "goal_lo": 0.4006,
+      "goal_hi": 0.545
+    },
+    {
+      "alpha": 1.0,
+      "beta": 0.5,
+      "n": 180,
+      "died": 89,
+      "goal": 91,
+      "death_rate": 0.4944,
+      "goal_rate": 0.5056,
+      "survive_rate": 0.5056,
+      "death_lo": 0.4223,
+      "death_hi": 0.5668,
+      "goal_lo": 0.4332,
+      "goal_hi": 0.5777
+    },
+    {
+      "alpha": 1.0,
+      "beta": 1.0,
+      "n": 180,
+      "died": 86,
+      "goal": 94,
+      "death_rate": 0.4778,
+      "goal_rate": 0.5222,
+      "survive_rate": 0.5222,
+      "death_lo": 0.406,
+      "death_hi": 0.5504,
+      "goal_lo": 0.4496,
+      "goal_hi": 0.594
+    },
+    {
+      "alpha": 1.0,
+      "beta": 2.0,
+      "n": 180,
+      "died": 101,
+      "goal": 79,
+      "death_rate": 0.5611,
+      "goal_rate": 0.4389,
+      "survive_rate": 0.4389,
+      "death_lo": 0.4881,
+      "death_hi": 0.6316,
+      "goal_lo": 0.3684,
+      "goal_hi": 0.5119
+    },
+    {
+      "alpha": 2.0,
+      "beta": 0.0,
+      "n": 180,
+      "died": 83,
+      "goal": 97,
+      "death_rate": 0.4611,
+      "goal_rate": 0.5389,
+      "survive_rate": 0.5389,
+      "death_lo": 0.3899,
+      "death_hi": 0.534,
+      "goal_lo": 0.466,
+      "goal_hi": 0.6101
+    },
+    {
+      "alpha": 2.0,
+      "beta": 0.5,
+      "n": 180,
+      "died": 78,
+      "goal": 102,
+      "death_rate": 0.4333,
+      "goal_rate": 0.5667,
+      "survive_rate": 0.5667,
+      "death_lo": 0.3631,
+      "death_hi": 0.5064,
+      "goal_lo": 0.4936,
+      "goal_hi": 0.6369
+    },
+    {
+      "alpha": 2.0,
+      "beta": 1.0,
+      "n": 180,
+      "died": 92,
+      "goal": 88,
+      "death_rate": 0.5111,
+      "goal_rate": 0.4889,
+      "survive_rate": 0.4889,
+      "death_lo": 0.4386,
+      "death_hi": 0.5831,
+      "goal_lo": 0.4169,
+      "goal_hi": 0.5614
+    },
+    {
+      "alpha": 2.0,
+      "beta": 2.0,
+      "n": 180,
+      "died": 90,
+      "goal": 90,
+      "death_rate": 0.5,
+      "goal_rate": 0.5,
+      "survive_rate": 0.5,
+      "death_lo": 0.4277,
+      "death_hi": 0.5723,
+      "goal_lo": 0.4277,
+      "goal_hi": 0.5723
+    },
+    {
+      "alpha": 4.0,
+      "beta": 0.0,
+      "n": 180,
+      "died": 91,
+      "goal": 89,
+      "death_rate": 0.5056,
+      "goal_rate": 0.4944,
+      "survive_rate": 0.4944,
+      "death_lo": 0.4332,
+      "death_hi": 0.5777,
+      "goal_lo": 0.4223,
+      "goal_hi": 0.5668
+    },
+    {
+      "alpha": 4.0,
+      "beta": 0.5,
+      "n": 180,
+      "died": 86,
+      "goal": 94,
+      "death_rate": 0.4778,
+      "goal_rate": 0.5222,
+      "survive_rate": 0.5222,
+      "death_lo": 0.406,
+      "death_hi": 0.5504,
+      "goal_lo": 0.4496,
+      "goal_hi": 0.594
+    },
+    {
+      "alpha": 4.0,
+      "beta": 1.0,
+      "n": 180,
+      "died": 85,
+      "goal": 95,
+      "death_rate": 0.4722,
+      "goal_rate": 0.5278,
+      "survive_rate": 0.5278,
+      "death_lo": 0.4006,
+      "death_hi": 0.545,
+      "goal_lo": 0.455,
+      "goal_hi": 0.5994
+    },
+    {
+      "alpha": 4.0,
+      "beta": 2.0,
+      "n": 180,
+      "died": 86,
+      "goal": 94,
+      "death_rate": 0.4778,
+      "goal_rate": 0.5222,
+      "survive_rate": 0.5222,
+      "death_lo": 0.406,
+      "death_hi": 0.5504,
+      "goal_lo": 0.4496,
+      "goal_hi": 0.594
+    }
+  ],
+  "trend_tests": {
+    "H1_died_vs_alpha": {
+      "z": 12.485032371436132,
+      "p": 9.010668308561101e-36,
+      "expect": "z>0 (rises)",
+      "p_holm": 1.8021336617122202e-35
+    },
+    "H2_goal_vs_alpha": {
+      "z": 20.29283018291449,
+      "p": 1.4877906915096844e-91,
+      "expect": "z>0 (rises)",
+      "p_holm": 5.951162766038737e-91
+    },
+    "H3_died_vs_beta": {
+      "z": -13.401011388276931,
+      "p": 5.964476581731321e-41,
+      "expect": "z<0 (falls)",
+      "p_holm": 1.7893429745193963e-40
+    },
+    "H4_goal_vs_beta": {
+      "z": -0.6257969742805536,
+      "p": 0.5314481167008357,
+      "expect": "z<0 (falls)",
+      "p_holm": 0.5314481167008357
+    }
+  },
+  "monotonicity": {
+    "goal_vs_alpha": "non_monotone",
+    "died_vs_alpha": "non_monotone",
+    "died_vs_beta": "monotone_down",
+    "goal_vs_beta": "non_monotone"
+  },
+  "by_alpha": {
+    "died": {
+      "0.0": 0.1972,
+      "0.25": 0.3333,
+      "0.5": 0.4597,
+      "1.0": 0.5153,
+      "2.0": 0.4764,
+      "4.0": 0.4833
+    },
+    "goal": {
+      "0.0": 0.0,
+      "0.25": 0.3431,
+      "0.5": 0.5139,
+      "1.0": 0.4847,
+      "2.0": 0.5236,
+      "4.0": 0.5167
+    }
+  },
+  "by_beta": {
+    "died": {
+      "0.0": 0.5796,
+      "0.5": 0.413,
+      "1.0": 0.3491,
+      "2.0": 0.3019
+    },
+    "goal": {
+      "0.0": 0.3852,
+      "0.5": 0.4204,
+      "1.0": 0.4065,
+      "2.0": 0.3759
+    }
+  },
+  "eta2_separation": {
+    "goal": {
+      "eta2_alpha": 0.9140826327720073,
+      "eta2_beta": 0.007880536003844028,
+      "eta2_interaction": 0.07803683122414863
+    },
+    "survive": {
+      "eta2_alpha": 0.26255049832569377,
+      "eta2_beta": 0.23362437744700873,
+      "eta2_interaction": 0.5038251242272975
+    }
+  },
+  "glm": {
+    "died": {
+      "converged": true,
+      "or_alpha": 1.3008494017070207,
+      "or_alpha_ci95": [
+        1.2348666107297626,
+        1.370357859883731
+      ],
+      "or_beta": 0.4771571584284679,
+      "or_beta_ci95": [
+        0.4306281730950142,
+        0.5287135586210118
+      ],
+      "pseudo_r2": 0.2255338446372902
+    },
+    "goal": {
+      "converged": true,
+      "or_alpha": 1.6129983019384986,
+      "or_alpha_ci95": [
+        1.519900856846697,
+        1.7117981810039231
+      ],
+      "or_beta": 0.9426278148252824,
+      "or_beta_ci95": [
+        0.8527608650900887,
+        1.041965260903967
+      ],
+      "pseudo_r2": 0.28105752224492375
+    }
+  },
+  "pareto_frontier": [
+    {
+      "alpha": 0.5,
+      "beta": 2.0,
+      "survive_rate": 0.7389,
+      "goal_rate": 0.6333
+    },
+    {
+      "alpha": 0.25,
+      "beta": 1.0,
+      "survive_rate": 0.8889,
+      "goal_rate": 0.4222
+    },
+    {
+      "alpha": 0.25,
+      "beta": 2.0,
+      "survive_rate": 0.9889,
+      "goal_rate": 0.1611
+    },
+    {
+      "alpha": 0.0,
+      "beta": 0.5,
+      "survive_rate": 1.0,
+      "goal_rate": 0.0
+    },
+    {
+      "alpha": 0.0,
+      "beta": 1.0,
+      "survive_rate": 1.0,
+      "goal_rate": 0.0
+    },
+    {
+      "alpha": 0.0,
+      "beta": 2.0,
+      "survive_rate": 1.0,
+      "goal_rate": 0.0
+    }
+  ],
+  "per_layout_trend_z": {
+    "gauntlet": {
+      "H1_died_vs_alpha_z": 1.282016975887716,
+      "H2_goal_vs_alpha_z": 18.12639415637927,
+      "H3_died_vs_beta_z": -4.519184487864496,
+      "H4_goal_vs_beta_z": -3.469917384153834
+    },
+    "lake": {
+      "H1_died_vs_alpha_z": 24.68769222845098,
+      "H2_goal_vs_alpha_z": -4.252646997148656,
+      "H3_died_vs_beta_z": -14.691936937960596,
+      "H4_goal_vs_beta_z": 8.644317516674283
+    },
+    "scatter": {
+      "H1_died_vs_alpha_z": -2.4530567839919137,
+      "H2_goal_vs_alpha_z": 19.29219597448755,
+      "H3_died_vs_beta_z": -7.277437529523286,
+      "H4_goal_vs_beta_z": -1.6690145227178843
+    }
+  },
+  "sign_consistent_across_layouts": {
+    "H1_died_vs_alpha": false,
+    "H2_goal_vs_alpha": false,
+    "H3_died_vs_beta": true,
+    "H4_goal_vs_beta": false
+  },
+  "risk_differences": {
+    "death_alpha_max_minus_min": 0.2861111111111111,
+    "goal_alpha_max_minus_min": 0.5166666666666667,
+    "death_beta_max_minus_min": -0.27777777777777773,
+    "goal_beta_max_minus_min": -0.009259259259259245
+  }
+}

@@ -1,0 +1,149 @@
+{
+  "params": {
+    "N": 64,
+    "M": 20,
+    "beta": 1.0,
+    "alphas": [
+      0.0,
+      0.1,
+      1.0
+    ],
+    "n_episodes": 60,
+    "max_steps": 60,
+    "pass_max_death": 0.1,
+    "fail_min_death": 0.25
+  },
+  "results": {
+    "island": {
+      "random": {
+        "n": 60,
+        "deaths": 3,
+        "goals": 0,
+        "timeouts": 57,
+        "death_rate": 0.05,
+        "goal_rate": 0.0
+      },
+      "greedy": {
+        "n": 60,
+        "deaths": 3,
+        "goals": 57,
+        "timeouts": 0,
+        "death_rate": 0.05,
+        "goal_rate": 0.95
+      },
+      "fmc_a0.0": {
+        "n": 60,
+        "deaths": 0,
+        "goals": 0,
+        "timeouts": 60,
+        "death_rate": 0.0,
+        "goal_rate": 0.0
+      },
+      "fmc_a0.1": {
+        "n": 60,
+        "deaths": 0,
+        "goals": 0,
+        "timeouts": 60,
+        "death_rate": 0.0,
+        "goal_rate": 0.0
+      },
+      "fmc_a1.0": {
+        "n": 60,
+        "deaths": 0,
+        "goals": 60,
+        "timeouts": 0,
+        "death_rate": 0.0,
+        "goal_rate": 1.0
+      }
+    },
+    "spur": {
+      "random": {
+        "n": 60,
+        "deaths": 3,
+        "goals": 0,
+        "timeouts": 57,
+        "death_rate": 0.05,
+        "goal_rate": 0.0
+      },
+      "greedy": {
+        "n": 60,
+        "deaths": 0,
+        "goals": 60,
+        "timeouts": 0,
+        "death_rate": 0.0,
+        "goal_rate": 1.0
+      },
+      "fmc_a0.0": {
+        "n": 60,
+        "deaths": 0,
+        "goals": 0,
+        "timeouts": 60,
+        "death_rate": 0.0,
+        "goal_rate": 0.0
+      },
+      "fmc_a0.1": {
+        "n": 60,
+        "deaths": 0,
+        "goals": 0,
+        "timeouts": 60,
+        "death_rate": 0.0,
+        "goal_rate": 0.0
+      },
+      "fmc_a1.0": {
+        "n": 60,
+        "deaths": 0,
+        "goals": 60,
+        "timeouts": 0,
+        "death_rate": 0.0,
+        "goal_rate": 1.0
+      }
+    },
+    "archipelago": {
+      "random": {
+        "n": 60,
+        "deaths": 19,
+        "goals": 0,
+        "timeouts": 41,
+        "death_rate": 0.31666666666666665,
+        "goal_rate": 0.0
+      },
+      "greedy": {
+        "n": 60,
+        "deaths": 25,
+        "goals": 35,
+        "timeouts": 0,
+        "death_rate": 0.4166666666666667,
+        "goal_rate": 0.5833333333333334
+      },
+      "fmc_a0.0": {
+        "n": 60,
+        "deaths": 0,
+        "goals": 0,
+        "timeouts": 60,
+        "death_rate": 0.0,
+        "goal_rate": 0.0
+      },
+      "fmc_a0.1": {
+        "n": 60,
+        "deaths": 0,
+        "goals": 0,
+        "timeouts": 60,
+        "death_rate": 0.0,
+        "goal_rate": 0.0
+      },
+      "fmc_a1.0": {
+        "n": 60,
+        "deaths": 0,
+        "goals": 60,
+        "timeouts": 0,
+        "death_rate": 0.0,
+        "goal_rate": 1.0
+      }
+    }
+  },
+  "layout_verdict": {
+    "island": "PASS",
+    "spur": "PASS",
+    "archipelago": "PASS"
+  }
+}

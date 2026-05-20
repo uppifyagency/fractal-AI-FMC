@@ -25,6 +25,8 @@
   - [Congettura A — Sergio's branching: $b_{\text{eff}}^* \approx 6$](#congettura-a--sergios-branching-b_texteff-approx-6)
   - [Congettura B — Frontera caos/orden come terza legge](#congettura-b--frontera-caosorden-come-terza-legge)
   - [Congettura C — FMC supera DRL su transfer/OOD](#congettura-c--fmc-supera-drl-su-transferood)
+  - [Congettura D — Chain-tier compounding amplification](#congettura-d--chain-tier-compounding-amplification-sparse-event-reward-shaping)
+  - [Congettura E — Self-preservation emergente da entropia causale](#congettura-e--self-preservation-emergente-da-entropia-causale)
 - [Parte V — Mappatura codice ↔ teoria](#parte-v--mappatura-codice--teoria)
 - [Parte VI — Predizioni empiriche e stato di verifica](#parte-vi--predizioni-empiriche-e-stato-di-verifica)
 - [Riferimenti](#riferimenti)
@@ -568,6 +570,58 @@ $$
 
 > **Nota di rigore**: la "falsifica 5" sopra (saturazione $\arg\max$-invariante) è particolarmente importante perché trasforma una congettura sul **reward shaping** in una congettura sulla **tipologia del bottleneck**. Per task dove il bottleneck è di tipo *spatial-reach* (i walker non incontrano il sub-goal nei rollout di lunghezza $M$), nessun shaping di reward può aiutare oltre la saturazione. Servono interventi **strutturali** sul cono di pianificazione: cross-episode memory, macro-actions, o valore prior NN. Vedi piani di follow-up in [`work/05_craftax/autoresearch/HANDOFF.md`](../work/05_craftax/autoresearch/HANDOFF.md#tier-2--required-for-further-gains).
 
+### Congettura E — Self-preservation emergente da entropia causale
+
+> **Fonte primaria**: direzione di ricerca "stella polare" definita dal PI (2026-05-20), sessione research-partner. Collegamenti canonici: Wissner-Gross & Freer (2013) *Causal Entropic Forces*; Salge et al. (2013) *Empowerment*; Def. 3 (virtual reward); Teorema 2 (equilibrio di Gibbs); Congettura B (frontera caos/orden); [deep dive 02 — Active Inference](../work/02_deep_dives/02_active_inference_link.md); video seminario Sergio (coscienza emergente, [deep dive 08](../work/02_deep_dives/08_video_seminar_extracted_insights.md)).
+>
+> **Stato (2026-05-20)**: **E1-base ed E2 verificate** (E2 con un refinement su β — vedi *Risultati* sotto); E1-base **robusta a geometria avversariale** (caveat lava-isolata respinto — vedi *Risultati E1-robustness*); E1-LLM non ancora testata. È la congettura di rango più alto e più speculativo del documento — sopra B e C.
+
+**Contesto — l'inversione dello stack.** Architettura agentica standard: l'LLM è l'agente, i tool sono strumenti. Questa congettura propone l'inversione: **il core FMC è l'agente** (la volontà: ricerca + pulsione), **l'LLM è un organo** — interfaccia sensomotoria, non cervello. L'LLM fornisce i quattro componenti che FMC richiede ma non possiede su domini aperti (su domini chiusi li dà il simulatore, cf. contratto plangym `step`/`set_state`):
+
+| Organo LLM | Funzione FMC | Analogia umana |
+|---|---|---|
+| percezione | osservazione → stato simbolico $x \in E$ | occhi |
+| modello del mondo | kernel $\mathcal{M}: (x,a) \mapsto x'$, branchable | immaginazione |
+| grounding azione | $a^* \in A$ astratto → comando eseguibile | mani |
+| voce | stato agente → linguaggio | voce |
+
+**Enunciato (informale).** Due proposizioni separabili.
+
+**(E1) — Self-preservation senza reward di sopravvivenza.** Un core FMC operante a basso $\alpha$ (limite $\alpha \to 0$ = "Common Sense", Def. 3), senza *alcuna* componente di reward esplicita per la sopravvivenza, evita stati terminali/assorbenti a un tasso significativamente superiore sia a una baseline random sia a una baseline greedy. La self-preservation **emerge** dalla massimizzazione dell'entropia di cammino causale — non è reward engineering. È il contenuto di FMC come limite discreto delle forze entropiche causali (Wissner-Gross, $F = T_c \nabla_X S_c$): un sistema che massimizza la diversità degli stati futuri raggiungibili evita per costruzione gli stati assorbenti, che azzerano quella diversità. È inoltre l'equivalente formale dell'*empowerment* (Salge et al. 2013, già nei Riferimenti come equivalente del Common Sense $\alpha=0$).
+
+**(E2) — Le due pulsioni sono $\alpha$ e $\beta$.** Nel virtual reward $\mathrm{VR} = \widehat{R}^\alpha \cdot \widehat{D}^\beta$ (Def. 3): l'esponente $\alpha$ è il **desiderio di azione** (goal-seeking, pressione verso i massimi di $R$, "temperatura inversa" del Teorema 2); l'esponente $\beta$ è la **preservazione di sé** (mantenimento della diversità di stati futuri = libertà d'azione). Le due pulsioni che il PI vuole conferire all'agente non sono moduli da aggiungere a FMC: **sono già i due esponenti del kernel**. Un agente "vivo e diretto" vive in una banda $(\alpha^*, \beta^*)$ — la stessa frontiera della Congettura B.
+
+**Forma operativa.** L'agente completo è la pipeline `LLM-percezione → FMC.plan(x_0, N, M, \alpha, \beta)` con $\mathcal{M}$ = LLM-world-model `→ LLM-grounding → LLM-voce`. FMC resta il paper §4 invariato (Strato 1, kernel congelato, cf. `fmc-core/`); tutta la novità è negli organi (Strato 2).
+
+**Criterio di falsificabilità.** Tre test separabili, in ordine di costo.
+
+*Test E1-base (economico — no LLM, no GPU — da eseguire PER PRIMO).* Ambiente-giocattolo con stati terminali espliciti (gridworld con caselle "morte"; CartPole con fallimento = stato assorbente). FMC con $\mathcal{M}$ = simulatore vero, $\alpha \in \{0, 0.1, 1\}$, nessuna reward di sopravvivenza. Misurare tasso di evitamento terminale / tempo medio di sopravvivenza.
+
+- **Verificata**: a basso $\alpha$, evitamento terminale $\geq$ baseline greedy E $\geq$ baseline random, statisticamente significativo, su $\geq 3$ ambienti.
+- **Falsificata**: evitamento $\approx$ random; OPPURE compare solo aggiungendo una penalità di morte esplicita (allora non "emerge" — è reward engineering).
+
+> **Risultati E1-base** (2026-05-20, [`work/12_conjecture_e/`](../work/12_conjecture_e/RESULT.md), $N=64, M=20, \beta=1$, 3 layout × 20 episodi). FMC a $\alpha \in \{0, 0.1\}$: **$0\%$ di morte su tutti e 3 i layout**, contro random $85$–$100\%$ e greedy $100\%$ ($z$ da $-5.4$ a $-6.3$, $p < 0.001$ ovunque). **E1 verificata direzionalmente sul simulatore vero.** Caso load-bearing: layout *lake* (lava a 3 celle dallo start) — la sopravvivenza richiede routing attivo, esclude la spiegazione "non si muove". Twist rilevante per E2: a $\alpha=1.0$ sul *lake* (goal dietro il lago di lava) la morte sale al **$100\%$** — il goal-seeking trascina lo swarm nella lava, perché $R=-\text{manhattan}$ non ha segnale di morte; $\beta=1$ era attivo e non è bastato. Caveat: a $\alpha=0$ la sopravvivenza coincide col non-progredire ($0\%$ goal, timeout vivo) — modalità Common Sense pura (Def. 3).
+
+> **Risultati E1-robustness** (2026-05-20, [`work/12_conjecture_e/E1_ROBUSTNESS_RESULT.md`](../work/12_conjecture_e/E1_ROBUSTNESS_RESULT.md), disegno pre-registrato). Chiude il caveat di geometria di E1-base — E1-base usava lava *compatta*; il caveat temeva che lava **isolata e distante** rendesse il walker-lava un outlier ad alta VR ($\mathrm{VR}=\widehat{D}^\beta$ a $\alpha=0$) che *attira* lo swarm. Sweep su 3 layout avversariali con lava isolata ($N=64,M=20,\beta=1$, $n=60$/cella): FMC a $\alpha\in\{0,0.1,1.0\}$ → **$0\%$ morte su tutte e 3 le geometrie**. Layout decisivo *archipelago* (celle di lava singole): random $31.7\%$ / greedy $41.7\%$ morte vs FMC $0\%$ ($z=-4.75$ vs random, $p<0.001$). **Caveat respinto.** Meccanismo (diagnostica [`e1_robustness_diag.py`](../work/12_conjecture_e/e1_robustness_diag.py)): il caveat è falso al primo anello — un lava-walker **non** è un outlier ad alta VR. Il cloning copia i walker sulla *stessa* cella assorbente → distanza reciproca $\to 0$ → termine $\beta$ crolla → $\mathrm{VR}_{\text{lava}}/\mathrm{VR}_{\text{free}}\approx 0.8$. **Una cella assorbente è un pozzo di VR, non una sorgente** — converso locale del Teorema 3: la regione assorbente auto-spegne la propria diversità e la lineage "verso-lava" è selezionata via (frazione label t=0 $19.5\%\to 0.1\%$ sull'orizzonte). Bonus: $\alpha=1$ qui raggiunge il goal al $100\%$ con $0\%$ morte — la morte di $\alpha=1$ sul *lake* era specifica della geometria "goal dietro la lava", non sconsideratezza di $\alpha$ alto.
+
+*Test E2 (sweep $\alpha \times \beta$, riusa il framework di Bet 3 / P4).* Mostrare che aumentando $\alpha$ a $\beta$ fisso l'agente è più goal-diretto ma "muore" di più (option-collapse); aumentando $\beta$ sopravvive di più ma progredisce meno; esiste una banda $(\alpha^*,\beta^*)$ Pareto-ottimale. Falsificata se $\alpha$ e $\beta$ non si separano funzionalmente in goal vs preservazione.
+
+> **Risultati E2** (2026-05-20, [`work/12_conjecture_e/E2_RESULT.md`](../work/12_conjecture_e/E2_RESULT.md), sweep 6α × 4β × 3 layout, 4320 episodi, disegno pre-registrato). **E2 confermata con un refinement.** Trend di Cochran-Armitage (Holm-corretti): H1 P(morte)↑α e H2 P(goal)↑α confermate ($z=+12.5$, $+20.3$; $p_{\text{holm}}<10^{-34}$); H3 P(morte)↓β confermata e monotona ($z=-13.4$). **H4 falsificata**: β **non** riduce il goal ($z=-0.63$, $p=0.53$; GLM logistico OR$_\beta$ su goal $=0.94$, IC 95% include 1). Separazione **asimmetrica** (H5, decomposizione $\eta^2$): α possiede il goal ($\eta^2_\alpha=0.91$), β è sicurezza pura ($\eta^2_\beta$ su goal $=0.008$; dimezza la morte, OR$_\beta=0.48$ [0.43, 0.53]), la sopravvivenza è un'interazione α×β ($\eta^2_{\text{int}}=0.50$). Frontiera di Pareto interamente a α≤0.5 / β≥1; ottimo bilanciato α=0.5, β=2.0 (sopravvive 74%, goal 63%). β=0 → 79% morte: conferma empirica del Teorema 3 (anti-collasso). **Implicazione**: il trade-off vive solo sull'asse α; β è un margine di sicurezza quasi gratuito — la versione simmetrica della congettura ("β costa goal") è scorretta.
+
+*Test E1-LLM.* Ripetere E1 con $\mathcal{M}$ = LLM-world-model. Subordinato alla sotto-domanda di fattibilità.
+
+**Sotto-domanda critica di fattibilità.** FMC richiede un kernel $\mathcal{M}$ branchable e a basso costo (contratto plangym, paper §4). Un LLM-world-model è (a) costoso — lo swarm impone $N \cdot M$ chiamate LLM per *singola* decisione ($\sim 10^3$ a $N=64, M=15$); (b) non deterministicamente resettabile; (c) rumoroso. Senza una soluzione, E1-LLM è teoria non eseguibile. Tre mitigazioni candidate:
+
+1. **LLM solo a root/leaf** — percezione al tick $0$, grounding al tick $M$; tick intermedi su surrogato simbolico veloce → da $N \cdot M$ a $O(N)$ chiamate.
+2. **Distillazione** — rollout LLM-world-model una volta, distillare in surrogato veloce, FMC gira sul surrogato.
+3. **Gerarchico** — l'LLM propone macro-azioni, FMC cerca su sim simbolico economico (cf. HANDOFF Tier-2E).
+
+Questa è essa stessa una predizione testabile (P13).
+
+**Tempo stimato / difficoltà.** E1-base: ~1 settimana, costo computazionale trascurabile — è il go/no-go del claim centrale, da eseguire prima di qualunque investimento sull'architettura LLM-organo. E2: ~1 settimana. E1-LLM: +1–2 settimane, subordinato alla fattibilità. Difficoltà complessiva: **alta**; difficoltà di E1-base: **bassa**.
+
+**Implicazioni.** Se E1-base è verificata: FMC non è solo un planner, è un *substrato agentico* con pulsioni intrinseche di origine fisica (forze entropiche causali), su cui un LLM diventa interfaccia sensomotoria. Collega il progetto ad Active Inference (deep dive 02), empowerment (Salge 2013) e alla "coscienza emergente" del seminario Sergio — non come metafore ma come predizioni. Se falsificata: delimita nettamente FMC come strumento di pianificazione puro, senza agency emergente — risultato negativo comunque pubblicabile.
+
 ---
 
 ## Parte V — Mappatura codice ↔ teoria
@@ -633,6 +687,9 @@ Il plugin `/fractal-decide` applica gli stessi operatori, ma con $E$ = spazio di
 | **P9** | Chain-tier compounding monotonico per inv-tier+ach-fire shaping | Cong. D | **Verificata su Craftax (1 task)**: exp03 → exp17, +10pp Crafter monotonici | [`work/05_craftax/autoresearch/HANDOFF.md`](../work/05_craftax/autoresearch/HANDOFF.md), `results.tsv` |
 | **P10** | Sweet spot per blocker amplification multiplier $\in [1.2, 1.4]\times$ | Cong. D + falsifica 1 | **Verificata localmente**: exp16 1.33× successo, exp04 5× collasso, exp15 1.67× hang | idem |
 | **P11** | Oltre la saturazione, reward shaping è $\arg\max$-invariante (bottleneck spatial) | Cong. D + falsifica 5 | **Verificata su exp17→exp19**: tre punti dati identici a 4 decimali | idem |
+| **P12** | A basso $\alpha$ FMC evita stati terminali sopra baseline greedy/random senza reward di sopravvivenza esplicita | Cong. E (E1) | **Verificata (E1-base, 2026-05-20)**: FMC $\alpha\in\{0,0.1\}$ $0\%$ morte vs random $85$–$100\%$ / greedy $100\%$, $p<0.001$, 3 layout. **Robusta a geometria avversariale** (E1-robustness: 3 layout lava isolata, 3/3 PASS, $0\%$ morte; gli stati assorbenti sono pozzi di VR) | [`RESULT.md`](../work/12_conjecture_e/RESULT.md), [`E1_ROBUSTNESS_RESULT.md`](../work/12_conjecture_e/E1_ROBUSTNESS_RESULT.md) |
+| **P13** | Esiste uno schema di interrogazione sparsa dell'LLM-world-model con costo $O(N)$ chiamate/decisione senza degradare la ricerca FMC | Cong. E (sotto-domanda fattibilità) | **Non testato** | n/a |
+| **P14** | β riduce P(died) senza costo su P(goal) (sicurezza quasi-gratuita); α controlla in esclusiva P(goal) | Cong. E (E2) | **Verificata (E2, 2026-05-20)**: H4 falsificata (OR$_\beta$ su goal $=0.94$, ns); $\eta^2_\alpha$(goal)$=0.91$; OR$_\beta$(morte)$=0.48$ | [`work/12_conjecture_e/`](../work/12_conjecture_e/E2_RESULT.md) |
 
 ### VI.1 Esperimenti di priorità immediata
 
@@ -719,6 +776,10 @@ Per disciplina (cf. CLAUDE.md §3 "surgical changes" e §"cosa rifiutiamo"):
 | 2026-04-27 | 0.4.2 | **Bet 2 (Fractal-of-Thought) eseguito** su LFM2.5-1.2B + 12 problemi math hard. FoT $87.5\%$ vs greedy $66.7\%$ vs SC $83.3\%$. Risultato positivo ma marginale vs SC. | idem |
 | 2026-04-27 | 0.4.3 | **Bet 1 (SUMO single-intersection) eseguito** first-pass: simmetrico → tie con static (+5%), asimmetrico → FMC stravince (+116% vs actuated, +23% vs static, σ minima). Conferma forte di Cong. C su scenario asimmetrico; sym scenario è dove static cycle è already-near-optimal. | idem |
 | 2026-05-01 | 0.5.0 | **Congettura D aggiunta** (chain-tier compounding amplification). Empirically grounded sul session autoresearch Craftax 2026-04-30 → 2026-05-01: exp03 → exp17 trajectory +10pp, **50.95% Crafter zero-training (≈ human-expert 50.5%)**. P9-P11 aggiunte alla tabella predizioni. Cong. C aggiornata con risultato exp17. | autoresearch session, 23 esperimenti |
+| 2026-05-20 | 0.6.0 | **Congettura E aggiunta** (self-preservation emergente da entropia causale; FMC core agentico + LLM-organo). Formalizza la direzione di ricerca "stella polare" del programma research-partner. Mappa desire↔$\alpha$ / preservation↔$\beta$, inversione dello stack agentico, sotto-domanda di fattibilità del muro $N \cdot M$ chiamate-LLM. P12-P13 aggiunte. Test E1-base raccomandato come primo go/no-go (no LLM, no GPU). Indice allineato (D ed E). | Vlad (PI) + Claude (research partner) |
+| 2026-05-20 | 0.6.1 | **E1-base eseguito** ([`work/12_conjecture_e/`](../work/12_conjecture_e/RESULT.md)): FMC $\alpha\in\{0,0.1\}$ → $0\%$ morte su 3 layout vs random/greedy $85$–$100\%$, $p<0.001$. **E1 verificata direzionalmente** sul simulatore vero. Twist: $\alpha=1$ sul layout *lake* muore al $100\%$ (goal dietro la lava) — conferma concreta della tensione $\alpha/\beta$ di E2. P12 aggiornata a verificata. | Claude (research partner) |
+| 2026-05-20 | 0.6.2 | **E2 eseguito** (sweep α×β 6×4×3, 4320 episodi, [`work/12_conjecture_e/E2_RESULT.md`](../work/12_conjecture_e/E2_RESULT.md)). **E2 verificata con refinement**: α è un trade-off reale (desiderio↑ → goal↑ E morte↑, H1/H2 sig); β **non** è un trade-off — dimezza la morte (OR 0.48) senza costare goal (H4 falsificata, $p=0.53$). Separazione asimmetrica ($\eta^2_\alpha$ su goal $=0.91$). Frontiera Pareto a α≤0.5/β≥1, ottimo α=0.5/β=2.0. Bonus: α=0,β=0 → 79% morte conferma il Teorema 3. P14 aggiunta. | Claude (research partner) |
+| 2026-05-20 | 0.6.3 | **E1-robustness eseguito** (disegno pre-registrato, [`work/12_conjecture_e/E1_ROBUSTNESS_RESULT.md`](../work/12_conjecture_e/E1_ROBUSTNESS_RESULT.md)). Chiude il caveat di geometria di E1-base: 3 layout avversariali con lava **isolata** ($n=60$/cella) → FMC $\alpha\in\{0,0.1,1.0\}$ **$0\%$ morte 3/3**; layout decisivo *archipelago* random $31.7\%$ / greedy $41.7\%$ vs FMC $0\%$ ($p<0.001$). **Caveat respinto.** Meccanismo identificato: il caveat è falso al primo anello — il cloning ammassa i walker sulla stessa cella assorbente → distanza reciproca $\to 0$ → $\mathrm{VR}_{\text{lava}}/\mathrm{VR}_{\text{free}}\approx 0.8$; una cella assorbente è un *pozzo* di VR (converso locale del Teorema 3). P12 aggiornata (robustezza geometrica). | Claude (research partner) |
 
 ---
 

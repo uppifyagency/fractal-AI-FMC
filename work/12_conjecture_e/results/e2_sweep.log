@@ -1,0 +1,74 @@
+[    10s]  1/72 gauntlet  a=0.0   b=0.0   death=41/60 goal= 0/60
+[    25s]  2/72 gauntlet  a=0.0   b=0.5   death= 0/60 goal= 0/60
+[    40s]  3/72 gauntlet  a=0.0   b=1.0   death= 0/60 goal= 0/60
+[    55s]  4/72 gauntlet  a=0.0   b=2.0   death= 0/60 goal= 0/60
+[    60s]  5/72 gauntlet  a=0.25  b=0.0   death=40/60 goal=20/60
+[    65s]  6/72 gauntlet  a=0.25  b=0.5   death=30/60 goal=30/60
+[    78s]  7/72 gauntlet  a=0.25  b=1.0   death=15/60 goal=15/60
+[    93s]  8/72 gauntlet  a=0.25  b=2.0   death= 1/60 goal= 5/60
+[    98s]  9/72 gauntlet  a=0.5   b=0.0   death=25/60 goal=35/60
+[   102s] 10/72 gauntlet  a=0.5   b=0.5   death=27/60 goal=33/60
+[   108s] 11/72 gauntlet  a=0.5   b=1.0   death=31/60 goal=29/60
+[   117s] 12/72 gauntlet  a=0.5   b=2.0   death=33/60 goal=23/60
+[   122s] 13/72 gauntlet  a=1.0   b=0.0   death=21/60 goal=39/60
+[   126s] 14/72 gauntlet  a=1.0   b=0.5   death=19/60 goal=41/60
+[   132s] 15/72 gauntlet  a=1.0   b=1.0   death=16/60 goal=44/60
+[   138s] 16/72 gauntlet  a=1.0   b=2.0   death=30/60 goal=30/60
+[   143s] 17/72 gauntlet  a=2.0   b=0.0   death=15/60 goal=45/60
+[   148s] 18/72 gauntlet  a=2.0   b=0.5   death=13/60 goal=47/60
+[   153s] 19/72 gauntlet  a=2.0   b=1.0   death=21/60 goal=39/60
+[   157s] 20/72 gauntlet  a=2.0   b=2.0   death=23/60 goal=37/60
+[   162s] 21/72 gauntlet  a=4.0   b=0.0   death=19/60 goal=41/60
+[   167s] 22/72 gauntlet  a=4.0   b=0.5   death=18/60 goal=42/60
+[   172s] 23/72 gauntlet  a=4.0   b=1.0   death=18/60 goal=42/60
+[   176s] 24/72 gauntlet  a=4.0   b=2.0   death=16/60 goal=44/60
+[   186s] 25/72 lake      a=0.0   b=0.0   death=43/60 goal= 0/60
+[   202s] 26/72 lake      a=0.0   b=0.5   death= 0/60 goal= 0/60
+[   217s] 27/72 lake      a=0.0   b=1.0   death= 0/60 goal= 0/60
+[   234s] 28/72 lake      a=0.0   b=2.0   death= 0/60 goal= 0/60
+[   234s] 29/72 lake      a=0.25  b=0.0   death=60/60 goal= 0/60
+[   236s] 30/72 lake      a=0.25  b=0.5   death=55/60 goal= 5/60
+[   251s] 31/72 lake      a=0.25  b=1.0   death= 1/60 goal=19/60
+[   267s] 32/72 lake      a=0.25  b=2.0   death= 0/60 goal= 1/60
+[   268s] 33/72 lake      a=0.5   b=0.0   death=60/60 goal= 0/60
+[   269s] 34/72 lake      a=0.5   b=0.5   death=60/60 goal= 0/60
+[   271s] 35/72 lake      a=0.5   b=1.0   death=52/60 goal= 8/60
+[   282s] 36/72 lake      a=0.5   b=2.0   death= 1/60 goal=46/60
+[   283s] 37/72 lake      a=1.0   b=0.0   death=60/60 goal= 0/60
+[   283s] 38/72 lake      a=1.0   b=0.5   death=60/60 goal= 0/60
+[   284s] 39/72 lake      a=1.0   b=1.0   death=60/60 goal= 0/60
+[   286s] 40/72 lake      a=1.0   b=2.0   death=58/60 goal= 2/60
+[   287s] 41/72 lake      a=2.0   b=0.0   death=60/60 goal= 0/60
+[   287s] 42/72 lake      a=2.0   b=0.5   death=60/60 goal= 0/60
+[   288s] 43/72 lake      a=2.0   b=1.0   death=60/60 goal= 0/60
+[   289s] 44/72 lake      a=2.0   b=2.0   death=60/60 goal= 0/60
+[   289s] 45/72 lake      a=4.0   b=0.0   death=60/60 goal= 0/60
+[   290s] 46/72 lake      a=4.0   b=0.5   death=60/60 goal= 0/60
+[   291s] 47/72 lake      a=4.0   b=1.0   death=60/60 goal= 0/60
+[   292s] 48/72 lake      a=4.0   b=2.0   death=60/60 goal= 0/60
+[   296s] 49/72 scatter   a=0.0   b=0.0   death=58/60 goal= 0/60
+[   311s] 50/72 scatter   a=0.0   b=0.5   death= 0/60 goal= 0/60
+[   326s] 51/72 scatter   a=0.0   b=1.0   death= 0/60 goal= 0/60
+[   340s] 52/72 scatter   a=0.0   b=2.0   death= 0/60 goal= 0/60
+[   346s] 53/72 scatter   a=0.25  b=0.0   death=20/60 goal=40/60
+[   352s] 54/72 scatter   a=0.25  b=0.5   death=13/60 goal=47/60
+[   362s] 55/72 scatter   a=0.25  b=1.0   death= 4/60 goal=42/60
+[   375s] 56/72 scatter   a=0.25  b=2.0   death= 1/60 goal=23/60
+[   380s] 57/72 scatter   a=0.5   b=0.0   death=10/60 goal=50/60
+[   385s] 58/72 scatter   a=0.5   b=0.5   death= 8/60 goal=52/60
+[   392s] 59/72 scatter   a=0.5   b=1.0   death=11/60 goal=49/60
+[   400s] 60/72 scatter   a=0.5   b=2.0   death=13/60 goal=45/60
+[   405s] 61/72 scatter   a=1.0   b=0.0   death=14/60 goal=46/60
+[   410s] 62/72 scatter   a=1.0   b=0.5   death=10/60 goal=50/60
+[   416s] 63/72 scatter   a=1.0   b=1.0   death=10/60 goal=50/60
+[   423s] 64/72 scatter   a=1.0   b=2.0   death=13/60 goal=47/60
+[   428s] 65/72 scatter   a=2.0   b=0.0   death= 8/60 goal=52/60
+[   433s] 66/72 scatter   a=2.0   b=0.5   death= 5/60 goal=55/60
+[   438s] 67/72 scatter   a=2.0   b=1.0   death=11/60 goal=49/60
+[   443s] 68/72 scatter   a=2.0   b=2.0   death= 7/60 goal=53/60
+[   448s] 69/72 scatter   a=4.0   b=0.0   death=12/60 goal=48/60
+[   453s] 70/72 scatter   a=4.0   b=0.5   death= 8/60 goal=52/60
+[   458s] 71/72 scatter   a=4.0   b=1.0   death= 7/60 goal=53/60
+[   464s] 72/72 scatter   a=4.0   b=2.0   death=10/60 goal=50/60
+
+wrote /Users/vladvrinceanu/Desktop/PROGETTI ANTYGRAVITY/FractalAI/work/12_conjecture_e/results/e2_raw.csv  (4320 episodes, 464s)
