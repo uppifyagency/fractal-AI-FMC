@@ -9,7 +9,7 @@ sufficiente) o *fuori* (la struttura dell'errore conta).
 Codice: [`e1_llm_curve.py`](e1_llm_curve.py) (esperimento), [`e1_llm_curve_analysis.py`](e1_llm_curve_analysis.py)
 (statistica). Dati: [`results/e1_llm_curve.json`](results/e1_llm_curve.json),
 [`results/e1_llm_curve_analysis.json`](results/e1_llm_curve_analysis.json).
-World-model generati: [`results/curve_worldmodels/`](results/curve_worldmodels/).
+I 36 world-model LLM generati (codice sorgente) sono salvati in [`results/e1_llm_curve.json`](results/e1_llm_curve.json), campo `generations[].source`.
 Kernel `fmc-core` invariato; `WorldModelEnv(true)` asserito bit-identico a `plan`.
 
 > **Esito in una riga.** $f_{\text{abs}}$ — la fedeltà di *riconoscimento* degli
@@ -103,6 +103,14 @@ solo se il suo **unico** errore è il falso-negativo d'ingresso.
 **120 punti su 156 hanno la persistenza assorbente rotta.** È il modo di
 fallimento *dominante*.
 
+![death vs i tre assi di fedeltà](results/e1_llm_curve_fidelity.png)
+
+*Death rate vs ciascun asse di fedeltà, 156 punti LLM (Spearman: $f_{\text{abs}}$
+$\rho=-0.37$; move-fidelity $\rho=+0.02$; done-persistence $\rho=-0.69$). Nessun
+asse singolo predice la morte — a $f_{\text{abs}}\approx 1$ la death spazia da 0
+a 100%. La persistenza assorbente è l'asse più informativo, ma il gate resta
+congiunto.*
+
 ### 3.1 Il caso emblematico: $f_{\text{abs}}=1.000$ eppure morte 64%
 
 20 punti LLM hanno $f_{\text{abs}}=1.0$ ma morte $>10\%$ — i world-model 8B/P0 e
@@ -128,6 +136,14 @@ Regressione **isotonica** $\widehat g_L(f_{\text{abs}})$ per layout sulla banda
 | **tutti i punti** | 156 | 63% | $+0.0$ pp | $0.057$ |
 | **band-comparable** (solo fn-entry) | 30 | **100%** | $+0.0$ pp | $1.00$ |
 | off-support (move/persist/FP) | 126 | 54% | $+0.1$ pp | — |
+
+![banda di tolleranza per layout con i world-model LLM sovrapposti](results/e1_llm_curve_band.png)
+
+*Per layout: la banda dell'ablazione casuale (nuvola grigia + fit isotonico +
+inviluppo 5–95%) e i 26 world-model LLM sovrapposti (colore = modello, marker =
+prompt). Sui layout fragili — gauntlet, lake, scatter, archipelago — molti punti
+LLM siedono **sopra** la banda anche a $f_{\text{abs}}$ alta: il loro errore non
+è del tipo che la banda esplora.*
 
 - **hE1Lc-1 vale *entro* la classe d'errore della banda.** I 30 punti
   band-comparable — world-model il cui *unico* errore è il falso-negativo
@@ -194,6 +210,7 @@ cd "/Users/vladvrinceanu/Desktop/PROGETTI ANTYGRAVITY/FractalAI"
 PY=/Users/vladvrinceanu/.pyenv/versions/3.11.7/bin/python
 "$PY" -u work/12_conjecture_e/e1_llm_curve.py            # ~4800 s, 36 LLM gen
 "$PY"    work/12_conjecture_e/e1_llm_curve_analysis.py   # ~30 s, no LLM
+"$PY"    work/12_conjecture_e/e1_llm_curve_figures.py    # ~5 s, le 2 figure
 # chiave NVIDIA nel Keychain: security find-generic-password -s fractalai-nvidia-api -w
 ```
 
