@@ -1,0 +1,9 @@
+[fmc_crafter] running 3 seeds, shaping=exp17, N=32, M=12
+[fmc_crafter] seed=42 (t=0s)...
+  → ach=7 reward=6.10 wall=63.2s
+[fmc_crafter] seed=43 (t=64s)...
+  → ach=6 reward=5.30 wall=76.0s
+[fmc_crafter] seed=44 (t=140s)...
+  → ach=6 reward=6.00 wall=80.8s
+
+[fmc_crafter] crafter_score=3.77% n=3 wall=220s saved=results_smoke_exp17_3seed.json

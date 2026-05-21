@@ -1,0 +1,11 @@
+{
+  "model": "meta/llama-3.3-70b-instruct",
+  "attempts": [
+    {
+      "attempt": 1,
+      "raw": "```python\ndef transition(r, c, done, action, grid, H, W):\n    if done:\n        return r, c, True\n\n    nr, nc = r, c\n    if action == 0 and r > 0:\n        nr -= 1\n    elif action == 1 and r < H - 1:\n        nr += 1\n    elif action == 2 and c > 0:\n        nc -= 1\n    elif action == 3 and c < W - 1:\n        nc += 1\n\n    ndone = grid[nr][nc] in [1, 2]\n    return nr, nc, ndone\n```",
+      "source": "def transition(r, c, done, action, grid, H, W):\n    if done:\n        return r, c, True\n\n    nr, nc = r, c\n    if action == 0 and r > 0:\n        nr -= 1\n    elif action == 1 and r < H - 1:\n        nr += 1\n    elif action == 2 and c > 0:\n        nc -= 1\n    elif action == 3 and c < W - 1:\n        nc += 1\n\n    ndone = grid[nr][nc] in [1, 2]\n    return nr, nc, ndone",
+      "status": "OK"
+    }
+  ]
+}

@@ -250,6 +250,20 @@ A multi-policy ensemble routing to H=12 when target shape is high-elong
 or iter-ramp, H=15 elsewhere, would yield **AVG ts ≈ -3.8** (estimated
 by best-of) — small additional gain but more robust per-scenario.
 
+## ✅ F13 (HORIZON 15 > 10) 5-seed validation: CONFIRMED ROBUST
+
+5-seed comparison of H=15 vs H=10 on V=80 GAS=2e21 base:
+
+| H | AVG ts (5-seed) | M16 truth ± std |
+|---|---|---|
+| **15 (M22 BEST)** | **-4.42** | **7.65 ± 1.29** |
+| 10 (M19 sim-best) | -7.82 | 8.91 ± 2.78 |
+| **Δ** | **+3.40** (was +2.58 at 2-seed) | -1.26 |
+
+F13 5-seed delta is LARGER than 2-seed claim. Robustness confirmed —
+**HORIZON sim-rank inversion is real and even stronger** than initially
+measured. M19's H=10 selection was sub-optimal by +3.40 ts.
+
 ## ✅ F17 (GAS=2e21) 5-seed validation: CONFIRMED ROBUST
 
 5-seed comparison of GAS=2e21 vs GAS=1e21 on full M22 BEST base:

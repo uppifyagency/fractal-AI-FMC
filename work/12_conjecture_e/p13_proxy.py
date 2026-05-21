@@ -163,11 +163,13 @@ def macro_menu(env, root, k: int, include_stay: bool):
 
 # === proxy plan: replicates fmc.core.plan, world-model swapped ================
 
-def proxy_plan(env, x0, N, M, alpha, beta, seed, schema):
+def proxy_plan(env, x0, N, M, alpha, beta, seed, schema, vr_hook=None):
     """Replicate the public plan() loop of fmc.core with `schema` as world-model.
 
     Kernel math (virtual_reward, clone_step, decide) is the unmodified fmc-core.
-    With schema=FullSchema this is bit-identical to fmc.core.plan (asserted in main).
+    With schema=FullSchema and vr_hook=None this is bit-identical to fmc.core.plan
+    (asserted in main). `vr_hook`, when given, is a callable (vr, rng) -> vr applied
+    to each tick's VR vector before clone_step -- used by hP13-0 to degrade VR rank.
     Returns (decided_action, vr_trace) where vr_trace[t] is the tick-t VR vector.
     """
     rng = np.random.default_rng(seed)
@@ -190,6 +192,8 @@ def proxy_plan(env, x0, N, M, alpha, beta, seed, schema):
             if partners[i] == i:
                 partners[i] = (i + 1) % N
         vr = virtual_reward(rewards, obs, partners, alpha=alpha, beta=beta)
+        if vr_hook is not None:
+            vr = vr_hook(vr, noise_rng)
         vr_trace.append(vr.copy())
         clone_idx = clone_step(vr, rng)
         states = [env.clone_state(states[k]) for k in clone_idx]

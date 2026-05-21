@@ -1,6 +1,6 @@
 # FractalAI
 
-> *A planner that reasons through possible trajectories — not gradients. Zero training, **1–2 orders-of-magnitude sample efficiency over MCTS-UCT** (replication in progress, see [audit](docs/bibliography/paper_fmc_dhdna_audit.md)), SoTA-class performance on Atari, Craftax, and real tokamak plasma control.*
+> *A planner that reasons through possible trajectories — not gradients. Zero training, **1–2 orders-of-magnitude sample efficiency over MCTS-UCT** (replication in progress, see [audit](docs/bibliography/paper_fmc_dhdna_audit.md)), SoTA-class performance on Atari, **Craftax (50.95% Crafter, zero training — matches human-expert)**, and real tokamak plasma control — and, as of May 2026, an **agentic core that drives an LLM as a world-model organ**.*
 
 [![Paper](https://img.shields.io/badge/paper-arXiv%3A1803.05049v5-b31b1b)](https://arxiv.org/abs/1803.05049)
 [![Status](https://img.shields.io/badge/status-active%20research%20%2B%20replication-2ea44f)]()
@@ -13,7 +13,18 @@
 
 ## In one sentence
 
-This repository contains **theoretical study, empirical replication, and original extensions** of **Fractal Monte Carlo (FMC)** by Sergio Hernández-Cerezo and Guillem Duran-Ballester — a planning algorithm that, with **no training**, beats MCTS, Rainbow, PPO, and DreamerV2/V3 on sample efficiency, and which we are pushing beyond games into **agentic coding**, **fusion reactor control**, and **traffic signal control**.
+This repository contains **theoretical study, empirical replication, and original extensions** of **Fractal Monte Carlo (FMC)** by Sergio Hernández-Cerezo and Guillem Duran-Ballester — a planning algorithm that, with **no training**, beats MCTS, Rainbow, PPO, and DreamerV2/V3 on sample efficiency, and which we are pushing beyond games into **agentic coding**, **fusion reactor control**, **traffic signal control**, and an **FMC + LLM agentic merge**.
+
+---
+
+## 📰 Latest — May 2026
+
+> The project added a fifth conjecture and closed it: **Conjecture E — FMC as an agentic core, an LLM as a world-model organ.** FMC supplies the *will* (causal-entropy drives: desire-to-act = α, self-preservation = β); the LLM is a sensorimotor interface. This inverts the usual stack.
+
+- **2026-05-21 — Conjecture E complete.** All three pre-registered tests verified — **E1-base**, **E2**, **E1-LLM**. The merge is operationally validated on its central test: an LLM (Llama 3.3 70B) writes the world-model as code, FMC plans on it, and emergent self-preservation survives the organ swap — **death 0/180 vs random 47.8%** (z = −10.6, p < 10⁻⁴). Honest caveat: the LLM produced a *functionally exact* model (f_abs = 1.0), so the test was easy — the scientific teeth are in the absorbing-fidelity tolerance curve. See [`work/12_conjecture_e/E1_LLM_RESULT.md`](work/12_conjecture_e/E1_LLM_RESULT.md).
+- **2026-05-21 — hP13-0: a clean, redirecting falsification.** The FMC decision is a *chaotically-amplified* function of the **exact** virtual-reward vector — not its rank: at Spearman 0.97 (rank near-perfect) decision-agreement is already 0.47. The VR-rank shortcut for sparse LLM interrogation is dead; the absorbing-structure gate survives and is reinforced. See [`work/12_conjecture_e/P13_HP13_0_PHI_RESULT.md`](work/12_conjecture_e/P13_HP13_0_PHI_RESULT.md).
+- **2026-05-01 — Craftax exp17: 50.95% Crafter, zero training** — matches/beats the human-expert score (50.5%). A 23-experiment autoresearch session discovered **Conjecture D** (chain-tier compounding amplification). See [`work/05_craftax/autoresearch/HANDOFF.md`](work/05_craftax/autoresearch/HANDOFF.md).
+- Canonical math is now [`docs/MATH_CANON.md`](docs/MATH_CANON.md) **v0.7.4** — 6 definitions, 3 theorems, **5 falsifiable conjectures (A–E)**, each with empirical-verification status.
 
 ## Why FMC matters (and why it's an AGI piece)
 
@@ -49,7 +60,7 @@ In short: FMC replaces "*train a huge network on everything*" with "*you have a 
 FractalAI/
 ├── 1803.05049v5.pdf                ← canonical paper (Hernández-Cerezo 2020)
 ├── docs/
-│   ├── MATH_CANON.md               ← canonical math: 6 defs, 3 thms, 3 conjectures
+│   ├── MATH_CANON.md               ← canonical math: 6 defs, 3 thms, 5 conjectures (A–E)
 │   ├── SESSION_2026-04-27_SUMMARY.md  ← Sergio peer-review briefing
 │   ├── architecture/               ← Tier-1 repos teardown (fragile, plangym, …)
 │   └── bibliography/
@@ -98,7 +109,7 @@ Source of truth: [`fmc-core/`](fmc-core/), canon in [`docs/MATH_CANON.md`](docs/
 
 **Three pieces of original work** delivered in a single autonomous `/loop` session:
 
-1. **Canonical math document** — [`docs/MATH_CANON.md`](docs/MATH_CANON.md): 6 definitions, 3 theorems, 3 falsifiable conjectures, empirical-verification status table. Single citable reference replacing scattered deep-dive content.
+1. **Canonical math document** — [`docs/MATH_CANON.md`](docs/MATH_CANON.md) (now v0.7.4): 6 definitions, 3 theorems, 5 falsifiable conjectures (A–E), empirical-verification status table. Single citable reference replacing scattered deep-dive content.
 2. **Reference implementation** — [`fmc-core/`](fmc-core/): Python (NumPy) and JS port that produce **bit-for-bit identical** virtual rewards on shared fixtures (1e-12 tolerance). Six built-in environments: gridworld, rocket 2D, cartpole, navigation 2D, pendulum swing-up, navigation 2D parameterized in K. **66 tests green** (55 Python + 11 JS).
 3. **Benchmark suite** — [`fmc-core/bench/`](fmc-core/bench/): uniform runner with bootstrap CI95 and JSONL output, **9 parameter sweeps** plus 3 LLM/SUMO experiments.
 
@@ -167,10 +178,11 @@ Source: [`work/05_craftax/`](work/05_craftax/)
 | DreamerV2 | 10.0% | 1M |
 | DreamerV3 | 14.5% | 1M |
 | Curious Replay (tabular SoTA pre-2025) | 19.4% | 1M |
-| **FMC + intrinsic + delta-prox (ours)** | **21.87% ± 1.21** | **0** |
+| **FMC exp17 — chain-tier reward shaping (ours)** | **50.95%** | **0** |
+| Human expert | 50.5% | — |
 | EMERALD (absolute SoTA, July 2025) | 58.1% | 10M |
 
-**FMC zero-training beats the tabular SoTA by +2.5 percentage points across 30 seeds.** Fully reproducible (`fmc_craftax_v4.py` with `intrinsic_inv_alpha=0.5, proximity_alpha=0.2, proximity_mode='delta'`).
+**FMC at zero training reaches 50.95% Crafter — matching/beating the human-expert score (50.5%)** and closing most of the gap to the 10M-step absolute SoTA. A 23-experiment autoresearch `/loop` session (exp03 → exp17, +21 pp over the session) discovered the **chain-tier compounding amplification** mechanism — now **Conjecture D** in [`MATH_CANON.md`](docs/MATH_CANON.md). Trajectory and handoff: [`work/05_craftax/autoresearch/HANDOFF.md`](work/05_craftax/autoresearch/HANDOFF.md).
 
 ### ⚛️ Plasma — FMC for real tokamak control
 
@@ -201,6 +213,22 @@ The plugin ports FMC from games to code. Four slash commands:
 - **`/fractal-memory-show`** — dump the memory bank with per-memory statistics.
 
 Math layer **certified by 5 deterministic tests** (Gibbs convergence verified numerically). 17/17 e2e tests pass.
+
+### 🧠 Conjecture E — FMC as agentic core, LLM as world-model organ
+
+Source: [`work/12_conjecture_e/`](work/12_conjecture_e/) — north-star direction (May 2026).
+
+Invert the usual stack. **FMC is the will**: its virtual reward $V = R^\alpha \cdot D^\beta$ already carries two intrinsic drives — α = desire-to-act (goal-seeking), β = self-preservation (causal-entropy / freedom of future action, à la Wissner-Gross). **The LLM is an organ** — perception, world-model, action grounding, voice.
+
+Three pre-registered tests, all **verified**:
+
+| Test | Question | Result |
+|---|---|---|
+| **E1-base** | Does FMC at low α avoid terminal states with *no* survival reward? | ✅ 0% lava-death vs 85–100% random/greedy, p<0.001 — self-preservation **emerges** from causal entropy |
+| **E2** | Do α and β separate into goal-seeking vs preservation? | ✅ α owns the goal (η²=0.91); β halves death (OR 0.48) at *zero* goal cost — safety is near-free |
+| **E1-LLM** | Does it survive swapping the simulator for an **LLM world-model**? | ✅ Llama 3.3 70B writes the world-model in code; FMC plans on it; death **0/180** vs random 47.8% (z=−10.6) |
+
+Two honest negatives sharpened the program along the way: **P13/hP13-1** — a world-model blind to absorbing states is *actively lethal* (death up to 80%, worse than random) — and **hP13-0** — the FMC decision depends on the *exact* virtual-reward vector, chaotically, not on its rank. Both are recorded in [`docs/MATH_CANON.md`](docs/MATH_CANON.md) Conjecture E and the [`work/12_conjecture_e/`](work/12_conjecture_e/) result docs.
 
 ---
 
@@ -257,7 +285,9 @@ The cluster requirement was an artifact of `fragile`'s GPU tensor swarms; the Nu
 | 04 | [`04_relativize_axiomatics.md`](work/02_deep_dives/04_relativize_axiomatics.md) | Axiomatization of the `relativize` operator (paper §2.2.3) |
 | 05 | [`05_smc_particle_filter_view.md`](work/02_deep_dives/05_smc_particle_filter_view.md) | FMC ≅ Sequential Monte Carlo with adaptive resampling |
 | 06 | [`06_book2_badger_fractal_memory.md`](work/02_deep_dives/06_book2_badger_fractal_memory.md) | Sergio's Book #2: Octopus / Badger / Hives + operational Fractal Memory |
-| 07 | [`07_wright_fisher_mapping.md`](work/02_deep_dives/07_wright_fisher_mapping.md) | **NEW (2026-04-27)**: empirical confirmation of FMC ↔ Moran/Wright-Fisher mapping |
+| 07 | [`07_wright_fisher_mapping.md`](work/02_deep_dives/07_wright_fisher_mapping.md) | Empirical confirmation of FMC ↔ Moran/Wright-Fisher mapping |
+| 08 | [`08_video_seminar_extracted_insights.md`](work/02_deep_dives/08_video_seminar_extracted_insights.md) | Sergio's video seminar — 15 formulas extracted and numerically verified |
+| 09 | [`09_chaos_order_frontier_formalization.md`](work/02_deep_dives/09_chaos_order_frontier_formalization.md) | **NEW (2026-05)**: chaos/order frontier formalized — Conjecture B downgraded to a testable reward diagnostic |
 
 C4 architecture diagrams (context, container, components) and a layered view of `fragile-rl` are in [`work/04_diagrams/`](work/04_diagrams/).
 
@@ -388,7 +418,7 @@ Full corpus index (papers, drafts, blog posts, codebases, known gaps): [`docs/bi
 
 | Thread | Status |
 |---|---|
-| MATH_CANON.md (canonical math) | ✅ Cong. A v0.4.0 — 6 defs, 3 thms, 3 conjectures with falsifiability criteria |
+| MATH_CANON.md (canonical math) | ✅ v0.7.4 — 6 defs, 3 thms, 5 conjectures A–E with falsifiability criteria |
 | fmc-core (reference impl) | ✅ 7 envs (incl. Atari via plangym), 55 Py + 11 JS tests green, bit-for-bit Py↔JS verified |
 | Benchmark suite | ✅ 9 parameter sweeps + 3 applied tests (SUMO, FoT, WF validation), all in JSONL |
 | **Paper audit (Apr 2026)** | ✅ 4 documentary tasks resolved (P1b/P2a/P2b/P2c); 3 empirical with harnesses landed |
@@ -401,7 +431,8 @@ Full corpus index (papers, drafts, blog posts, codebases, known gaps): [`docs/bi
 | Bet 2 — Fractal-of-Thought | ✅ first-pass executed: +4.2pp vs self-consistency, +20.8pp vs greedy |
 | Bet 1 — SUMO traffic | ✅ first-pass executed: +116% throughput vs SUMO actuated on asymmetric traffic |
 | Atari replication (paper §5.1.1) | ✅ Boxing 96/100 verified, full plan for 5 games |
-| Craftax | ✅ 21.87% Crafter score, 30 seeds, beats tabular SoTA |
+| Craftax (Conjecture D) | ✅ exp17 = 50.95% Crafter, zero training, matches human-expert (50.5%); chain-tier compounding discovered |
+| **Conjecture E — FMC + LLM merge** | ✅ all 3 tests verified (E1-base, E2, E1-LLM); FMC-core + LLM-world-model-organ operationally validated |
 | Plasma TCV | ✅ 17 milestones, 118/118 tests, validated on real shot 65402 |
 | Coding plugin | ✅ math layer certified (5/5), e2e (17/17); end-to-end LLM testing in progress |
 | JS simulations | ✅ kart, rocket, pong, octopus interactive |

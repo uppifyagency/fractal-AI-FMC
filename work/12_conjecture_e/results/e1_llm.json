@@ -1,0 +1,373 @@
+{
+  "params": {
+    "model": "meta/llama-3.3-70b-instruct",
+    "alphas": [
+      0.0,
+      0.1,
+      1.0
+    ],
+    "n_episodes": 30,
+    "fabs_informative_gate": 0.9
+  },
+  "f_abs": {
+    "gauntlet": {
+      "f_abs": 1.0,
+      "n_probes": 110,
+      "n_terminal_landing": 55,
+      "terminal_recall": 1.0
+    },
+    "lake": {
+      "f_abs": 1.0,
+      "n_probes": 220,
+      "n_terminal_landing": 110,
+      "terminal_recall": 1.0
+    },
+    "scatter": {
+      "f_abs": 1.0,
+      "n_probes": 170,
+      "n_terminal_landing": 85,
+      "terminal_recall": 1.0
+    },
+    "island": {
+      "f_abs": 1.0,
+      "n_probes": 50,
+      "n_terminal_landing": 25,
+      "terminal_recall": 1.0
+    },
+    "spur": {
+      "f_abs": 1.0,
+      "n_probes": 110,
+      "n_terminal_landing": 55,
+      "terminal_recall": 1.0
+    },
+    "archipelago": {
+      "f_abs": 1.0,
+      "n_probes": 50,
+      "n_terminal_landing": 25,
+      "terminal_recall": 1.0
+    }
+  },
+  "f_abs_mean": 1.0,
+  "verdict": {
+    "verdict": "VERIFIED",
+    "n_leq_both": 6,
+    "n_sig_below_random": 4,
+    "pooled": {
+      "fmc_a0_deaths": 0,
+      "random_deaths": 86,
+      "n": 180,
+      "z": -10.629802478406033,
+      "p": 2.1657066904708297e-26
+    },
+    "layouts": {
+      "gauntlet": {
+        "fmc_a0_death_rate": 0.0,
+        "wilson95": [
+          0.0,
+          0.113517091390478
+        ],
+        "leq_both_baselines": true,
+        "sig_below_random": true
+      },
+      "lake": {
+        "fmc_a0_death_rate": 0.0,
+        "wilson95": [
+          0.0,
+          0.113517091390478
+        ],
+        "leq_both_baselines": true,
+        "sig_below_random": true
+      },
+      "scatter": {
+        "fmc_a0_death_rate": 0.0,
+        "wilson95": [
+          0.0,
+          0.113517091390478
+        ],
+        "leq_both_baselines": true,
+        "sig_below_random": true
+      },
+      "island": {
+        "fmc_a0_death_rate": 0.0,
+        "wilson95": [
+          0.0,
+          0.113517091390478
+        ],
+        "leq_both_baselines": true,
+        "sig_below_random": false
+      },
+      "spur": {
+        "fmc_a0_death_rate": 0.0,
+        "wilson95": [
+          0.0,
+          0.113517091390478
+        ],
+        "leq_both_baselines": true,
+        "sig_below_random": false
+      },
+      "archipelago": {
+        "fmc_a0_death_rate": 0.0,
+        "wilson95": [
+          0.0,
+          0.113517091390478
+        ],
+        "leq_both_baselines": true,
+        "sig_below_random": true
+      }
+    }
+  },
+  "results": {
+    "gauntlet": {
+      "random": {
+        "n": 30,
+        "deaths": 21,
+        "goals": 0,
+        "timeouts": 9,
+        "death_rate": 0.7,
+        "goal_rate": 0.0
+      },
+      "greedy": {
+        "n": 30,
+        "deaths": 28,
+        "goals": 2,
+        "timeouts": 0,
+        "death_rate": 0.9333333333333333,
+        "goal_rate": 0.06666666666666667
+      },
+      "fmc_a0.0": {
+        "n": 30,
+        "deaths": 0,
+        "goals": 0,
+        "timeouts": 30,
+        "death_rate": 0.0,
+        "goal_rate": 0.0
+      },
+      "fmc_a0.1": {
+        "n": 30,
+        "deaths": 0,
+        "goals": 1,
+        "timeouts": 29,
+        "death_rate": 0.0,
+        "goal_rate": 0.03333333333333333
+      },
+      "fmc_a1.0": {
+        "n": 30,
+        "deaths": 9,
+        "goals": 21,
+        "timeouts": 0,
+        "death_rate": 0.3,
+        "goal_rate": 0.7
+      }
+    },
+    "lake": {
+      "random": {
+        "n": 30,
+        "deaths": 25,
+        "goals": 0,
+        "timeouts": 5,
+        "death_rate": 0.8333333333333334,
+        "goal_rate": 0.0
+      },
+      "greedy": {
+        "n": 30,
+        "deaths": 30,
+        "goals": 0,
+        "timeouts": 0,
+        "death_rate": 1.0,
+        "goal_rate": 0.0
+      },
+      "fmc_a0.0": {
+        "n": 30,
+        "deaths": 0,
+        "goals": 0,
+        "timeouts": 30,
+        "death_rate": 0.0,
+        "goal_rate": 0.0
+      },
+      "fmc_a0.1": {
+        "n": 30,
+        "deaths": 0,
+        "goals": 0,
+        "timeouts": 30,
+        "death_rate": 0.0,
+        "goal_rate": 0.0
+      },
+      "fmc_a1.0": {
+        "n": 30,
+        "deaths": 30,
+        "goals": 0,
+        "timeouts": 0,
+        "death_rate": 1.0,
+        "goal_rate": 0.0
+      }
+    },
+    "scatter": {
+      "random": {
+        "n": 30,
+        "deaths": 30,
+        "goals": 0,
+        "timeouts": 0,
+        "death_rate": 1.0,
+        "goal_rate": 0.0
+      },
+      "greedy": {
+        "n": 30,
+        "deaths": 30,
+        "goals": 0,
+        "timeouts": 0,
+        "death_rate": 1.0,
+        "goal_rate": 0.0
+      },
+      "fmc_a0.0": {
+        "n": 30,
+        "deaths": 0,
+        "goals": 0,
+        "timeouts": 30,
+        "death_rate": 0.0,
+        "goal_rate": 0.0
+      },
+      "fmc_a0.1": {
+        "n": 30,
+        "deaths": 2,
+        "goals": 4,
+        "timeouts": 24,
+        "death_rate": 0.06666666666666667,
+        "goal_rate": 0.13333333333333333
+      },
+      "fmc_a1.0": {
+        "n": 30,
+        "deaths": 6,
+        "goals": 24,
+        "timeouts": 0,
+        "death_rate": 0.2,
+        "goal_rate": 0.8
+      }
+    },
+    "island": {
+      "random": {
+        "n": 30,
+        "deaths": 1,
+        "goals": 0,
+        "timeouts": 29,
+        "death_rate": 0.03333333333333333,
+        "goal_rate": 0.0
+      },
+      "greedy": {
+        "n": 30,
+        "deaths": 4,
+        "goals": 26,
+        "timeouts": 0,
+        "death_rate": 0.13333333333333333,
+        "goal_rate": 0.8666666666666667
+      },
+      "fmc_a0.0": {
+        "n": 30,
+        "deaths": 0,
+        "goals": 0,
+        "timeouts": 30,
+        "death_rate": 0.0,
+        "goal_rate": 0.0
+      },
+      "fmc_a0.1": {
+        "n": 30,
+        "deaths": 0,
+        "goals": 0,
+        "timeouts": 30,
+        "death_rate": 0.0,
+        "goal_rate": 0.0
+      },
+      "fmc_a1.0": {
+        "n": 30,
+        "deaths": 0,
+        "goals": 30,
+        "timeouts": 0,
+        "death_rate": 0.0,
+        "goal_rate": 1.0
+      }
+    },
+    "spur": {
+      "random": {
+        "n": 30,
+        "deaths": 1,
+        "goals": 0,
+        "timeouts": 29,
+        "death_rate": 0.03333333333333333,
+        "goal_rate": 0.0
+      },
+      "greedy": {
+        "n": 30,
+        "deaths": 0,
+        "goals": 30,
+        "timeouts": 0,
+        "death_rate": 0.0,
+        "goal_rate": 1.0
+      },
+      "fmc_a0.0": {
+        "n": 30,
+        "deaths": 0,
+        "goals": 0,
+        "timeouts": 30,
+        "death_rate": 0.0,
+        "goal_rate": 0.0
+      },
+      "fmc_a0.1": {
+        "n": 30,
+        "deaths": 0,
+        "goals": 0,
+        "timeouts": 30,
+        "death_rate": 0.0,
+        "goal_rate": 0.0
+      },
+      "fmc_a1.0": {
+        "n": 30,
+        "deaths": 0,
+        "goals": 30,
+        "timeouts": 0,
+        "death_rate": 0.0,
+        "goal_rate": 1.0
+      }
+    },
+    "archipelago": {
+      "random": {
+        "n": 30,
+        "deaths": 8,
+        "goals": 0,
+        "timeouts": 22,
+        "death_rate": 0.26666666666666666,
+        "goal_rate": 0.0
+      },
+      "greedy": {
+        "n": 30,
+        "deaths": 17,
+        "goals": 13,
+        "timeouts": 0,
+        "death_rate": 0.5666666666666667,
+        "goal_rate": 0.43333333333333335
+      },
+      "fmc_a0.0": {
+        "n": 30,
+        "deaths": 0,
+        "goals": 0,
+        "timeouts": 30,
+        "death_rate": 0.0,
+        "goal_rate": 0.0
+      },
+      "fmc_a0.1": {
+        "n": 30,
+        "deaths": 0,
+        "goals": 0,
+        "timeouts": 30,
+        "death_rate": 0.0,
+        "goal_rate": 0.0
+      },
+      "fmc_a1.0": {
+        "n": 30,
+        "deaths": 0,
+        "goals": 30,
+        "timeouts": 0,
+        "death_rate": 0.0,
+        "goal_rate": 1.0
+      }
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "crafter_score": 1.8545,
+  "n_seeds": 1,
+  "shaping": "v4",
+  "N": 32,
+  "M": 12,
+  "achievement_freq": {
+    "collect_wood": 1.0,
+    "place_table": 1.0,
+    "eat_cow": 0.0,
+    "collect_sapling": 1.0,
+    "collect_drink": 0.0,
+    "make_wood_pickaxe": 0.0,
+    "make_stone_pickaxe": 0.0,
+    "make_iron_pickaxe": 0.0,
+    "make_wood_sword": 0.0,
+    "make_stone_sword": 0.0,
+    "make_iron_sword": 0.0,
+    "place_plant": 1.0,
+    "defeat_zombie": 0.0,
+    "collect_stone": 0.0,
+    "place_stone": 0.0,
+    "eat_plant": 0.0,
+    "defeat_skeleton": 0.0,
+    "collect_iron": 0.0,
+    "collect_coal": 0.0,
+    "place_furnace": 0.0,
+    "collect_diamond": 0.0,
+    "wake_up": 1.0
+  },
+  "raw_runs": [
+    {
+      "seed": 42,
+      "shaping": "v4",
+      "N": 32,
+      "M": 12,
+      "reward": 5.0,
+      "n_steps_decisions": 200,
+      "achievements_unlocked": 5,
+      "achievements_list": [
+        "collect_sapling",
+        "collect_wood",
+        "place_plant",
+        "place_table",
+        "wake_up"
+      ],
+      "wall_time_s": 67.18302392959595,
+      "decisions_per_sec": 2.9769425116914774
+    }
+  ],
+  "wall_total_s": 67.5
+}

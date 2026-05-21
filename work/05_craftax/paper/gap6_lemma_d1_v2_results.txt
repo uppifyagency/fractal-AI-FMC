@@ -1,0 +1,48 @@
+========================================================================
+Gap 6 v2 — tightened Lemma D.1 derivation
+========================================================================
+
+--- (T1) Sufficient condition for regime separation ---
+
+  z_firing(p, w, sigma_base) = \frac{w \left(1 - p\right)}{\sqrt{p w^{2} \left(1 - p\right) + \sigma_{base}^{2}}}
+                              = w*(1 - p)/sqrt(p*w**2*(1 - p) + sigma_base**2)
+
+  w_min(z_star, sigma_base, p):
+    \frac{\sigma_{base} z_{star}}{\sqrt{\left(1 - p\right) \left(- p z_{star}^{2} - p + 1\right)}}
+    valid when p < 1/(1 + z_star^2)
+
+  Check: z_firing at w = w_min = -z_star*(p - 1)/(sqrt((p - 1)/(p*z_star**2 + p - 1))*sqrt((p - 1)*(p*z_star**2 + p - 1)))
+  (should equal z_star, confirming the inversion)
+
+  Numerical check (Craftax exp17-like, make_iron_pickaxe):
+    z_star = 1.00, sigma_base=35, p=1/3:  w_min = 74.25  (actual w=200 → ✓ regime separation at this z*)
+    z_star = 1.10, sigma_base=35, p=1/3:  w_min = 91.89  (actual w=200 → ✓ regime separation at this z*)
+    z_star = 1.30, sigma_base=35, p=1/3:  w_min = 173.36  (actual w=200 → ✓ regime separation at this z*)
+
+
+--- (T2) Finite-sample bound on E[N_clone] ---
+
+  E[N_clone | rho] = (N - 1) * (1 - rho)
+                   = \left(1 - \rho\right) \left(N - 1\right)
+  Var[N_clone]     = (N - 1) (1 - rho) rho
+                   = \rho \left(1 - \rho\right) \left(N - 1\right)
+
+  Hoeffding tail: P(|N_clone - E| >= t) <= 2 exp(-2t²/(N-1))
+  For N = 512, want t such that bound <= 0.05:
+  -> t = 30.70  (5% deviation tolerance)
+  E[N_clone] ≈ 445 (rho=0.13, N=512)
+  Tail bound: P(N_clone < 414 or > 475) <= 0.05
+  -> N_clone = Theta(N) w.h.p.; firing trajectory dominates
+
+
+--- (T3) End-to-end Phi monotonicity bound ---
+
+  delta(log term) for tier amp lifting p_old by (1+delta_p):
+    Taylor:  \frac{100 \delta_{p} p_{old}}{100 p_{old} + 1}
+  delta_Phi / Phi ≈ delta(log term) / J ≈
+    \frac{100 \delta_{p} p_{old}}{J \left(100 p_{old} + 1\right)}
+
+  Numeric (p_old=1/3, delta_p=0.2, J=22):
+    delta_Phi / Phi  ≈ 0.0088
+    On Phi ≈ 50 → expected gain ≈ 0.44 pp
+    Observed gain in single tier amp step: 1-5 pp (matches order of magnitude)

@@ -1,0 +1,6 @@
+sanity: WorldModelEnv(true_transition) == fmc.core.plan() : OK
+sanity: true_transition -> f_abs=1.0, 0 FN, 0 FP : OK
+
+==============================================================================
+PHASE A — reference band (80 random-ablation draws/layout, alpha=0.0)
+==============================================================================

@@ -1,0 +1,403 @@
+{
+  "params": {
+    "alpha": 0.0,
+    "phis": [
+      0.0,
+      0.05,
+      0.1,
+      0.15,
+      0.2,
+      0.3,
+      0.4,
+      0.55,
+      0.7,
+      0.85,
+      1.0
+    ],
+    "n_episodes": 30,
+    "N": 64,
+    "M": 20,
+    "beta": 1.0,
+    "agree_target": 0.85,
+    "spearman_high": 0.8
+  },
+  "verdict": "WEAKENED",
+  "results": {
+    "phi0.0": {
+      "phi": 0.0,
+      "vr_spearman_mean": 1.0,
+      "vr_spearman_std": 1.1884131436699928e-16,
+      "spearman_samples": 108000,
+      "layouts": {
+        "island": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "agreement": 1.0
+        },
+        "spur": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "agreement": 1.0
+        },
+        "archipelago": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "agreement": 1.0
+        }
+      }
+    },
+    "phi0.05": {
+      "phi": 0.05,
+      "vr_spearman_mean": 0.9682786896546689,
+      "vr_spearman_std": 0.03703518055724605,
+      "spearman_samples": 108000,
+      "layouts": {
+        "island": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "agreement": 0.4483333333333333
+        },
+        "spur": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "agreement": 0.4811111111111111
+        },
+        "archipelago": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "agreement": 0.4727777777777778
+        }
+      }
+    },
+    "phi0.1": {
+      "phi": 0.1,
+      "vr_spearman_mean": 0.904925655699173,
+      "vr_spearman_std": 0.06343271963369931,
+      "spearman_samples": 108000,
+      "layouts": {
+        "island": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "agreement": 0.38555555555555554
+        },
+        "spur": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "agreement": 0.3794444444444444
+        },
+        "archipelago": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "agreement": 0.40944444444444444
+        }
+      }
+    },
+    "phi0.15": {
+      "phi": 0.15,
+      "vr_spearman_mean": 0.8412978447543652,
+      "vr_spearman_std": 0.08148197779335893,
+      "spearman_samples": 108000,
+      "layouts": {
+        "island": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "agreement": 0.3566666666666667
+        },
+        "spur": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "agreement": 0.36
+        },
+        "archipelago": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "agreement": 0.38
+        }
+      }
+    },
+    "phi0.2": {
+      "phi": 0.2,
+      "vr_spearman_mean": 0.8093245272310595,
+      "vr_spearman_std": 0.0887291775454177,
+      "spearman_samples": 108000,
+      "layouts": {
+        "island": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "agreement": 0.3466666666666667
+        },
+        "spur": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "agreement": 0.3488888888888889
+        },
+        "archipelago": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "agreement": 0.3572222222222222
+        }
+      }
+    },
+    "phi0.3": {
+      "phi": 0.3,
+      "vr_spearman_mean": 0.7144597277467106,
+      "vr_spearman_std": 0.10659567461771881,
+      "spearman_samples": 108000,
+      "layouts": {
+        "island": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "agreement": 0.30944444444444447
+        },
+        "spur": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "agreement": 0.31
+        },
+        "archipelago": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "agreement": 0.3333333333333333
+        }
+      }
+    },
+    "phi0.4": {
+      "phi": 0.4,
+      "vr_spearman_mean": 0.5881334094940631,
+      "vr_spearman_std": 0.12560467166699749,
+      "spearman_samples": 108000,
+      "layouts": {
+        "island": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "agreement": 0.31666666666666665
+        },
+        "spur": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "agreement": 0.3055555555555556
+        },
+        "archipelago": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "agreement": 0.3088888888888889
+        }
+      }
+    },
+    "phi0.55": {
+      "phi": 0.55,
+      "vr_spearman_mean": 0.4592073894986338,
+      "vr_spearman_std": 0.14080915523909898,
+      "spearman_samples": 108000,
+      "layouts": {
+        "island": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "agreement": 0.2838888888888889
+        },
+        "spur": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "agreement": 0.31555555555555553
+        },
+        "archipelago": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "agreement": 0.2916666666666667
+        }
+      }
+    },
+    "phi0.7": {
+      "phi": 0.7,
+      "vr_spearman_mean": 0.3020351470019349,
+      "vr_spearman_std": 0.15592165500557464,
+      "spearman_samples": 107280,
+      "layouts": {
+        "island": {
+          "n": 30,
+          "deaths": 1,
+          "goals": 0,
+          "agreement": 0.24886621315192745
+        },
+        "spur": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "agreement": 0.2722222222222222
+        },
+        "archipelago": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "agreement": 0.28
+        }
+      }
+    },
+    "phi0.85": {
+      "phi": 0.85,
+      "vr_spearman_mean": 0.14241454214935861,
+      "vr_spearman_std": 0.16763834874919634,
+      "spearman_samples": 107000,
+      "layouts": {
+        "island": {
+          "n": 30,
+          "deaths": 1,
+          "goals": 0,
+          "agreement": 0.23595505617977527
+        },
+        "spur": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "agreement": 0.24833333333333332
+        },
+        "archipelago": {
+          "n": 30,
+          "deaths": 3,
+          "goals": 0,
+          "agreement": 0.268361581920904
+        }
+      }
+    },
+    "phi1.0": {
+      "phi": 1.0,
+      "vr_spearman_mean": -0.01527620584741028,
+      "vr_spearman_std": 0.17723576441765093,
+      "spearman_samples": 102720,
+      "layouts": {
+        "island": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "agreement": 0.22777777777777777
+        },
+        "spur": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "agreement": 0.22277777777777777
+        },
+        "archipelago": {
+          "n": 30,
+          "deaths": 12,
+          "goals": 0,
+          "agreement": 0.21028645833333334
+        }
+      }
+    }
+  },
+  "pooled": {
+    "0.0": {
+      "spearman": 1.0,
+      "agreement": 1.0,
+      "death_rate": 0.0,
+      "goal_rate": 0.0,
+      "deaths": 0,
+      "n": 90
+    },
+    "0.05": {
+      "spearman": 0.9682786896546689,
+      "agreement": 0.46740740740740744,
+      "death_rate": 0.0,
+      "goal_rate": 0.0,
+      "deaths": 0,
+      "n": 90
+    },
+    "0.1": {
+      "spearman": 0.904925655699173,
+      "agreement": 0.3914814814814815,
+      "death_rate": 0.0,
+      "goal_rate": 0.0,
+      "deaths": 0,
+      "n": 90
+    },
+    "0.15": {
+      "spearman": 0.8412978447543652,
+      "agreement": 0.3655555555555556,
+      "death_rate": 0.0,
+      "goal_rate": 0.0,
+      "deaths": 0,
+      "n": 90
+    },
+    "0.2": {
+      "spearman": 0.8093245272310595,
+      "agreement": 0.3509259259259259,
+      "death_rate": 0.0,
+      "goal_rate": 0.0,
+      "deaths": 0,
+      "n": 90
+    },
+    "0.3": {
+      "spearman": 0.7144597277467106,
+      "agreement": 0.3175925925925926,
+      "death_rate": 0.0,
+      "goal_rate": 0.0,
+      "deaths": 0,
+      "n": 90
+    },
+    "0.4": {
+      "spearman": 0.5881334094940631,
+      "agreement": 0.31037037037037035,
+      "death_rate": 0.0,
+      "goal_rate": 0.0,
+      "deaths": 0,
+      "n": 90
+    },
+    "0.55": {
+      "spearman": 0.4592073894986338,
+      "agreement": 0.29703703703703704,
+      "death_rate": 0.0,
+      "goal_rate": 0.0,
+      "deaths": 0,
+      "n": 90
+    },
+    "0.7": {
+      "spearman": 0.3020351470019349,
+      "agreement": 0.26702947845804986,
+      "death_rate": 0.011111111111111112,
+      "goal_rate": 0.0,
+      "deaths": 1,
+      "n": 90
+    },
+    "0.85": {
+      "spearman": 0.14241454214935861,
+      "agreement": 0.25088332381133754,
+      "death_rate": 0.044444444444444446,
+      "goal_rate": 0.0,
+      "deaths": 4,
+      "n": 90
+    },
+    "1.0": {
+      "spearman": -0.01527620584741028,
+      "agreement": 0.22028067129629628,
+      "death_rate": 0.13333333333333333,
+      "goal_rate": 0.0,
+      "deaths": 12,
+      "n": 90
+    }
+  }
+}

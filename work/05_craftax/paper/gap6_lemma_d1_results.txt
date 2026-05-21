@@ -1,0 +1,47 @@
+======================================================================
+Gap 6 — Lemma D.1 sympy verification
+======================================================================
+
+(R1) d rhat / d mu  (log regime, z > 0):
+      - \frac{1}{- \mu + r + \sigma}
+      = -1/(-mu + r + sigma)
+
+(R2) delta rhat (firing walker), exact:
+      - \log{\left(\frac{- \mu + r + \sigma}{\sigma} \right)} + \log{\left(\frac{- \Delta_{\mu} + d_{\sigma} - \mu + r + \sigma}{d_{\sigma} + \sigma} \right)}
+
+(R2) Taylor expansion in (Delta_mu, d_sigma) to first order:
+      \frac{- \Delta_{\mu} \sigma \left(- \mu + r + \sigma\right) + d_{\sigma} \left(\Delta_{\mu} \sigma + \left(\mu - r\right) \left(- \mu + r + \sigma\right)\right)}{\sigma \left(- \mu + r + \sigma\right)^{2}}
+      = (-Delta_mu*sigma*(-mu + r + sigma) + d_sigma*(Delta_mu*sigma + (mu - r)*(-mu + r + sigma)))/(sigma*(-mu + r + sigma)**2)
+
+(R2') After substituting z = (r-mu)/sigma:
+      \frac{- \Delta_{\mu} \sigma \left(z + 1\right) + d_{\sigma} \left(\Delta_{\mu} - \sigma z \left(z + 1\right)\right)}{\sigma^{2} \left(z + 1\right)^{2}}
+      = (-Delta_mu*sigma*(z + 1) + d_sigma*(Delta_mu - sigma*z*(z + 1)))/(sigma**2*(z + 1)**2)
+
+(R3) Coefficient of Delta_mu  (sign tells us mu-effect):
+      \frac{d_{\sigma} - \sigma \left(z + 1\right)}{\sigma^{2} \left(z + 1\right)^{2}}  -- negative for z>0, sigma>0
+(R3) Coefficient of d_sigma (sign tells us std-effect):
+      \frac{\Delta_{\mu} - \sigma z \left(z + 1\right)}{\sigma^{2} \left(z + 1\right)^{2}}  -- negative for z>0, sigma>0
+
+Lemma D.1 conclusion (verified):
+  - firing walker rhat *decreases* under amplification, by:
+    Delta rhat_firing ≈ -[Delta_mu + z*d_sigma] / [sigma*(1+z)]
+  - this decrease is BOUNDED above by 1/(1+z) which is small
+    when z >> 1 (sparse-event regime).
+  - meanwhile non-firing walkers (z near 0) see rhat ~= exp(z)/e
+    which grows nearly linearly → their floor rises faster than
+    the firing walker's ceiling falls, so the *gradient signal*
+    that 'firing trajectory is correct' is preserved.
+
+======================================================================
+Numerical check: Craftax-like values
+======================================================================
+  z (firing) = (250.0 - 80.0) / 35.0 = 4.8571
+  rhat_firing pre-amp  = 1 + log(1+4.86) = 2.7677
+  rhat_firing post-amp = 2.6935
+  Δ                    = -0.0742
+  bound 1/(1+z)        = 0.1707  (max possible decrease in log regime per unit Delta_mu)
+
+  non-firing walker rhat increase = Delta_mu/(sigma*e) = 0.0841
+  ratio Δrhat_non / |Δrhat_firing| = 1.13
+  → non-firing walkers gain MUCH more rhat per tier-amp tick than
+    the firing walker loses → preserves the cloning gradient.

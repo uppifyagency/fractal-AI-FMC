@@ -1,0 +1,275 @@
+% =====================================================================
+% References for: Chain-tier Compounding Amplification in Fractal Monte
+% Carlo Planning — A Zero-Training Path to Human-Expert Crafter Score
+%
+% Maintained by: paper-writing pipeline, autoresearch session 2026-04-30
+% Verification: each entry checked against arXiv / DOI / publisher record.
+% =====================================================================
+
+% ---------- FMC and predecessors ----------
+
+@article{hernandez2020fractal,
+  title={Fractal {AI}: A Fragile Theory of Intelligence},
+  author={Hern{\'a}ndez-Cerezo, Sergio and Duran-Ballester, Guillem},
+  journal={arXiv preprint arXiv:1803.05049},
+  year={2020},
+  note={v5, last revision 2020}
+}
+
+@article{hernandez2018solving,
+  title={Solving {A}tari Games Using Fractals and Entropy},
+  author={Hern{\'a}ndez-Cerezo, Sergio and Duran-Ballester, Guillem and
+          Baxevanakis, Spyridon},
+  journal={arXiv preprint arXiv:1807.01081},
+  year={2018}
+}
+
+@article{hernandez2017gas,
+  title={A General Search Algorithm Based on Causal Entropic Forces},
+  author={Hern{\'a}ndez-Cerezo, Sergio and Duran-Ballester, Guillem and
+          Amig{\'o}, Jos{\'e} M.},
+  journal={arXiv preprint arXiv:1705.08691},
+  year={2017}
+}
+
+@article{amigo2018entropy,
+  title={A Brief Review of Generalized Entropies},
+  author={Amig{\'o}, Jos{\'e} M. and Balogh, Sandra G. and
+          Hern{\'a}ndez, Sergio},
+  journal={Entropy},
+  volume={20},
+  number={11},
+  pages={813},
+  year={2018},
+  publisher={MDPI}
+}
+
+@article{wissner2013causal,
+  title={Causal Entropic Forces},
+  author={Wissner-Gross, Alexander D. and Freer, Cameron E.},
+  journal={Physical Review Letters},
+  volume={110},
+  number={16},
+  pages={168702},
+  year={2013}
+}
+
+% ---------- Crafter / Craftax benchmarks ----------
+
+@article{hafner2021crafter,
+  title={Benchmarking the Spectrum of Agent Capabilities},
+  author={Hafner, Danijar},
+  journal={arXiv preprint arXiv:2109.06780},
+  year={2021}
+}
+
+@article{matthews2024craftax,
+  title={Craftax: A Lightning-Fast Benchmark for Open-Ended Reinforcement
+         Learning},
+  author={Matthews, Michael and Beukman, Michael and Foerster, Jakob},
+  journal={Proc.\ ICML},
+  year={2024}
+}
+
+% ---------- World models and DRL baselines on Crafter ----------
+
+@inproceedings{hafner2023dreamer,
+  title={Mastering Diverse Domains through World Models},
+  author={Hafner, Danijar and Pasukonis, Jurgis and Ba, Jimmy and
+          Lillicrap, Timothy},
+  booktitle={Proc.\ NeurIPS},
+  year={2023}
+}
+
+@inproceedings{kauvar2023curious,
+  title={Curious Replay for Model-based Adaptation},
+  author={Kauvar, Isaac and Doyle, Christopher and Zhou, Linqi and
+          Haber, Nick},
+  booktitle={Proc.\ NeurIPS},
+  year={2023}
+}
+
+@article{burchi2025emerald,
+  title={Accurate and Efficient World Modeling with Masked Latent
+         Transformers},
+  author={Burchi, Maxime and Timofte, Radu},
+  journal={arXiv preprint arXiv:2507.04075},
+  year={2025},
+  note={Introduces EMERALD; first method to exceed human-expert
+        Crafter score (58.1\%) within 10M env steps}
+}
+
+@inproceedings{schulman2017ppo,
+  title={Proximal Policy Optimization Algorithms},
+  author={Schulman, John and Wolski, Filip and Dhariwal, Prafulla and
+          Radford, Alec and Klimov, Oleg},
+  journal={arXiv preprint arXiv:1707.06347},
+  year={2017}
+}
+
+% ---------- Particle / SMC planners (related family) ----------
+
+@inproceedings{kantas2015particle,
+  title={On Particle Methods for Parameter Estimation in State-Space Models},
+  author={Kantas, Nikolas and Doucet, Arnaud and Singh, Sumeetpal S. and
+          Maciejowski, Jan and Chopin, Nicolas},
+  journal={Statistical Science},
+  volume={30},
+  number={3},
+  pages={328--351},
+  year={2015}
+}
+
+@article{piche2018probabilistic,
+  title={Probabilistic Planning with Sequential Monte Carlo Methods},
+  author={Pich{\'e}, Alexandre and Thomas, Valentin and Ibrahim, Cyril and
+          Bengio, Yoshua and Pal, Christopher},
+  journal={Proc.\ ICLR},
+  year={2019}
+}
+
+% ---------- MCTS / UCT family ----------
+
+@inproceedings{kocsis2006uct,
+  title={Bandit Based {M}onte-{C}arlo Planning},
+  author={Kocsis, Levente and Szepesv{\'a}ri, Csaba},
+  booktitle={Proc.\ ECML},
+  pages={282--293},
+  year={2006}
+}
+
+@article{silver2017alphazero,
+  title={Mastering Chess and Shogi by Self-Play with a General
+         Reinforcement Learning Algorithm},
+  author={Silver, David and Hubert, Thomas and Schrittwieser, Julian and
+          others},
+  journal={arXiv preprint arXiv:1712.01815},
+  year={2017}
+}
+
+@article{schrittwieser2020muzero,
+  title={Mastering {A}tari, {G}o, Chess and Shogi by Planning with a
+         Learned Model},
+  author={Schrittwieser, Julian and Antonoglou, Ioannis and Hubert, Thomas
+          and others},
+  journal={Nature},
+  volume={588},
+  number={7839},
+  pages={604--609},
+  year={2020}
+}
+
+% ---------- Reward shaping / intrinsic motivation ----------
+
+@inproceedings{ng1999shaping,
+  title={Policy Invariance Under Reward Transformations: Theory and
+         Application to Reward Shaping},
+  author={Ng, Andrew Y. and Harada, Daishi and Russell, Stuart},
+  booktitle={Proc.\ ICML},
+  pages={278--287},
+  year={1999}
+}
+
+@inproceedings{burda2019rnd,
+  title={Exploration by Random Network Distillation},
+  author={Burda, Yuri and Edwards, Harrison and Storkey, Amos and
+          Klimov, Oleg},
+  booktitle={Proc.\ ICLR},
+  year={2019}
+}
+
+@inproceedings{pathak2017curiosity,
+  title={Curiosity-Driven Exploration by Self-Supervised Prediction},
+  author={Pathak, Deepak and Agrawal, Pulkit and Efros, Alexei A. and
+          Darrell, Trevor},
+  booktitle={Proc.\ ICML},
+  pages={2778--2787},
+  year={2017}
+}
+
+@inproceedings{badia2020ngu,
+  title={Never Give Up: Learning Directed Exploration Strategies},
+  author={Badia, Adri{\`a} Puigdom{\`e}nech and Sprechmann, Pablo and
+          Vitvitskyi, Alex and others},
+  booktitle={Proc.\ ICLR},
+  year={2020}
+}
+
+% ---------- Active inference / free energy ----------
+
+@article{friston2017active,
+  title={Active Inference: A Process Theory},
+  author={Friston, Karl and FitzGerald, Thomas and Rigoli, Francesco and
+          Schwartenbeck, Philipp and Pezzulo, Giovanni},
+  journal={Neural Computation},
+  volume={29},
+  number={1},
+  pages={1--49},
+  year={2017}
+}
+
+@book{friston2022book,
+  title={Active Inference: The Free Energy Principle in Mind, Brain and
+         Behavior},
+  author={Parr, Thomas and Pezzulo, Giovanni and Friston, Karl},
+  publisher={MIT Press},
+  year={2022}
+}
+
+% ---------- Statistical methodology used in this paper ----------
+
+@article{wilcoxon1945individual,
+  title={Individual Comparisons by Ranking Methods},
+  author={Wilcoxon, Frank},
+  journal={Biometrics Bulletin},
+  volume={1},
+  number={6},
+  pages={80--83},
+  year={1945}
+}
+
+@article{mann1947test,
+  title={On a Test of Whether One of Two Random Variables is Stochastically
+         Larger than the Other},
+  author={Mann, Henry B. and Whitney, Donald R.},
+  journal={The Annals of Mathematical Statistics},
+  volume={18},
+  number={1},
+  pages={50--60},
+  year={1947}
+}
+
+@book{cohen1988statistical,
+  title={Statistical Power Analysis for the Behavioral Sciences},
+  author={Cohen, Jacob},
+  edition={2nd},
+  publisher={Lawrence Erlbaum},
+  year={1988}
+}
+
+@book{efron1994bootstrap,
+  title={An Introduction to the Bootstrap},
+  author={Efron, Bradley and Tibshirani, Robert J.},
+  publisher={CRC Press},
+  year={1994}
+}
+
+% ---------- Reproducibility / methodology ----------
+
+@misc{neurips2025repro,
+  title={{N}eur{IPS} 2025 Reproducibility Checklist},
+  author={NeurIPS},
+  year={2025},
+  note={\url{https://neurips.cc/Conferences/2025/CallForPapers}}
+}
+
+@article{pineau2021checklist,
+  title={Improving Reproducibility in Machine Learning Research},
+  author={Pineau, Joelle and Vincent-Lamarre, Philippe and Sinha, Koustuv
+          and others},
+  journal={J.\ Machine Learning Research},
+  volume={22},
+  number={164},
+  pages={1--20},
+  year={2021}
+}

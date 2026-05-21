@@ -6,6 +6,23 @@ Thumbs.db
 # Claude Code runtime state (per-session locks, scheduled task state)
 .claude/
 
+# Secrets — NEVER commit (overrides "include tutto"; real secrets live in the
+# macOS Keychain, see work/12_conjecture_e/E1_LLM_DESIGN.md)
+.env
+.env.*
+*.key
+secrets.*
+
+# Vendored dependency repos — they carry their own .git history and cannot be
+# committed as plain content (git would add a dangling gitlink). Cloned per the
+# repos/ table in CLAUDE.md; re-clone from upstream rather than tracking here.
+repos/flogging/
+repos/hydraclick/
+repos/kdense-scientific-skills/
+repos/plangym/
+repos/science-skills/
+repos/shaolin/
+
 # Python build / cache
 __pycache__/
 *.egg-info/

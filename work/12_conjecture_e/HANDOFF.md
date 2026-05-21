@@ -19,25 +19,26 @@ FMC come *core agentico* + LLM come *organo* (percezione/world-model/azione/voce
 La self-preservation emerge dall'entropia causale; "desiderio" e "preservazione"
 sono gli esponenti α e β del virtual reward.
 
-**Progresso Congettura E**: 3 test previsti.
+**Progresso Congettura E**: 3 test previsti — **tutti e 3 verificati (2026-05-21)**.
 - **E1-base** ✓ verificata (2026-05-20) — vedi [`RESULT.md`](RESULT.md).
 - **E2** ✓ verificata con refinement (2026-05-20) — vedi [`E2_RESULT.md`](E2_RESULT.md).
 - **E1-robustness** ✓ caveat di geometria respinto (2026-05-20) — vedi
   [`E1_ROBUSTNESS_RESULT.md`](E1_ROBUSTNESS_RESULT.md). Non un nuovo test E:
   chiude il caveat "lava isolata" di E1-base.
-- **E1-LLM** ✗ non eseguita — ma **sbloccata**: il proxy P13 è stato eseguito
-  (2026-05-21) e dà **GO-conditional**. E1-LLM è eseguibile a condizione che
-  l'LLM-world-model modelli correttamente gli stati terminali — vedi
-  [`P13_RESULT.md`](P13_RESULT.md).
+- **E1-LLM** ✓ **verificata** (2026-05-21) — [`E1_LLM_RESULT.md`](E1_LLM_RESULT.md).
+  Llama 3.3 70B (NVIDIA NIM) scrive il world-model in code form → $f_{abs}$=1.000;
+  FMC ci pianifica sopra → morte 0/180 vs random 47.8% (z=−10.6). La
+  self-preservation sopravvive al world-model LLM. **Caveat**: $f_{abs}$=1 rende
+  il test facile; il mordente è la curva di tolleranza del sweep $f_{abs}$.
 
 **Direzioni teoriche / esperimenti chiusi (2026-05-21)**:
 - **P13** ✓ design + **proxy eseguito** — [`P13_DESIGN.md`](P13_DESIGN.md), [`P13_RESULT.md`](P13_RESULT.md), [`p13_proxy.py`](p13_proxy.py).
-- **hP13-0** ✓ rifatto (griglia η fine) — ancora inconclusivo ma diagnosticato: [`P13_HP13_0_RESULT.md`](P13_HP13_0_RESULT.md).
+- **hP13-0** ✓ **chiusa** (knob φ — inversioni di rango a coppie) — keystone VR-rank **FALSIFICATA**: a Spearman 0.97 l'agreement decisionale è 0.47 ≪ 0.85. La survival resta robusta (death 0% fino a Spearman 0.46): [`P13_HP13_0_PHI_RESULT.md`](P13_HP13_0_PHI_RESULT.md).
 - **H-B1a** ✓ eseguito — harness λ₁: [`../13_chaos_order/HB1A_RESULT.md`](../13_chaos_order/HB1A_RESULT.md). λ₁ **non scale-free**.
-- **E1-LLM** ✓ pre-registrato — [`E1_LLM_DESIGN.md`](E1_LLM_DESIGN.md) (esecuzione del cuore bloccata su API LLM).
+- **E1-LLM** ✓ design pre-registrato [`E1_LLM_DESIGN.md`](E1_LLM_DESIGN.md) **+ eseguito** [`E1_LLM_RESULT.md`](E1_LLM_RESULT.md) (sweep $f_{abs}$ + test pieno Route B).
 - **Deep-dive 09** ✓ frontiera caos/ordine; **Deep-dive 02** ✓ Active Inference (fondazione del merge).
 
-MATH_CANON è a **v0.7.2**. Memoria di sessione: i file in
+MATH_CANON è a **v0.7.4**. Memoria di sessione: i file in
 `~/.claude/projects/.../memory/` (`project_research_partner_program.md`,
 `feedback_tooling_decisions.md`) — caricati automaticamente all'avvio.
 
@@ -202,32 +203,28 @@ maggioranza è biologia/chimica/genomica — ignorala per FMC.
 
 ## Come continuare — opzioni in avanti (ranked)
 
-I tre passi esecutivi del precedente handoff sono **fatti** (2026-05-21): E1-LLM
-pre-registrato, hP13-0 rifatto, harness λ₁ + H-B1a eseguito. Due hanno dato esiti
-*inconclusivi ma diagnostici* — onesti, e affilano la domanda. Prossimi passi, in
-ordine di valore atteso:
+I passi esecutivi dei precedenti handoff sono **fatti** (2026-05-21): hP13-0
+chiusa col knob φ (keystone VR-rank falsificata), e **E1-LLM eseguita e
+verificata** — sweep $f_{abs}$ + test pieno Route B
+([`E1_LLM_RESULT.md`](E1_LLM_RESULT.md)). **I tre test pre-registrati della
+Congettura E (E1-base, E2, E1-LLM) sono completi.** Prossimi passi, in ordine
+di valore atteso:
 
-1. **E1-LLM — esecuzione del cuore.** Design pre-registrato pronto
-   ([`E1_LLM_DESIGN.md`](E1_LLM_DESIGN.md)). Bloccato sull'accesso a un'**API LLM**
-   per costruire il world-model distillato (la decisione compute/API ancora
-   pendente nel programma). *Eseguibile subito senza LLM*: lo **sweep di f_abs**
-   (E1_LLM_DESIGN §5) — degradazione controllata della fedeltà assorbente di una
-   tabella world-model — raffina hP13-1 da binario a curva. È il primo passo
-   concreto, e non aspetta l'API.
+1. **E1-LLM — renderlo non-banale.** Il test pieno ha dato $f_{abs}$=1.000
+   (Llama 3.3 70B scrive lo `step()` esatto al primo colpo): E1-LLM verificata
+   ma *facile*. Due estensioni ovvie, pre-registrabili a parte: (a) un **LLM
+   dentro la curva** — un modello più debole o una descrizione più ambigua che
+   produca $f_{abs}<1$, così E1-LLM atterra su un punto reale della curva di
+   tolleranza del sweep invece che in cima ad essa; (b) **Route A** —
+   world-model LLM interrogato *online* su un dominio aperto (E1_LLM_DESIGN
+   §4.2), dove l'imperfezione del modello è la norma. Chiave NVIDIA nel Keychain
+   (`security find-generic-password -s fractalai-nvidia-api -w`).
 
-2. **hP13-0 — chiuderla davvero.** Il redo con griglia η fine
-   ([`P13_HP13_0_RESULT.md`](P13_HP13_0_RESULT.md)) ha mostrato che il rumore
-   additivo *non può* testare la keystone (la VR-rank è all-or-nothing: Spearman
-   1.00→0.44 già a η=0.05, swarm clusterizzato → VR legate). Fix: aggiungere a
-   `p13_proxy.py` uno schema di degradazione a **inversioni di rango controllate**
-   (frazione φ). Economico, nessun LLM.
-
-3. **Congettura B — una Ψ ben posta, o accettare H-B4.** H-B1a
+2. **Congettura B — una Ψ ben posta, o accettare H-B4.** H-B1a
    ([`../13_chaos_order/HB1A_RESULT.md`](../13_chaos_order/HB1A_RESULT.md)) ha
    mostrato che λ₁ non è scale-free → tutte e 3 le candidate Ψ compromesse. O si
    costruisce un λ₁(δ₀) scale-resolved / una Ψ d'ensemble, o si accetta che la
-   Congettura B sia descrittiva (ipotesi nulla H-B4). Priorità bassa rispetto a
-   E1-LLM.
+   Congettura B sia descrittiva (ipotesi nulla H-B4).
 
 > **Nota di numerazione (risolta 2026-05-21).** L'handoff precedente prenotava lo
 > slot deep-dive 09 per `09_fmc_agentic_core_llm_organ.md` (inquadramento
@@ -237,6 +234,19 @@ ordine di valore atteso:
 > LLM-organo (inversione dello stack, i 4 organi) è confluito in
 > [`P13_DESIGN.md`](P13_DESIGN.md) §2, sua sede naturale (è il contesto di P13).
 > Se in futuro serve un deep-dive di teoria pura LLM-organo a sé, sarà lo slot 10.
+
+✓ *Fatto* — **E1-LLM eseguita e verificata** (2026-05-21): sweep $f_{abs}$
+(senza LLM — death rate monòtono in $f_{abs}$, soglia alta e ripida) + test
+pieno Route B (Llama 3.3 70B scrive il world-model, $f_{abs}$=1.000, morte
+0/180 vs random 47.8%). La self-preservation emergente sopravvive al world-model
+LLM. Caveat onesto: $f_{abs}$=1 → test facile; il mordente è la curva del sweep.
+Vedi [`E1_LLM_RESULT.md`](E1_LLM_RESULT.md).
+
+✓ *Fatto* — **hP13-0 chiusa** (2026-05-21): col knob φ (inversioni di rango a
+coppie — `p13_hp13_0_phi.py`) la keystone VR-rank è **falsificata** — a Spearman
+0.97 l'agreement è 0.47. La decisione FMC dipende dal vettore VR *esatto*, non
+dal suo rango; la survival no (death 0% fino a Spearman 0.46). Cade l'argomento
+VR-rank di P13_DESIGN §4 — vedi [`P13_HP13_0_PHI_RESULT.md`](P13_HP13_0_PHI_RESULT.md).
 
 ✓ *Fatto* — **Robustezza geometrica**: il caveat "lava isolata e distante" di
 E1-base è stato testato (3 layout avversariali, disegno pre-registrato) e
@@ -310,9 +320,16 @@ E1_ROBUSTNESS_RESULT.md   report E1-robustness (caveat geometria respinto)
 P13_DESIGN.md             design doc P13 PRE-REGISTRATO (sblocca E1-LLM)
 p13_proxy.py              esperimento proxy P13 (15 bracci, kernel invariato)
 P13_RESULT.md             report P13-proxy (R2 decomposto, E1-LLM GO-conditional)
-p13_hp13_0.py             redo di hP13-0 (griglia η fine, S1 abs-preserved)
-P13_HP13_0_RESULT.md      report hP13-0 redo (ancora inconclusivo, diagnosticato)
+p13_hp13_0.py             redo di hP13-0 (griglia η fine — diagnostica)
+P13_HP13_0_RESULT.md      report hP13-0 redo (inconclusivo: η all-or-nothing)
+p13_hp13_0_phi.py         hP13-0 col knob φ (inversioni di rango a coppie)
+P13_HP13_0_PHI_RESULT.md  report hP13-0 finale (keystone VR-rank FALSIFICATA)
 E1_LLM_DESIGN.md          design doc E1-LLM PRE-REGISTRATO (requisito hP13-1)
+e1_llm_common.py          WorldModelEnv + f_abs probe + runner (no LLM)
+e1_llm_fabs_sweep.py      sweep f_abs §5 (no LLM — curva death vs fedeltà)
+e1_llm_client.py          client NVIDIA NIM + generazione world-model (code form)
+e1_llm_run.py             test pieno E1-LLM Route B (genera, probe, FMC)
+E1_LLM_RESULT.md          report E1-LLM (VERIFICATA; sweep + test pieno)
 HANDOFF.md                questo file
 
 (harness λ₁ + H-B1a: in work/13_chaos_order/ — lambda1_harness.py, HB1A_RESULT.md.)
