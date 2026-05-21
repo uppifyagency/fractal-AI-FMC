@@ -31,14 +31,13 @@ sono gli esponenti α e β del virtual reward.
   [`P13_RESULT.md`](P13_RESULT.md).
 
 **Direzioni teoriche / esperimenti chiusi (2026-05-21)**:
-- **P13** ✓ design pre-registrato + **proxy eseguito** — [`P13_DESIGN.md`](P13_DESIGN.md),
-  [`P13_RESULT.md`](P13_RESULT.md), [`p13_proxy.py`](p13_proxy.py).
-- **Deep-dive 09** ✓ — formalizzazione frontiera caos/ordine (Congettura B):
-  [`../02_deep_dives/09_chaos_order_frontier_formalization.md`](../02_deep_dives/09_chaos_order_frontier_formalization.md).
-- **Deep-dive 02** ✓ — Active Inference: fondazione di principio del merge FMC+LLM
-  ([`../02_deep_dives/02_active_inference_link.md`](../02_deep_dives/02_active_inference_link.md)).
+- **P13** ✓ design + **proxy eseguito** — [`P13_DESIGN.md`](P13_DESIGN.md), [`P13_RESULT.md`](P13_RESULT.md), [`p13_proxy.py`](p13_proxy.py).
+- **hP13-0** ✓ rifatto (griglia η fine) — ancora inconclusivo ma diagnosticato: [`P13_HP13_0_RESULT.md`](P13_HP13_0_RESULT.md).
+- **H-B1a** ✓ eseguito — harness λ₁: [`../13_chaos_order/HB1A_RESULT.md`](../13_chaos_order/HB1A_RESULT.md). λ₁ **non scale-free**.
+- **E1-LLM** ✓ pre-registrato — [`E1_LLM_DESIGN.md`](E1_LLM_DESIGN.md) (esecuzione del cuore bloccata su API LLM).
+- **Deep-dive 09** ✓ frontiera caos/ordine; **Deep-dive 02** ✓ Active Inference (fondazione del merge).
 
-MATH_CANON è a **v0.7.1**. Memoria di sessione: i file in
+MATH_CANON è a **v0.7.2**. Memoria di sessione: i file in
 `~/.claude/projects/.../memory/` (`project_research_partner_program.md`,
 `feedback_tooling_decisions.md`) — caricati automaticamente all'avvio.
 
@@ -145,6 +144,25 @@ dalla non-differenziabilità di un LLM-world-model (SMC non chiede gradienti).
 Trattazione onesta: il termine β è della *famiglia* empowerment, non identità con
 la KL-information-gain di AIF.
 
+### H-B1a, hP13-0 redo, E1-LLM design (2026-05-21, MATH_CANON v0.7.2)
+I tre passi esecutivi dell'handoff precedente. Due esiti *inconclusivi ma
+diagnostici* — onesti, e affilano la domanda.
+- **H-B1a** ([`../13_chaos_order/`](../13_chaos_order/HB1A_RESULT.md), `lambda1_harness.py`):
+  harness twin-trajectory dell'esponente di Lyapunov dello swarm. Esito: $\lambda_1$
+  **non è scale-free** — cambia segno con la scala di perturbazione $\delta_0$
+  (∀α su navigation2d), confermando il caveat di dd09 §3.1 (il cloning discontinuo
+  rende la mappa-swarm "a tratti"). $\Psi_1$ via twin-trajectory ingenuo non
+  risolve una frontiera → con $\Psi_2$/$\Psi_3$ già cadute, **tutte e 3 le
+  candidate $\Psi$ compromesse**, l'ipotesi nulla H-B4 guadagna terreno.
+- **hP13-0 redo** ([`P13_HP13_0_RESULT.md`](P13_HP13_0_RESULT.md), `p13_hp13_0.py`):
+  griglia η fine. Ancora inconclusivo — anche η=0.05 fa crollare la VR-rank
+  Spearman a 0.44 (swarm clusterizzato → VR densamente legate → il rumore additivo
+  è all-or-nothing). Fix specificato: degradare il rango con inversioni a coppie
+  controllate, non con rumore additivo.
+- **E1-LLM design** ([`E1_LLM_DESIGN.md`](E1_LLM_DESIGN.md)): pre-registrazione col
+  requisito di struttura assorbente (hP13-1) come gate, death rate come metrica,
+  sweep $f_{\text{abs}}$ eseguibile senza LLM. Cuore di E1-LLM bloccato su API.
+
 ---
 
 ## Skill: quali stiamo usando, quali sono disponibili
@@ -184,26 +202,32 @@ maggioranza è biologia/chimica/genomica — ignorala per FMC.
 
 ## Come continuare — opzioni in avanti (ranked)
 
-La Congettura E ha **2/3 test verificati** (E1-base, E2) + caveat geometrico chiuso
-+ **P13 sbloccato** (proxy eseguito 2026-05-21, GO-conditional). I prossimi passi
-sono **esecutivi**, in ordine di valore atteso:
+I tre passi esecutivi del precedente handoff sono **fatti** (2026-05-21): E1-LLM
+pre-registrato, hP13-0 rifatto, harness λ₁ + H-B1a eseguito. Due hanno dato esiti
+*inconclusivi ma diagnostici* — onesti, e affilano la domanda. Prossimi passi, in
+ordine di valore atteso:
 
-1. **E1-LLM** — il test che chiude la stella polare. Sbloccato dal proxy P13.
-   Pre-condizione dal verdetto P13 (hP13-1): l'LLM-world-model **deve modellare
-   correttamente gli stati terminali/assorbenti** — è l'unico requisito
-   load-bearing, ed è raggiungibile. Pre-registrare quel requisito e misurarlo
-   sull'LLM prima del test pieno. Per E1-LLM *come test* (gridworld chiuso) lo
-   schema S2 basta. Vedi [`P13_RESULT.md`](P13_RESULT.md) §7.
+1. **E1-LLM — esecuzione del cuore.** Design pre-registrato pronto
+   ([`E1_LLM_DESIGN.md`](E1_LLM_DESIGN.md)). Bloccato sull'accesso a un'**API LLM**
+   per costruire il world-model distillato (la decisione compute/API ancora
+   pendente nel programma). *Eseguibile subito senza LLM*: lo **sweep di f_abs**
+   (E1_LLM_DESIGN §5) — degradazione controllata della fedeltà assorbente di una
+   tabella world-model — raffina hP13-1 da binario a curva. È il primo passo
+   concreto, e non aspetta l'API.
 
-2. **hP13-0 ridone** — il test keystone di P13 (VR-rank → decisione) **non** è
-   stato eseguito: la griglia di rumore η era troppo grossa (saltava da rango
-   perfetto a distrutto). Rifare con η ∈ {0.1, 0.25, 0.5}: `p13_proxy.py` è già
-   pronto, basta cambiare `ETAS`. Economico.
+2. **hP13-0 — chiuderla davvero.** Il redo con griglia η fine
+   ([`P13_HP13_0_RESULT.md`](P13_HP13_0_RESULT.md)) ha mostrato che il rumore
+   additivo *non può* testare la keystone (la VR-rank è all-or-nothing: Spearman
+   1.00→0.44 già a η=0.05, swarm clusterizzato → VR legate). Fix: aggiungere a
+   `p13_proxy.py` uno schema di degradazione a **inversioni di rango controllate**
+   (frazione φ). Economico, nessun LLM.
 
-3. **Harness λ₁ + H-B1a** (deep-dive 09 §6). Misuratore dell'esponente di Lyapunov
-   dello swarm su `fmc-core` (traiettorie gemelle, separazione finita alla
-   Benettin); sweep α → cercare l'attraversamento dello zero. Go/no-go della
-   Congettura B. Indipendente da E — priorità più bassa di 1–2.
+3. **Congettura B — una Ψ ben posta, o accettare H-B4.** H-B1a
+   ([`../13_chaos_order/HB1A_RESULT.md`](../13_chaos_order/HB1A_RESULT.md)) ha
+   mostrato che λ₁ non è scale-free → tutte e 3 le candidate Ψ compromesse. O si
+   costruisce un λ₁(δ₀) scale-resolved / una Ψ d'ensemble, o si accetta che la
+   Congettura B sia descrittiva (ipotesi nulla H-B4). Priorità bassa rispetto a
+   E1-LLM.
 
 > **Nota di numerazione (risolta 2026-05-21).** L'handoff precedente prenotava lo
 > slot deep-dive 09 per `09_fmc_agentic_core_llm_organ.md` (inquadramento
@@ -286,7 +310,12 @@ E1_ROBUSTNESS_RESULT.md   report E1-robustness (caveat geometria respinto)
 P13_DESIGN.md             design doc P13 PRE-REGISTRATO (sblocca E1-LLM)
 p13_proxy.py              esperimento proxy P13 (15 bracci, kernel invariato)
 P13_RESULT.md             report P13-proxy (R2 decomposto, E1-LLM GO-conditional)
+p13_hp13_0.py             redo di hP13-0 (griglia η fine, S1 abs-preserved)
+P13_HP13_0_RESULT.md      report hP13-0 redo (ancora inconclusivo, diagnosticato)
+E1_LLM_DESIGN.md          design doc E1-LLM PRE-REGISTRATO (requisito hP13-1)
 HANDOFF.md                questo file
+
+(harness λ₁ + H-B1a: in work/13_chaos_order/ — lambda1_harness.py, HB1A_RESULT.md.)
 results/                  e1_base.json, e2_*, e1_robustness.json,
                           e1_robustness_mechanism.png, log
 ```

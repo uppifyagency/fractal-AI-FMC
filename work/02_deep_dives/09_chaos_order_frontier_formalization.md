@@ -12,6 +12,18 @@
 > **Esito anticipato**: il claim sopravvive come *diagnostica testabile*, **non**
 > come "terza legge universale" — e una delle sue tre candidate statistiche viene
 > falsificata qui, per propagazione corretta della falsificazione di Congettura A.
+>
+> ⚠️ **Aggiornamento (2026-05-21, post H-B1a).** H-B1a (§4.2) è stata eseguita —
+> [`work/13_chaos_order/HB1A_RESULT.md`](../13_chaos_order/HB1A_RESULT.md). Esito:
+> l'esponente di Lyapunov dello swarm $\lambda_1$ **non è scale-free** — cambia
+> *segno* al variare della scala di perturbazione $\delta_0$, confermando
+> empiricamente il caveat del §3.1. **$\Psi_1$ è quindi compromessa** insieme a
+> $\Psi_2$ (assorbita, §3.2) e $\Psi_3$ (falsificata, §3.3): **tutte e tre le
+> candidate $\Psi$ cadono**, e l'ipotesi nulla **H-B4** diventa la posizione di
+> default. La riformulazione del §4.3 e i test H-B1b/c restano sospesi finché non
+> esiste una $\Psi$ ben posta (un $\lambda_1(\delta_0)$ scale-resolved, o una
+> statistica d'ensemble). Non una falsificazione della sostanza di B — una
+> falsificazione dello *stimatore* $\Psi_1$.
 
 ---
 
