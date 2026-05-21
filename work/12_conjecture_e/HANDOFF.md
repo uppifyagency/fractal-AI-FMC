@@ -36,9 +36,10 @@ sono gli esponenti α e β del virtual reward.
 - **hP13-0** ✓ **chiusa** (knob φ — inversioni di rango a coppie) — keystone VR-rank **FALSIFICATA**: a Spearman 0.97 l'agreement decisionale è 0.47 ≪ 0.85. La survival resta robusta (death 0% fino a Spearman 0.46): [`P13_HP13_0_PHI_RESULT.md`](P13_HP13_0_PHI_RESULT.md).
 - **H-B1a** ✓ eseguito — harness λ₁: [`../13_chaos_order/HB1A_RESULT.md`](../13_chaos_order/HB1A_RESULT.md). λ₁ **non scale-free**.
 - **E1-LLM** ✓ design pre-registrato [`E1_LLM_DESIGN.md`](E1_LLM_DESIGN.md) **+ eseguito** [`E1_LLM_RESULT.md`](E1_LLM_RESULT.md) (sweep $f_{abs}$ + test pieno Route B).
+- **E1-LLM-curve** ✓ design [`E1_LLM_CURVE_DESIGN.md`](E1_LLM_CURVE_DESIGN.md) **+ eseguito** [`E1_LLM_CURVE_RESULT.md`](E1_LLM_CURVE_RESULT.md) — scala 4 modelli × 3 prompt; $f_{abs}$ necessaria ma **non sufficiente** (gate del merge a 3 assi).
 - **Deep-dive 09** ✓ frontiera caos/ordine; **Deep-dive 02** ✓ Active Inference (fondazione del merge).
 
-MATH_CANON è a **v0.7.4**. Memoria di sessione: i file in
+MATH_CANON è a **v0.7.5**. Memoria di sessione: i file in
 `~/.claude/projects/.../memory/` (`project_research_partner_program.md`,
 `feedback_tooling_decisions.md`) — caricati automaticamente all'avvio.
 
@@ -204,20 +205,21 @@ maggioranza è biologia/chimica/genomica — ignorala per FMC.
 ## Come continuare — opzioni in avanti (ranked)
 
 I passi esecutivi dei precedenti handoff sono **fatti** (2026-05-21): hP13-0
-chiusa col knob φ (keystone VR-rank falsificata), e **E1-LLM eseguita e
-verificata** — sweep $f_{abs}$ + test pieno Route B
-([`E1_LLM_RESULT.md`](E1_LLM_RESULT.md)). **I tre test pre-registrati della
-Congettura E (E1-base, E2, E1-LLM) sono completi.** Prossimi passi, in ordine
-di valore atteso:
+chiusa col knob φ, **E1-LLM verificata**, e **E1-LLM-curve eseguita** — $f_{abs}$
+caratterizzata come *necessaria ma non sufficiente*
+([`E1_LLM_CURVE_RESULT.md`](E1_LLM_CURVE_RESULT.md)). I tre test della Congettura
+E sono completi e il merge FMC+LLM è mappato fino ai suoi modi di fallimento.
+Prossimi passi, in ordine di valore atteso:
 
-1. **E1-LLM — renderlo non-banale.** Il test pieno ha dato $f_{abs}$=1.000
-   (Llama 3.3 70B scrive lo `step()` esatto al primo colpo): E1-LLM verificata
-   ma *facile*. Due estensioni ovvie, pre-registrabili a parte: (a) un **LLM
-   dentro la curva** — un modello più debole o una descrizione più ambigua che
-   produca $f_{abs}<1$, così E1-LLM atterra su un punto reale della curva di
-   tolleranza del sweep invece che in cima ad essa; (b) **Route A** —
-   world-model LLM interrogato *online* su un dominio aperto (E1_LLM_DESIGN
-   §4.2), dove l'imperfezione del modello è la norma. Chiave NVIDIA nel Keychain
+1. **E1-LLM Route A — world-model LLM online su dominio aperto.** E1-LLM ed
+   E1-LLM-curve hanno coperto il dominio *chiuso* (schema S2, distillazione
+   offline). Route A interroga l'LLM-world-model *online* a ogni tick — il regime
+   dove l'imperfezione del modello è la norma. Richiede uno schema sparso $O(N)$
+   (P13_DESIGN S1) e un dominio aperto; porta il merge fuori dal gridworld. Da
+   pre-registrare. Il **probe di fedeltà a 3 assi** scoperto da E1-LLM-curve —
+   entry-detection ($f_{abs}$) + movimento + persistenza assorbente — è ora il
+   requisito-gate da portarsi dietro (il death rate li cattura tutti, $f_{abs}$
+   da sola no). Chiave NVIDIA nel Keychain
    (`security find-generic-password -s fractalai-nvidia-api -w`).
 
 2. **Congettura B — una Ψ ben posta, o accettare H-B4.** H-B1a
@@ -234,6 +236,13 @@ di valore atteso:
 > LLM-organo (inversione dello stack, i 4 organi) è confluito in
 > [`P13_DESIGN.md`](P13_DESIGN.md) §2, sua sede naturale (è il contesto di P13).
 > Se in futuro serve un deep-dive di teoria pura LLM-organo a sé, sarà lo slot 10.
+
+✓ *Fatto* — **E1-LLM-curve eseguita** (2026-05-21): scala 4 modelli Llama (1B–70B)
+× 3 prompt × 3 repliche vs banda di ablazione casuale (isotonica + Wilcoxon + JT).
+$f_{abs}$ **necessaria ma non sufficiente** — sufficiente entro la classe
+falso-negativo-d'ingresso (band-comparable in-band 100%), cieca a movimento e
+persistenza assorbente (8B/3B → $f_{abs}$=1.0 ma morte 64%, manca `if done:`).
+Gate del merge a 3 assi. Vedi [`E1_LLM_CURVE_RESULT.md`](E1_LLM_CURVE_RESULT.md).
 
 ✓ *Fatto* — **E1-LLM eseguita e verificata** (2026-05-21): sweep $f_{abs}$
 (senza LLM — death rate monòtono in $f_{abs}$, soglia alta e ripida) + test
@@ -330,6 +339,10 @@ e1_llm_fabs_sweep.py      sweep f_abs §5 (no LLM — curva death vs fedeltà)
 e1_llm_client.py          client NVIDIA NIM + generazione world-model (code form)
 e1_llm_run.py             test pieno E1-LLM Route B (genera, probe, FMC)
 E1_LLM_RESULT.md          report E1-LLM (VERIFICATA; sweep + test pieno)
+E1_LLM_CURVE_DESIGN.md    design doc E1-LLM-curve PRE-REGISTRATO
+e1_llm_curve.py           E1-LLM-curve: banda K=80 + scala 4 modelli x 3 prompt
+e1_llm_curve_analysis.py  analisi: isotonica + Wilcoxon + Jonckheere-Terpstra
+E1_LLM_CURVE_RESULT.md    report E1-LLM-curve (f_abs necessaria, non sufficiente)
 HANDOFF.md                questo file
 
 (harness λ₁ + H-B1a: in work/13_chaos_order/ — lambda1_harness.py, HB1A_RESULT.md.)

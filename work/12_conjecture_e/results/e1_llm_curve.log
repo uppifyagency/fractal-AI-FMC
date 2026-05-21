@@ -4,3 +4,55 @@ sanity: true_transition -> f_abs=1.0, 0 FN, 0 FP : OK
 ==============================================================================
 PHASE A — reference band (80 random-ablation draws/layout, alpha=0.0)
 ==============================================================================
+  [ 373.1s] gauntlet     f_abs∈[0.50,1.00]  death∈[0%,100%]  random=70%
+  [ 854.3s] lake         f_abs∈[0.50,1.00]  death∈[0%,100%]  random=80%
+  [1050.2s] scatter      f_abs∈[0.50,1.00]  death∈[0%,100%]  random=100%
+  [1717.0s] island       f_abs∈[0.50,1.00]  death∈[0%,37%]  random=7%
+  [2400.4s] spur         f_abs∈[0.50,1.00]  death∈[0%,7%]  random=3%
+  [2951.0s] archipelago  f_abs∈[0.50,1.00]  death∈[0%,80%]  random=30%
+
+==============================================================================
+PHASE B — LLM sweep (4 models x 3 prompts x 3 reps, temp=0.7)
+==============================================================================
+  [   5.8s] llama-3.2-1b-instruct/P0/r0            NO-VALID-MODEL (['REJECTED', 'REJECTED', 'REJECTED'])
+  [  10.5s] llama-3.2-1b-instruct/P0/r1            NO-VALID-MODEL (['REJECTED', 'REJECTED', 'REJECTED'])
+  [  15.4s] llama-3.2-1b-instruct/P0/r2            NO-VALID-MODEL (['REJECTED', 'REJECTED', 'REJECTED'])
+  [  17.9s] llama-3.2-1b-instruct/P1/r0            NO-VALID-MODEL (['REJECTED', 'REJECTED', 'REJECTED'])
+  [  20.3s] llama-3.2-1b-instruct/P1/r1            NO-VALID-MODEL (['REJECTED', 'REJECTED', 'REJECTED'])
+  [  22.8s] llama-3.2-1b-instruct/P1/r2            NO-VALID-MODEL (['REJECTED', 'REJECTED', 'REJECTED'])
+  [  24.9s] llama-3.2-1b-instruct/P2/r0            NO-VALID-MODEL (['REJECTED', 'REJECTED', 'REJECTED'])
+  [  27.0s] llama-3.2-1b-instruct/P2/r1            NO-VALID-MODEL (['REJECTED', 'REJECTED', 'REJECTED'])
+  [  29.3s] llama-3.2-1b-instruct/P2/r2            NO-VALID-MODEL (['REJECTED', 'REJECTED', 'REJECTED'])
+  -- checkpoint after model 1/4 --
+  [  57.7s] llama-3.2-3b-instruct/P0/r0            valid  mean f_abs=0.638  mean death=65.0%
+  [  87.7s] llama-3.2-3b-instruct/P0/r1            valid  mean f_abs=0.900  mean death=62.8%
+  [ 115.9s] llama-3.2-3b-instruct/P0/r2            valid  mean f_abs=1.000  mean death=67.8%
+  [ 142.5s] llama-3.2-3b-instruct/P1/r0            NO-VALID-MODEL (['REJECTED', 'REJECTED', 'REJECTED'])
+  [ 209.0s] llama-3.2-3b-instruct/P1/r1            valid  mean f_abs=0.842  mean death=65.0%
+  [ 232.5s] llama-3.2-3b-instruct/P1/r2            valid  mean f_abs=0.553  mean death=90.6%
+  [ 278.5s] llama-3.2-3b-instruct/P2/r0            valid  mean f_abs=0.557  mean death=36.1%
+  [ 308.2s] llama-3.2-3b-instruct/P2/r1            valid  mean f_abs=0.557  mean death=64.4%
+  [ 338.7s] llama-3.2-3b-instruct/P2/r2            valid  mean f_abs=0.552  mean death=66.1%
+  -- checkpoint after model 2/4 --
+  [ 370.6s] llama-3.1-8b-instruct/P0/r0            valid  mean f_abs=1.000  mean death=62.8%
+  [ 401.3s] llama-3.1-8b-instruct/P0/r1            valid  mean f_abs=1.000  mean death=61.7%
+  [ 429.1s] llama-3.1-8b-instruct/P0/r2            valid  mean f_abs=1.000  mean death=67.8%
+  [ 458.0s] llama-3.1-8b-instruct/P1/r0            valid  mean f_abs=1.000  mean death=63.3%
+  [ 487.1s] llama-3.1-8b-instruct/P1/r1            valid  mean f_abs=0.943  mean death=62.2%
+  [ 516.8s] llama-3.1-8b-instruct/P1/r2            valid  mean f_abs=1.000  mean death=64.4%
+  [ 558.2s] llama-3.1-8b-instruct/P2/r0            valid  mean f_abs=0.500  mean death=36.7%
+  [ 603.5s] llama-3.1-8b-instruct/P2/r1            valid  mean f_abs=0.557  mean death=36.7%
+  [ 651.4s] llama-3.1-8b-instruct/P2/r2            valid  mean f_abs=0.557  mean death=31.1%
+  -- checkpoint after model 3/4 --
+  [ 878.0s] llama-3.3-70b-instruct/P0/r0           valid  mean f_abs=1.000  mean death=0.0%
+  [1011.0s] llama-3.3-70b-instruct/P0/r1           valid  mean f_abs=1.000  mean death=0.0%
+  [1417.5s] llama-3.3-70b-instruct/P0/r2           valid  mean f_abs=1.000  mean death=0.0%
+  [1500.3s] llama-3.3-70b-instruct/P1/r0           valid  mean f_abs=1.000  mean death=0.0%
+  [1565.4s] llama-3.3-70b-instruct/P1/r1           valid  mean f_abs=1.000  mean death=0.0%
+  [1655.9s] llama-3.3-70b-instruct/P1/r2           valid  mean f_abs=1.000  mean death=0.0%
+  [2322.0s] llama-3.3-70b-instruct/P2/r0           valid  mean f_abs=0.557  mean death=33.9%
+  [2381.7s] llama-3.3-70b-instruct/P2/r1           valid  mean f_abs=0.557  mean death=64.4%
+  [2420.4s] llama-3.3-70b-instruct/P2/r2           valid  mean f_abs=0.557  mean death=65.0%
+  -- checkpoint after model 4/4 --
+
+wrote /Users/vladvrinceanu/Desktop/PROGETTI ANTYGRAVITY/FractalAI/work/12_conjecture_e/results/e1_llm_curve.json   (5371.7s total)
