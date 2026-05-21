@@ -7,7 +7,7 @@
 | File | Argomento | Stato | Pagine paper di riferimento |
 |---|---|---|---|
 | [`01_cloning_mathematics.md`](01_cloning_mathematics.md) | Matematica del cloning come Markov chain con equilibrio di Gibbs | ✅ scritto | Book #1 §4.2 (29-34) |
-| [`02_active_inference_link.md`](02_active_inference_link.md) | Connessione con il Free Energy Principle di Friston | 📝 outline | Book #1 §6.4 (51) |
+| [`02_active_inference_link.md`](02_active_inference_link.md) | Connessione con il Free Energy Principle di Friston: FMC = motore di inferenza Active Inference (massimizza un funzionale tipo Expected Free Energy via SMC); il merge FMC+LLM = AIF con modello generativo LLM + solver SMC gradient-free. Fondazione di principio della Congettura E. | ✅ scritto | Book #1 §6.4 (51); Friston 2010/2017 |
 | [`03_standard_model_cognition.md`](03_standard_model_cognition.md) | Standard Model of Cognition (gauge theory) di Fragile Mechanics | 📝 outline | n/a (fragile-rl) |
 | [`04_relativize_axiomatics.md`](04_relativize_axiomatics.md) | Caratterizzazione assiomatica della trasformazione `relativize` | 📝 outline | Book #1 §2.2.3 (12-13) |
 | [`05_smc_particle_filter_view.md`](05_smc_particle_filter_view.md) | FMC come Sequential Monte Carlo con peso virtual reward | ✅ scritto | Book #1 §4.4 (36-39) |
@@ -31,7 +31,7 @@ In ordine di valore-per-tempo:
 1. **01 — Cloning mathematics** (✅ scritto). È il cuore algoritmico: senza questo, il resto non si capisce.
 2. **05 — SMC view** (✅ scritto). Mappa FMC sulla letteratura SMC consolidata; forte per pubblicazione.
 3. **06 — Book #2 + Fractal Memory** (✅ scritto). Espande oltre il paper isolato; necessario per il quadro completo.
-4. **02 — Active Inference**. Lega Fractal AI alla cornice di Friston, oggi dominante in neuroscienze computazionali.
+4. **02 — Active Inference** (✅ scritto). Lega Fractal AI alla cornice di Friston, oggi dominante in neuroscienze computazionali; dà al merge FMC+LLM la sua fondazione di principio (l'LLM è il modello generativo, FMC il motore di inferenza EFE).
 5. **04 — Relativize axiomatics**. Risolve il "buco" assiomatico segnalato in §10.3 di [`ANALISIS.md`](../../ANALISIS.md).
 6. **03 — Standard Model of Cognition**. Più speculativo; richiede maggior tempo di studio dei docs `fragile-rl`.
 7. **07 — Wright-Fisher mapping** (✅ scritto). Falsifica empirica di un claim specifico di Sergio (Radient cap.16). Lavoro originale, non derivato.

@@ -25,16 +25,20 @@ sono gli esponenti α e β del virtual reward.
 - **E1-robustness** ✓ caveat di geometria respinto (2026-05-20) — vedi
   [`E1_ROBUSTNESS_RESULT.md`](E1_ROBUSTNESS_RESULT.md). Non un nuovo test E:
   chiude il caveat "lava isolata" di E1-base.
-- **E1-LLM** ✗ non eseguita — ma **non più bloccata a livello di design**: il muro
-  di compute P13 è ora un design doc pre-registrato ([`P13_DESIGN.md`](P13_DESIGN.md)),
-  con un esperimento proxy eseguibile su `fmc-core`. Resta da *eseguire* il proxy.
+- **E1-LLM** ✗ non eseguita — ma **sbloccata**: il proxy P13 è stato eseguito
+  (2026-05-21) e dà **GO-conditional**. E1-LLM è eseguibile a condizione che
+  l'LLM-world-model modelli correttamente gli stati terminali — vedi
+  [`P13_RESULT.md`](P13_RESULT.md).
 
-**Direzioni teoriche chiuse (2026-05-21)**:
-- **P13** ✓ design pre-registrato — [`P13_DESIGN.md`](P13_DESIGN.md).
-- **Deep-dive 09** ✓ scritto — formalizzazione della frontiera caos/ordine
-  (Congettura B): [`../02_deep_dives/09_chaos_order_frontier_formalization.md`](../02_deep_dives/09_chaos_order_frontier_formalization.md).
+**Direzioni teoriche / esperimenti chiusi (2026-05-21)**:
+- **P13** ✓ design pre-registrato + **proxy eseguito** — [`P13_DESIGN.md`](P13_DESIGN.md),
+  [`P13_RESULT.md`](P13_RESULT.md), [`p13_proxy.py`](p13_proxy.py).
+- **Deep-dive 09** ✓ — formalizzazione frontiera caos/ordine (Congettura B):
+  [`../02_deep_dives/09_chaos_order_frontier_formalization.md`](../02_deep_dives/09_chaos_order_frontier_formalization.md).
+- **Deep-dive 02** ✓ — Active Inference: fondazione di principio del merge FMC+LLM
+  ([`../02_deep_dives/02_active_inference_link.md`](../02_deep_dives/02_active_inference_link.md)).
 
-MATH_CANON è a **v0.7.0**. Memoria di sessione: i file in
+MATH_CANON è a **v0.7.1**. Memoria di sessione: i file in
 `~/.claude/projects/.../memory/` (`project_research_partner_program.md`,
 `feedback_tooling_decisions.md`) — caricati automaticamente all'avvio.
 
@@ -117,6 +121,30 @@ punto fisso — e strutturalmente — lo spazio-etichette è monotonamente
 contrattivo); $\Psi_2$ assorbita in $\Psi_1$ via Pesin. Resta una congettura
 falsificabile: H-B1a/b/c, harness $\lambda_1$ su `fmc-core`.
 
+### P13 — proxy eseguito (2026-05-21, MATH_CANON v0.7.1)
+[`p13_proxy.py`](p13_proxy.py) → [`P13_RESULT.md`](P13_RESULT.md). 15 bracci × 2α ×
+3 layout, kernel `fmc-core` invariato (`proxy_plan` replica `plan()` con il
+world-model sostituito; sanity check bit-identico verificato). Esito **onesto**:
+nessuno schema genuinamente sparso passa il criterio R2 *come scritto* — ma il
+criterio fondeva due metriche e i dati le **decompongono**. *R2-survival*: la
+self-preservation di E1 sopravvive all'interrogazione sparsa **se il surrogato
+preserva la struttura assorbente** (hP13-1 confermata netta — S1 abs-broken muore
+fino all'**80%** su archipelago, *peggio del random*). *R2-fidelity*: le decisioni
+specifiche no (agreement → 0.30). Verdetto: **E1-LLM = GO-conditional** sul
+requisito "l'LLM modella correttamente gli stati terminali". hP13-0 (keystone)
+**non testata** — griglia di rumore troppo grossa, da rifare.
+
+### Deep-dive 02 — Active Inference (2026-05-21)
+[`../02_deep_dives/02_active_inference_link.md`](../02_deep_dives/02_active_inference_link.md)
+(era outline, ora scritto). Fondazione di principio del merge: FMC è un motore di
+inferenza Active Inference (massimizza un funzionale di orizzonte = analogo
+dell'Expected Free Energy, via SMC); $\alpha,\beta$ = i due termini
+pragmatico/epistemico = le precisioni di AIF. **Il merge FMC+LLM = Active Inference
+con modello generativo LLM + solver SMC** — e quella fattorizzazione è *imposta*
+dalla non-differenziabilità di un LLM-world-model (SMC non chiede gradienti).
+Trattazione onesta: il termine β è della *famiglia* empowerment, non identità con
+la KL-information-gain di AIF.
+
 ---
 
 ## Skill: quali stiamo usando, quali sono disponibili
@@ -156,25 +184,26 @@ maggioranza è biologia/chimica/genomica — ignorala per FMC.
 
 ## Come continuare — opzioni in avanti (ranked)
 
-La Congettura E ha **2/3 test verificati** (E1-base, E2) + caveat di robustezza
-geometrica chiuso. Le due direzioni teoriche del precedente handoff sono **fatte**:
-P13 ha un design doc pre-registrato, il deep-dive 09 è scritto. I prossimi passi
+La Congettura E ha **2/3 test verificati** (E1-base, E2) + caveat geometrico chiuso
++ **P13 sbloccato** (proxy eseguito 2026-05-21, GO-conditional). I prossimi passi
 sono **esecutivi**, in ordine di valore atteso:
 
-1. **Eseguire il proxy di P13** → `P13_RESULT.md`. Implementare `p13_proxy.py`
-   secondo [`P13_DESIGN.md`](P13_DESIGN.md) §6: i 3 bracci (S1/S2/S3-proxy) sul
-   gridworld di E1; metriche death/goal-rate + decision-agreement + diagnostica
-   VR-rank; verdetto go/no-go pre-registrato (§6.5). Costo: minuti CPU. È il gate
-   che rende E1-LLM eseguibile.
+1. **E1-LLM** — il test che chiude la stella polare. Sbloccato dal proxy P13.
+   Pre-condizione dal verdetto P13 (hP13-1): l'LLM-world-model **deve modellare
+   correttamente gli stati terminali/assorbenti** — è l'unico requisito
+   load-bearing, ed è raggiungibile. Pre-registrare quel requisito e misurarlo
+   sull'LLM prima del test pieno. Per E1-LLM *come test* (gridworld chiuso) lo
+   schema S2 basta. Vedi [`P13_RESULT.md`](P13_RESULT.md) §7.
 
-2. **E1-LLM** (il test che chiude la stella polare). Solo dopo un GO del proxy.
-   Per E1-LLM *come test* (gridworld chiuso) lo schema S2 (distillazione) basta —
-   vedi [`P13_DESIGN.md`](P13_DESIGN.md) §7.
+2. **hP13-0 ridone** — il test keystone di P13 (VR-rank → decisione) **non** è
+   stato eseguito: la griglia di rumore η era troppo grossa (saltava da rango
+   perfetto a distrutto). Rifare con η ∈ {0.1, 0.25, 0.5}: `p13_proxy.py` è già
+   pronto, basta cambiare `ETAS`. Economico.
 
 3. **Harness λ₁ + H-B1a** (deep-dive 09 §6). Misuratore dell'esponente di Lyapunov
    dello swarm su `fmc-core` (traiettorie gemelle, separazione finita alla
-   Benettin); sweep α → cercare l'attraversamento dello zero. Economico, è il
-   go/no-go della Congettura B. Indipendente da E — priorità più bassa di 1–2.
+   Benettin); sweep α → cercare l'attraversamento dello zero. Go/no-go della
+   Congettura B. Indipendente da E — priorità più bassa di 1–2.
 
 > **Nota di numerazione (risolta 2026-05-21).** L'handoff precedente prenotava lo
 > slot deep-dive 09 per `09_fmc_agentic_core_llm_organ.md` (inquadramento
@@ -255,6 +284,8 @@ E2_RESULT.md              report E2 (con le 4 figure inline)
 E1_ROBUSTNESS_DESIGN.md   disegno E1-robustness PRE-REGISTRATO
 E1_ROBUSTNESS_RESULT.md   report E1-robustness (caveat geometria respinto)
 P13_DESIGN.md             design doc P13 PRE-REGISTRATO (sblocca E1-LLM)
+p13_proxy.py              esperimento proxy P13 (15 bracci, kernel invariato)
+P13_RESULT.md             report P13-proxy (R2 decomposto, E1-LLM GO-conditional)
 HANDOFF.md                questo file
 results/                  e1_base.json, e2_*, e1_robustness.json,
                           e1_robustness_mechanism.png, log

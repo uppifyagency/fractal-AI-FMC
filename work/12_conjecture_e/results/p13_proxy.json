@@ -1,0 +1,964 @@
+{
+  "params": {
+    "N": 64,
+    "M": 20,
+    "beta": 1.0,
+    "alphas": [
+      0.0,
+      0.1
+    ],
+    "n_episodes": 30,
+    "etas": [
+      0.0,
+      1.0,
+      2.0,
+      4.0
+    ],
+    "distill_budgets": [
+      50,
+      150,
+      400,
+      1125
+    ],
+    "agree_min": 0.85,
+    "death_margin": 0.05
+  },
+  "results": {
+    "island": {
+      "alpha0.0": {
+        "FULL": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 1.0
+        },
+        "S1_eta0.0_abs": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 1.0
+        },
+        "S1_eta0.0_brk": {
+          "n": 30,
+          "deaths": 10,
+          "goals": 0,
+          "timeouts": 20,
+          "death_rate": 0.3333333333333333,
+          "goal_rate": 0.0,
+          "agreement": 0.7429876060013046
+        },
+        "S1_eta1.0_abs": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 0.32722222222222225
+        },
+        "S1_eta1.0_brk": {
+          "n": 30,
+          "deaths": 8,
+          "goals": 0,
+          "timeouts": 22,
+          "death_rate": 0.26666666666666666,
+          "goal_rate": 0.0,
+          "agreement": 0.31473620375985445
+        },
+        "S1_eta2.0_abs": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 0.29888888888888887
+        },
+        "S1_eta2.0_brk": {
+          "n": 30,
+          "deaths": 6,
+          "goals": 0,
+          "timeouts": 24,
+          "death_rate": 0.2,
+          "goal_rate": 0.0,
+          "agreement": 0.2892007321537523
+        },
+        "S1_eta4.0_abs": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 0.25555555555555554
+        },
+        "S1_eta4.0_brk": {
+          "n": 30,
+          "deaths": 6,
+          "goals": 0,
+          "timeouts": 24,
+          "death_rate": 0.2,
+          "goal_rate": 0.0,
+          "agreement": 0.27262180974477956
+        },
+        "S2_B50": {
+          "n": 30,
+          "deaths": 2,
+          "goals": 0,
+          "timeouts": 28,
+          "death_rate": 0.06666666666666667,
+          "goal_rate": 0.0,
+          "agreement": 0.26057906458797325
+        },
+        "S2_B150": {
+          "n": 30,
+          "deaths": 1,
+          "goals": 0,
+          "timeouts": 29,
+          "death_rate": 0.03333333333333333,
+          "goal_rate": 0.0,
+          "agreement": 0.23450586264656617
+        },
+        "S2_B400": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 0.24055555555555555
+        },
+        "S2_B1125": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 0.2866666666666667
+        },
+        "S3_k3_stay": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 0.15722222222222224
+        },
+        "S3_k3_nostay": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 0.14
+        },
+        "_vr_rank": {
+          "eta0.0": {
+            "mean": 1.0,
+            "worst_tick": 1.0
+          },
+          "eta1.0": {
+            "mean": 0.14742479683775508,
+            "worst_tick": -0.010394461055229726
+          },
+          "eta2.0": {
+            "mean": 0.08520250071631962,
+            "worst_tick": -0.03795130004241775
+          },
+          "eta4.0": {
+            "mean": 0.05138248702449374,
+            "worst_tick": -0.04172504093771272
+          }
+        }
+      },
+      "alpha0.1": {
+        "FULL": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 1.0
+        },
+        "S1_eta0.0_abs": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 1.0
+        },
+        "S1_eta0.0_brk": {
+          "n": 30,
+          "deaths": 3,
+          "goals": 0,
+          "timeouts": 27,
+          "death_rate": 0.1,
+          "goal_rate": 0.0,
+          "agreement": 0.7718040621266428
+        },
+        "S1_eta1.0_abs": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 0.35944444444444446
+        },
+        "S1_eta1.0_brk": {
+          "n": 30,
+          "deaths": 5,
+          "goals": 0,
+          "timeouts": 25,
+          "death_rate": 0.16666666666666666,
+          "goal_rate": 0.0,
+          "agreement": 0.374294670846395
+        },
+        "S1_eta2.0_abs": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 4,
+          "timeouts": 26,
+          "death_rate": 0.0,
+          "goal_rate": 0.13333333333333333,
+          "agreement": 0.32935831913685404
+        },
+        "S1_eta2.0_brk": {
+          "n": 30,
+          "deaths": 4,
+          "goals": 5,
+          "timeouts": 21,
+          "death_rate": 0.13333333333333333,
+          "goal_rate": 0.16666666666666666,
+          "agreement": 0.3329305135951662
+        },
+        "S1_eta4.0_abs": {
+          "n": 30,
+          "deaths": 3,
+          "goals": 4,
+          "timeouts": 23,
+          "death_rate": 0.1,
+          "goal_rate": 0.13333333333333333,
+          "agreement": 0.29728132387706857
+        },
+        "S1_eta4.0_brk": {
+          "n": 30,
+          "deaths": 10,
+          "goals": 1,
+          "timeouts": 19,
+          "death_rate": 0.3333333333333333,
+          "goal_rate": 0.03333333333333333,
+          "agreement": 0.3116370808678501
+        },
+        "S2_B50": {
+          "n": 30,
+          "deaths": 1,
+          "goals": 0,
+          "timeouts": 29,
+          "death_rate": 0.03333333333333333,
+          "goal_rate": 0.0,
+          "agreement": 0.23737373737373738
+        },
+        "S2_B150": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 0.22055555555555556
+        },
+        "S2_B400": {
+          "n": 30,
+          "deaths": 2,
+          "goals": 0,
+          "timeouts": 28,
+          "death_rate": 0.06666666666666667,
+          "goal_rate": 0.0,
+          "agreement": 0.24800910125142206
+        },
+        "S2_B1125": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 0.32055555555555554
+        },
+        "S3_k3_stay": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 0.19166666666666668
+        },
+        "S3_k3_nostay": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 0.20055555555555554
+        },
+        "_vr_rank": {
+          "eta0.0": {
+            "mean": 1.0,
+            "worst_tick": 0.9999999999999998
+          },
+          "eta1.0": {
+            "mean": 0.16202783859406247,
+            "worst_tick": -0.0009625858721037439
+          },
+          "eta2.0": {
+            "mean": 0.08849955318754459,
+            "worst_tick": -0.031786497623326894
+          },
+          "eta4.0": {
+            "mean": 0.05193008662736509,
+            "worst_tick": -0.05576180527967349
+          }
+        }
+      }
+    },
+    "spur": {
+      "alpha0.0": {
+        "FULL": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 1.0
+        },
+        "S1_eta0.0_abs": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 1.0
+        },
+        "S1_eta0.0_brk": {
+          "n": 30,
+          "deaths": 2,
+          "goals": 0,
+          "timeouts": 28,
+          "death_rate": 0.06666666666666667,
+          "goal_rate": 0.0,
+          "agreement": 0.9023972602739726
+        },
+        "S1_eta1.0_abs": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 0.32055555555555554
+        },
+        "S1_eta1.0_brk": {
+          "n": 30,
+          "deaths": 1,
+          "goals": 0,
+          "timeouts": 29,
+          "death_rate": 0.03333333333333333,
+          "goal_rate": 0.0,
+          "agreement": 0.3429844097995546
+        },
+        "S1_eta2.0_abs": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 0.2966666666666667
+        },
+        "S1_eta2.0_brk": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 0.29
+        },
+        "S1_eta4.0_abs": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 0.2838888888888889
+        },
+        "S1_eta4.0_brk": {
+          "n": 30,
+          "deaths": 2,
+          "goals": 0,
+          "timeouts": 28,
+          "death_rate": 0.06666666666666667,
+          "goal_rate": 0.0,
+          "agreement": 0.2705479452054795
+        },
+        "S2_B50": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 0.25
+        },
+        "S2_B150": {
+          "n": 30,
+          "deaths": 1,
+          "goals": 0,
+          "timeouts": 29,
+          "death_rate": 0.03333333333333333,
+          "goal_rate": 0.0,
+          "agreement": 0.2561936936936937
+        },
+        "S2_B400": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 0.2538888888888889
+        },
+        "S2_B1125": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 0.27555555555555555
+        },
+        "S3_k3_stay": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 0.11833333333333333
+        },
+        "S3_k3_nostay": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 0.10833333333333334
+        },
+        "_vr_rank": {
+          "eta0.0": {
+            "mean": 1.0,
+            "worst_tick": 1.0
+          },
+          "eta1.0": {
+            "mean": 0.15331506985396684,
+            "worst_tick": -0.05481143957566579
+          },
+          "eta2.0": {
+            "mean": 0.07815014091239589,
+            "worst_tick": -0.05978176500421983
+          },
+          "eta4.0": {
+            "mean": 0.048265044021080075,
+            "worst_tick": -0.08571841137235517
+          }
+        }
+      },
+      "alpha0.1": {
+        "FULL": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 1.0
+        },
+        "S1_eta0.0_abs": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 1.0
+        },
+        "S1_eta0.0_brk": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 1,
+          "timeouts": 29,
+          "death_rate": 0.0,
+          "goal_rate": 0.03333333333333333,
+          "agreement": 0.849859943977591
+        },
+        "S1_eta1.0_abs": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 1,
+          "timeouts": 29,
+          "death_rate": 0.0,
+          "goal_rate": 0.03333333333333333,
+          "agreement": 0.3569436698271054
+        },
+        "S1_eta1.0_brk": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 2,
+          "timeouts": 28,
+          "death_rate": 0.0,
+          "goal_rate": 0.06666666666666667,
+          "agreement": 0.34782608695652173
+        },
+        "S1_eta2.0_abs": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 6,
+          "timeouts": 24,
+          "death_rate": 0.0,
+          "goal_rate": 0.2,
+          "agreement": 0.3137369033760186
+        },
+        "S1_eta2.0_brk": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 5,
+          "timeouts": 25,
+          "death_rate": 0.0,
+          "goal_rate": 0.16666666666666666,
+          "agreement": 0.31671554252199413
+        },
+        "S1_eta4.0_abs": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 8,
+          "timeouts": 22,
+          "death_rate": 0.0,
+          "goal_rate": 0.26666666666666666,
+          "agreement": 0.28455754771544245
+        },
+        "S1_eta4.0_brk": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 8,
+          "timeouts": 22,
+          "death_rate": 0.0,
+          "goal_rate": 0.26666666666666666,
+          "agreement": 0.30096536059057355
+        },
+        "S2_B50": {
+          "n": 30,
+          "deaths": 3,
+          "goals": 0,
+          "timeouts": 27,
+          "death_rate": 0.1,
+          "goal_rate": 0.0,
+          "agreement": 0.23833902161547213
+        },
+        "S2_B150": {
+          "n": 30,
+          "deaths": 2,
+          "goals": 0,
+          "timeouts": 28,
+          "death_rate": 0.06666666666666667,
+          "goal_rate": 0.0,
+          "agreement": 0.23207227555053642
+        },
+        "S2_B400": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 0.23555555555555555
+        },
+        "S2_B1125": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 0.31222222222222223
+        },
+        "S3_k3_stay": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 0.14555555555555555
+        },
+        "S3_k3_nostay": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 0.15
+        },
+        "_vr_rank": {
+          "eta0.0": {
+            "mean": 0.9999999999999998,
+            "worst_tick": 0.9999999999999998
+          },
+          "eta1.0": {
+            "mean": 0.14764938685534726,
+            "worst_tick": -0.047245673650600506
+          },
+          "eta2.0": {
+            "mean": 0.09237348962882443,
+            "worst_tick": -0.03519863579317599
+          },
+          "eta4.0": {
+            "mean": 0.06075118461495936,
+            "worst_tick": -0.07073764783695022
+          }
+        }
+      }
+    },
+    "archipelago": {
+      "alpha0.0": {
+        "FULL": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 1.0
+        },
+        "S1_eta0.0_abs": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 1.0
+        },
+        "S1_eta0.0_brk": {
+          "n": 30,
+          "deaths": 17,
+          "goals": 0,
+          "timeouts": 13,
+          "death_rate": 0.5666666666666667,
+          "goal_rate": 0.0,
+          "agreement": 0.5270049099836334
+        },
+        "S1_eta1.0_abs": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 0.33166666666666667
+        },
+        "S1_eta1.0_brk": {
+          "n": 30,
+          "deaths": 18,
+          "goals": 0,
+          "timeouts": 12,
+          "death_rate": 0.6,
+          "goal_rate": 0.0,
+          "agreement": 0.31574608408903543
+        },
+        "S1_eta2.0_abs": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 0.31777777777777777
+        },
+        "S1_eta2.0_brk": {
+          "n": 30,
+          "deaths": 15,
+          "goals": 0,
+          "timeouts": 15,
+          "death_rate": 0.5,
+          "goal_rate": 0.0,
+          "agreement": 0.318557475582269
+        },
+        "S1_eta4.0_abs": {
+          "n": 30,
+          "deaths": 6,
+          "goals": 0,
+          "timeouts": 24,
+          "death_rate": 0.2,
+          "goal_rate": 0.0,
+          "agreement": 0.2732661529342027
+        },
+        "S1_eta4.0_brk": {
+          "n": 30,
+          "deaths": 16,
+          "goals": 0,
+          "timeouts": 14,
+          "death_rate": 0.5333333333333333,
+          "goal_rate": 0.0,
+          "agreement": 0.2799452429842574
+        },
+        "S2_B50": {
+          "n": 30,
+          "deaths": 6,
+          "goals": 0,
+          "timeouts": 24,
+          "death_rate": 0.2,
+          "goal_rate": 0.0,
+          "agreement": 0.2373612823674476
+        },
+        "S2_B150": {
+          "n": 30,
+          "deaths": 9,
+          "goals": 0,
+          "timeouts": 21,
+          "death_rate": 0.3,
+          "goal_rate": 0.0,
+          "agreement": 0.24203821656050956
+        },
+        "S2_B400": {
+          "n": 30,
+          "deaths": 5,
+          "goals": 0,
+          "timeouts": 25,
+          "death_rate": 0.16666666666666666,
+          "goal_rate": 0.0,
+          "agreement": 0.2387440758293839
+        },
+        "S2_B1125": {
+          "n": 30,
+          "deaths": 4,
+          "goals": 0,
+          "timeouts": 26,
+          "death_rate": 0.13333333333333333,
+          "goal_rate": 0.0,
+          "agreement": 0.28917120387174833
+        },
+        "S3_k3_stay": {
+          "n": 30,
+          "deaths": 5,
+          "goals": 0,
+          "timeouts": 25,
+          "death_rate": 0.16666666666666666,
+          "goal_rate": 0.0,
+          "agreement": 0.14904143475572046
+        },
+        "S3_k3_nostay": {
+          "n": 30,
+          "deaths": 5,
+          "goals": 0,
+          "timeouts": 25,
+          "death_rate": 0.16666666666666666,
+          "goal_rate": 0.0,
+          "agreement": 0.17006802721088435
+        },
+        "_vr_rank": {
+          "eta0.0": {
+            "mean": 1.0,
+            "worst_tick": 0.9999999999999998
+          },
+          "eta1.0": {
+            "mean": 0.1541243655414654,
+            "worst_tick": -0.03907294910283911
+          },
+          "eta2.0": {
+            "mean": 0.07738447006601165,
+            "worst_tick": -0.060128697683588264
+          },
+          "eta4.0": {
+            "mean": 0.049723409231885576,
+            "worst_tick": -0.06286482907007421
+          }
+        }
+      },
+      "alpha0.1": {
+        "FULL": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 1.0
+        },
+        "S1_eta0.0_abs": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 1.0
+        },
+        "S1_eta0.0_brk": {
+          "n": 30,
+          "deaths": 24,
+          "goals": 0,
+          "timeouts": 6,
+          "death_rate": 0.8,
+          "goal_rate": 0.0,
+          "agreement": 0.5749027237354085
+        },
+        "S1_eta1.0_abs": {
+          "n": 30,
+          "deaths": 0,
+          "goals": 0,
+          "timeouts": 30,
+          "death_rate": 0.0,
+          "goal_rate": 0.0,
+          "agreement": 0.3383333333333333
+        },
+        "S1_eta1.0_brk": {
+          "n": 30,
+          "deaths": 20,
+          "goals": 1,
+          "timeouts": 9,
+          "death_rate": 0.6666666666666666,
+          "goal_rate": 0.03333333333333333,
+          "agreement": 0.35525260625501204
+        },
+        "S1_eta2.0_abs": {
+          "n": 30,
+          "deaths": 1,
+          "goals": 1,
+          "timeouts": 28,
+          "death_rate": 0.03333333333333333,
+          "goal_rate": 0.03333333333333333,
+          "agreement": 0.34288990825688076
+        },
+        "S1_eta2.0_brk": {
+          "n": 30,
+          "deaths": 19,
+          "goals": 1,
+          "timeouts": 10,
+          "death_rate": 0.6333333333333333,
+          "goal_rate": 0.03333333333333333,
+          "agreement": 0.3403057119871279
+        },
+        "S1_eta4.0_abs": {
+          "n": 30,
+          "deaths": 6,
+          "goals": 0,
+          "timeouts": 24,
+          "death_rate": 0.2,
+          "goal_rate": 0.0,
+          "agreement": 0.29245861434702636
+        },
+        "S1_eta4.0_brk": {
+          "n": 30,
+          "deaths": 17,
+          "goals": 1,
+          "timeouts": 12,
+          "death_rate": 0.5666666666666667,
+          "goal_rate": 0.03333333333333333,
+          "agreement": 0.3041310541310541
+        },
+        "S2_B50": {
+          "n": 30,
+          "deaths": 4,
+          "goals": 0,
+          "timeouts": 26,
+          "death_rate": 0.13333333333333333,
+          "goal_rate": 0.0,
+          "agreement": 0.23781561949500882
+        },
+        "S2_B150": {
+          "n": 30,
+          "deaths": 8,
+          "goals": 0,
+          "timeouts": 22,
+          "death_rate": 0.26666666666666666,
+          "goal_rate": 0.0,
+          "agreement": 0.22365196078431374
+        },
+        "S2_B400": {
+          "n": 30,
+          "deaths": 5,
+          "goals": 0,
+          "timeouts": 25,
+          "death_rate": 0.16666666666666666,
+          "goal_rate": 0.0,
+          "agreement": 0.25045703839122485
+        },
+        "S2_B1125": {
+          "n": 30,
+          "deaths": 1,
+          "goals": 0,
+          "timeouts": 29,
+          "death_rate": 0.03333333333333333,
+          "goal_rate": 0.0,
+          "agreement": 0.32169433314253004
+        },
+        "S3_k3_stay": {
+          "n": 30,
+          "deaths": 2,
+          "goals": 0,
+          "timeouts": 28,
+          "death_rate": 0.06666666666666667,
+          "goal_rate": 0.0,
+          "agreement": 0.20497973364215402
+        },
+        "S3_k3_nostay": {
+          "n": 30,
+          "deaths": 1,
+          "goals": 0,
+          "timeouts": 29,
+          "death_rate": 0.03333333333333333,
+          "goal_rate": 0.0,
+          "agreement": 0.2108843537414966
+        },
+        "_vr_rank": {
+          "eta0.0": {
+            "mean": 1.0,
+            "worst_tick": 0.9999999999999998
+          },
+          "eta1.0": {
+            "mean": 0.13696340077085778,
+            "worst_tick": -0.01804976412595536
+          },
+          "eta2.0": {
+            "mean": 0.08295301777360826,
+            "worst_tick": -0.05398376176937077
+          },
+          "eta4.0": {
+            "mean": 0.046828602230420444,
+            "worst_tick": -0.08487562025721765
+          }
+        }
+      }
+    }
+  }
+}
