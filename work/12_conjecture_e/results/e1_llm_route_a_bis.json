@@ -1,0 +1,259 @@
+{
+  "params": {
+    "model": "meta/llama-3.3-70b-instruct",
+    "alphas": [
+      0.0,
+      0.1
+    ],
+    "n_episodes": 30,
+    "persistence": "framework-enforced (done->stay)"
+  },
+  "verdict": "ROUTE A-bis \u2014 NO RECOVERY",
+  "fidelity": {
+    "gauntlet": {
+      "f_abs": 0.5363636363636364,
+      "terminal_recall": 0.07272727272727272,
+      "move_fidelity": 0.9371900826446281
+    },
+    "lake": {
+      "f_abs": 0.5636363636363636,
+      "terminal_recall": 0.12727272727272726,
+      "move_fidelity": 0.8611570247933884
+    },
+    "scatter": {
+      "f_abs": 0.5235294117647059,
+      "terminal_recall": 0.047058823529411764,
+      "move_fidelity": 0.8975206611570248
+    },
+    "island": {
+      "f_abs": 0.54,
+      "terminal_recall": 0.08,
+      "move_fidelity": 0.9857777777777778
+    },
+    "spur": {
+      "f_abs": 0.5272727272727272,
+      "terminal_recall": 0.05454545454545454,
+      "move_fidelity": 0.9733333333333334
+    },
+    "archipelago": {
+      "f_abs": 0.54,
+      "terminal_recall": 0.08,
+      "move_fidelity": 0.9857777777777778
+    }
+  },
+  "api_calls_new": 0,
+  "results": {
+    "gauntlet": {
+      "random": {
+        "n": 30,
+        "deaths": 20,
+        "goals": 0,
+        "timeouts": 10,
+        "death_rate": 0.6666666666666666,
+        "goal_rate": 0.0
+      },
+      "greedy": {
+        "n": 30,
+        "deaths": 29,
+        "goals": 1,
+        "timeouts": 0,
+        "death_rate": 0.9666666666666667,
+        "goal_rate": 0.03333333333333333
+      },
+      "fmc_a0.0": {
+        "n": 30,
+        "deaths": 16,
+        "goals": 0,
+        "timeouts": 14,
+        "death_rate": 0.5333333333333333,
+        "goal_rate": 0.0
+      },
+      "fmc_a0.1": {
+        "n": 30,
+        "deaths": 15,
+        "goals": 0,
+        "timeouts": 15,
+        "death_rate": 0.5,
+        "goal_rate": 0.0
+      }
+    },
+    "lake": {
+      "random": {
+        "n": 30,
+        "deaths": 20,
+        "goals": 0,
+        "timeouts": 10,
+        "death_rate": 0.6666666666666666,
+        "goal_rate": 0.0
+      },
+      "greedy": {
+        "n": 30,
+        "deaths": 30,
+        "goals": 0,
+        "timeouts": 0,
+        "death_rate": 1.0,
+        "goal_rate": 0.0
+      },
+      "fmc_a0.0": {
+        "n": 30,
+        "deaths": 21,
+        "goals": 0,
+        "timeouts": 9,
+        "death_rate": 0.7,
+        "goal_rate": 0.0
+      },
+      "fmc_a0.1": {
+        "n": 30,
+        "deaths": 26,
+        "goals": 0,
+        "timeouts": 4,
+        "death_rate": 0.8666666666666667,
+        "goal_rate": 0.0
+      }
+    },
+    "scatter": {
+      "random": {
+        "n": 30,
+        "deaths": 29,
+        "goals": 0,
+        "timeouts": 1,
+        "death_rate": 0.9666666666666667,
+        "goal_rate": 0.0
+      },
+      "greedy": {
+        "n": 30,
+        "deaths": 28,
+        "goals": 2,
+        "timeouts": 0,
+        "death_rate": 0.9333333333333333,
+        "goal_rate": 0.06666666666666667
+      },
+      "fmc_a0.0": {
+        "n": 30,
+        "deaths": 26,
+        "goals": 0,
+        "timeouts": 4,
+        "death_rate": 0.8666666666666667,
+        "goal_rate": 0.0
+      },
+      "fmc_a0.1": {
+        "n": 30,
+        "deaths": 25,
+        "goals": 0,
+        "timeouts": 5,
+        "death_rate": 0.8333333333333334,
+        "goal_rate": 0.0
+      }
+    },
+    "island": {
+      "random": {
+        "n": 30,
+        "deaths": 1,
+        "goals": 0,
+        "timeouts": 29,
+        "death_rate": 0.03333333333333333,
+        "goal_rate": 0.0
+      },
+      "greedy": {
+        "n": 30,
+        "deaths": 7,
+        "goals": 23,
+        "timeouts": 0,
+        "death_rate": 0.23333333333333334,
+        "goal_rate": 0.7666666666666667
+      },
+      "fmc_a0.0": {
+        "n": 30,
+        "deaths": 1,
+        "goals": 0,
+        "timeouts": 29,
+        "death_rate": 0.03333333333333333,
+        "goal_rate": 0.0
+      },
+      "fmc_a0.1": {
+        "n": 30,
+        "deaths": 1,
+        "goals": 0,
+        "timeouts": 29,
+        "death_rate": 0.03333333333333333,
+        "goal_rate": 0.0
+      }
+    },
+    "spur": {
+      "random": {
+        "n": 30,
+        "deaths": 1,
+        "goals": 0,
+        "timeouts": 29,
+        "death_rate": 0.03333333333333333,
+        "goal_rate": 0.0
+      },
+      "greedy": {
+        "n": 30,
+        "deaths": 0,
+        "goals": 30,
+        "timeouts": 0,
+        "death_rate": 0.0,
+        "goal_rate": 1.0
+      },
+      "fmc_a0.0": {
+        "n": 30,
+        "deaths": 0,
+        "goals": 0,
+        "timeouts": 30,
+        "death_rate": 0.0,
+        "goal_rate": 0.0
+      },
+      "fmc_a0.1": {
+        "n": 30,
+        "deaths": 0,
+        "goals": 0,
+        "timeouts": 30,
+        "death_rate": 0.0,
+        "goal_rate": 0.0
+      }
+    },
+    "archipelago": {
+      "random": {
+        "n": 30,
+        "deaths": 7,
+        "goals": 0,
+        "timeouts": 23,
+        "death_rate": 0.23333333333333334,
+        "goal_rate": 0.0
+      },
+      "greedy": {
+        "n": 30,
+        "deaths": 15,
+        "goals": 15,
+        "timeouts": 0,
+        "death_rate": 0.5,
+        "goal_rate": 0.5
+      },
+      "fmc_a0.0": {
+        "n": 30,
+        "deaths": 6,
+        "goals": 0,
+        "timeouts": 24,
+        "death_rate": 0.2,
+        "goal_rate": 0.0
+      },
+      "fmc_a0.1": {
+        "n": 30,
+        "deaths": 12,
+        "goals": 0,
+        "timeouts": 18,
+        "death_rate": 0.4,
+        "goal_rate": 0.0
+      }
+    }
+  },
+  "route_a_fmc_a0_death": {
+    "gauntlet": 0.7,
+    "lake": 0.3333333333333333,
+    "scatter": 0.8,
+    "island": 0.03333333333333333,
+    "spur": 0.0,
+    "archipelago": 0.23333333333333334
+  }
+}

@@ -37,10 +37,11 @@ sono gli esponenti α e β del virtual reward.
 - **H-B1a** ✓ eseguito — harness λ₁: [`../13_chaos_order/HB1A_RESULT.md`](../13_chaos_order/HB1A_RESULT.md). λ₁ **non scale-free**.
 - **E1-LLM** ✓ design pre-registrato [`E1_LLM_DESIGN.md`](E1_LLM_DESIGN.md) **+ eseguito** [`E1_LLM_RESULT.md`](E1_LLM_RESULT.md) (sweep $f_{abs}$ + test pieno Route B).
 - **E1-LLM-curve** ✓ design [`E1_LLM_CURVE_DESIGN.md`](E1_LLM_CURVE_DESIGN.md) **+ eseguito** [`E1_LLM_CURVE_RESULT.md`](E1_LLM_CURVE_RESULT.md) — scala 4 modelli × 3 prompt; $f_{abs}$ necessaria ma **non sufficiente** (gate del merge a 3 assi).
-- **E1-LLM Route A** ✓ design [`E1_LLM_ROUTE_A_DESIGN.md`](E1_LLM_ROUTE_A_DESIGN.md) **+ eseguito** [`E1_LLM_ROUTE_A_RESULT.md`](E1_LLM_ROUTE_A_RESULT.md) — world-model LLM **online**; hRA-3 **falsificata** (morte 35%): il merge regge offline, non online-per-query (cede la persistenza assorbente, 0.53).
+- **E1-LLM Route A** ✓ design [`E1_LLM_ROUTE_A_DESIGN.md`](E1_LLM_ROUTE_A_DESIGN.md) **+ eseguito** [`E1_LLM_ROUTE_A_RESULT.md`](E1_LLM_ROUTE_A_RESULT.md) — world-model LLM **online**; hRA-3 **falsificata**: il merge regge offline, non online-per-query. ⚠️ diagnosi rivista da Route A-bis (vedi sotto).
+- **E1-LLM Route A-bis** ✓ design [`E1_LLM_ROUTE_A_BIS_DESIGN.md`](E1_LLM_ROUTE_A_BIS_DESIGN.md) **+ eseguito** [`E1_LLM_ROUTE_A_BIS_RESULT.md`](E1_LLM_ROUTE_A_BIS_RESULT.md) — imposta la persistenza dal framework: **nessun recupero** (morte 38.9%); **corregge Route A** — il vero blocco è l'entry-detection ($f_{abs}$ bilanciato ≈ 0.54, floor del caso), non la persistenza.
 - **Deep-dive 09** ✓ frontiera caos/ordine; **Deep-dive 02** ✓ Active Inference (fondazione del merge).
 
-MATH_CANON è a **v0.7.6**. Memoria di sessione: i file in
+MATH_CANON è a **v0.7.7**. Memoria di sessione: i file in
 `~/.claude/projects/.../memory/` (`project_research_partner_program.md`,
 `feedback_tooling_decisions.md`) — caricati automaticamente all'avvio.
 
@@ -207,24 +208,13 @@ maggioranza è biologia/chimica/genomica — ignorala per FMC.
 
 I passi esecutivi dei precedenti handoff sono **fatti**: hP13-0 chiusa, **E1-LLM
 verificata**, **E1-LLM-curve eseguita** ($f_{abs}$ necessaria ma non sufficiente),
-e **E1-LLM Route A eseguita** (2026-05-22) — il merge regge offline, **non**
-online-per-query ([`E1_LLM_ROUTE_A_RESULT.md`](E1_LLM_ROUTE_A_RESULT.md)). I tre
-test della Congettura E sono completi e il merge FMC+LLM è mappato online e
-offline fino ai suoi modi di fallimento. Prossimi passi, in ordine di valore
-atteso:
+e **Route A + Route A-bis eseguite** (2026-05-22) — il merge FMC+LLM regge
+offline, **non** online-per-query, e il *perché* è ora corretto e fermo:
+l'entry-detection dell'LLM online è al floor del caso ($f_{abs}$ bilanciato
+≈ 0.54). La direzione "merge online" è **conclusa** allo stato attuale. Prossimi
+passi, in ordine di valore atteso:
 
-1. **Route A-bis — persistenza imposta dal framework.** Route A ha fallito
-   (hRA-3) perché l'LLM online non mantiene l'invariante di persistenza
-   assorbente (0.53). Ma uno stato terminale è assorbente *per definizione di
-   FMC* — non è conoscenza del mondo da chiedere all'LLM. Fix pre-registrabile:
-   l'harness applica "done → stay" strutturalmente, interroga l'LLM **solo per
-   stati vivi** (`done=False`) → persistenza 1.0 per costruzione; resta da vedere
-   se $f_{abs}$ $0.92$ + movimento $0.94$ bastano (il sweep $f_{abs}$ dice che
-   serve fedeltà *quasi*-perfetta). Riusa `e1_llm_route_a.py` + la cache già
-   raccolta. Chiave NVIDIA nel Keychain
-   (`security find-generic-password -s fractalai-nvidia-api -w`).
-
-2. **Congettura B — una Ψ ben posta, o accettare H-B4.** H-B1a
+1. **Congettura B — una Ψ ben posta, o accettare H-B4.** H-B1a
    ([`../13_chaos_order/HB1A_RESULT.md`](../13_chaos_order/HB1A_RESULT.md)) ha
    mostrato che λ₁ non è scale-free → tutte e 3 le candidate Ψ compromesse. O si
    costruisce un λ₁(δ₀) scale-resolved / una Ψ d'ensemble, o si accetta che la
@@ -239,12 +229,20 @@ atteso:
 > [`P13_DESIGN.md`](P13_DESIGN.md) §2, sua sede naturale (è il contesto di P13).
 > Se in futuro serve un deep-dive di teoria pura LLM-organo a sé, sarà lo slot 10.
 
+✓ *Fatto* — **E1-LLM Route A-bis eseguita** (2026-05-22): imposta la persistenza
+assorbente dal framework → **nessun recupero** (morte 38.9%, hRAb-2/3 falsificate).
+Col probe **bilanciato** corregge Route A: $f_{abs}$ online ≈ 0.54 (floor del
+caso) — il vero blocco è l'**entry-detection**, non la persistenza; l'LLM online
+senza le regole modella la lava col prior "ostacolo da evitare" non "letale-
+terminale". Vedi [`E1_LLM_ROUTE_A_BIS_RESULT.md`](E1_LLM_ROUTE_A_BIS_RESULT.md).
+
 ✓ *Fatto* — **E1-LLM Route A eseguita** (2026-05-22): world-model LLM interrogato
 *online* da osservazioni locali. hRA-1 ✓ (costo trattabile con cache), hRA-3
-**falsificata** (morte pooled 35% vs 0/180 offline) — il merge regge offline ma
-non online-per-query; cede la persistenza assorbente (0.53; f_abs 0.92, movimento
-0.94 reggono). 3 run: 2 scartati (rate-limiting → fallback fabbricato; abort su
-blip di rete), il 3° pulito. Vedi [`E1_LLM_ROUTE_A_RESULT.md`](E1_LLM_ROUTE_A_RESULT.md).
+**falsificata** (morte pooled 35% vs 0/180 offline) — il merge regge offline, non
+online-per-query. ⚠️ diagnosi del meccanismo poi **corretta da Route A-bis**
+(entry-detection al floor del caso, non la persistenza). 3 run: 2 scartati
+(rate-limiting → fallback fabbricato; abort su blip di rete), il 3° pulito. Vedi
+[`E1_LLM_ROUTE_A_RESULT.md`](E1_LLM_ROUTE_A_RESULT.md).
 
 ✓ *Fatto* — **E1-LLM-curve eseguita** (2026-05-21): scala 4 modelli Llama (1B–70B)
 × 3 prompt × 3 repliche vs banda di ablazione casuale (isotonica + Wilcoxon + JT).
@@ -354,7 +352,10 @@ e1_llm_curve_analysis.py  analisi: isotonica + Wilcoxon + Jonckheere-Terpstra
 E1_LLM_CURVE_RESULT.md    report E1-LLM-curve (f_abs necessaria, non sufficiente)
 E1_LLM_ROUTE_A_DESIGN.md  design doc E1-LLM Route A PRE-REGISTRATO
 e1_llm_route_a.py         Route A: world-model LLM online + probe 4 assi
-E1_LLM_ROUTE_A_RESULT.md  report Route A (merge regge offline, non online)
+E1_LLM_ROUTE_A_RESULT.md  report Route A (merge offline sì, online no)
+E1_LLM_ROUTE_A_BIS_DESIGN.md  design Route A-bis (persistenza dal framework)
+e1_llm_route_a_bis.py     Route A-bis: persistenza imposta + probe bilanciato
+E1_LLM_ROUTE_A_BIS_RESULT.md  report Route A-bis (corregge la diagnosi di Route A)
 HANDOFF.md                questo file
 
 (harness λ₁ + H-B1a: in work/13_chaos_order/ — lambda1_harness.py, HB1A_RESULT.md.)

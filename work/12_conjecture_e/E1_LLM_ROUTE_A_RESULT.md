@@ -18,6 +18,23 @@ Kernel `fmc-core` invariato; `WorldModelEnv` riusato via `LLMWorldModelOnlineEnv
 > P13/hP13-1 ed E1-LLM-curve. **hRA-3 falsificata; il merge è delimitato al
 > regime offline-code.**
 
+> ## ⚠️ CORREZIONE (2026-05-22) — la diagnosi qui sotto è in parte SBAGLIATA
+>
+> [`E1_LLM_ROUTE_A_BIS_RESULT.md`](E1_LLM_ROUTE_A_BIS_RESULT.md) corregge questo
+> documento su un punto centrale. **(1)** Il $f_{\text{abs}}=0.92$ qui riportato
+> viene da una metrica **non bilanciata** (`fidelity_probe`, dominata dal
+> base-rate ~90% di celle libere) — incoerente col canone del progetto. Il probe
+> **bilanciato** (lo stesso di sweep ed E1-LLM-curve) dà $f_{\text{abs}}\approx
+> \mathbf{0.54}$, al **floor del caso**: l'entry-detection dell'LLM online **non
+> regge** (recall terminale ~0.07). **(2)** La persistenza ($0.53$) **non era
+> load-bearing**: Route A-bis l'ha imposta a $1.0$ dal framework e la morte
+> **non è scesa** ($38.9\%$ vs $35\%$). Il **verdetto** di questo documento
+> resta valido — il merge regge offline, non online — ma la **diagnosi del
+> meccanismo** è rivista: non la persistenza, bensì l'entry-detection al floor
+> del caso (l'LLM online, senza le regole, modella la lava col prior "ostacolo"
+> e non "letale-terminale"). Le §3–§5 qui sotto vanno lette con la correzione di
+> [`E1_LLM_ROUTE_A_BIS_RESULT.md`](E1_LLM_ROUTE_A_BIS_RESULT.md) §3–§4.
+
 ---
 
 ## 0. Validità — due run scartati prima di questo
