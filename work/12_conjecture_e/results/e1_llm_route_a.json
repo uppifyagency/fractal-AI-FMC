@@ -1,0 +1,264 @@
+{
+  "params": {
+    "model": "meta/llama-3.3-70b-instruct",
+    "temperature": 0.0,
+    "alphas": [
+      0.0,
+      0.1
+    ],
+    "n_episodes": 30,
+    "query_cap": 4000
+  },
+  "verdict": "ROUTE A FALSIFIED (fidelity)",
+  "cost": {
+    "distinct_queries": 660,
+    "api_calls_total": 589,
+    "api_calls_in_fmc_test": 0,
+    "cache_hits": 21818780,
+    "parse_failures": 0
+  },
+  "fidelity": {
+    "gauntlet": {
+      "f_abs": 0.915702479338843,
+      "move_fidelity": 0.9371900826446281,
+      "done_persistence": 0.5636363636363636
+    },
+    "lake": {
+      "f_abs": 0.8413223140495868,
+      "move_fidelity": 0.8611570247933884,
+      "done_persistence": 0.7909090909090909
+    },
+    "scatter": {
+      "f_abs": 0.8661157024793389,
+      "move_fidelity": 0.8975206611570248,
+      "done_persistence": 0.29411764705882354
+    },
+    "island": {
+      "f_abs": 0.9795555555555555,
+      "move_fidelity": 0.9857777777777778,
+      "done_persistence": 0.6
+    },
+    "spur": {
+      "f_abs": 0.9537777777777777,
+      "move_fidelity": 0.9733333333333334,
+      "done_persistence": 0.6727272727272727
+    },
+    "archipelago": {
+      "f_abs": 0.9795555555555555,
+      "move_fidelity": 0.9857777777777778,
+      "done_persistence": 0.28
+    }
+  },
+  "consistency": {
+    "n_sampled": 132,
+    "n_answered": 132,
+    "agree": 126,
+    "rate": 0.9545454545454546
+  },
+  "results": {
+    "gauntlet": {
+      "random": {
+        "n": 30,
+        "deaths": 19,
+        "goals": 0,
+        "timeouts": 11,
+        "death_rate": 0.6333333333333333,
+        "goal_rate": 0.0
+      },
+      "greedy": {
+        "n": 30,
+        "deaths": 27,
+        "goals": 3,
+        "timeouts": 0,
+        "death_rate": 0.9,
+        "goal_rate": 0.1
+      },
+      "fmc_a0.0": {
+        "n": 30,
+        "deaths": 21,
+        "goals": 0,
+        "timeouts": 9,
+        "death_rate": 0.7,
+        "goal_rate": 0.0
+      },
+      "fmc_a0.1": {
+        "n": 30,
+        "deaths": 10,
+        "goals": 0,
+        "timeouts": 20,
+        "death_rate": 0.3333333333333333,
+        "goal_rate": 0.0
+      }
+    },
+    "lake": {
+      "random": {
+        "n": 30,
+        "deaths": 25,
+        "goals": 0,
+        "timeouts": 5,
+        "death_rate": 0.8333333333333334,
+        "goal_rate": 0.0
+      },
+      "greedy": {
+        "n": 30,
+        "deaths": 30,
+        "goals": 0,
+        "timeouts": 0,
+        "death_rate": 1.0,
+        "goal_rate": 0.0
+      },
+      "fmc_a0.0": {
+        "n": 30,
+        "deaths": 10,
+        "goals": 1,
+        "timeouts": 19,
+        "death_rate": 0.3333333333333333,
+        "goal_rate": 0.03333333333333333
+      },
+      "fmc_a0.1": {
+        "n": 30,
+        "deaths": 21,
+        "goals": 5,
+        "timeouts": 4,
+        "death_rate": 0.7,
+        "goal_rate": 0.16666666666666666
+      }
+    },
+    "scatter": {
+      "random": {
+        "n": 30,
+        "deaths": 29,
+        "goals": 0,
+        "timeouts": 1,
+        "death_rate": 0.9666666666666667,
+        "goal_rate": 0.0
+      },
+      "greedy": {
+        "n": 30,
+        "deaths": 30,
+        "goals": 0,
+        "timeouts": 0,
+        "death_rate": 1.0,
+        "goal_rate": 0.0
+      },
+      "fmc_a0.0": {
+        "n": 30,
+        "deaths": 24,
+        "goals": 0,
+        "timeouts": 6,
+        "death_rate": 0.8,
+        "goal_rate": 0.0
+      },
+      "fmc_a0.1": {
+        "n": 30,
+        "deaths": 24,
+        "goals": 0,
+        "timeouts": 6,
+        "death_rate": 0.8,
+        "goal_rate": 0.0
+      }
+    },
+    "island": {
+      "random": {
+        "n": 30,
+        "deaths": 3,
+        "goals": 0,
+        "timeouts": 27,
+        "death_rate": 0.1,
+        "goal_rate": 0.0
+      },
+      "greedy": {
+        "n": 30,
+        "deaths": 3,
+        "goals": 27,
+        "timeouts": 0,
+        "death_rate": 0.1,
+        "goal_rate": 0.9
+      },
+      "fmc_a0.0": {
+        "n": 30,
+        "deaths": 1,
+        "goals": 0,
+        "timeouts": 29,
+        "death_rate": 0.03333333333333333,
+        "goal_rate": 0.0
+      },
+      "fmc_a0.1": {
+        "n": 30,
+        "deaths": 2,
+        "goals": 0,
+        "timeouts": 28,
+        "death_rate": 0.06666666666666667,
+        "goal_rate": 0.0
+      }
+    },
+    "spur": {
+      "random": {
+        "n": 30,
+        "deaths": 0,
+        "goals": 0,
+        "timeouts": 30,
+        "death_rate": 0.0,
+        "goal_rate": 0.0
+      },
+      "greedy": {
+        "n": 30,
+        "deaths": 0,
+        "goals": 30,
+        "timeouts": 0,
+        "death_rate": 0.0,
+        "goal_rate": 1.0
+      },
+      "fmc_a0.0": {
+        "n": 30,
+        "deaths": 0,
+        "goals": 0,
+        "timeouts": 30,
+        "death_rate": 0.0,
+        "goal_rate": 0.0
+      },
+      "fmc_a0.1": {
+        "n": 30,
+        "deaths": 0,
+        "goals": 2,
+        "timeouts": 28,
+        "death_rate": 0.0,
+        "goal_rate": 0.06666666666666667
+      }
+    },
+    "archipelago": {
+      "random": {
+        "n": 30,
+        "deaths": 12,
+        "goals": 0,
+        "timeouts": 18,
+        "death_rate": 0.4,
+        "goal_rate": 0.0
+      },
+      "greedy": {
+        "n": 30,
+        "deaths": 13,
+        "goals": 17,
+        "timeouts": 0,
+        "death_rate": 0.43333333333333335,
+        "goal_rate": 0.5666666666666667
+      },
+      "fmc_a0.0": {
+        "n": 30,
+        "deaths": 7,
+        "goals": 0,
+        "timeouts": 23,
+        "death_rate": 0.23333333333333334,
+        "goal_rate": 0.0
+      },
+      "fmc_a0.1": {
+        "n": 30,
+        "deaths": 7,
+        "goals": 0,
+        "timeouts": 23,
+        "death_rate": 0.23333333333333334,
+        "goal_rate": 0.0
+      }
+    }
+  }
+}

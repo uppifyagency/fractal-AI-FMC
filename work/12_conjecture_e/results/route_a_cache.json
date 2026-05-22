@@ -1,0 +1,2642 @@
+{
+  "ground|edge|ground|edge|ground|done=0|a=0": [
+    "stay",
+    false
+  ],
+  "ground|edge|ground|edge|ground|done=1|a=0": [
+    "stay",
+    true
+  ],
+  "ground|edge|ground|edge|ground|done=0|a=1": [
+    "down",
+    false
+  ],
+  "ground|edge|ground|edge|ground|done=1|a=1": [
+    "down",
+    false
+  ],
+  "ground|edge|ground|edge|ground|done=0|a=2": [
+    "stay",
+    false
+  ],
+  "ground|edge|ground|edge|ground|done=1|a=2": [
+    "stay",
+    false
+  ],
+  "ground|edge|ground|edge|ground|done=0|a=3": [
+    "right",
+    false
+  ],
+  "ground|edge|ground|edge|ground|done=1|a=3": [
+    "right",
+    false
+  ],
+  "ground|edge|ground|edge|ground|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|edge|ground|edge|ground|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|edge|ground|ground|ground|done=0|a=0": [
+    "stay",
+    false
+  ],
+  "ground|edge|ground|ground|ground|done=1|a=0": [
+    "stay",
+    true
+  ],
+  "ground|edge|ground|ground|ground|done=0|a=1": [
+    "down",
+    false
+  ],
+  "ground|edge|ground|ground|ground|done=1|a=1": [
+    "down",
+    false
+  ],
+  "ground|edge|ground|ground|ground|done=0|a=2": [
+    "left",
+    false
+  ],
+  "ground|edge|ground|ground|ground|done=1|a=2": [
+    "left",
+    false
+  ],
+  "ground|edge|ground|ground|ground|done=0|a=3": [
+    "right",
+    false
+  ],
+  "ground|edge|ground|ground|ground|done=1|a=3": [
+    "right",
+    false
+  ],
+  "ground|edge|ground|ground|ground|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|edge|ground|ground|ground|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|edge|ground|ground|edge|done=0|a=0": [
+    "stay",
+    false
+  ],
+  "ground|edge|ground|ground|edge|done=1|a=0": [
+    "stay",
+    true
+  ],
+  "ground|edge|ground|ground|edge|done=0|a=1": [
+    "down",
+    false
+  ],
+  "ground|edge|ground|ground|edge|done=1|a=1": [
+    "down",
+    false
+  ],
+  "ground|edge|ground|ground|edge|done=0|a=2": [
+    "left",
+    false
+  ],
+  "ground|edge|ground|ground|edge|done=1|a=2": [
+    "left",
+    false
+  ],
+  "ground|edge|ground|ground|edge|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "ground|edge|ground|ground|edge|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "ground|edge|ground|ground|edge|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|edge|ground|ground|edge|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|ground|ground|edge|ground|done=0|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|ground|edge|ground|done=1|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|ground|edge|ground|done=0|a=1": [
+    "down",
+    false
+  ],
+  "ground|ground|ground|edge|ground|done=1|a=1": [
+    "down",
+    false
+  ],
+  "ground|ground|ground|edge|ground|done=0|a=2": [
+    "stay",
+    false
+  ],
+  "ground|ground|ground|edge|ground|done=1|a=2": [
+    "stay",
+    true
+  ],
+  "ground|ground|ground|edge|ground|done=0|a=3": [
+    "right",
+    false
+  ],
+  "ground|ground|ground|edge|ground|done=1|a=3": [
+    "right",
+    false
+  ],
+  "ground|ground|ground|edge|ground|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|ground|ground|edge|ground|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|ground|ground|ground|ground|done=0|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|ground|ground|ground|done=1|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|ground|ground|ground|done=0|a=1": [
+    "down",
+    false
+  ],
+  "ground|ground|ground|ground|ground|done=1|a=1": [
+    "down",
+    false
+  ],
+  "ground|ground|ground|ground|ground|done=0|a=2": [
+    "left",
+    false
+  ],
+  "ground|ground|ground|ground|ground|done=1|a=2": [
+    "left",
+    false
+  ],
+  "ground|ground|ground|ground|ground|done=0|a=3": [
+    "right",
+    false
+  ],
+  "ground|ground|ground|ground|ground|done=1|a=3": [
+    "right",
+    false
+  ],
+  "ground|ground|ground|ground|ground|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|ground|ground|ground|ground|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|ground|ground|ground|edge|done=0|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|ground|ground|edge|done=1|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|ground|ground|edge|done=0|a=1": [
+    "down",
+    false
+  ],
+  "ground|ground|ground|ground|edge|done=1|a=1": [
+    "down",
+    false
+  ],
+  "ground|ground|ground|ground|edge|done=0|a=2": [
+    "left",
+    false
+  ],
+  "ground|ground|ground|ground|edge|done=1|a=2": [
+    "left",
+    false
+  ],
+  "ground|ground|ground|ground|edge|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "ground|ground|ground|ground|edge|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "ground|ground|ground|ground|edge|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|ground|ground|ground|edge|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|ground|lava|edge|ground|done=0|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|lava|edge|ground|done=1|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|lava|edge|ground|done=0|a=1": [
+    "stay",
+    true
+  ],
+  "ground|ground|lava|edge|ground|done=1|a=1": [
+    "stay",
+    true
+  ],
+  "ground|ground|lava|edge|ground|done=0|a=2": [
+    "stay",
+    false
+  ],
+  "ground|ground|lava|edge|ground|done=1|a=2": [
+    "stay",
+    true
+  ],
+  "ground|ground|lava|edge|ground|done=0|a=3": [
+    "right",
+    false
+  ],
+  "ground|ground|lava|edge|ground|done=1|a=3": [
+    "right",
+    false
+  ],
+  "ground|ground|lava|edge|ground|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|ground|lava|edge|ground|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|ground|lava|ground|ground|done=0|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|lava|ground|ground|done=1|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|lava|ground|ground|done=0|a=1": [
+    "stay",
+    false
+  ],
+  "ground|ground|lava|ground|ground|done=1|a=1": [
+    "stay",
+    true
+  ],
+  "ground|ground|lava|ground|ground|done=0|a=2": [
+    "left",
+    false
+  ],
+  "ground|ground|lava|ground|ground|done=1|a=2": [
+    "left",
+    false
+  ],
+  "ground|ground|lava|ground|ground|done=0|a=3": [
+    "right",
+    false
+  ],
+  "ground|ground|lava|ground|ground|done=1|a=3": [
+    "right",
+    false
+  ],
+  "ground|ground|lava|ground|ground|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|ground|lava|ground|ground|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|ground|lava|ground|edge|done=0|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|lava|ground|edge|done=1|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|lava|ground|edge|done=0|a=1": [
+    "stay",
+    true
+  ],
+  "ground|ground|lava|ground|edge|done=1|a=1": [
+    "stay",
+    true
+  ],
+  "ground|ground|lava|ground|edge|done=0|a=2": [
+    "left",
+    false
+  ],
+  "ground|ground|lava|ground|edge|done=1|a=2": [
+    "left",
+    false
+  ],
+  "ground|ground|lava|ground|edge|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "ground|ground|lava|ground|edge|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "ground|ground|lava|ground|edge|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|ground|lava|ground|edge|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "lava|ground|ground|edge|lava|done=0|a=0": [
+    "up",
+    false
+  ],
+  "lava|ground|ground|edge|lava|done=1|a=0": [
+    "up",
+    false
+  ],
+  "lava|ground|ground|edge|lava|done=0|a=1": [
+    "down",
+    false
+  ],
+  "lava|ground|ground|edge|lava|done=1|a=1": [
+    "down",
+    false
+  ],
+  "lava|ground|ground|edge|lava|done=0|a=2": [
+    "stay",
+    false
+  ],
+  "lava|ground|ground|edge|lava|done=1|a=2": [
+    "stay",
+    true
+  ],
+  "lava|ground|ground|edge|lava|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "lava|ground|ground|edge|lava|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "lava|ground|ground|edge|lava|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "lava|ground|ground|edge|lava|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "lava|ground|ground|lava|lava|done=0|a=0": [
+    "up",
+    false
+  ],
+  "lava|ground|ground|lava|lava|done=1|a=0": [
+    "up",
+    false
+  ],
+  "lava|ground|ground|lava|lava|done=0|a=1": [
+    "down",
+    false
+  ],
+  "lava|ground|ground|lava|lava|done=1|a=1": [
+    "down",
+    false
+  ],
+  "lava|ground|ground|lava|lava|done=0|a=2": [
+    "stay",
+    false
+  ],
+  "lava|ground|ground|lava|lava|done=1|a=2": [
+    "stay",
+    true
+  ],
+  "lava|ground|ground|lava|lava|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "lava|ground|ground|lava|lava|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "lava|ground|ground|lava|lava|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "lava|ground|ground|lava|lava|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "lava|ground|ground|lava|ground|done=0|a=0": [
+    "up",
+    false
+  ],
+  "lava|ground|ground|lava|ground|done=1|a=0": [
+    "up",
+    false
+  ],
+  "lava|ground|ground|lava|ground|done=0|a=1": [
+    "down",
+    false
+  ],
+  "lava|ground|ground|lava|ground|done=1|a=1": [
+    "down",
+    false
+  ],
+  "lava|ground|ground|lava|ground|done=0|a=2": [
+    "stay",
+    false
+  ],
+  "lava|ground|ground|lava|ground|done=1|a=2": [
+    "stay",
+    true
+  ],
+  "lava|ground|ground|lava|ground|done=0|a=3": [
+    "right",
+    false
+  ],
+  "lava|ground|ground|lava|ground|done=1|a=3": [
+    "right",
+    false
+  ],
+  "lava|ground|ground|lava|ground|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "lava|ground|ground|lava|ground|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|ground|ground|lava|lava|done=0|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|ground|lava|lava|done=1|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|ground|lava|lava|done=0|a=1": [
+    "down",
+    false
+  ],
+  "ground|ground|ground|lava|lava|done=1|a=1": [
+    "down",
+    false
+  ],
+  "ground|ground|ground|lava|lava|done=0|a=2": [
+    "stay",
+    false
+  ],
+  "ground|ground|ground|lava|lava|done=1|a=2": [
+    "stay",
+    true
+  ],
+  "ground|ground|ground|lava|lava|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "ground|ground|ground|lava|lava|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "ground|ground|ground|lava|lava|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|ground|ground|lava|lava|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "lava|ground|ground|ground|lava|done=0|a=0": [
+    "up",
+    false
+  ],
+  "lava|ground|ground|ground|lava|done=1|a=0": [
+    "up",
+    false
+  ],
+  "lava|ground|ground|ground|lava|done=0|a=1": [
+    "down",
+    false
+  ],
+  "lava|ground|ground|ground|lava|done=1|a=1": [
+    "down",
+    false
+  ],
+  "lava|ground|ground|ground|lava|done=0|a=2": [
+    "left",
+    false
+  ],
+  "lava|ground|ground|ground|lava|done=1|a=2": [
+    "left",
+    false
+  ],
+  "lava|ground|ground|ground|lava|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "lava|ground|ground|ground|lava|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "lava|ground|ground|ground|lava|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "lava|ground|ground|ground|lava|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "lava|ground|ground|lava|edge|done=0|a=0": [
+    "up",
+    false
+  ],
+  "lava|ground|ground|lava|edge|done=1|a=0": [
+    "up",
+    false
+  ],
+  "lava|ground|ground|lava|edge|done=0|a=1": [
+    "down",
+    false
+  ],
+  "lava|ground|ground|lava|edge|done=1|a=1": [
+    "down",
+    false
+  ],
+  "lava|ground|ground|lava|edge|done=0|a=2": [
+    "stay",
+    false
+  ],
+  "lava|ground|ground|lava|edge|done=1|a=2": [
+    "stay",
+    true
+  ],
+  "lava|ground|ground|lava|edge|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "lava|ground|ground|lava|edge|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "lava|ground|ground|lava|edge|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "lava|ground|ground|lava|edge|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|lava|ground|edge|ground|done=0|a=0": [
+    "stay",
+    false
+  ],
+  "ground|lava|ground|edge|ground|done=1|a=0": [
+    "stay",
+    true
+  ],
+  "ground|lava|ground|edge|ground|done=0|a=1": [
+    "down",
+    false
+  ],
+  "ground|lava|ground|edge|ground|done=1|a=1": [
+    "down",
+    false
+  ],
+  "ground|lava|ground|edge|ground|done=0|a=2": [
+    "stay",
+    false
+  ],
+  "ground|lava|ground|edge|ground|done=1|a=2": [
+    "stay",
+    true
+  ],
+  "ground|lava|ground|edge|ground|done=0|a=3": [
+    "right",
+    false
+  ],
+  "ground|lava|ground|edge|ground|done=1|a=3": [
+    "right",
+    false
+  ],
+  "ground|lava|ground|edge|ground|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|lava|ground|edge|ground|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|lava|ground|ground|ground|done=0|a=0": [
+    "stay",
+    false
+  ],
+  "ground|lava|ground|ground|ground|done=1|a=0": [
+    "stay",
+    true
+  ],
+  "ground|lava|ground|ground|ground|done=0|a=1": [
+    "down",
+    false
+  ],
+  "ground|lava|ground|ground|ground|done=1|a=1": [
+    "down",
+    false
+  ],
+  "ground|lava|ground|ground|ground|done=0|a=2": [
+    "left",
+    false
+  ],
+  "ground|lava|ground|ground|ground|done=1|a=2": [
+    "left",
+    false
+  ],
+  "ground|lava|ground|ground|ground|done=0|a=3": [
+    "right",
+    false
+  ],
+  "ground|lava|ground|ground|ground|done=1|a=3": [
+    "right",
+    false
+  ],
+  "ground|lava|ground|ground|ground|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|lava|ground|ground|ground|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|lava|ground|ground|edge|done=0|a=0": [
+    "stay",
+    false
+  ],
+  "ground|lava|ground|ground|edge|done=1|a=0": [
+    "stay",
+    true
+  ],
+  "ground|lava|ground|ground|edge|done=0|a=1": [
+    "down",
+    false
+  ],
+  "ground|lava|ground|ground|edge|done=1|a=1": [
+    "down",
+    false
+  ],
+  "ground|lava|ground|ground|edge|done=0|a=2": [
+    "left",
+    false
+  ],
+  "ground|lava|ground|ground|edge|done=1|a=2": [
+    "left",
+    false
+  ],
+  "ground|lava|ground|ground|edge|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "ground|lava|ground|ground|edge|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "ground|lava|ground|ground|edge|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|lava|ground|ground|edge|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|ground|goal|ground|edge|done=0|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|goal|ground|edge|done=1|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|goal|ground|edge|done=0|a=1": [
+    "down",
+    true
+  ],
+  "ground|ground|goal|ground|edge|done=1|a=1": [
+    "down",
+    true
+  ],
+  "ground|ground|goal|ground|edge|done=0|a=2": [
+    "left",
+    false
+  ],
+  "ground|ground|goal|ground|edge|done=1|a=2": [
+    "left",
+    false
+  ],
+  "ground|ground|goal|ground|edge|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "ground|ground|goal|ground|edge|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "ground|ground|goal|ground|edge|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|ground|goal|ground|edge|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|ground|edge|edge|ground|done=0|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|edge|edge|ground|done=1|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|edge|edge|ground|done=0|a=1": [
+    "stay",
+    false
+  ],
+  "ground|ground|edge|edge|ground|done=1|a=1": [
+    "stay",
+    true
+  ],
+  "ground|ground|edge|edge|ground|done=0|a=2": [
+    "stay",
+    false
+  ],
+  "ground|ground|edge|edge|ground|done=1|a=2": [
+    "stay",
+    true
+  ],
+  "ground|ground|edge|edge|ground|done=0|a=3": [
+    "right",
+    false
+  ],
+  "ground|ground|edge|edge|ground|done=1|a=3": [
+    "right",
+    false
+  ],
+  "ground|ground|edge|edge|ground|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|ground|edge|edge|ground|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|ground|edge|ground|ground|done=0|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|edge|ground|ground|done=1|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|edge|ground|ground|done=0|a=1": [
+    "stay",
+    false
+  ],
+  "ground|ground|edge|ground|ground|done=1|a=1": [
+    "stay",
+    true
+  ],
+  "ground|ground|edge|ground|ground|done=0|a=2": [
+    "left",
+    false
+  ],
+  "ground|ground|edge|ground|ground|done=1|a=2": [
+    "left",
+    false
+  ],
+  "ground|ground|edge|ground|ground|done=0|a=3": [
+    "right",
+    false
+  ],
+  "ground|ground|edge|ground|ground|done=1|a=3": [
+    "right",
+    false
+  ],
+  "ground|ground|edge|ground|ground|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|ground|edge|ground|ground|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|ground|edge|ground|goal|done=0|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|edge|ground|goal|done=1|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|edge|ground|goal|done=0|a=1": [
+    "stay",
+    false
+  ],
+  "ground|ground|edge|ground|goal|done=1|a=1": [
+    "stay",
+    true
+  ],
+  "ground|ground|edge|ground|goal|done=0|a=2": [
+    "left",
+    false
+  ],
+  "ground|ground|edge|ground|goal|done=1|a=2": [
+    "left",
+    false
+  ],
+  "ground|ground|edge|ground|goal|done=0|a=3": [
+    "right",
+    true
+  ],
+  "ground|ground|edge|ground|goal|done=1|a=3": [
+    "right",
+    true
+  ],
+  "ground|ground|edge|ground|goal|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|ground|edge|ground|goal|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "goal|ground|edge|ground|edge|done=0|a=0": [
+    "up",
+    false
+  ],
+  "goal|ground|edge|ground|edge|done=1|a=0": [
+    "up",
+    false
+  ],
+  "goal|ground|edge|ground|edge|done=0|a=1": [
+    "stay",
+    false
+  ],
+  "goal|ground|edge|ground|edge|done=1|a=1": [
+    "stay",
+    true
+  ],
+  "goal|ground|edge|ground|edge|done=0|a=2": [
+    "left",
+    false
+  ],
+  "goal|ground|edge|ground|edge|done=1|a=2": [
+    "left",
+    false
+  ],
+  "goal|ground|edge|ground|edge|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "goal|ground|edge|ground|edge|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "goal|ground|edge|ground|edge|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "goal|ground|edge|ground|edge|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|ground|lava|ground|lava|done=0|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|lava|ground|lava|done=1|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|lava|ground|lava|done=0|a=1": [
+    "stay",
+    true
+  ],
+  "ground|ground|lava|ground|lava|done=1|a=1": [
+    "stay",
+    true
+  ],
+  "ground|ground|lava|ground|lava|done=0|a=2": [
+    "left",
+    false
+  ],
+  "ground|ground|lava|ground|lava|done=1|a=2": [
+    "left",
+    false
+  ],
+  "ground|ground|lava|ground|lava|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "ground|ground|lava|ground|lava|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "ground|ground|lava|ground|lava|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|ground|lava|ground|lava|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "lava|ground|lava|ground|lava|done=0|a=0": [
+    "up",
+    false
+  ],
+  "lava|ground|lava|ground|lava|done=1|a=0": [
+    "up",
+    false
+  ],
+  "lava|ground|lava|ground|lava|done=0|a=1": [
+    "stay",
+    false
+  ],
+  "lava|ground|lava|ground|lava|done=1|a=1": [
+    "stay",
+    true
+  ],
+  "lava|ground|lava|ground|lava|done=0|a=2": [
+    "left",
+    false
+  ],
+  "lava|ground|lava|ground|lava|done=1|a=2": [
+    "left",
+    false
+  ],
+  "lava|ground|lava|ground|lava|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "lava|ground|lava|ground|lava|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "lava|ground|lava|ground|lava|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "lava|ground|lava|ground|lava|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "lava|ground|lava|lava|lava|done=0|a=0": [
+    "up",
+    false
+  ],
+  "lava|ground|lava|lava|lava|done=1|a=0": [
+    "up",
+    false
+  ],
+  "lava|ground|lava|lava|lava|done=0|a=1": [
+    "stay",
+    false
+  ],
+  "lava|ground|lava|lava|lava|done=1|a=1": [
+    "stay",
+    true
+  ],
+  "lava|ground|lava|lava|lava|done=0|a=2": [
+    "stay",
+    false
+  ],
+  "lava|ground|lava|lava|lava|done=1|a=2": [
+    "stay",
+    true
+  ],
+  "lava|ground|lava|lava|lava|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "lava|ground|lava|lava|lava|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "lava|ground|lava|lava|lava|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "lava|ground|lava|lava|lava|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "lava|ground|lava|lava|ground|done=0|a=0": [
+    "up",
+    false
+  ],
+  "lava|ground|lava|lava|ground|done=1|a=0": [
+    "up",
+    false
+  ],
+  "lava|ground|lava|lava|ground|done=0|a=1": [
+    "stay",
+    false
+  ],
+  "lava|ground|lava|lava|ground|done=1|a=1": [
+    "stay",
+    true
+  ],
+  "lava|ground|lava|lava|ground|done=0|a=2": [
+    "stay",
+    false
+  ],
+  "lava|ground|lava|lava|ground|done=1|a=2": [
+    "stay",
+    true
+  ],
+  "lava|ground|lava|lava|ground|done=0|a=3": [
+    "right",
+    false
+  ],
+  "lava|ground|lava|lava|ground|done=1|a=3": [
+    "right",
+    false
+  ],
+  "lava|ground|lava|lava|ground|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "lava|ground|lava|lava|ground|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|ground|lava|lava|ground|done=0|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|lava|lava|ground|done=1|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|lava|lava|ground|done=0|a=1": [
+    "stay",
+    true
+  ],
+  "ground|ground|lava|lava|ground|done=1|a=1": [
+    "stay",
+    true
+  ],
+  "ground|ground|lava|lava|ground|done=0|a=2": [
+    "stay",
+    false
+  ],
+  "ground|ground|lava|lava|ground|done=1|a=2": [
+    "stay",
+    true
+  ],
+  "ground|ground|lava|lava|ground|done=0|a=3": [
+    "right",
+    false
+  ],
+  "ground|ground|lava|lava|ground|done=1|a=3": [
+    "right",
+    false
+  ],
+  "ground|ground|lava|lava|ground|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|ground|lava|lava|ground|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|ground|ground|ground|lava|done=0|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|ground|ground|lava|done=1|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|ground|ground|lava|done=0|a=1": [
+    "down",
+    false
+  ],
+  "ground|ground|ground|ground|lava|done=1|a=1": [
+    "down",
+    false
+  ],
+  "ground|ground|ground|ground|lava|done=0|a=2": [
+    "left",
+    false
+  ],
+  "ground|ground|ground|ground|lava|done=1|a=2": [
+    "left",
+    false
+  ],
+  "ground|ground|ground|ground|lava|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "ground|ground|ground|ground|lava|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "ground|ground|ground|ground|lava|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|ground|ground|ground|lava|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "lava|lava|lava|lava|lava|done=0|a=0": [
+    "stay",
+    true
+  ],
+  "lava|lava|lava|lava|lava|done=1|a=0": [
+    "stay",
+    true
+  ],
+  "lava|lava|lava|lava|lava|done=0|a=1": [
+    "stay",
+    false
+  ],
+  "lava|lava|lava|lava|lava|done=1|a=1": [
+    "stay",
+    true
+  ],
+  "lava|lava|lava|lava|lava|done=0|a=2": [
+    "stay",
+    false
+  ],
+  "lava|lava|lava|lava|lava|done=1|a=2": [
+    "stay",
+    true
+  ],
+  "lava|lava|lava|lava|lava|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "lava|lava|lava|lava|lava|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "lava|lava|lava|lava|lava|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "lava|lava|lava|lava|lava|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|ground|ground|lava|ground|done=0|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|ground|lava|ground|done=1|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|ground|lava|ground|done=0|a=1": [
+    "down",
+    false
+  ],
+  "ground|ground|ground|lava|ground|done=1|a=1": [
+    "down",
+    false
+  ],
+  "ground|ground|ground|lava|ground|done=0|a=2": [
+    "stay",
+    false
+  ],
+  "ground|ground|ground|lava|ground|done=1|a=2": [
+    "stay",
+    true
+  ],
+  "ground|ground|ground|lava|ground|done=0|a=3": [
+    "right",
+    false
+  ],
+  "ground|ground|ground|lava|ground|done=1|a=3": [
+    "right",
+    false
+  ],
+  "ground|ground|ground|lava|ground|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|ground|ground|lava|ground|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "lava|lava|lava|ground|lava|done=0|a=0": [
+    "stay",
+    false
+  ],
+  "lava|lava|lava|ground|lava|done=1|a=0": [
+    "stay",
+    true
+  ],
+  "lava|lava|lava|ground|lava|done=0|a=1": [
+    "stay",
+    false
+  ],
+  "lava|lava|lava|ground|lava|done=1|a=1": [
+    "stay",
+    true
+  ],
+  "lava|lava|lava|ground|lava|done=0|a=2": [
+    "left",
+    false
+  ],
+  "lava|lava|lava|ground|lava|done=1|a=2": [
+    "left",
+    false
+  ],
+  "lava|lava|lava|ground|lava|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "lava|lava|lava|ground|lava|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "lava|lava|lava|ground|lava|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "lava|lava|lava|ground|lava|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "lava|lava|lava|lava|ground|done=0|a=0": [
+    "stay",
+    false
+  ],
+  "lava|lava|lava|lava|ground|done=1|a=0": [
+    "stay",
+    true
+  ],
+  "lava|lava|lava|lava|ground|done=0|a=1": [
+    "stay",
+    false
+  ],
+  "lava|lava|lava|lava|ground|done=1|a=1": [
+    "stay",
+    true
+  ],
+  "lava|lava|lava|lava|ground|done=0|a=2": [
+    "stay",
+    false
+  ],
+  "lava|lava|lava|lava|ground|done=1|a=2": [
+    "stay",
+    true
+  ],
+  "lava|lava|lava|lava|ground|done=0|a=3": [
+    "right",
+    false
+  ],
+  "lava|lava|lava|lava|ground|done=1|a=3": [
+    "right",
+    false
+  ],
+  "lava|lava|lava|lava|ground|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "lava|lava|lava|lava|ground|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|ground|ground|ground|goal|done=0|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|ground|ground|goal|done=1|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|ground|ground|goal|done=0|a=1": [
+    "down",
+    false
+  ],
+  "ground|ground|ground|ground|goal|done=1|a=1": [
+    "down",
+    false
+  ],
+  "ground|ground|ground|ground|goal|done=0|a=2": [
+    "left",
+    false
+  ],
+  "ground|ground|ground|ground|goal|done=1|a=2": [
+    "left",
+    false
+  ],
+  "ground|ground|ground|ground|goal|done=0|a=3": [
+    "right",
+    true
+  ],
+  "ground|ground|ground|ground|goal|done=1|a=3": [
+    "right",
+    true
+  ],
+  "ground|ground|ground|ground|goal|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|ground|ground|ground|goal|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "goal|ground|ground|ground|edge|done=0|a=0": [
+    "up",
+    false
+  ],
+  "goal|ground|ground|ground|edge|done=1|a=0": [
+    "up",
+    false
+  ],
+  "goal|ground|ground|ground|edge|done=0|a=1": [
+    "down",
+    false
+  ],
+  "goal|ground|ground|ground|edge|done=1|a=1": [
+    "down",
+    false
+  ],
+  "goal|ground|ground|ground|edge|done=0|a=2": [
+    "left",
+    false
+  ],
+  "goal|ground|ground|ground|edge|done=1|a=2": [
+    "left",
+    false
+  ],
+  "goal|ground|ground|ground|edge|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "goal|ground|ground|ground|edge|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "goal|ground|ground|ground|edge|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "goal|ground|ground|ground|edge|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "lava|lava|ground|ground|lava|done=0|a=0": [
+    "stay",
+    false
+  ],
+  "lava|lava|ground|ground|lava|done=1|a=0": [
+    "stay",
+    true
+  ],
+  "lava|lava|ground|ground|lava|done=0|a=1": [
+    "down",
+    false
+  ],
+  "lava|lava|ground|ground|lava|done=1|a=1": [
+    "down",
+    false
+  ],
+  "lava|lava|ground|ground|lava|done=0|a=2": [
+    "left",
+    false
+  ],
+  "lava|lava|ground|ground|lava|done=1|a=2": [
+    "left",
+    false
+  ],
+  "lava|lava|ground|ground|lava|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "lava|lava|ground|ground|lava|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "lava|lava|ground|ground|lava|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "lava|lava|ground|ground|lava|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "lava|lava|ground|lava|ground|done=0|a=0": [
+    "stay",
+    false
+  ],
+  "lava|lava|ground|lava|ground|done=1|a=0": [
+    "stay",
+    true
+  ],
+  "lava|lava|ground|lava|ground|done=0|a=1": [
+    "down",
+    false
+  ],
+  "lava|lava|ground|lava|ground|done=1|a=1": [
+    "down",
+    false
+  ],
+  "lava|lava|ground|lava|ground|done=0|a=2": [
+    "stay",
+    false
+  ],
+  "lava|lava|ground|lava|ground|done=1|a=2": [
+    "stay",
+    true
+  ],
+  "lava|lava|ground|lava|ground|done=0|a=3": [
+    "right",
+    false
+  ],
+  "lava|lava|ground|lava|ground|done=1|a=3": [
+    "right",
+    false
+  ],
+  "lava|lava|ground|lava|ground|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "lava|lava|ground|lava|ground|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|goal|ground|ground|edge|done=0|a=0": [
+    "up",
+    true
+  ],
+  "ground|goal|ground|ground|edge|done=1|a=0": [
+    "up",
+    true
+  ],
+  "ground|goal|ground|ground|edge|done=0|a=1": [
+    "down",
+    false
+  ],
+  "ground|goal|ground|ground|edge|done=1|a=1": [
+    "down",
+    false
+  ],
+  "ground|goal|ground|ground|edge|done=0|a=2": [
+    "left",
+    false
+  ],
+  "ground|goal|ground|ground|edge|done=1|a=2": [
+    "left",
+    false
+  ],
+  "ground|goal|ground|ground|edge|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "ground|goal|ground|ground|edge|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "ground|goal|ground|ground|edge|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|goal|ground|ground|edge|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|lava|ground|ground|lava|done=0|a=0": [
+    "stay",
+    false
+  ],
+  "ground|lava|ground|ground|lava|done=1|a=0": [
+    "stay",
+    true
+  ],
+  "ground|lava|ground|ground|lava|done=0|a=1": [
+    "down",
+    false
+  ],
+  "ground|lava|ground|ground|lava|done=1|a=1": [
+    "down",
+    false
+  ],
+  "ground|lava|ground|ground|lava|done=0|a=2": [
+    "left",
+    false
+  ],
+  "ground|lava|ground|ground|lava|done=1|a=2": [
+    "left",
+    false
+  ],
+  "ground|lava|ground|ground|lava|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "ground|lava|ground|ground|lava|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "ground|lava|ground|ground|lava|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|lava|ground|ground|lava|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "lava|lava|ground|lava|lava|done=0|a=0": [
+    "stay",
+    false
+  ],
+  "lava|lava|ground|lava|lava|done=1|a=0": [
+    "stay",
+    true
+  ],
+  "lava|lava|ground|lava|lava|done=0|a=1": [
+    "down",
+    false
+  ],
+  "lava|lava|ground|lava|lava|done=1|a=1": [
+    "down",
+    false
+  ],
+  "lava|lava|ground|lava|lava|done=0|a=2": [
+    "stay",
+    false
+  ],
+  "lava|lava|ground|lava|lava|done=1|a=2": [
+    "stay",
+    true
+  ],
+  "lava|lava|ground|lava|lava|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "lava|lava|ground|lava|lava|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "lava|lava|ground|lava|lava|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "lava|lava|ground|lava|lava|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|lava|ground|lava|ground|done=0|a=0": [
+    "stay",
+    false
+  ],
+  "ground|lava|ground|lava|ground|done=1|a=0": [
+    "stay",
+    true
+  ],
+  "ground|lava|ground|lava|ground|done=0|a=1": [
+    "down",
+    false
+  ],
+  "ground|lava|ground|lava|ground|done=1|a=1": [
+    "down",
+    false
+  ],
+  "ground|lava|ground|lava|ground|done=0|a=2": [
+    "stay",
+    false
+  ],
+  "ground|lava|ground|lava|ground|done=1|a=2": [
+    "stay",
+    true
+  ],
+  "ground|lava|ground|lava|ground|done=0|a=3": [
+    "right",
+    false
+  ],
+  "ground|lava|ground|lava|ground|done=1|a=3": [
+    "right",
+    false
+  ],
+  "ground|lava|ground|lava|ground|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|lava|ground|lava|ground|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|ground|edge|ground|edge|done=0|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|edge|ground|edge|done=1|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|edge|ground|edge|done=0|a=1": [
+    "stay",
+    false
+  ],
+  "ground|ground|edge|ground|edge|done=1|a=1": [
+    "stay",
+    true
+  ],
+  "ground|ground|edge|ground|edge|done=0|a=2": [
+    "left",
+    false
+  ],
+  "ground|ground|edge|ground|edge|done=1|a=2": [
+    "left",
+    false
+  ],
+  "ground|ground|edge|ground|edge|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "ground|ground|edge|ground|edge|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "ground|ground|edge|ground|edge|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|ground|edge|ground|edge|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|edge|lava|ground|ground|done=0|a=0": [
+    "stay",
+    false
+  ],
+  "ground|edge|lava|ground|ground|done=1|a=0": [
+    "stay",
+    true
+  ],
+  "ground|edge|lava|ground|ground|done=0|a=1": [
+    "stay",
+    false
+  ],
+  "ground|edge|lava|ground|ground|done=1|a=1": [
+    "stay",
+    true
+  ],
+  "ground|edge|lava|ground|ground|done=0|a=2": [
+    "left",
+    false
+  ],
+  "ground|edge|lava|ground|ground|done=1|a=2": [
+    "left",
+    false
+  ],
+  "ground|edge|lava|ground|ground|done=0|a=3": [
+    "right",
+    false
+  ],
+  "ground|edge|lava|ground|ground|done=1|a=3": [
+    "right",
+    false
+  ],
+  "ground|edge|lava|ground|ground|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|edge|lava|ground|ground|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|edge|ground|ground|lava|done=0|a=0": [
+    "stay",
+    false
+  ],
+  "ground|edge|ground|ground|lava|done=1|a=0": [
+    "stay",
+    true
+  ],
+  "ground|edge|ground|ground|lava|done=0|a=1": [
+    "down",
+    false
+  ],
+  "ground|edge|ground|ground|lava|done=1|a=1": [
+    "down",
+    false
+  ],
+  "ground|edge|ground|ground|lava|done=0|a=2": [
+    "left",
+    false
+  ],
+  "ground|edge|ground|ground|lava|done=1|a=2": [
+    "left",
+    false
+  ],
+  "ground|edge|ground|ground|lava|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "ground|edge|ground|ground|lava|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "ground|edge|ground|ground|lava|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|edge|ground|ground|lava|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "lava|edge|ground|ground|ground|done=0|a=0": [
+    "stay",
+    false
+  ],
+  "lava|edge|ground|ground|ground|done=1|a=0": [
+    "stay",
+    true
+  ],
+  "lava|edge|ground|ground|ground|done=0|a=1": [
+    "down",
+    false
+  ],
+  "lava|edge|ground|ground|ground|done=1|a=1": [
+    "down",
+    false
+  ],
+  "lava|edge|ground|ground|ground|done=0|a=2": [
+    "left",
+    false
+  ],
+  "lava|edge|ground|ground|ground|done=1|a=2": [
+    "left",
+    false
+  ],
+  "lava|edge|ground|ground|ground|done=0|a=3": [
+    "right",
+    false
+  ],
+  "lava|edge|ground|ground|ground|done=1|a=3": [
+    "right",
+    false
+  ],
+  "lava|edge|ground|ground|ground|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "lava|edge|ground|ground|ground|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|edge|ground|lava|ground|done=0|a=0": [
+    "stay",
+    false
+  ],
+  "ground|edge|ground|lava|ground|done=1|a=0": [
+    "stay",
+    true
+  ],
+  "ground|edge|ground|lava|ground|done=0|a=1": [
+    "down",
+    false
+  ],
+  "ground|edge|ground|lava|ground|done=1|a=1": [
+    "down",
+    false
+  ],
+  "ground|edge|ground|lava|ground|done=0|a=2": [
+    "stay",
+    false
+  ],
+  "ground|edge|ground|lava|ground|done=1|a=2": [
+    "stay",
+    true
+  ],
+  "ground|edge|ground|lava|ground|done=0|a=3": [
+    "right",
+    false
+  ],
+  "ground|edge|ground|lava|ground|done=1|a=3": [
+    "right",
+    false
+  ],
+  "ground|edge|ground|lava|ground|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|edge|ground|lava|ground|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "lava|ground|ground|ground|ground|done=0|a=0": [
+    "up",
+    false
+  ],
+  "lava|ground|ground|ground|ground|done=1|a=0": [
+    "up",
+    false
+  ],
+  "lava|ground|ground|ground|ground|done=0|a=1": [
+    "down",
+    false
+  ],
+  "lava|ground|ground|ground|ground|done=1|a=1": [
+    "down",
+    false
+  ],
+  "lava|ground|ground|ground|ground|done=0|a=2": [
+    "left",
+    false
+  ],
+  "lava|ground|ground|ground|ground|done=1|a=2": [
+    "left",
+    false
+  ],
+  "lava|ground|ground|ground|ground|done=0|a=3": [
+    "right",
+    false
+  ],
+  "lava|ground|ground|ground|ground|done=1|a=3": [
+    "right",
+    true
+  ],
+  "lava|ground|ground|ground|ground|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "lava|ground|ground|ground|ground|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|ground|ground|edge|lava|done=0|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|ground|edge|lava|done=1|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|ground|edge|lava|done=0|a=1": [
+    "down",
+    false
+  ],
+  "ground|ground|ground|edge|lava|done=1|a=1": [
+    "down",
+    false
+  ],
+  "ground|ground|ground|edge|lava|done=0|a=2": [
+    "stay",
+    false
+  ],
+  "ground|ground|ground|edge|lava|done=1|a=2": [
+    "stay",
+    true
+  ],
+  "ground|ground|ground|edge|lava|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "ground|ground|ground|edge|lava|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "ground|ground|ground|edge|lava|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|ground|ground|edge|lava|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|lava|lava|ground|ground|done=0|a=0": [
+    "stay",
+    false
+  ],
+  "ground|lava|lava|ground|ground|done=1|a=0": [
+    "stay",
+    true
+  ],
+  "ground|lava|lava|ground|ground|done=0|a=1": [
+    "stay",
+    false
+  ],
+  "ground|lava|lava|ground|ground|done=1|a=1": [
+    "stay",
+    true
+  ],
+  "ground|lava|lava|ground|ground|done=0|a=2": [
+    "left",
+    false
+  ],
+  "ground|lava|lava|ground|ground|done=1|a=2": [
+    "left",
+    false
+  ],
+  "ground|lava|lava|ground|ground|done=0|a=3": [
+    "right",
+    false
+  ],
+  "ground|lava|lava|ground|ground|done=1|a=3": [
+    "right",
+    false
+  ],
+  "ground|lava|lava|ground|ground|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|lava|lava|ground|ground|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "lava|ground|lava|ground|ground|done=0|a=0": [
+    "up",
+    false
+  ],
+  "lava|ground|lava|ground|ground|done=1|a=0": [
+    "up",
+    false
+  ],
+  "lava|ground|lava|ground|ground|done=0|a=1": [
+    "stay",
+    false
+  ],
+  "lava|ground|lava|ground|ground|done=1|a=1": [
+    "stay",
+    true
+  ],
+  "lava|ground|lava|ground|ground|done=0|a=2": [
+    "left",
+    false
+  ],
+  "lava|ground|lava|ground|ground|done=1|a=2": [
+    "left",
+    false
+  ],
+  "lava|ground|lava|ground|ground|done=0|a=3": [
+    "right",
+    false
+  ],
+  "lava|ground|lava|ground|ground|done=1|a=3": [
+    "right",
+    false
+  ],
+  "lava|ground|lava|ground|ground|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "lava|ground|lava|ground|ground|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|ground|ground|lava|edge|done=0|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|ground|lava|edge|done=1|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|ground|lava|edge|done=0|a=1": [
+    "down",
+    false
+  ],
+  "ground|ground|ground|lava|edge|done=1|a=1": [
+    "down",
+    false
+  ],
+  "ground|ground|ground|lava|edge|done=0|a=2": [
+    "stay",
+    false
+  ],
+  "ground|ground|ground|lava|edge|done=1|a=2": [
+    "stay",
+    true
+  ],
+  "ground|ground|ground|lava|edge|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "ground|ground|ground|lava|edge|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "ground|ground|ground|lava|edge|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|ground|ground|lava|edge|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "lava|lava|ground|ground|ground|done=0|a=0": [
+    "stay",
+    false
+  ],
+  "lava|lava|ground|ground|ground|done=1|a=0": [
+    "stay",
+    true
+  ],
+  "lava|lava|ground|ground|ground|done=0|a=1": [
+    "down",
+    false
+  ],
+  "lava|lava|ground|ground|ground|done=1|a=1": [
+    "down",
+    false
+  ],
+  "lava|lava|ground|ground|ground|done=0|a=2": [
+    "left",
+    false
+  ],
+  "lava|lava|ground|ground|ground|done=1|a=2": [
+    "left",
+    false
+  ],
+  "lava|lava|ground|ground|ground|done=0|a=3": [
+    "right",
+    false
+  ],
+  "lava|lava|ground|ground|ground|done=1|a=3": [
+    "right",
+    false
+  ],
+  "lava|lava|ground|ground|ground|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "lava|lava|ground|ground|ground|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|ground|edge|ground|lava|done=0|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|edge|ground|lava|done=1|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|edge|ground|lava|done=0|a=1": [
+    "stay",
+    false
+  ],
+  "ground|ground|edge|ground|lava|done=1|a=1": [
+    "stay",
+    true
+  ],
+  "ground|ground|edge|ground|lava|done=0|a=2": [
+    "left",
+    false
+  ],
+  "ground|ground|edge|ground|lava|done=1|a=2": [
+    "left",
+    false
+  ],
+  "ground|ground|edge|ground|lava|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "ground|ground|edge|ground|lava|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "ground|ground|edge|ground|lava|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|ground|edge|ground|lava|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "lava|ground|edge|ground|ground|done=0|a=0": [
+    "up",
+    false
+  ],
+  "lava|ground|edge|ground|ground|done=1|a=0": [
+    "up",
+    false
+  ],
+  "lava|ground|edge|ground|ground|done=0|a=1": [
+    "stay",
+    false
+  ],
+  "lava|ground|edge|ground|ground|done=1|a=1": [
+    "stay",
+    true
+  ],
+  "lava|ground|edge|ground|ground|done=0|a=2": [
+    "left",
+    false
+  ],
+  "lava|ground|edge|ground|ground|done=1|a=2": [
+    "left",
+    false
+  ],
+  "lava|ground|edge|ground|ground|done=0|a=3": [
+    "right",
+    false
+  ],
+  "lava|ground|edge|ground|ground|done=1|a=3": [
+    "right",
+    false
+  ],
+  "lava|ground|edge|ground|ground|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "lava|ground|edge|ground|ground|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|lava|edge|lava|ground|done=0|a=0": [
+    "stay",
+    false
+  ],
+  "ground|lava|edge|lava|ground|done=1|a=0": [
+    "stay",
+    true
+  ],
+  "ground|lava|edge|lava|ground|done=0|a=1": [
+    "stay",
+    false
+  ],
+  "ground|lava|edge|lava|ground|done=1|a=1": [
+    "stay",
+    true
+  ],
+  "ground|lava|edge|lava|ground|done=0|a=2": [
+    "stay",
+    false
+  ],
+  "ground|lava|edge|lava|ground|done=1|a=2": [
+    "stay",
+    true
+  ],
+  "ground|lava|edge|lava|ground|done=0|a=3": [
+    "right",
+    false
+  ],
+  "ground|lava|edge|lava|ground|done=1|a=3": [
+    "right",
+    false
+  ],
+  "ground|lava|edge|lava|ground|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|lava|edge|lava|ground|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "lava|edge|lava|ground|lava|done=0|a=0": [
+    "stay",
+    false
+  ],
+  "lava|edge|lava|ground|lava|done=1|a=0": [
+    "stay",
+    true
+  ],
+  "lava|edge|lava|ground|lava|done=0|a=1": [
+    "down",
+    false
+  ],
+  "lava|edge|lava|ground|lava|done=1|a=1": [
+    "down",
+    true
+  ],
+  "lava|edge|lava|ground|lava|done=0|a=2": [
+    "left",
+    false
+  ],
+  "lava|edge|lava|ground|lava|done=1|a=2": [
+    "left",
+    false
+  ],
+  "lava|edge|lava|ground|lava|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "lava|edge|lava|ground|lava|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "lava|edge|lava|ground|lava|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "lava|edge|lava|ground|lava|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "lava|edge|ground|lava|lava|done=0|a=0": [
+    "stay",
+    false
+  ],
+  "lava|edge|ground|lava|lava|done=1|a=0": [
+    "stay",
+    true
+  ],
+  "lava|edge|ground|lava|lava|done=0|a=1": [
+    "down",
+    false
+  ],
+  "lava|edge|ground|lava|lava|done=1|a=1": [
+    "down",
+    false
+  ],
+  "lava|edge|ground|lava|lava|done=0|a=2": [
+    "stay",
+    false
+  ],
+  "lava|edge|ground|lava|lava|done=1|a=2": [
+    "stay",
+    true
+  ],
+  "lava|edge|ground|lava|lava|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "lava|edge|ground|lava|lava|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "lava|edge|ground|lava|lava|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "lava|edge|ground|lava|lava|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "lava|edge|lava|lava|edge|done=0|a=0": [
+    "stay",
+    false
+  ],
+  "lava|edge|lava|lava|edge|done=1|a=0": [
+    "stay",
+    true
+  ],
+  "lava|edge|lava|lava|edge|done=0|a=1": [
+    "down",
+    false
+  ],
+  "lava|edge|lava|lava|edge|done=1|a=1": [
+    "down",
+    true
+  ],
+  "lava|edge|lava|lava|edge|done=0|a=2": [
+    "left",
+    false
+  ],
+  "lava|edge|lava|lava|edge|done=1|a=2": [
+    "left",
+    true
+  ],
+  "lava|edge|lava|lava|edge|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "lava|edge|lava|lava|edge|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "lava|edge|lava|lava|edge|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "lava|edge|lava|lava|edge|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "lava|lava|lava|ground|ground|done=0|a=0": [
+    "stay",
+    false
+  ],
+  "lava|lava|lava|ground|ground|done=1|a=0": [
+    "stay",
+    true
+  ],
+  "lava|lava|lava|ground|ground|done=0|a=1": [
+    "stay",
+    false
+  ],
+  "lava|lava|lava|ground|ground|done=1|a=1": [
+    "stay",
+    true
+  ],
+  "lava|lava|lava|ground|ground|done=0|a=2": [
+    "left",
+    false
+  ],
+  "lava|lava|lava|ground|ground|done=1|a=2": [
+    "left",
+    false
+  ],
+  "lava|lava|lava|ground|ground|done=0|a=3": [
+    "right",
+    false
+  ],
+  "lava|lava|lava|ground|ground|done=1|a=3": [
+    "right",
+    false
+  ],
+  "lava|lava|lava|ground|ground|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "lava|lava|lava|ground|ground|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|lava|lava|lava|ground|done=0|a=0": [
+    "stay",
+    false
+  ],
+  "ground|lava|lava|lava|ground|done=1|a=0": [
+    "stay",
+    true
+  ],
+  "ground|lava|lava|lava|ground|done=0|a=1": [
+    "stay",
+    false
+  ],
+  "ground|lava|lava|lava|ground|done=1|a=1": [
+    "stay",
+    true
+  ],
+  "ground|lava|lava|lava|ground|done=0|a=2": [
+    "stay",
+    false
+  ],
+  "ground|lava|lava|lava|ground|done=1|a=2": [
+    "stay",
+    true
+  ],
+  "ground|lava|lava|lava|ground|done=0|a=3": [
+    "right",
+    false
+  ],
+  "ground|lava|lava|lava|ground|done=1|a=3": [
+    "right",
+    false
+  ],
+  "ground|lava|lava|lava|ground|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|lava|lava|lava|ground|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|lava|lava|ground|lava|done=0|a=0": [
+    "stay",
+    false
+  ],
+  "ground|lava|lava|ground|lava|done=1|a=0": [
+    "stay",
+    true
+  ],
+  "ground|lava|lava|ground|lava|done=0|a=1": [
+    "stay",
+    false
+  ],
+  "ground|lava|lava|ground|lava|done=1|a=1": [
+    "stay",
+    true
+  ],
+  "ground|lava|lava|ground|lava|done=0|a=2": [
+    "left",
+    false
+  ],
+  "ground|lava|lava|ground|lava|done=1|a=2": [
+    "left",
+    false
+  ],
+  "ground|lava|lava|ground|lava|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "ground|lava|lava|ground|lava|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "ground|lava|lava|ground|lava|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|lava|lava|ground|lava|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "lava|lava|lava|ground|edge|done=0|a=0": [
+    "stay",
+    false
+  ],
+  "lava|lava|lava|ground|edge|done=1|a=0": [
+    "stay",
+    true
+  ],
+  "lava|lava|lava|ground|edge|done=0|a=1": [
+    "stay",
+    false
+  ],
+  "lava|lava|lava|ground|edge|done=1|a=1": [
+    "stay",
+    true
+  ],
+  "lava|lava|lava|ground|edge|done=0|a=2": [
+    "left",
+    false
+  ],
+  "lava|lava|lava|ground|edge|done=1|a=2": [
+    "left",
+    false
+  ],
+  "lava|lava|lava|ground|edge|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "lava|lava|lava|ground|edge|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "lava|lava|lava|ground|edge|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "lava|lava|lava|ground|edge|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "lava|lava|ground|lava|edge|done=0|a=0": [
+    "stay",
+    false
+  ],
+  "lava|lava|ground|lava|edge|done=1|a=0": [
+    "stay",
+    true
+  ],
+  "lava|lava|ground|lava|edge|done=0|a=1": [
+    "down",
+    false
+  ],
+  "lava|lava|ground|lava|edge|done=1|a=1": [
+    "down",
+    false
+  ],
+  "lava|lava|ground|lava|edge|done=0|a=2": [
+    "stay",
+    false
+  ],
+  "lava|lava|ground|lava|edge|done=1|a=2": [
+    "stay",
+    true
+  ],
+  "lava|lava|ground|lava|edge|done=0|a=3": [
+    "stay",
+    false
+  ],
+  "lava|lava|ground|lava|edge|done=1|a=3": [
+    "stay",
+    true
+  ],
+  "lava|lava|ground|lava|edge|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "lava|lava|ground|lava|edge|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|ground|goal|edge|ground|done=0|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|goal|edge|ground|done=1|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|goal|edge|ground|done=0|a=1": [
+    "down",
+    true
+  ],
+  "ground|ground|goal|edge|ground|done=1|a=1": [
+    "down",
+    true
+  ],
+  "ground|ground|goal|edge|ground|done=0|a=2": [
+    "stay",
+    false
+  ],
+  "ground|ground|goal|edge|ground|done=1|a=2": [
+    "stay",
+    true
+  ],
+  "ground|ground|goal|edge|ground|done=0|a=3": [
+    "right",
+    false
+  ],
+  "ground|ground|goal|edge|ground|done=1|a=3": [
+    "right",
+    false
+  ],
+  "ground|ground|goal|edge|ground|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|ground|goal|edge|ground|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "goal|ground|edge|edge|ground|done=0|a=0": [
+    "up",
+    false
+  ],
+  "goal|ground|edge|edge|ground|done=1|a=0": [
+    "up",
+    false
+  ],
+  "goal|ground|edge|edge|ground|done=0|a=1": [
+    "stay",
+    false
+  ],
+  "goal|ground|edge|edge|ground|done=1|a=1": [
+    "stay",
+    true
+  ],
+  "goal|ground|edge|edge|ground|done=0|a=2": [
+    "stay",
+    false
+  ],
+  "goal|ground|edge|edge|ground|done=1|a=2": [
+    "stay",
+    true
+  ],
+  "goal|ground|edge|edge|ground|done=0|a=3": [
+    "right",
+    false
+  ],
+  "goal|ground|edge|edge|ground|done=1|a=3": [
+    "right",
+    false
+  ],
+  "goal|ground|edge|edge|ground|done=0|a=4": [
+    "stay",
+    true
+  ],
+  "goal|ground|edge|edge|ground|done=1|a=4": [
+    "stay",
+    true
+  ],
+  "ground|ground|edge|goal|ground|done=0|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|edge|goal|ground|done=1|a=0": [
+    "up",
+    false
+  ],
+  "ground|ground|edge|goal|ground|done=0|a=1": [
+    "stay",
+    false
+  ],
+  "ground|ground|edge|goal|ground|done=1|a=1": [
+    "stay",
+    true
+  ],
+  "ground|ground|edge|goal|ground|done=0|a=2": [
+    "left",
+    true
+  ],
+  "ground|ground|edge|goal|ground|done=1|a=2": [
+    "left",
+    true
+  ],
+  "ground|ground|edge|goal|ground|done=0|a=3": [
+    "right",
+    false
+  ],
+  "ground|ground|edge|goal|ground|done=1|a=3": [
+    "right",
+    false
+  ],
+  "ground|ground|edge|goal|ground|done=0|a=4": [
+    "stay",
+    false
+  ],
+  "ground|ground|edge|goal|ground|done=1|a=4": [
+    "stay",
+    true
+  ]
+}
