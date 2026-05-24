@@ -2,7 +2,7 @@
 
 > **Per il prossimo agente AI che riprende questo lavoro.**
 > Leggi questo file *per intero* prima di toccare qualsiasi cosa.
-> Aggiornato: 2026-05-21.
+> Aggiornato: 2026-05-24.
 
 ---
 
@@ -39,9 +39,10 @@ sono gli esponenti α e β del virtual reward.
 - **E1-LLM-curve** ✓ design [`E1_LLM_CURVE_DESIGN.md`](E1_LLM_CURVE_DESIGN.md) **+ eseguito** [`E1_LLM_CURVE_RESULT.md`](E1_LLM_CURVE_RESULT.md) — scala 4 modelli × 3 prompt; $f_{abs}$ necessaria ma **non sufficiente** (gate del merge a 3 assi).
 - **E1-LLM Route A** ✓ design [`E1_LLM_ROUTE_A_DESIGN.md`](E1_LLM_ROUTE_A_DESIGN.md) **+ eseguito** [`E1_LLM_ROUTE_A_RESULT.md`](E1_LLM_ROUTE_A_RESULT.md) — world-model LLM **online**; hRA-3 **falsificata**: il merge regge offline, non online-per-query. ⚠️ diagnosi rivista da Route A-bis (vedi sotto).
 - **E1-LLM Route A-bis** ✓ design [`E1_LLM_ROUTE_A_BIS_DESIGN.md`](E1_LLM_ROUTE_A_BIS_DESIGN.md) **+ eseguito** [`E1_LLM_ROUTE_A_BIS_RESULT.md`](E1_LLM_ROUTE_A_BIS_RESULT.md) — imposta la persistenza dal framework: **nessun recupero** (morte 38.9%); **corregge Route A** — il vero blocco è l'entry-detection ($f_{abs}$ bilanciato ≈ 0.54, floor del caso), non la persistenza.
+- **E1-LLM Route A-ter** ✓ design [`E1_LLM_ROUTE_A_TER_DESIGN.md`](E1_LLM_ROUTE_A_TER_DESIGN.md) **+ eseguito** [`E1_LLM_ROUTE_A_TER_RESULT.md`](E1_LLM_ROUTE_A_TER_RESULT.md) — rinomina death-tile `lava`→`pit` per testare le due sotto-cause di A-bis: (i) mismatch semantico vs (ii) confound saggezza/predizione. **hRAt-1/hRAt-2 falsificate** ($f_{abs}$ sale solo da 0.54 a 0.59, morte 39.4% — nessun recupero); **hRAt-3 supportata** (sotto-causa ii): il confine offline-regge / online-fallisce è **strutturale al world-model online**, non semantico. **Route A è concluso** (A, A-bis, A-ter esaurite).
 - **Deep-dive 09** ✓ frontiera caos/ordine; **Deep-dive 02** ✓ Active Inference (fondazione del merge).
 
-MATH_CANON è a **v0.7.7**. Memoria di sessione: i file in
+MATH_CANON è a **v0.7.8**. Memoria di sessione: i file in
 `~/.claude/projects/.../memory/` (`project_research_partner_program.md`,
 `feedback_tooling_decisions.md`) — caricati automaticamente all'avvio.
 
@@ -208,11 +209,13 @@ maggioranza è biologia/chimica/genomica — ignorala per FMC.
 
 I passi esecutivi dei precedenti handoff sono **fatti**: hP13-0 chiusa, **E1-LLM
 verificata**, **E1-LLM-curve eseguita** ($f_{abs}$ necessaria ma non sufficiente),
-e **Route A + Route A-bis eseguite** (2026-05-22) — il merge FMC+LLM regge
-offline, **non** online-per-query, e il *perché* è ora corretto e fermo:
-l'entry-detection dell'LLM online è al floor del caso ($f_{abs}$ bilanciato
-≈ 0.54). La direzione "merge online" è **conclusa** allo stato attuale. Prossimi
-passi, in ordine di valore atteso:
+e le **tre varianti pre-registrate di Route A esaurite** (A 2026-05-22, A-bis
+2026-05-22, A-ter 2026-05-24) — il merge FMC+LLM regge offline, **non**
+online-per-query; il blocco è l'**entry-detection** ($f_{abs}$ bilanciato ≈ 0.54
+con `lava`, 0.59 con `pit`, ben sotto la soglia 0.80) e la sotto-causa è
+**strutturale** (saggezza-vs-predizione), **non semantica** — rinominare la tile
+non recupera. La direzione "merge online per-query da osservazione locale" è
+**conclusa** allo stato attuale. Prossimi passi, in ordine di valore atteso:
 
 1. **Congettura B — una Ψ ben posta, o accettare H-B4.** H-B1a
    ([`../13_chaos_order/HB1A_RESULT.md`](../13_chaos_order/HB1A_RESULT.md)) ha
@@ -228,6 +231,18 @@ passi, in ordine di valore atteso:
 > LLM-organo (inversione dello stack, i 4 organi) è confluito in
 > [`P13_DESIGN.md`](P13_DESIGN.md) §2, sua sede naturale (è il contesto di P13).
 > Se in futuro serve un deep-dive di teoria pura LLM-organo a sé, sarà lo slot 10.
+
+✓ *Fatto* — **E1-LLM Route A-ter eseguita** (2026-05-24): rinomina la death-tile
+`lava` → `pit` per distinguere mismatch semantico da confound saggezza/predizione.
+**hRAt-1/hRAt-2 falsificate** ($f_{abs}$ sale solo da 0.54 a 0.59 — soglia 0.80;
+morte pooled 39.4% — nessun recupero, 0/6 layout significativi); **hRAt-3
+supportata**: l'LLM rifiuta di predire l'ingresso in una tile pericolosa
+*qualunque* sia il nome. Il confine offline-regge / online-fallisce è
+**strutturale** al world-model online per-query, non semantico. **Route A è
+concluso** (A, A-bis, A-ter esaurite). Vie costruttive sopravvissute fuori dallo
+scope: (a) regola esplicita sulle tile [= Route B], (b) dominio open dove i prior
+LLM coincidono con le regole, (c) organo di percezione che etichetti
+operativamente le tile prima del world-model. Vedi [`E1_LLM_ROUTE_A_TER_RESULT.md`](E1_LLM_ROUTE_A_TER_RESULT.md).
 
 ✓ *Fatto* — **E1-LLM Route A-bis eseguita** (2026-05-22): imposta la persistenza
 assorbente dal framework → **nessun recupero** (morte 38.9%, hRAb-2/3 falsificate).
@@ -356,6 +371,9 @@ E1_LLM_ROUTE_A_RESULT.md  report Route A (merge offline sì, online no)
 E1_LLM_ROUTE_A_BIS_DESIGN.md  design Route A-bis (persistenza dal framework)
 e1_llm_route_a_bis.py     Route A-bis: persistenza imposta + probe bilanciato
 E1_LLM_ROUTE_A_BIS_RESULT.md  report Route A-bis (corregge la diagnosi di Route A)
+E1_LLM_ROUTE_A_TER_DESIGN.md  design Route A-ter (rename death-tile lava→pit, PRE-REGISTRATO)
+e1_llm_route_a_ter.py     Route A-ter: rename death-tile (test sotto-cause i/ii)
+E1_LLM_ROUTE_A_TER_RESULT.md  report Route A-ter (rename non recupera, hRAt-3 supportata)
 HANDOFF.md                questo file
 
 (harness λ₁ + H-B1a: in work/13_chaos_order/ — lambda1_harness.py, HB1A_RESULT.md.)
