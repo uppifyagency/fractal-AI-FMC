@@ -267,7 +267,25 @@ scenarios [M18/plasma]. (Nuance: the broader plasma pipeline did distill a deplo
 continuous-action controller in earlier milestones; what the gate correctly predicts is the
 failure of the *divergence-dependent* tier-stack mechanism, which is what M18 attempted.)
 
-### 5.4 Summary: the gate vs the outcome
+### 5.4 Controlled positive: DeceptiveNav (a *fit* verdict that yields a win)
+
+To test the *fit* side of the gate under control — the side we had tested least — we built
+**DeceptiveNav**: a momentum point-mass that must reach a goal behind a wall whose only gap is
+offset sideways, under a deceptive `-distance` reward (it pulls straight into the wall). Momentum
+plus wall collisions make it strongly divergent (`disp_ratio = 7.66` → DIVERGE). Against standard
+matched-budget planners (random-shooting MPC, CEM), with the **same argmax action read-out** for
+all methods (an apples-to-apples fix over FMC's default majority-vote read-out) and the
+theory-predicted setting (low α, high β — less reward-following, more causal-entropy exploration,
+which a deceptive task calls for), **FMC significantly beats both baselines at moderate-to-high
+budget**: at `B = 396` sim-calls/decision, FMC `1.00` vs CEM `0.80` (`z = +2.98, p = 0.003`, n=40;
+robust to `z = +4.45` at n=80). At identical read-out and budget, FMC beats plain random-shooting
+by `+0.375`, isolating the value of its per-step SMC resampling and dispersion. Honest scope: the
+win over CEM needs the (principled) tuning and appears only for `B ≥ 396`; with the read-out fix
+alone and default α=β=1 FMC *ties* the baselines. The result was found only after an adversarial
+review caught a decode-asymmetry confound that had produced a spurious FMC loss — see
+[`W8_PIANIFICAZIONE_DINAMICA.md`](../wave8_dynamic_planning/W8_PIANIFICAZIONE_DINAMICA.md).
+
+### 5.5 Summary: the gate vs the outcome
 
 | Domain | Instance | Gate verdict | disp_ratio | Real FMC-vs-baseline outcome | Gate correct? |
 |---|---|---|---:|---|:---:|
@@ -275,12 +293,16 @@ failure of the *divergence-dependent* tier-stack mechanism, which is what M18 at
 | Quantum routing | grid-3×3 (K=12) | COLLAPSE | 2.94 | Loses to SABRE 25/28, −2.93 SWAP, `p=5.9e-5` | ✓ |
 | Logic synthesis | 10 arith. circuits (K=6) | COLLAPSE | 1.3–2.3 | Ties greedy (+11.40% vs +11.91%, `p=0.5`, 10/10 equiv) | ✓ |
 | Plasma (retrospective) | TCV linear sim | COLLAPSE | 1.94 (mimic) | M18 tier-stack null across 4 scenarios | ✓ |
+| **DeceptiveNav** (controlled) | **momentum + deceptive reward** | **DIVERGE (fit)** | **7.66** | **FMC beats MPC/CEM at B≥396 (1.00 vs 0.80, p=0.003) with matched read-out + principled tuning** | **✓** |
 | *Control (calibration)* | *Rocket / Nav2D / Pendulum* | *DIVERGE* | *4.66–24.90* | *FMC beats random (+5.6 … +16.7)* | *✓* |
 | *Control (calibration)* | *LinearContractive* | *COLLAPSE* | *1.94* | *Ties random (+0.49)* | *✓* |
 
-Across four application/retrospective domains (plus the six calibration fixtures) the gate's
-a-priori verdict matched the observed sign of FMC's usefulness in every case. Where it said
-*fit*, FMC was at least competitive; where it said *no-fit*, FMC delivered no advantage.
+Across five application/controlled/retrospective domains (plus the six calibration fixtures) the
+gate's a-priori verdict matched the observed sign of FMC's usefulness in every case. Where it said
+*fit*, FMC was at least competitive and — in the one controlled fit-case with a fair read-out
+(DeceptiveNav) — a significant winner; where it said *no-fit*, FMC delivered no advantage. Caveat:
+a *fit* verdict warrants a head-to-head, it does not by itself guarantee a win (quantum-linear5
+was only a tie); its most robust content remains the *screen-out* of collapse domains.
 
 ---
 
@@ -329,7 +351,9 @@ seeds) and on **no formal multiple-comparison correction** across domains; "gate
 case" is post-hoc pattern-matching over ≈ six instances, not a pre-registered test. Finally, the
 collapse-case prediction is *one-sided* — "FMC will not beat the baseline" is close to the null
 expectation anyway — so the gate's most falsifiable content is really its *fit* verdicts, of which
-we have tested few.
+we have now tested one under control with a fair read-out (DeceptiveNav, §5.4, a significant FMC
+win) plus two in the wild (quantum-linear5, a tie; the control fixtures, wins) — still few, and a
+*fit* verdict warrants a head-to-head rather than promising a win.
 
 **Scope boundary — static optimisation (added 2026-07-10, W7).** The gate presumes a *dynamical*
 system: `disp_ratio` measures how a free swarm's trajectories spread under the forward dynamics.
