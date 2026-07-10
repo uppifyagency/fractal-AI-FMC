@@ -41,3 +41,6 @@ fmc-core/tests/_fixture_relativize.json
 fmc-core/bench/sumo/scenarios/*/routes.rou.xml
 fmc-core/bench/sumo/scenarios/*/trips_*.xml
 fmc-core/bench/sumo/scenarios/*/stats_*.xml
+# nWave activation marker (keep .nwave/local-config.json trackable)
+.nwave/*
+!.nwave/local-config.json

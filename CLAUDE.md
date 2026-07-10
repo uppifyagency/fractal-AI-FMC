@@ -78,7 +78,7 @@ This repo is a **research + tooling effort around the Fractal Monte Carlo (FMC) 
 
 1. **Replicate** FMC on Atari (done — 96/100 Boxing in 7 min, 231 LOC NumPy, no GPU). See [`work/03_atari_replication/`](work/03_atari_replication/).
 2. **Extend** FMC into coding (the [`plugin/fractal-coding-loop/`](plugin/fractal-coding-loop/) Claude Code plugin: `/fractal-decide`, `/octopus`, `/fractal-recall`).
-3. **Benchmark target reached on Craftax-Classic** (2026-05-01): **exp17 = 50.95% Crafter zero-training, matches/beats human-expert (50.5%)**. 23-experiment autoresearch session on `autoresearch/exp02-ach-bonus` branch discovered chain-tier compounding amplification mechanism (Cong. D in MATH_CANON). See [`work/05_craftax/autoresearch/HANDOFF.md`](work/05_craftax/autoresearch/HANDOFF.md). Procgen and CompilerGym remain candidates for cross-benchmark validation.
+3. **Chain-tier reward shaping doubles FMC on Craftax-Classic** (2026-05-01; claim corretto 2026-07-10). **Claim difendibile**: exp17 vs baseline v4 = **+22.1pp appaiato** su 18 seed (Wilcoxon $p=1.9\times10^{-3}$, Cohen $d_z=0.74$), sblocca la catena iron→diamond in zero-training. ⚠️ **Il vecchio titolo "50.95% = matches human-expert (50.5%)" è RITRATTATO** (audit night_2026-07-09 / W3-3): 50.95% è l'aggregato cross-episodio (run n=11; ri-validato n=18 = 50.60%), **non** la media per-episodio (30%, CI95 [36.85, 59.46]); e **non è like-for-like** (exp17 su Craftax-Classic-Symbolic vs umano su Crafter-original a pixel — sull'ambiente umano FMC fa **3.77%**). 23-experiment autoresearch session, meccanismo chain-tier compounding (Cong. D). See [`work/14_night_2026-07-09/wave3_validation/W33_restatement_onesto.md`](work/14_night_2026-07-09/wave3_validation/W33_restatement_onesto.md) + [`work/05_craftax/autoresearch/HANDOFF.md`](work/05_craftax/autoresearch/HANDOFF.md). Per "human-expert" servono like-for-like su Crafter-original a compute pieno + replica Procgen. Procgen/CompilerGym restano candidati.
 4. **Theoretical deep-dives** on cloning math, SMC particle-filter view, Active Inference link, Fractal Memory. See [`work/02_deep_dives/`](work/02_deep_dives/).
 
 Language convention: **Italian for prose, English for code/comments**. ISO 8601 dates. Today: 2026-05-01.
@@ -165,7 +165,7 @@ Language convention: **Italian for prose, English for code/comments**. ISO 8601 
 - [`work/11_ram_vs_img_ablation/`](work/11_ram_vs_img_ablation/) — RAM vs IMG sweep parametrico
 
 **Autoresearch sessions** (Karpathy-style /loop iteration con auto-status gate):
-- [`work/05_craftax/autoresearch/`](work/05_craftax/autoresearch/) — branch `autoresearch/exp02-ach-bonus`, **23 esperimenti 2026-04-30 → 2026-05-01**, trajectory **29.27% → 50.95% Crafter zero-training** (matches/beats human-expert 50.5%). HANDOFF, results.tsv, fmc_mutable.py = exp17 final.
+- [`work/05_craftax/autoresearch/`](work/05_craftax/autoresearch/) — branch `autoresearch/exp02-ach-bonus`, **23 esperimenti 2026-04-30 → 2026-05-01**, aggregato Crafter zero-training da 28.46% (baseline v4) a 50.60% (exp17), **+22.1pp appaiato p<0.01** (⚠️ il "50.95% ≈ human-expert" è ritrattato — vedi punto 3 sopra e W33_restatement_onesto.md). HANDOFF, results.tsv, fmc_mutable.py = exp17 final.
 
 **Custom plangym simulators** ([`work/08_simulators/`](work/08_simulators/)): env Python custom che ereditano `PlanEnv` per girare FMC su scenari nostri (rocket-uncino F23, ecc.). Sostituiscono progressivamente le sims HTML statiche.
 

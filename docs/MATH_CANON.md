@@ -1,6 +1,6 @@
 # MATH_CANON — Canone matematico di Fractal Monte Carlo
 
-> **Stato**: draft iniziale (2026-04-27).
+> **Stato**: v0.8.1 (2026-07-10). ⚠️ Teorema 2 (Gibbs) ritrattato → Teorema 2′/2′.5 (Moran/Wright-Fisher); aggiunto Teorema 4 (α_eff). **v0.8.1**: coeff. di diffusione di Thm 2′.5 chiuso (co-ancestry, +12.8%), Φ in forma chiusa, Teorema 4′ (ponte α_eff→s_eff, unificazione verificata). Vedi Cronologia.
 > **Obiettivo**: documento citabile che consolida in un singolo posto le definizioni, i teoremi e le congetture aperte di FMC. Sostituisce — non duplica — i deep dive sparsi.
 > **Convenzione**: prosa in italiano, matematica e codice in inglese, citazioni sempre con riferimento esplicito (paper §, deep dive, podcast capitolo, file-LOC).
 > **Lettura attesa**: chi conosce SMC o MCTS lo legge in 30-45 min; chi non li conosce si appoggia ai deep dive 01 e 05 prima.
@@ -19,7 +19,11 @@
   - [Definizione 6 — Effective branching factor](#definizione-6--effective-branching-factor)
 - [Parte III — Teoremi](#parte-iii--teoremi)
   - [Teorema 1 — Convergenza in $L^p$](#teorema-1--convergenza-in-lp)
-  - [Teorema 2 — Detailed balance e equilibrio di Gibbs](#teorema-2--detailed-balance-e-equilibrio-di-gibbs)
+  - [Teorema 2 — Detailed balance e equilibrio di Gibbs — ⚠️ RITRATTATO](#teorema-2--detailed-balance-e-equilibrio-di-gibbs--️-ritrattato-2026-07-10)
+  - [Teorema 2′ — Selezione Moran/Wright-Fisher (stazionaria corretta)](#teorema-2--selezione-moranwright-fisher-stazionaria-corretta--nuovo-2026-07-10)
+  - [Teorema 2′.5 — Legge stazionaria con mutazione (Wright)](#teorema-25--legge-stazionaria-con-mutazione-wright--diff-approx-verificata-2026-07-10)
+  - [Teorema 4 — Temperatura inversa effettiva di `relativize` ($\alpha_{\mathrm{eff}}$)](#teorema-4--temperatura-inversa-effettiva-di-relativize-alpha_mathrmeff--nuovo-2026-07-10)
+  - [Teorema 4′ — Ponte $\alpha_{\mathrm{eff}}\to s_{\mathrm{eff}}$ (unificazione temperatura↔drift)](#teorema-4--ponte-alpha_mathrmeff-to-s_mathrmeff-unificazione-temperaturadrift--dim-2026-07-10-w6)
   - [Teorema 3 — Lemma anti-collasso](#teorema-3--lemma-anti-collasso)
 - [Parte IV — Congetture aperte](#parte-iv--congetture-aperte)
   - [Congettura A — Sergio's branching: $b_{\text{eff}}^* \approx 6$](#congettura-a--sergios-branching-b_texteff-approx-6)
@@ -183,7 +187,9 @@ $$
 (W^{(i)}, \ell^{(i)}) \leftarrow (W^{(k)}, \ell^{(k)}).
 $$
 
-Questa è la regola Metropolis-Hastings con peso $\mathrm{VR}$ — il rapporto $\frac{\mathrm{VR}^{(k)} - \mathrm{VR}^{(i)}}{\mathrm{VR}^{(i)}} = \frac{\mathrm{VR}^{(k)}}{\mathrm{VR}^{(i)}} - 1$ è esattamente la quota MH che, una volta clippata, dà la probabilità di accettazione standard $P_{\mathrm{MH}} = \min(\mathrm{VR}^{(k)}/\mathrm{VR}^{(i)}, 1)$.
+> ⚠️ **CORREZIONE (2026-07-10, sessione night_2026-07-09 / W3-1)**: l'affermazione precedente — che questa fosse la regola Metropolis-Hastings standard, con $\operatorname{clip}(\mathrm{VR}^{(k)}/\mathrm{VR}^{(i)} - 1) = \min(\mathrm{VR}^{(k)}/\mathrm{VR}^{(i)}, 1)$ — **è FALSA** ed è ritirata. L'accettazione effettiva è
+> $$a_{\mathrm{FMC}}(r) = \operatorname{clip}(r-1,\,0,\,1) = \min(\max(r-1,0),\,1), \qquad r = \mathrm{VR}^{(k)}/\mathrm{VR}^{(i)}.$$
+> **Non** è Metropolis $\min(r,1)$ né Barker $r/(1+r)$: coincide con $\min(r,1)$ **solo per $r \ge 2$**. Per $r \in (1,2)$ è sub-Metropolis ($a_{\mathrm{FMC}} = r-1 < 1 = a_{\mathrm{MH}}$); per $r \le 1$ è $0$ (uphill-only). Controesempi: $a_{\mathrm{FMC}}(0.8)=0$ vs $a_{\mathrm{MH}}=0.8$; $a_{\mathrm{FMC}}(1.5)=0.5$ vs $a_{\mathrm{MH}}=1.0$ (verifica numerica in [`w31_stationary_check.py`](../work/14_night_2026-07-09/wave3_validation/w31_stationary_check.py)). È una **regola di selezione direzionale uphill-only**, non una proposta MH reversibile. Conseguenza: il Teorema 2 (Gibbs) che poggiava su questa identità è ritrattato — vedi Teorema 2′.
 
 > **Differenza con SMC standard**: il resampling FMC è **pairwise** (ogni walker si confronta con un singolo partner), non *systematic* o *multinomial*. Per $N \to \infty$ le due distribuzioni coincidono (Lemma in deep dive 05 §2.3.1), ma le proprietà di varianza finita sono diverse. È *embarrassingly parallel*.
 
@@ -250,9 +256,11 @@ Vedi Del Moral (2004) §7.4.4 per la prova formale. ∎
 
 **Caveat**. La costante $c_t$ può esplodere come $O(t)$ o $O(t^2)$ a seconda della "mixing rate" di $\mathcal{M}$ (Chopin 2004 CLT). Per FMC su Atari ($M \leq 30$) è gestibile; per Montezuma's Revenge ($M \approx 100+$) la costante richiede $N$ molto più grande.
 
-### Teorema 2 — Detailed balance e equilibrio di Gibbs
+### Teorema 2 — Detailed balance e equilibrio di Gibbs — ⚠️ **RITRATTATO (2026-07-10)**
 
 > Riferimenti: paper §4.2.4, deep dive [01 §4](../work/02_deep_dives/01_cloning_mathematics.md#4-teorema-3-equilibrio-di-gibbs).
+>
+> 🚫 **RITRATTATO (sessione night_2026-07-09 / W3-1, W3b).** L'enunciato sotto ($\pi^*\propto R^\alpha\rho^{-\beta}$ come equilibrio di Gibbs a temperatura finita, ottenuto per detailed balance Metropolis-Hastings) **è errato**. Tre motivi, tutti verificati: (1) l'accettazione FMC è $a_{\mathrm{FMC}}(r)=\operatorname{clip}(r-1,0,1)\neq\min(r,1)$ (vedi correzione a Def. 4), quindi il passaggio MH non regge; (2) il cloning è *uphill-only*: per $\mathrm{VR}(y)>\mathrm{VR}(x)$ si ha $K(y\to x)=0$, dunque il bilancio dettagliato $\pi^*(x)K(x\to y)=\pi^*(y)K(y\to x)$ forza $\pi^*(x)=0$ — nessuna Gibbs a supporto pieno è invariante; (3) il cloning-only converge a **massa puntuale** (fissazione), coerente con l'osservazione empirica $b_{\text{eff}}\to1$ per ogni $\alpha>0$. Lo stesso salto invalido è in **deep dive 01 §4** ($\Pr[y\to x]=0$ e poi rapporto finito). Sostituito dal **Teorema 2′** (sotto). L'enunciato originale è conservato per provenienza.
 
 **Enunciato**. Considera la dinamica $\mathbf{W} \to \mathcal{S} \circ \mathcal{C}(\mathbf{W})$ con $\mathcal{S}$ un perturbatore reversibile e $\mathcal{C}$ il cloning kernel di Definizione 4. Allora la distribuzione invariante della catena di Markov sui *single-walker positions* (marginale di $E^N$ rispetto a un singolo walker) ristretta al cono causale $X_H(x_0, \tau)$ è:
 
@@ -298,6 +306,59 @@ Mappa formale (deep dive 01 §10):
 | Cloning | Selezione di Gibbs |
 | Perturbazione random | Termal noise (Langevin) |
 | Distribuzione equilibrium | Boltzmann $\propto e^{-\beta_{\text{stat}} U}$ |
+
+### Teorema 2′ — Selezione Moran/Wright-Fisher (stazionaria corretta) — **nuovo (2026-07-10)**
+
+> Riferimenti: [`W31_stazionaria_corretta.md`](../work/14_night_2026-07-09/wave3_validation/W31_stazionaria_corretta.md) + [`w31_stationary_check.py`](../work/14_night_2026-07-09/wave3_validation/w31_stationary_check.py); mappatura Wright-Fisher in [deep dive 07](../work/02_deep_dives/07_wright_fisher_mapping.md). Sostituisce il Teorema 2 ritrattato.
+
+**Enunciato.** Sia $\mathcal C$ il cloning kernel di Def. 4 con accettazione $a_{\mathrm{FMC}}(r)=\operatorname{clip}(r-1,0,1)$, applicato a una popolazione di $N$ walker con "tipi" = configurazioni. Allora:
+
+1. **[DIM]** $\mathcal C$ non introduce tipi nuovi ⇒ la diversità è monotòna non-crescente (operatore di non-espansione del supporto).
+2. **[DIM]** $\mathcal C$ è uphill-only ($a=0$ per $r\le1$) ⇒ non reversibile ⇒ nessuna distribuzione di Gibbs a supporto pieno è invariante.
+3. **[DIM+NUM]** Con selezione ($\alpha>0$, VR per-tipo distinte) il tipo argmax-VR ha conteggio non-decrescente ⇒ **fissazione con probabilità 1** (≠ Moran classico, dove la fissazione del mutante ha probabilità $<1$). Verifica: prob. fissazione FMC $=1.0000$ per ogni $s>0$; con l'accettazione MH standard si recupera Moran ($s=0.5$: $0.34$ vs teoria $0.3333$).
+4. **[DIM+NUM]** Caso neutrale ($\alpha=0$, drift senza bias): resampling di Moran/Wright-Fisher, esponente di eterozigosità $q=-1.018$, CI$_{95}$ $[-1.033,-1.003]$ (WF: $-1$); tempo di fissazione $p=+1.025$, CI$_{95}$ $[+1.012,+1.039]$ (WF/Moran: $+1$), su 25 seed, $N\in\{32,64,128,256\}$, sotto **fitness fluttuante per-tick** (verifica in [`w3b_robustness.py`](../work/14_night_2026-07-09/wave3_validation/w3b_robustness.py)).
+
+**Conseguenza.** La stazionaria del cloning-only è massa puntuale ($b_{\text{eff}}\to1$); $\alpha$ è **intensità di selezione**, non temperatura inversa termodinamica. Una legge non-degenere richiede l'operatore di perturbazione $\mathcal S$ come mutazione (Teorema 2′.5). ∎
+
+### Teorema 2′.5 — Legge stazionaria con mutazione (Wright) — **[DIFF-APPROX; coeff. di diffusione chiuso 2026-07-10 W6]**
+
+> Riferimenti: [`W3B_teoria_rafforzata.md`](../work/14_night_2026-07-09/wave3_validation/W3B_teoria_rafforzata.md) + [`w3b_mutation_diffusion.py`](../work/14_night_2026-07-09/wave3_validation/w3b_mutation_diffusion.py); **coefficiente di diffusione chiuso** in [`W6_CHIUSURA_TEORICA §1`](../work/14_night_2026-07-09/wave6_theory_closure/W6_CHIUSURA_TEORICA.md) + [`w6a_coancestry_Ne.py`](../work/14_night_2026-07-09/wave6_theory_closure/w6a_coancestry_Ne.py).
+
+**Enunciato (2 tipi, limite di diffusione di Kimura).** Il kernel FMC (accettazione uphill-only) con mutazione a tasso $\mu$ ha densità stazionaria di Wright
+$$\varphi_\infty(x) \;\propto\; x^{\theta-1}(1-x)^{\theta-1}\,e^{\sigma x},$$
+con coefficienti **derivati dalla vera accettazione**, non dalla selezione Moran standard:
+- drift $s_{\mathrm{eff}} = \Phi(\delta)-\Phi(-\delta)$, dove $\Phi(m)=\mathbb E_{u\sim\mathcal N(m,\,2\sigma_v^2)}[\operatorname{clip}(e^u-1,0,1)]$ (validato all'1.3% contro $\mathbb E[\Delta x]$). **$\Phi(m)$ ha forma chiusa** (W6 §2.2): $\Phi(m)=e^{m+\tau^2/2}[F(\ln2;m{+}\tau^2)-F(0;m{+}\tau^2)]+1-2F(\ln2;m)+F(0;m)$, $\tau^2{=}2\sigma_v^2$, $F=$ CDF di $\mathcal N(\cdot,\tau^2)$ — quindi $s_{\mathrm{eff}}$ è chiuso, non un integrale MC;
+- diffusione con dimensione efficace **$N_e=N/(\lambda N)$ in forma chiusa** (era $N/(2\varphi_0)$ leading-order): $\lambda N = 2\varphi_0 + \langle a_{\rm in}^2\rangle - 2\langle a_{\rm in}a_{\rm out}\rangle$, con $a_{\rm in}(t)=\mathbb E_g[\operatorname{clip}(e^{t-g}-1,0,1)]$, $a_{\rm out}(t)=a_{\rm in}(-t)$, $\varphi_0=\langle a_{\rm in}\rangle$; $\theta=2N_e\mu$, $\sigma=2N_e\,s_{\mathrm{eff}}$.
+
+**Verifica [NUM].** Contro il kernel esatto con mutazione: $(\theta,\sigma)$ entro 3–4%, media stazionaria $<0.1\%$, distanza di variazione totale $\mathrm{TV}\to0$ come $N\to\infty$ ($0.099\to0.016$ a $N=800$). Limiti corretti: $\delta\to0\Rightarrow\mathrm{Beta}(\theta,\theta)$; $\sigma_v\to0\Rightarrow$ fissazione (recupera Thm 2′.3).
+
+**Chiusura del coefficiente di diffusione (W6, 2026-07-10) — era il buco principale.** La correzione **+12.8%** (a $\sigma_v{=}0.5$; $\lambda N=0.6755$ vs baseline $2\varphi_0=0.599$) è la **probabilità di co-ancestry pairwise per tick**, derivata in forma chiusa enumerando le vie di coalescenza (due offspring distinti condividono il genitore) e verificata a **+0.1%** contro il kernel esatto su $N\in\{100,800\}$. Passa da `[NUM]` (misurata) a `[DIM-LO]` (chiusa al leading order in $1/N$; la ricorsione $\mathbb E[H_{t+1}]=(1-p_{\rm coal})\mathbb E[H_t]$ è dimostrata **esatta** nel neutro). Confermata da review avversariale con verificatore indipendente (parent-map counting).
+
+**Perché ancora non [DIM] pieno.** Resta un solo buco: (1) il **limite di diffusione funzionale** (martingale problem / Lindeberg con la clip a spigoli) non è dimostrato — standard nella letteratura WF; (2) riduzione a 2 tipi (estensione a $K$ tipi → Ewens 1972). Il coefficiente di diffusione — punto (2) del vecchio elenco — **è ora chiuso**. **Risoluzione del paradosso**: il kernel discreto congelato è non-reversibile (Thm 2′.2), ma con fitness fluttuante + mutazione la diffusione 1-D è reversibile rispetto a $\varphi_\infty$ — due regimi, non una contraddizione.
+
+### Teorema 4 — Temperatura inversa effettiva di `relativize` ($\alpha_{\mathrm{eff}}$) — **nuovo (2026-07-10)**
+
+> Riferimenti: [`W32_alpha_eff.md`](../work/14_night_2026-07-09/wave3_validation/W32_alpha_eff.md) + [`w32_alpha_eff_check.py`](../work/14_night_2026-07-09/wave3_validation/w32_alpha_eff_check.py). Formalizza l'intuizione "α nominale ≠ pressione reale".
+
+**Enunciato.** Con `relativize` (Def. 2) su $z=(R-\mu_R)/\sigma_R$, ramo $z\le0\mapsto e^z$, ramo $z>0\mapsto 1+\log(1+z)$, la pressione selettiva locale $\alpha_{\mathrm{eff}}(R):=\partial\log\mathrm{VR}/\partial R$ (stesse unità della temperatura inversa di Boltzmann) è **[DIM] (sympy, pointwise esatta)**:
+$$\alpha_{\mathrm{eff}}(z) = \frac{\alpha}{\sigma_R}\,g(z), \qquad g(z)=\begin{cases}1 & z\le0\\ \dfrac{1}{(1+z)\,(1+\log(1+z))} & z>0.\end{cases}$$
+A scala di popolazione $\bar\alpha_{\mathrm{eff}} = C\,\alpha/\sigma_R$ con $C=\mathbb E[g(z)]$: $C_{\text{gauss}}=0.7225$ CI$_{95}$ $[0.7221,0.7227]$, $C_{\text{unif}}=0.7384$ **[NUM, ≤0.29% err MC]**. La legge $\bar\alpha_{\mathrm{eff}}\propto\alpha/\sigma_R$ è algebrica dello z-score (indipendente dalla distribuzione); solo $C$ è distribution-dependent.
+
+**Corollari.** (a) **Annealing emergente**: convergendo lo sciame, $\sigma_R\downarrow\Rightarrow$ pressione$\uparrow$ senza intervento — aggancio quantitativo alla frontiera caos/ordine (Cong. B, D3). (b) **Incomparabilità di $\alpha$**: confrontare $\alpha$ tra benchmark senza normalizzare per $\sigma_R$ è privo di senso. (c) **Shaping deve essere moltiplicativo-tiered**: `relativize` è invariante a trasformazioni affini globali (bonus additivo e riscalamento uniforme danno $\Delta\mathrm{VR}\sim10^{-14}$), quindi solo lo shaping non-uniforme *fra walker* modifica la selezione — spiega meccanicamente perché la Cong. D funziona con inv-tier stacking e non con reward additive. Il legame quantitativo esatto con il compounding di exp17 resta **[SKETCH]**.
+
+### Teorema 4′ — Ponte $\alpha_{\mathrm{eff}}\to s_{\mathrm{eff}}$ (unificazione temperatura↔drift) — **[DIM] (2026-07-10 W6)**
+
+> Riferimenti: [`W6_CHIUSURA_TEORICA §2`](../work/14_night_2026-07-09/wave6_theory_closure/W6_CHIUSURA_TEORICA.md) + [`w6b_alpha_s_bridge.py`](../work/14_night_2026-07-09/wave6_theory_closure/w6b_alpha_s_bridge.py), identificazione accoppiata in [`w6c_coupled_identification.py`](../work/14_night_2026-07-09/wave6_theory_closure/w6c_coupled_identification.py). Risolve la tensione "$\alpha_{\mathrm{eff}}$ (Thm 4) e $s_{\mathrm{eff}}$ (Thm 2′.5) sono due misure separate".
+
+**Enunciato.** $\alpha_{\mathrm{eff}}$ e $s_{\mathrm{eff}}$ non sono due temperature rivali: sono la **stessa** selezione linearizzata in due sistemi di coordinate, composti dalla regola della catena. Nel limite di selezione debole,
+$$\boxed{\;s_{\mathrm{eff}} \;=\; \underbrace{2\Phi'(0)}_{\text{trasmissione della clip}}\;\cdot\;\underbrace{\alpha_{\mathrm{eff}}}_{=\,C\alpha/\sigma_R}\;\cdot\;\Delta R \;+\; O(\Delta R^3),\;}$$
+dove $\Delta R$ è il gap di reward fra due tipi, e la trasmissione marginale della clip ha forma chiusa $\Phi'(0)=e^{\tau^2/2}[F(\ln2;\tau^2)-F(0;\tau^2)]$ ($\tau^2{=}2\sigma_v^2$): solo la **banda di transizione** $0<u<\ln2$ (accettazione strettamente in $(0,1)$) trasmette selezione. Composizione di due link, ciascuno una linearizzazione della **stessa** accettazione clip:
+- **LINK A** (`relativize`): $\delta=\alpha_{\mathrm{eff}}\,\Delta R$, con $\alpha_{\mathrm{eff}}=C\alpha/\sigma_R$ (Jacobiana mediata sulla popolazione $C=\mathbb E[g(z)]$, **non** $g(\bar z)$);
+- **LINK B** (clip): $s_{\mathrm{eff}}=\Phi(\delta)-\Phi(-\delta)=2\Phi'(0)\delta+O(\delta^3)$.
+
+**Verifica.** LINK A err →0.01%, LINK B err →0.00%, composizione end-to-end err →0.00% nel limite $\Delta R\to0$ (**[DIM]** analitico + **[NUM]**). **Unificazione [DIM-NUM]** (chiude il Difetto 2 della review): $\sigma_v$ è *determinato* da `relativize`, non un parametro libero — simulazione **accoppiata** (relativize+clone, $\sigma_v$ letto come spread entro-tipo di $\log\mathrm{VR}$) dà drift realizzato $=\Phi(\delta;\tau)-\Phi(-\delta;\tau)$ a $\tau^2=s_A^2+s_B^2$ **vincolato** entro **0.1–0.9%**. Sfumatura: $s_A\ne s_B$ fuori dal punto neutro, ma la forma $\tau^2=s_A^2+s_B^2$ è esatta.
+
+**Conseguenza.** Chiude quantitativamente il legame Thm 4 ↔ Thm 2′.5: la temperatura inversa $\alpha_{\mathrm{eff}}$ (coordinate reward→log-VR) e il drift di selezione $s_{\mathrm{eff}}$ (coordinate log-VR→frequenza) sono la stessa cosa vista da due angoli, raccordate da $2\Phi'(0)$.
 
 ### Teorema 3 — Lemma anti-collasso
 
@@ -824,6 +885,8 @@ Per disciplina (cf. CLAUDE.md §3 "surgical changes" e §"cosa rifiutiamo"):
 | 2026-05-22 | 0.7.6 | **E1-LLM Route A eseguita** ([`E1_LLM_ROUTE_A_RESULT.md`](../work/12_conjecture_e/E1_LLM_ROUTE_A_RESULT.md), `e1_llm_route_a.py`, kernel `fmc-core` invariato). World-model LLM interrogato **online** da osservazioni locali. **hRA-1 ✓** (costo $R1$ trattabile: cache → 660 query distinte, 0 chiamate nel test FMC). **hRA-2** consistenza $0.955$ (sotto $0.98$). **hRA-3 falsificata**: self-preservation non sopravvive online — morte pooled $35\%$ (vs $0/180$ offline, $49\%$ random). **hRA-4 ✓**: cede la **persistenza assorbente** ($0.53$; $f_{\text{abs}}$ $0.92$ e movimento $0.94$ reggono) — l'LLM per-query non mantiene l'invariante "terminale resta terminale" che il codice di Route B imponeva strutturalmente. **Il merge FMC+LLM regge offline, non online-per-query.** Primi 2 run scartati (rate-limiting → fallback fabbricato; abort su blip di rete) — harness indurito (pacing/backoff/fail-loud/checkpoint per-query). | Claude (research partner) |
 | 2026-05-22 | 0.7.7 | **E1-LLM Route A-bis eseguita** ([`E1_LLM_ROUTE_A_BIS_RESULT.md`](../work/12_conjecture_e/E1_LLM_ROUTE_A_BIS_RESULT.md), `e1_llm_route_a_bis.py`, kernel `fmc-core` invariato, $0$ nuove chiamate API). Testa la via avanti di Route A (persistenza imposta dal framework): **hRAb-2/3 falsificate** — morte $38.9\%$, nessun recupero; la persistenza **non** era load-bearing. **Corregge la diagnosi di Route A**: il suo $f_{\text{abs}}=0.92$ era una metrica non-bilanciata (base-rate-dominata); il probe bilanciato dà $f_{\text{abs}}\approx 0.54$ — floor del caso. Il merge online fallisce all'**entry-detection**: l'LLM, senza le regole, modella la lava col prior "ostacolo" non "letale-terminale". Verdetto di Route A invariato (merge offline sì, online no); diagnosi del meccanismo corretta. | Claude (research partner) |
 | 2026-05-24 | 0.7.8 | **E1-LLM Route A-ter eseguita** ([`E1_LLM_ROUTE_A_TER_RESULT.md`](../work/12_conjecture_e/E1_LLM_ROUTE_A_TER_RESULT.md), `e1_llm_route_a_ter.py`, kernel `fmc-core` invariato; $704$ nuove chiamate API, wall-time ~43 h da free-tier rate-limit). Distingue le due sotto-cause della diagnosi A-bis: (i) mismatch semantico ("lava" prior "evita" vs regola "letale-terminale") vs (ii) confound saggezza-vs-predizione (l'LLM rifiuta di predire l'ingresso in pericolo *qualunque* sia il nome). Singolo delta: tile $1$ chiamata `pit` (prior coincidente con la regola). **hRAt-1 falsificata** ($f_{\text{abs}}$ bilanciato $0.59$ vs soglia $0.80$ — guadagno marginale $+0.05$ vs $0.54$ di Route A); **hRAt-2 falsificata** (death pooled $39.4\%$, $0/6$ layout significativi, $z=-1.38$); **hRAt-3 supportata** — sotto-causa (ii), strutturale. Il confine offline-regge / online-fallisce del merge FMC+LLM è **strutturale al world-model online per-query**, non semantico — il world-model LLM mescola dinamica del mondo e giudizio normativo dell'agente. Vie costruttive sopravvissute (fuori scope): dominio open dove i prior LLM coincidono con le regole, o organo di percezione che etichetti operativamente le tile prima del world-model. **Route A è concluso** (A, A-bis, A-ter esaurite). | Claude (research partner) |
+| 2026-07-10 | **0.8.0** | **Sessione night_2026-07-09 — validazione/raffinamento del core** ([`work/14_night_2026-07-09/`](../work/14_night_2026-07-09/)). **(1) Teorema 2 (Gibbs) RITRATTATO** (W3-1): l'accettazione FMC è $a_{\mathrm{FMC}}(r)=\operatorname{clip}(r-1,0,1)\neq\min(r,1)$ (coincide con MH solo per $r\ge2$; correzione a Def. 4 riga 186); uphill-only ⇒ non reversibile ⇒ nessuna Gibbs a supporto pieno; cloning-only ⇒ massa puntuale. **Teorema 2′** (selezione Moran/WF: fissazione prob. 1 con selezione; drift neutrale $q=-1.018$ CI$[-1.033,-1.003]$, $p=+1.025$, 25 seed, fitness fluttuante). **(2) Teorema 2′.5** [DIFF-APPROX verificata] (W3b): legge stazionaria con mutazione = distribuzione di Wright $\varphi_\infty\propto x^{\theta-1}(1-x)^{\theta-1}e^{\sigma x}$ con drift/diffusione dalla vera accettazione uphill-only; TV→0.016 a $N=800$; residuo aperto = correzione +13% di $N_e$ (co-ancestry pairwise). **(3) Teorema 4 — $\alpha_{\mathrm{eff}}=C\alpha/\sigma_R$** (W3-2, [DIM] pointwise + [NUM] ≤0.29%): temperatura inversa effettiva di `relativize`; annealing emergente, incomparabilità di $\alpha$, shaping obbligatoriamente moltiplicativo-tiered. **(4) Restatement onesto Craftax** (W3-3): claim difendibile = exp17 vs baseline **+22.1pp appaiato** (Wilcoxon $p=1.9\!\times\!10^{-3}$, $d_z=0.74$, n=18); "50.95% = human-expert" **ritrattato** (aggregato ≠ media per-episodio 30%; non like-for-like — su Crafter-original a pixel FMC fa 3.77%). **(5) Gate E2 di divergenza** (W3-4): `disp_ratio`≥3 predice il fit di FMC; validato 6/6 su control + cross-dominio (quantum routing, logic synthesis — vedi Parte VI). | Claude (research partner) |
+| 2026-07-10 | **0.8.1** | **Chiusura dei 2 buchi teorici aperti** ([`work/14_night_2026-07-09/wave6_theory_closure/`](../work/14_night_2026-07-09/wave6_theory_closure/W6_CHIUSURA_TEORICA.md), W6). **(G1) Coefficiente di diffusione di Thm 2′.5 chiuso**: la correzione co-ancestry (misurata +13% in v0.8.0) è derivata in forma chiusa via coalescente pairwise — $\lambda N=2\varphi_0+\langle a_{\rm in}^2\rangle-2\langle a_{\rm in}a_{\rm out}\rangle$ (+12.8% a $\sigma_v{=}0.5$), verificata a +0.1% contro il kernel esatto; da `[NUM]` a `[DIM-LO]`. Bonus: **$\Phi(m)$ in forma chiusa** (CDF normali) ⇒ $s_{\rm eff}$ non più integrale MC. **(G2) Teorema 4′ (nuovo, [DIM])**: ponte $s_{\rm eff}=2\Phi'(0)\,\alpha_{\rm eff}\,\Delta R$ — $\alpha_{\rm eff}$ e $s_{\rm eff}$ sono la stessa selezione in due coordinate (LINK A `relativize` + LINK B clip), risolve la tensione §7.3. Unificazione ($\sigma_v$ determinato da `relativize`, non libero) **testata** su sim accoppiata (T3 <0.9%, $\tau^2=s_A^2+s_B^2$). **Review avversariale** (falsificatore Opus): G1 confermato; G2 confermato con 2 difetti trovati e sanati (LINK A costante $C=\mathbb E[g(z)]$ non $g(\bar z)$; identificazione $\sigma_v$ testata). Buco residuo unico: limite di diffusione funzionale (tightness WF). | Claude (research partner) |
 
 ---
 
